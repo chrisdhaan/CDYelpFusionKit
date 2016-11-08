@@ -1,0 +1,6 @@
+framework module CDYelpFusionKit {
+  umbrella header "CDYelpFusionKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

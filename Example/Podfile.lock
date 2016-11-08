@@ -1,0 +1,25 @@
+PODS:
+  - Alamofire (4.0.1)
+  - AlamofireObjectMapper (4.0.0):
+    - Alamofire (~> 4.0)
+    - ObjectMapper (~> 2.0)
+  - CDYelpFusionKit (0.1.0):
+    - AlamofireObjectMapper (~> 4.0)
+  - ObjectMapper (2.2.1)
+
+DEPENDENCIES:
+  - CDYelpFusionKit (from `../`)
+
+EXTERNAL SOURCES:
+  CDYelpFusionKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  AlamofireObjectMapper: 9faa3ce5a240efda1b209009a2d6e1e949227abc
+  CDYelpFusionKit: ec2e696675db3bf33e2a79d5a1484b9760032cf5
+  ObjectMapper: 41e43e1a89f8060ef5ea5d04ba852e269a621d68
+
+PODFILE CHECKSUM: 47f28d84acb7262ea9ccf5cc3fae10d9f6eaefb9
+
+COCOAPODS: 1.1.1
