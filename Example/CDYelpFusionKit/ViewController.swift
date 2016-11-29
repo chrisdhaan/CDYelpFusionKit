@@ -39,8 +39,8 @@ class ViewController: UIViewController {
 //                                                  clientSecret: "")
 //        let yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
         
-        let yelpAPIClient = CDYelpAPIClient(clientId: "",
-                                            clientSecret: "")
+//        let yelpAPIClient = CDYelpAPIClient(clientId: "",
+//                                            clientSecret: "")
     }
 
     override func didReceiveMemoryWarning() {

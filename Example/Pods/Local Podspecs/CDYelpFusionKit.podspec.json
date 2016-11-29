@@ -1,7 +1,7 @@
 {
   "name": "CDYelpFusionKit",
   "version": "0.1.0",
-  "summary": "An extensive Objective C wrapper for the Yelp Fusion Developers V3 API.",
+  "summary": "An extensive Swift wrapper for the Yelp Fusion Developers V3 API.",
   "description": "This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion Developers V3 API.",
   "homepage": "https://github.com/chrisdhaan/CDYelpFusionKit",
   "license": {

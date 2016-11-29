@@ -1,7 +1,7 @@
 PODS:
-  - Alamofire (4.0.1)
-  - AlamofireObjectMapper (4.0.0):
-    - Alamofire (~> 4.0)
+  - Alamofire (4.2.0)
+  - AlamofireObjectMapper (4.0.1):
+    - Alamofire (~> 4.1)
     - ObjectMapper (~> 2.0)
   - CDYelpFusionKit (0.1.0):
     - AlamofireObjectMapper (~> 4.0)
@@ -15,9 +15,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
-  AlamofireObjectMapper: 9faa3ce5a240efda1b209009a2d6e1e949227abc
-  CDYelpFusionKit: ec2e696675db3bf33e2a79d5a1484b9760032cf5
+  Alamofire: aa2e09d871c9160ac53c90e83c68064a94e3dfbe
+  AlamofireObjectMapper: 842d2eed43a4d0593ff0110d54ac86a170c4519c
+  CDYelpFusionKit: e695405c6670919833355db6807e941677e3c4b7
   ObjectMapper: 41e43e1a89f8060ef5ea5d04ba852e269a621d68
 
 PODFILE CHECKSUM: 47f28d84acb7262ea9ccf5cc3fae10d9f6eaefb9
