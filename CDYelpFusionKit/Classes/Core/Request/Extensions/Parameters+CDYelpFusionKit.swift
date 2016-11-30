@@ -29,7 +29,7 @@ import UIKit
 
 import Alamofire
 
-internal extension Dictionary where Key: StringLiteralConvertible, Value: Any {
+internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     
     internal static func searchParameters(withTerm term: String?,
                                           location: String?,
