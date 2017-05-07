@@ -25,15 +25,13 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import ObjectMapper
 
-internal class CDYelpOAuthCredential: Mappable {
+class CDYelpOAuthCredential: Mappable {
 
-    internal var accessToken: String?
-    internal var expiresIn: Int?
-    internal var tokenType: String?
+    var accessToken: String?
+    var expiresIn: Int?
+    var tokenType: String?
     
     required init?(map: Map) {
     }

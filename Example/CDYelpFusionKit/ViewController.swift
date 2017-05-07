@@ -30,17 +30,11 @@ import UIKit
 import CDYelpFusionKit
 
 class ViewController: UIViewController {
-
+    
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-//        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "",
-//                                                  clientSecret: "")
-//        let yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
-        
-//        let yelpAPIClient = CDYelpAPIClient(clientId: "",
-//                                            clientSecret: "")
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,5 +42,14 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: - Button Methods
+    @IBAction func searchButtonPressed(_ sender: UIButton) {
+        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byTerm: nil, location: "San Francisco", latitude: nil, longitude: nil, radius: nil, categories: nil, locale: nil, limit: nil, offset: nil, sortBy: nil, price: nil, openNow: nil, openAt: nil, attributes: nil) { (response, error) in
+            
+            if let response = response {
+                print(response)
+            }
+        }
+    }
 }
 

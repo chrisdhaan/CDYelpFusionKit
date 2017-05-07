@@ -25,29 +25,77 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import Alamofire
+import AlamofireObjectMapper
 
 open class CDYelpAPIClient: NSObject {
     
-    fileprivate let oAuthAPIClient: CDYelpOAuthAPIClient
-    fileprivate let manager = Alamofire.SessionManager()
+    fileprivate var manager = Alamofire.SessionManager()
+//    fileprivate lazy var manager: Alamofire.SessionManager = {
+//        if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
+//            // Get the default headers
+//            var headers = Alamofire.SessionManager.defaultHTTPHeaders
+//            // Add the Authorization header
+//            headers["Authorization"] = "Bearer \(accessToken)"
+//            // Create a custom session configuration
+//            let configuration = URLSessionConfiguration.default
+//            // Add the Authorization header
+//            configuration.httpAdditionalHeaders = headers
+//            // Create a session manager with the custom configuration
+//            return Alamofire.SessionManager(configuration: configuration)
+//        } else {
+//            return Alamofire.SessionManager()
+//        }
+//    }()
+    fileprivate let oAuthAPIClient: CDYelpOAuthAPIClient!
     
     // MARK: - Initializers
     public init(clientId: String!,
                 clientSecret: String!) {
         assert((clientId != nil && clientId != "") &&
             (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
-        
         self.oAuthAPIClient = CDYelpOAuthAPIClient(clientId: clientId,
                                                    clientSecret: clientSecret)
-        self.oAuthAPIClient.authorize()
+        super.init()
     }
     
     public init(oAuthAPIClient: CDYelpOAuthAPIClient!) {
         self.oAuthAPIClient = oAuthAPIClient
-        self.oAuthAPIClient.authorize()
+        super.init()
+    }
+    
+    // MARK: - Authorization Methods
+    public func authorize() {
+        self.oAuthAPIClient.authorize { (successful, error) in
+            if let successful = successful,
+                successful == true {
+                
+                if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
+                    // Get the default headers
+                    var headers = Alamofire.SessionManager.defaultHTTPHeaders
+                    // Add the Authorization header
+                    headers["Authorization"] = "Bearer \(accessToken)"
+                    // Create a custom session configuration
+                    let configuration = URLSessionConfiguration.default
+                    // Add the Authorization header
+                    configuration.httpAdditionalHeaders = headers
+                    // Create a session manager with the custom configuration
+                    self.manager = Alamofire.SessionManager(configuration: configuration)
+                }
+            }
+            
+            if let error = error {
+                print("authorize() failure: ", error.localizedDescription)
+            }
+        }
+    }
+    
+    public func isAuthorized() -> Bool {
+        if let _ = self.oAuthAPIClient.oAuthCredential?.accessToken {
+            return true
+        } else {
+            return false
+        }
     }
     
     // MARK: - Yelp API Methods
@@ -65,27 +113,39 @@ open class CDYelpAPIClient: NSObject {
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [String]?,
-                                 completion: @escaping (NSObject?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion V3 Developers API search endpoint.")
         
-        let params = Parameters.searchParameters(withTerm: term,
-                                                 location: location,
-                                                 latitude: latitude,
-                                                 longitude: longitude,
-                                                 radius: radius,
-                                                 categories: categories,
-                                                 locale: locale,
-                                                 limit: limit,
-                                                 offset: offset,
-                                                 sortBy: sortBy,
-                                                 price: price,
-                                                 openNow: openNow,
-                                                 openAt: openAt,
-                                                 attributes: attributes)
+        if self.isAuthorized() == true {
+            
+            let params = Parameters.searchParameters(withTerm: term,
+                                                     location: location,
+                                                     latitude: latitude,
+                                                     longitude: longitude,
+                                                     radius: radius,
+                                                     categories: categories,
+                                                     locale: locale,
+                                                     limit: limit,
+                                                     offset: offset,
+                                                     sortBy: sortBy,
+                                                     price: price,
+                                                     openNow: openNow,
+                                                     openAt: openAt,
+                                                     attributes: attributes)
 
-        self.manager.request(CDYelpRouter.search(parameters: params)).response { (response) in
-            //
+            self.manager.request(CDYelpRouter.search(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+
+                switch response.result {
+                case .success(let searchResponse):
+                    completion(searchResponse, nil)
+                    break
+                case .failure(let error):
+                    print("searchBusinesses() failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
     

@@ -25,8 +25,6 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import Alamofire
 import AlamofireObjectMapper
 
@@ -35,7 +33,7 @@ public class CDYelpOAuthAPIClient: NSObject {
     fileprivate let clientId: String
     fileprivate let clientSecret: String
     
-    internal var oAuthCredential: CDYelpOAuthCredential? = nil
+    var oAuthCredential: CDYelpOAuthCredential? = nil
     
     public init(clientId: String!,
                 clientSecret: String!) {
@@ -46,7 +44,7 @@ public class CDYelpOAuthAPIClient: NSObject {
         self.clientSecret = clientSecret
     }
     
-    public func authorize() {
+    public func authorize(completion: @escaping (Bool?, Error?) -> Void) {
         let params: Parameters = ["grant_type": "client_credentials",
                                   "client_id": self.clientId,
                                   "client_secret": self.clientSecret]
@@ -54,9 +52,11 @@ public class CDYelpOAuthAPIClient: NSObject {
             switch response.result {
             case .success(let oAuthCredential):
                 self.oAuthCredential = oAuthCredential
+                completion(true, nil)
                 break
             case .failure(let error):
                 print("authorize() failure: ", error.localizedDescription)
+                completion(false, error)
                 break
             }
         }

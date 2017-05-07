@@ -25,26 +25,24 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import Alamofire
 
-internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
+extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     
-    internal static func searchParameters(withTerm term: String?,
-                                          location: String?,
-                                          latitude: Double?,
-                                          longitude: Double?,
-                                          radius: Int?,
-                                          categories: [String]?,
-                                          locale: String?,
-                                          limit: Int?,
-                                          offset: Int?,
-                                          sortBy: String?,
-                                          price: String?,
-                                          openNow: Bool?,
-                                          openAt: Int?,
-                                          attributes: [String]?) -> Parameters {
+    static func searchParameters(withTerm term: String?,
+                                 location: String?,
+                                 latitude: Double?,
+                                 longitude: Double?,
+                                 radius: Int?,
+                                 categories: [String]?,
+                                 locale: String?,
+                                 limit: Int?,
+                                 offset: Int?,
+                                 sortBy: String?,
+                                 price: String?,
+                                 openNow: Bool?,
+                                 openAt: Int?,
+                                 attributes: [String]?) -> Parameters {
         var params: Parameters = [:]
         
         if let term = term,
@@ -94,7 +92,7 @@ internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any 
         return params
     }
     
-    internal static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
+    static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
         var params: Parameters = [:]
         
         if let phone = phoneNumber,
@@ -105,9 +103,9 @@ internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any 
         return params
     }
     
-    internal static func transactionsParameters(withLocation location: String?,
-                                                latitude: Double?,
-                                                longitude: Double?) -> Parameters {
+    static func transactionsParameters(withLocation location: String?,
+                                       latitude: Double?,
+                                       longitude: Double?) -> Parameters {
         var params: Parameters = [:]
         
         if let location = location,
@@ -124,7 +122,7 @@ internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any 
         return params
     }
     
-    internal static func reviewsParameters(withLocale locale: String?) -> Parameters {
+    static func reviewsParameters(withLocale locale: String?) -> Parameters {
         var params: Parameters = [:]
         
         if let locale = locale,
@@ -135,10 +133,10 @@ internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any 
         return params
     }
     
-    internal static func autocompleteParameters(withTerm term: String!,
-                                                latitude: Double!,
-                                                longitude: Double!,
-                                                locale: String?) -> Parameters {
+    static func autocompleteParameters(withTerm term: String!,
+                                       latitude: Double!,
+                                       longitude: Double!,
+                                       locale: String?) -> Parameters {
         var params: Parameters = [:]
         
         if let term = term,

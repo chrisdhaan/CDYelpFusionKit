@@ -25,15 +25,42 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import ObjectMapper
 
-class CDYelpBusiness: Mappable {
+public class CDYelpBusiness: Mappable {
 
-    required init?(map: Map) {
+    public var categories: [CDYelpCategory]?
+    public var coordinates: CDYelpCoordinates?
+    public var displayPhone: String?
+    public var distance: Double?
+    public var id: String?
+    public var imageUrl: URL?
+    public var isClosed: Bool?
+    public var location: CDYelpLocation?
+    public var name: String?
+    public var phone: String?
+    public var price: String?
+    public var rating: Double?
+    public var reviewCount: Int?
+    public var url: URL?
+    
+    public required init?(map: Map) {
     }
     
-    func mapping(map: Map) {
+    public func mapping(map: Map) {
+        categories      <- map["categories"]
+        coordinates     <- map["coordinates"]
+        displayPhone    <- map["display_phone"]
+        distance        <- map["distance"]
+        id              <- map["id"]
+        imageUrl        <- (map["image_url"], URLTransform())
+        isClosed        <- map["is_closed"]
+        location        <- map["location"]
+        name            <- map["name"]
+        phone           <- map["phone"]
+        price           <- map["price"]
+        rating          <- map["rating"]
+        reviewCount     <- map["review_count"]
+        url             <- (map["url"], URLTransform())
     }
 }

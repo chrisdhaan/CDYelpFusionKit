@@ -25,20 +25,22 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import ObjectMapper
 
-class CDYelpSearchResponse: Mappable {
+public class CDYelpSearchResponse: Mappable {
 
-    var total: Int?
-    var businesses: [CDYelpBusiness]?
+    public var total: Int?
+    public var businesses: [CDYelpBusiness]?
+    public var region: CDYelpRegion?
+    public var transactions: [String]?
     
-    required init?(map: Map) {
+    public required init?(map: Map) {
     }
     
-    func mapping(map: Map) {
-        total       <- map["total"]
-        businesses  <- map["businesses"]
+    public func mapping(map: Map) {
+        total           <- map["total"]
+        businesses      <- map["businesses"]
+        region          <- map["region"]
+        transactions    <- map["transactions"]
     }
 }

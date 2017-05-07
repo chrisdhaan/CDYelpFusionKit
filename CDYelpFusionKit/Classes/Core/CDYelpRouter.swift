@@ -25,13 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
 import Alamofire
 
 fileprivate let CDYelpBaseURL = "https://api.yelp.com/v3/"
 
-internal enum CDYelpRouter: URLRequestConvertible {
+enum CDYelpRouter: URLRequestConvertible {
     
     case search(parameters: Parameters)
     case phone(parameters: Parameters)
