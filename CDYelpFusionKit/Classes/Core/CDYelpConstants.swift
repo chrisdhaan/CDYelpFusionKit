@@ -1,8 +1,8 @@
 //
-//  CDYelpCoordinate.swift
+//  CDYelpConstants.swift
 //  Pods
 //
-//  Created by Christopher de Haan on 5/6/17.
+//  Created by Christopher de Haan on 5/7/17.
 //
 //  Copyright (c) 2016 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,18 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public enum CDYelpTransactionType: String {
+    case delivery   = "delivery"
+}
 
-public class CDYelpCoordinates: Mappable {
-    
-    public var latitude: Double?
-    public var longitude: Double?
-    
-    public required init?(map: Map) {
-    }
-    
-    public func mapping(map: Map) {
-        latitude    <- map["latitude"]
-        longitude   <- map["longitude"]
-    }
+struct CDYelpURL {
+    static let oAuth    = "https://api.yelp.com/"
+    static let base     = "https://api.yelp.com/v3/"
 }

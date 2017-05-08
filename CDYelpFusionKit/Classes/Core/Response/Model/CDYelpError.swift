@@ -1,8 +1,8 @@
 //
-//  CDYelpCoordinate.swift
+//  CDYelpError.swift
 //  Pods
 //
-//  Created by Christopher de Haan on 5/6/17.
+//  Created by Christopher de Haan on 5/7/17.
 //
 //  Copyright (c) 2016 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -27,16 +27,18 @@
 
 import ObjectMapper
 
-public class CDYelpCoordinates: Mappable {
-    
-    public var latitude: Double?
-    public var longitude: Double?
+public class CDYelpError: Mappable {
+
+    public var description: String?
+    public var field: String?
+    public var code: String?
     
     public required init?(map: Map) {
     }
     
     public func mapping(map: Map) {
-        latitude    <- map["latitude"]
-        longitude   <- map["longitude"]
+        description <- map["description"]
+        field       <- map["field"]
+        code        <- map["code"]
     }
 }

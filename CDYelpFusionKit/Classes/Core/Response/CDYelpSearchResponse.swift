@@ -32,7 +32,7 @@ public class CDYelpSearchResponse: Mappable {
     public var total: Int?
     public var businesses: [CDYelpBusiness]?
     public var region: CDYelpRegion?
-    public var transactions: [String]?
+    public var error: CDYelpError?
     
     public required init?(map: Map) {
     }
@@ -41,6 +41,6 @@ public class CDYelpSearchResponse: Mappable {
         total           <- map["total"]
         businesses      <- map["businesses"]
         region          <- map["region"]
-        transactions    <- map["transactions"]
+        error           <- map["error"]
     }
 }

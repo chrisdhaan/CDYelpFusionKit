@@ -133,15 +133,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return params
     }
     
-    static func autocompleteParameters(withTerm term: String!,
+    static func autocompleteParameters(withText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
                                        locale: String?) -> Parameters {
         var params: Parameters = [:]
         
-        if let term = term,
-            term != "" {
-            params["term"] = term
+        if let text = text,
+            text != "" {
+            params["text"] = text
         }
         if let latitude = latitude {
             params["latitude"] = latitude

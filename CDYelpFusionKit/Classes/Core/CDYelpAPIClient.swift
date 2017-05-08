@@ -30,23 +30,22 @@ import AlamofireObjectMapper
 
 open class CDYelpAPIClient: NSObject {
     
-    fileprivate var manager = Alamofire.SessionManager()
-//    fileprivate lazy var manager: Alamofire.SessionManager = {
-//        if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
-//            // Get the default headers
-//            var headers = Alamofire.SessionManager.defaultHTTPHeaders
-//            // Add the Authorization header
-//            headers["Authorization"] = "Bearer \(accessToken)"
-//            // Create a custom session configuration
-//            let configuration = URLSessionConfiguration.default
-//            // Add the Authorization header
-//            configuration.httpAdditionalHeaders = headers
-//            // Create a session manager with the custom configuration
-//            return Alamofire.SessionManager(configuration: configuration)
-//        } else {
-//            return Alamofire.SessionManager()
-//        }
-//    }()
+    fileprivate lazy var manager: Alamofire.SessionManager = {
+        if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
+            // Get the default headers
+            var headers = Alamofire.SessionManager.defaultHTTPHeaders
+            // Add the Authorization header
+            headers["Authorization"] = "Bearer \(accessToken)"
+            // Create a custom session configuration
+            let configuration = URLSessionConfiguration.default
+            // Add the Authorization header
+            configuration.httpAdditionalHeaders = headers
+            // Create a session manager with the custom configuration
+            return Alamofire.SessionManager(configuration: configuration)
+        } else {
+            return Alamofire.SessionManager()
+        }
+    }()
     fileprivate let oAuthAPIClient: CDYelpOAuthAPIClient!
     
     // MARK: - Initializers
@@ -67,22 +66,6 @@ open class CDYelpAPIClient: NSObject {
     // MARK: - Authorization Methods
     public func authorize() {
         self.oAuthAPIClient.authorize { (successful, error) in
-            if let successful = successful,
-                successful == true {
-                
-                if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
-                    // Get the default headers
-                    var headers = Alamofire.SessionManager.defaultHTTPHeaders
-                    // Add the Authorization header
-                    headers["Authorization"] = "Bearer \(accessToken)"
-                    // Create a custom session configuration
-                    let configuration = URLSessionConfiguration.default
-                    // Add the Authorization header
-                    configuration.httpAdditionalHeaders = headers
-                    // Create a session manager with the custom configuration
-                    self.manager = Alamofire.SessionManager(configuration: configuration)
-                }
-            }
             
             if let error = error {
                 print("authorize() failure: ", error.localizedDescription)
@@ -141,7 +124,7 @@ open class CDYelpAPIClient: NSObject {
                     completion(searchResponse, nil)
                     break
                 case .failure(let error):
-                    print("searchBusinesses() failure: ", error.localizedDescription)
+                    print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
                     completion(nil, error)
                     break
                 }
@@ -150,69 +133,130 @@ open class CDYelpAPIClient: NSObject {
     }
     
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
-                                 completion: @escaping (NSObject?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
         assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion V3 Developers API phone endpoint.")
         
-        let params = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
+        if self.isAuthorized() == true {
         
-        self.manager.request(CDYelpRouter.phone(parameters: params)).response { (response) in
-            //
+            let params = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
+            
+            self.manager.request(CDYelpRouter.phone(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+                
+                switch response.result {
+                case .success(let searchResponse):
+                    completion(searchResponse, nil)
+                    break
+                case .failure(let error):
+                    print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
     
-    public func searchTransactions(byType type: String!,
+    public func searchTransactions(byType type: CDYelpTransactionType!,
                                    location: String?,
                                    latitude: Double?,
                                    longitude: Double?,
-                                   completion: @escaping (NSObject?) -> Void) {
-        assert((type != nil && type != ""), "A transaction type is required to query the Yelp Fusion V3 Developers API transactions endpoint.")
+                                   completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
+        assert((latitude != nil && longitude != nil) ||
+            (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion V3 Developers API transactions endpoint.")
         
-        let params = Parameters.transactionsParameters(withLocation: location,
-                                                       latitude: latitude,
-                                                       longitude: longitude)
+        if self.isAuthorized() == true {
         
-        self.manager.request(CDYelpRouter.transactions(type: type, parameters: params)).response { (response) in
-            //
+            let params = Parameters.transactionsParameters(withLocation: location,
+                                                           latitude: latitude,
+                                                           longitude: longitude)
+            
+            self.manager.request(CDYelpRouter.transactions(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+                
+                switch response.result {
+                case .success(let searchResponse):
+                    completion(searchResponse, nil)
+                    break
+                case .failure(let error):
+                    print("searchTransactions(byType) failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
     
     public func fetchBusiness(byId id: String!,
-                              completion: @escaping (NSObject?) -> Void) {
+                              completion: @escaping (CDYelpBusiness?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API business endpoint.")
         
-        self.manager.request(CDYelpRouter.business(id: id)).response { (response) in
-            //
+        if self.isAuthorized() == true {
+        
+            self.manager.request(CDYelpRouter.business(id: id)).responseObject { (response: DataResponse<CDYelpBusiness>) in
+                
+                switch response.result {
+                case .success(let business):
+                    completion(business, nil)
+                    break
+                case .failure(let error):
+                    print("fetchBusiness(byId) failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
     
     public func fetchReviews(forBusinessId id: String!,
                              locale: String?,
-                             completion: @escaping (NSObject?) -> Void) {
+                             completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API reviews endpoint.")
         
-        let params = Parameters.reviewsParameters(withLocale: locale)
+        if self.isAuthorized() == true {
         
-        self.manager.request(CDYelpRouter.reviews(id: id, parameters: params)).response { (response) in
-            //
+            let params = Parameters.reviewsParameters(withLocale: locale)
+            
+            self.manager.request(CDYelpRouter.reviews(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpReviewsResponse>) in
+                
+                switch response.result {
+                case .success(let reviewsResponse):
+                    completion(reviewsResponse, nil)
+                    break
+                case .failure(let error):
+                    print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
     
-    public func autocompleteBusinesses(byTerm term: String!,
+    public func autocompleteBusinesses(byText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
                                        locale: String?,
-                                       completion: @escaping (NSObject?) -> Void) {
-        assert((term != nil && term != "") &&
+                                       completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void) {
+        assert((text != nil && text != "") &&
             latitude != nil &&
             longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion V3 Developers API autocomplete endpoint.")
         
-        let params = Parameters.autocompleteParameters(withTerm: term,
-                                                       latitude: latitude,
-                                                       longitude: longitude,
-                                                       locale: locale)
-        
-        self.manager.request(CDYelpRouter.autocomplete(parameters: params)).response { (response) in
-            //
+        if self.isAuthorized() == true {
+            
+            let params = Parameters.autocompleteParameters(withText: text,
+                                                           latitude: latitude,
+                                                           longitude: longitude,
+                                                           locale: locale)
+            
+            self.manager.request(CDYelpRouter.autocomplete(parameters: params)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse>) in
+                
+                switch response.result {
+                case .success(let autocompleteResponse):
+                    completion(autocompleteResponse, nil)
+                    break
+                case .failure(let error):
+                    print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
+                    completion(nil, error)
+                    break
+                }
+            }
         }
     }
 }

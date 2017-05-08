@@ -28,39 +28,45 @@
 import ObjectMapper
 
 public class CDYelpBusiness: Mappable {
-
-    public var categories: [CDYelpCategory]?
-    public var coordinates: CDYelpCoordinates?
-    public var displayPhone: String?
-    public var distance: Double?
+    
     public var id: String?
+    public var name: String?
     public var imageUrl: URL?
     public var isClosed: Bool?
-    public var location: CDYelpLocation?
-    public var name: String?
-    public var phone: String?
+    public var url: URL?
     public var price: String?
+    public var phone: String?
+    public var displayPhone: String?
+    public var photos: [String]?
+    public var hours: [CDYelpHour]?
     public var rating: Double?
     public var reviewCount: Int?
-    public var url: URL?
+    public var categories: [CDYelpCategory]?
+    public var distance: Double?
+    public var coordinates: CDYelpCoordinates?
+    public var location: CDYelpLocation?
+    public var transactions: [String]?
     
     public required init?(map: Map) {
     }
     
     public func mapping(map: Map) {
-        categories      <- map["categories"]
-        coordinates     <- map["coordinates"]
-        displayPhone    <- map["display_phone"]
-        distance        <- map["distance"]
         id              <- map["id"]
+        name            <- map["name"]
         imageUrl        <- (map["image_url"], URLTransform())
         isClosed        <- map["is_closed"]
-        location        <- map["location"]
-        name            <- map["name"]
-        phone           <- map["phone"]
+        url             <- (map["url"], URLTransform())
         price           <- map["price"]
+        phone           <- map["phone"]
+        displayPhone    <- map["display_phone"]
+        photos          <- map["photos"]
+        hours           <- map["hours"]
         rating          <- map["rating"]
         reviewCount     <- map["review_count"]
-        url             <- (map["url"], URLTransform())
+        categories      <- map["categories"]
+        distance        <- map["distance"]
+        coordinates     <- map["coordinates"]
+        location        <- map["location"]
+        transactions    <- map["transactions"]
     }
 }

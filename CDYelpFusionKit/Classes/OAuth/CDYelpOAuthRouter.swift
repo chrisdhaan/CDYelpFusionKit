@@ -27,8 +27,6 @@
 
 import Alamofire
 
-fileprivate let CDYelpBaseURL = "https://api.yelp.com/"
-
 enum CDYelpOAuthRouter: URLRequestConvertible {
     
     case authorize(parameters: Parameters)
@@ -48,7 +46,7 @@ enum CDYelpOAuthRouter: URLRequestConvertible {
     }
     
     func asURLRequest() throws -> URLRequest {
-        let url = try CDYelpBaseURL.asURL()
+        let url = try CDYelpURL.oAuth.asURL()
         
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))
         urlRequest.httpMethod = method.rawValue

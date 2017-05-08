@@ -44,12 +44,47 @@ class ViewController: UIViewController {
 
     // MARK: - Button Methods
     @IBAction func searchButtonPressed(_ sender: UIButton) {
-        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byTerm: nil, location: "San Francisco", latitude: nil, longitude: nil, radius: nil, categories: nil, locale: nil, limit: nil, offset: nil, sortBy: nil, price: nil, openNow: nil, openAt: nil, attributes: nil) { (response, error) in
-            
-            if let response = response {
-                print(response)
-            }
-        }
+//        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byTerm: nil, location: "San Francisco", latitude: nil, longitude: nil, radius: nil, categories: nil, locale: nil, limit: nil, offset: nil, sortBy: nil, price: nil, openNow: nil, openAt: nil, attributes: nil) { (businesses, error) in
+//            
+//            if let businesses = businesses {
+//                print(businesses)
+//            }
+//        }
+        
+//        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (businesses, error) in
+//            
+//            if let businesses = businesses {
+//                print(businesses)
+//            }
+//        }
+        
+//        CDYelpFusionKitManager.shared.yelpAPIClient.searchTransactions(byType: .delivery, location: "San Francisco", latitude: nil, longitude: nil) { (transactions, error) in
+//            
+//            if let transactions = transactions {
+//                print(transactions)
+//            }
+//        }
+        
+//        CDYelpFusionKitManager.shared.yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (business, error) in
+//            
+//            if let business = business {
+//                print(business)
+//            }
+//        }
+        
+//        CDYelpFusionKitManager.shared.yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco", locale: nil) { (reviews, error) in
+//            
+//            if let reviews = reviews {
+//                print(reviews)
+//            }
+//        }
+        
+//        CDYelpFusionKitManager.shared.yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut", latitude: 37.786572, longitude: -122.415192, locale: nil) { (autocomplete, error) in
+//            
+//            if let autocomplete = autocomplete {
+//                print(autocomplete)
+//            }
+//        }
     }
 }
 
