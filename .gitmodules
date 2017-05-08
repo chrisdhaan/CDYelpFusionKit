@@ -1,0 +1,3 @@
+[submodule "Carthage/Checkouts/AlamofireObjectMapper"]
+	path = Carthage/Checkouts/AlamofireObjectMapper
+	url = https://github.com/tristanhimmelman/AlamofireObjectMapper.git

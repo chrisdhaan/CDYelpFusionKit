@@ -1,5 +1,0 @@
-use_frameworks!
-
-target 'CDYelpFusionKit_Example' do
-  pod 'CDYelpFusionKit', :path => '../'
-end
