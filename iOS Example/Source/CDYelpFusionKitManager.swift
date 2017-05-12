@@ -35,11 +35,35 @@ final class CDYelpFusionKitManager: NSObject {
     var yelpAPIClient: CDYelpAPIClient!
     
     func configure() {
-        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "c2ga0ZniC7rQMICCibYK6g",
-                                                    clientSecret: "F4CbFYVJuWVP2pE8QvS2oitpCcFRHCsciQiga74gaYnEAcqrTWwq42IeePyau5Et")
+        // How to authorize with a custom CDYelpOAuthAPIClient
+        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "",
+                                                    clientSecret: "")
         self.yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
-//        self.yelpAPIClient = CDYelpAPIClient(clientId: "",
-//                                             clientSecret: "")
+        // How to authorize using the CDYelpAPIClient CDYelpOAuthAPIClient
+        self.yelpAPIClient = CDYelpAPIClient(clientId: "",
+                                             clientSecret: "")
         self.yelpAPIClient.authorize()
+        
+        self.yelpAPIClient.searchBusinesses(byTerm: "",
+                                            location: nil,
+                                            latitude: nil,
+                                            longitude: nil,
+                                            radius: nil,
+                                            categories: nil,
+                                            locale: nil,
+                                            limit: nil,
+                                            offset: nil,
+                                            sortBy: nil,
+                                            price: nil,
+                                            openNow: nil,
+                                            openAt: nil,
+                                            attributes: nil) { (response, error) in
+            //
+        }
+        
+        self.yelpAPIClient.fetchReviews(forBusinessId: "",
+                                        locale: CDYelpLocale.english_unitedStates) { (response, error) in
+//            //
+        }
     }
 }

@@ -35,14 +35,14 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  longitude: Double?,
                                  radius: Int?,
                                  categories: [String]?,
-                                 locale: String?,
+                                 locale: CDYelpLocale?,
                                  limit: Int?,
                                  offset: Int?,
-                                 sortBy: String?,
-                                 price: String?,
+                                 sortBy: CDYelpSortType?,
+                                 price: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
-                                 attributes: [String]?) -> Parameters {
+                                 attributes: [CDYelpAttributeFilter]?) -> Parameters {
         var params: Parameters = [:]
         
         if let term = term,
@@ -64,8 +64,8 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         // TODO: - categories
         if let locale = locale,
-            locale != "" {
-            params["locale"] = locale
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
         }
         if let limit = limit {
             params["limit"] = limit
@@ -74,13 +74,14 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             params["offset"] = offset
         }
         if let sortBy = sortBy,
-            sortBy != "" {
-            params["sort_By"] = sortBy
+            sortBy.rawValue != "" {
+            params["sort_By"] = sortBy.rawValue
         }
-        if let price = price,
-            price != "" {
-            params["price"] = price
-        }
+        // TODO: - price
+//        if let price = price,
+//            price != "" {
+//            params["price"] = price
+//        }
         if let openNow = openNow {
             params["open_now"] = openNow
         }
@@ -122,12 +123,12 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return params
     }
     
-    static func reviewsParameters(withLocale locale: String?) -> Parameters {
+    static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
         
         if let locale = locale,
-            locale != "" {
-            params["locale"] = locale
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
         }
         
         return params
@@ -136,7 +137,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     static func autocompleteParameters(withText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
-                                       locale: String?) -> Parameters {
+                                       locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
         
         if let text = text,
@@ -150,8 +151,8 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             params["longitude"] = longitude
         }
         if let locale = locale,
-            locale != "" {
-            params["locale"] = locale
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
         }
         
         return params
