@@ -145,14 +145,14 @@ public func searchBusinesses(byTerm term: String?,                  // Optional
                              location: String?,                     // Optional
                              latitude: Double?,                     // Optional
                              longitude: Double?,                    // Optional
-                             radius: Int?,                          // Optional (Max = 40000)
+                             radius: Int?,                          // Optional - Max = 40000
                              categories: [String]?,                 // Optional
                              locale: CDYelpLocale?,                 // Optional
-                             limit: Int?,                           // Optional (Default = 20, Max = 50)
+                             limit: Int?,                           // Optional - Default = 20, Max = 50
                              offset: Int?,                          // Optional
-                             sortBy: CDYelpSortType?,               // Optional (Default = .bestMatch)
+                             sortBy: CDYelpSortType?,               // Optional - Default = .bestMatch
                              price: [CDYelpPriceTier]?,             // Optional
-                             openNow: Bool?,                        // Optional (Default = false)
+                             openNow: Bool?,                        // Optional - Default = false
                              openAt: Int?,                          // Optional
                              attributes: [CDYelpAttributeFilter]?,	// Optional
                              completion: @escaping (CDYelpSearchResponse?, Error?) -> Void);
@@ -208,7 +208,7 @@ CDYelpLocale.turkish_turkey
 The Search API has a `sortBy` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
 
 ```swift
-CDYelpSortType.bestMatch		// Default
+CDYelpSortType.bestMatch	// Default
 CDYelpSortType.rating
 CDYelpSortType.reviewCount
 CDYelpSortType.distance
@@ -273,9 +273,9 @@ yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error
 
 ```swift
 public func searchTransactions(byType type: CDYelpTransactionType!,	// Required
-                              location: String?,                    // Optional
-                              latitude: Double?,                    // Optional
-                              longitude: Double?,                   // Optional
+                              location: String?,					// Optional
+                              latitude: Double?,					// Optional
+                              longitude: Double?,					// Optional
                               completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
 ```
 
@@ -316,7 +316,7 @@ yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (bus
 
 ```swift
 public func fetchReviews(forBusinessId id: String!,	// Required
-                         locale: CDYelpLocale?,     // Optional
+                         locale: CDYelpLocale?,		// Optional
                          completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void)
 ```
 
@@ -339,8 +339,8 @@ yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco"
 ### [Autocomplete API](https://www.yelp.com/developers/documentation/v3/autocomplete)
 
 ```swift
-public func autocompleteBusinesses(byText text: String!,    // Required
-                                   latitude: Double!,       // Required
+public func autocompleteBusinesses(byText text: String!,	// Required
+                                   latitude: Double!,		// Required
                                    longitude: Double!,		// Required
                                    locale: CDYelpLocale?,	// Optional
                                    completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void)
