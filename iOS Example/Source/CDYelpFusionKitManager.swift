@@ -36,34 +36,12 @@ final class CDYelpFusionKitManager: NSObject {
     
     func configure() {
         // How to authorize with a custom CDYelpOAuthAPIClient
-        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "",
-                                                    clientSecret: "")
-        self.yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
+//        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "",
+//                                                    clientSecret: "")
+//        self.yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
+//        self.yelpAPIClient.authorize()
         // How to authorize using the CDYelpAPIClient CDYelpOAuthAPIClient
         self.yelpAPIClient = CDYelpAPIClient(clientId: "",
                                              clientSecret: "")
-        self.yelpAPIClient.authorize()
-        
-        self.yelpAPIClient.searchBusinesses(byTerm: "",
-                                            location: nil,
-                                            latitude: nil,
-                                            longitude: nil,
-                                            radius: nil,
-                                            categories: nil,
-                                            locale: nil,
-                                            limit: nil,
-                                            offset: nil,
-                                            sortBy: nil,
-                                            price: nil,
-                                            openNow: nil,
-                                            openAt: nil,
-                                            attributes: nil) { (response, error) in
-            //
-        }
-        
-        self.yelpAPIClient.fetchReviews(forBusinessId: "",
-                                        locale: CDYelpLocale.english_unitedStates) { (response, error) in
-//            //
-        }
     }
 }

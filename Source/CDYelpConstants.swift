@@ -50,7 +50,7 @@ public enum CDYelpLocale: String {
     case chinese_hongKong           = "zh_HK"
     case chinese_taiwan             = "zh_TW"
     case czech_czechRepublic        = "cs_CZ"
-    case danish_Denmark             = "da_DK"
+    case danish_denmark             = "da_DK"
     case dutch_belgium              = "nl_BE"
     case dutch_theNetherlands       = "nl_NL"
     case english_australia          = "en_AU"

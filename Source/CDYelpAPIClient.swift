@@ -64,8 +64,9 @@ open class CDYelpAPIClient: NSObject {
         assert((clientId != nil && clientId != "") &&
             (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
         self.oAuthAPIClient = CDYelpOAuthAPIClient(clientId: clientId,
-                                                   clientSecret: clientSecret)
+                                              clientSecret: clientSecret)
         super.init()
+        self.authorize()
     }
     
     ///
@@ -315,6 +316,14 @@ open class CDYelpAPIClient: NSObject {
                     break
                 }
             }
+        }
+    }
+    
+    public func cancelAllPendingAPIRequests() {
+        self.manager.session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) in
+            dataTasks.forEach { $0.cancel() }
+            uploadTasks.forEach { $0.cancel() }
+            downloadTasks.forEach { $0.cancel() }
         }
     }
 }
