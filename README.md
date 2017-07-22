@@ -130,7 +130,7 @@ Next, select your application project in the **Project Navigator** to navigate t
 
 ```swift
 let yelpAPIClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
-																		clientSecret: "YOUR_CLIENT_SECRET")
+                                    clientSecret: "YOUR_CLIENT_SECRET")
 ```
 
 Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fusion API using any of the following methods.
@@ -141,19 +141,19 @@ Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fu
 ### [Search API](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ```swift
-public func searchBusinesses(byTerm term: String?,									// Optional
-                             location: String?,											// Optional
-                             latitude: Double?,											// Optional
-                             longitude: Double?,										// Optional
-                             radius: Int?,													// Optional (Max = 40000)
-                             categories: [String]?,									// Optional
-                             locale: CDYelpLocale?,									// Optional
-                             limit: Int?,														// Optional (Default = 20, Max = 50)
-                             offset: Int?,													// Optional
-                             sortBy: CDYelpSortType?,								// Optional (Default = .bestMatch)
-                             price: [CDYelpPriceTier]?,							// Optional
-                             openNow: Bool?,												// Optional (Default = false)
-                             openAt: Int?,													// Optional
+public func searchBusinesses(byTerm term: String?,                  // Optional
+                             location: String?,                     // Optional
+                             latitude: Double?,                     // Optional
+                             longitude: Double?,                    // Optional
+                             radius: Int?,                          // Optional (Max = 40000)
+                             categories: [String]?,                 // Optional
+                             locale: CDYelpLocale?,                 // Optional
+                             limit: Int?,                           // Optional (Default = 20, Max = 50)
+                             offset: Int?,                          // Optional
+                             sortBy: CDYelpSortType?,               // Optional (Default = .bestMatch)
+                             price: [CDYelpPriceTier]?,             // Optional
+                             openNow: Bool?,                        // Optional (Default = false)
+                             openAt: Int?,                          // Optional
                              attributes: [CDYelpAttributeFilter]?,	// Optional
                              completion: @escaping (CDYelpSearchResponse?, Error?) -> Void);
 ```
@@ -227,25 +227,25 @@ The following lines of code show an example query to the Yelp Fusion Search API.
 yelpAPIClient.cancelAllPendingAPIRequests()
 // Query Yelp Fusion API for business results
 yelpAPIClient.searchBusinesses(byTerm: "Food",
-															 location: "San Francisco",
-															 latitude: nil,
-															 longitude: nil,
-															 radius: 10000,
-															 categories: nil,
-															 locale: .english_unitedStates,
-															 limit: 5,
-															 offset: 0,
-															 sortBy: .rating,
-															 price: nil,
-															 openNow: true,
-															 openAt: nil,
-															 attributes: nil) { (response, error) in
+                               location: "San Francisco",
+                               latitude: nil,
+                               longitude: nil,
+                               radius: 10000,
+                               categories: nil,
+                               locale: .english_unitedStates,
+                               limit: 5,
+                               offset: 0,
+                               sortBy: .rating,
+                               price: nil,
+                               openNow: true,
+                               openAt: nil,
+                               attributes: nil) { (response, error) in
             
-	if let response = response,
-	    let businesses = response.businesses,
-	    businesses.count > 0 {
-	    print(businesses)
-	}
+  if let response = response,
+      let businesses = response.businesses,
+      businesses.count > 0 {
+      print(businesses)
+  }
 }
 ```
 
@@ -261,11 +261,11 @@ The following lines of code show an example query to the Yelp Fusion Phone Searc
 ```swift
 yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error) in
             
-	if let response = response,
-	    let businesses = response.businesses,
-	    businesses.count > 0 {
-	    print(businesses)
-	}
+  if let response = response,
+      let businesses = response.businesses,
+      businesses.count > 0 {
+      print(businesses)
+  }
 }
 ```
 
@@ -273,19 +273,19 @@ yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error
 
 ```swift
 public func searchTransactions(byType type: CDYelpTransactionType!,	// Required
-															 location: String?,										// Optional
-															 latitude: Double?,										// Optional
-															 longitude: Double?,									// Optional
-															 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
+                              location: String?,                    // Optional
+                              latitude: Double?,                    // Optional
+                              longitude: Double?,                   // Optional
+                              completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Transaction Search API.
 
 ```swift
 yelpAPIClient.searchTransactions(byType: .foodDelivery,
-																 location: "San Francisco",
-																 latitude: nil,
-																 longitude: nil) { (response, error) in
+                                 location: "San Francisco",
+                                 latitude: nil,
+                                 longitude: nil) { (response, error) in
             
   if let response = response,
       let businesses = response.businesses,
@@ -299,7 +299,7 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 
 ```swift
 public func fetchBusiness(byId id: String!,	// Required
-													completion: @escaping (CDYelpBusiness?, Error?) -> Void)
+                          completion: @escaping (CDYelpBusiness?, Error?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Business API.
@@ -316,8 +316,8 @@ yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (bus
 
 ```swift
 public func fetchReviews(forBusinessId id: String!,	// Required
-												 locale: CDYelpLocale?,			// Optional
-												 completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void)
+                         locale: CDYelpLocale?,     // Optional
+                         completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void)
 ```
 
 The Reviews API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
@@ -325,12 +325,12 @@ The Reviews API has a `locale` parameter which allows for query results to be re
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
-yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco", 
-													 locale: nil) { (reviews, error) in
+yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
+                           locale: nil) { (reviews, error) in
             
   if let response = response,
-  		let reviews = response.reviews,
-  		reviews.count > 0 {
+      let reviews = response.reviews,
+      reviews.count > 0 {
       print(reviews)
   }
 }
@@ -339,11 +339,11 @@ yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco"
 ### [Autocomplete API](https://www.yelp.com/developers/documentation/v3/autocomplete)
 
 ```swift
-public func autocompleteBusinesses(byText text: String!,	// Required
-																	 latitude: Double!,			// Required
-																	 longitude: Double!,		// Required
-																	 locale: CDYelpLocale?,	// Optional
-																	 completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void)
+public func autocompleteBusinesses(byText text: String!,    // Required
+                                   latitude: Double!,       // Required
+                                   longitude: Double!,		// Required
+                                   locale: CDYelpLocale?,	// Optional
+                                   completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void)
 ```
 
 The Autocomplete API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
@@ -352,9 +352,9 @@ The following lines of code show an example query to the Yelp Fusion Business AP
 
 ```swift
 yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
-																		 latitude: 37.786572,
-																		 longitude: -122.415192,
-																		 locale: nil) { (response, error) in
+                                     latitude: 37.786572,
+                                     longitude: -122.415192,
+                                     locale: nil) { (response, error) in
             
   if let response = response,
       let businesses = response.businesses,
