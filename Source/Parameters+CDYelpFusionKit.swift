@@ -34,12 +34,12 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  latitude: Double?,
                                  longitude: Double?,
                                  radius: Int?,
-                                 categories: [String]?,
+                                 categories: [CDYelpCategoryFilter]?,
                                  locale: CDYelpLocale?,
                                  limit: Int?,
                                  offset: Int?,
                                  sortBy: CDYelpSortType?,
-                                 price: [CDYelpPriceTier]?,
+                                 priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?) -> Parameters {
@@ -62,7 +62,16 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let radius = radius {
             params["radius"] = radius
         }
-        // TODO: - categories
+        if let categories = categories,
+            categories.count > 0 {
+            
+            var categoriesString = ""
+            for category in categories {
+                categoriesString = categoriesString + category.rawValue + ","
+            }
+            let parametersString = categoriesString.substring(to: categoriesString.index(before: categoriesString.endIndex))
+            params["categories"] = parametersString
+        }
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
@@ -77,18 +86,32 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             sortBy.rawValue != "" {
             params["sort_By"] = sortBy.rawValue
         }
-        // TODO: - price
-//        if let price = price,
-//            price != "" {
-//            params["price"] = price
-//        }
+        if let priceTiers = priceTiers,
+            priceTiers.count > 0 {
+            
+            var priceString = ""
+            for priceTier in priceTiers {
+                priceString = priceString + priceTier.rawValue + ","
+            }
+            let parametersString = priceString.substring(to: priceString.index(before: priceString.endIndex))
+            params["price"] = parametersString
+        }
         if let openNow = openNow {
             params["open_now"] = openNow
         }
         if let openAt = openAt {
             params["open_at"] = openAt
         }
-        // TODO: - attributes
+        if let attributes = attributes,
+            attributes.count > 0 {
+            
+            var attributesString = ""
+            for attribute in attributes {
+                attributesString = attributesString + attribute.rawValue + ","
+            }
+            let parametersString = attributesString.substring(to: attributesString.index(before: attributesString.endIndex))
+            params["attributes"] = parametersString
+        }
         
         return params
     }

@@ -53,7 +53,7 @@ class ViewController: UIViewController {
                                                                      limit: 5,
                                                                      offset: 0,
                                                                      sortBy: .rating,
-                                                                     price: nil,
+                                                                     priceTiers: nil,
                                                                      openNow: true,
                                                                      openAt: nil,
                                                                      attributes: nil) { (response, error) in
