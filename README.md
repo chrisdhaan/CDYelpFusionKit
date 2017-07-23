@@ -252,7 +252,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 ### [Phone Search API](https://www.yelp.com/developers/documentation/v3/business_search_phone)
 
 ```swift
-public func searchBusinesses(byPhoneNumber phoneNumber: String!,	// Required
+public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
                                  completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
 ```
 
