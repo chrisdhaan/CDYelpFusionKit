@@ -146,12 +146,12 @@ public func searchBusinesses(byTerm term: String?,                 // Optional
                              latitude: Double?,                    // Optional
                              longitude: Double?,                   // Optional
                              radius: Int?,                         // Optional - Max = 40000
-                             categories: [String]?,                // Optional
+                             categories: [CDYelpCategoryFilter]?,  // Optional
                              locale: CDYelpLocale?,                // Optional
                              limit: Int?,                          // Optional - Default = 20, Max = 50
                              offset: Int?,                         // Optional
                              sortBy: CDYelpSortType?,              // Optional - Default = .bestMatch
-                             price: [CDYelpPriceTier]?,            // Optional
+                             priceTiers: [CDYelpPriceTier]?,       // Optional
                              openNow: Bool?,                       // Optional - Default = false
                              openAt: Int?,                         // Optional
                              attributes: [CDYelpAttributeFilter]?, // Optional
@@ -214,11 +214,24 @@ CDYelpSortType.reviewCount
 CDYelpSortType.distance
 ```
 
-** Some parameters are currently not implemented** even though they can be passed into the `searchBusinesses` method. Those parameters are listed below:
+The Search API has a `price` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which price tiers can be passed into the `priceTiers` parameter.
 
-- categories
-- price
-- attributes
+```swift
+CDYelpPriceTier.oneDollarSign
+CDYelpPriceTier.twoDollarSigns
+CDYelpPriceTier.threeDollarSigns
+CDYelpPriceTier.fourDollarSigns
+```
+
+The Search API has an `attributes` parameter which allows for query results to be filtered based off five types of criteria. The following lines of code show which attributes can be passed into the `attributes` parameter.
+
+```swift
+CDYelpAttributeFilter.hotAndNew
+CDYelpAttributeFilter.requestAQuote
+CDYelpAttributeFilter.waitlistReservation
+CDYelpAttributeFilter.cashback
+CDYelpAttributeFilter.deals
+```
 
 The following lines of code show an example query to the Yelp Fusion Search API.
 
@@ -231,12 +244,12 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
                                latitude: nil,
                                longitude: nil,
                                radius: 10000,
-                               categories: nil,
+                               categories: [.activeLife, .food],
                                locale: .english_unitedStates,
                                limit: 5,
                                offset: 0,
                                sortBy: .rating,
-                               price: nil,
+                               priceTiers: [.oneDollarSign, .twoDollarSigns],
                                openNow: true,
                                openAt: nil,
                                attributes: nil) { (response, error) in

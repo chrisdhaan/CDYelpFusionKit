@@ -91,8 +91,15 @@ public enum CDYelpCategoryFilter: String {
     case circuitTrainingGyms    = "circuittraininggyms"
     case intervalTrainingGyms   = "intervaltraininggyms"
     case martialArts            = "martialarts"
-    
-    case bars       = "bars"
+    // Arts & Entertainment
+    case artsAndEntertainment   = "arts"
+    case bars                   = "bars"
+    // Food
+    case food                   = "food"
+    // Nightlife
+    case nightlife              = "nightlife"
+    // Restaurants
+    case restaurants            = "restaurants"
 }
 
 ///
