@@ -10,11 +10,41 @@ This Swift wrapper covers all possible network endpoints and responses for the Y
 
 For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example project after cloning the repo.
 
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Initialization](#initialization)
+    - [Search API](#search-api)
+    - [Phone Search API](#phone-search-api)
+    - [Transaction Search API](#transaction-search-api)
+    - [Business API](#business-api)
+    - [Reviews API](#reviews-api)
+    - [Autocomplete API](#autocomplete-api)
+- [Resources](#resources)
+- [License](#license)
+
 ---
 
 ## Pre-Release Software
 
 This framework is currently in development. As of release 0.9.0 the code is stable and in a usable state to install in applications. But be aware that breaking changes may occur until 1.0.0 is released.
+
+---
+
+## Features
+
+- [x] Authentication
+- [x] Search API
+- [x] Phone Search API
+- [x] Transaction Search API
+- [x] Business API
+- [ ] Business Match API
+- [x] Reviews API
+- [x] Autocomplete API
+- [ ] Deep Linking
+- [ ] Complete CDYelpCategoryFilter Mapping
+- [ ] Documentation
 
 ---
 
@@ -135,8 +165,8 @@ let yelpAPIClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
 
 Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fusion API using any of the following methods.
 
-- Parameters with "// Optional" can take nil as a value.
-- Parameters with "// Required" will throw an exception when passing nil as a value.
+- Parameters with `// Optional` can take nil as a value.
+- Parameters with `// Required` will throw an exception when passing nil as a value.
 
 ### [Search API](https://www.yelp.com/developers/documentation/v3/business_search)
 

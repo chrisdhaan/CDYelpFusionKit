@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		5FBF0EA71EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */; };
 		5FBF0EA81EC000B1004C1F6B /* CDYelpBusiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */; };
@@ -87,6 +88,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F09D2E91F282938001877E9 /* CDYelpEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEnums.swift; sourceTree = "<group>"; };
 		5FBF0E671EBFFEB0004C1F6B /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAPIClient.swift; sourceTree = "<group>"; };
 		5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAutoCompleteResponse.swift; sourceTree = "<group>"; };
@@ -202,8 +204,9 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */,
-				5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */,
 				5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */,
+				5F09D2E91F282938001877E9 /* CDYelpEnums.swift */,
+				5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				5FBF0EAC1EC000B1004C1F6B /* CDYelpConstants.swift in Sources */,
 				5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */,
 				5FBF0EAB1EC000B1004C1F6B /* CDYelpCenter.swift in Sources */,
+				5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */,
 				5FBF0EB31EC000B1004C1F6B /* CDYelpOAuthCredential.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,
 				5FBF0EB41EC000B1004C1F6B /* CDYelpOAuthRouter.swift in Sources */,
