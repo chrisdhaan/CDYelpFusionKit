@@ -57,6 +57,14 @@ This framework is currently in development. As of release 0.9.0 the code is stab
 
 ---
 
+## Dependencies
+
+- [AlamofireObjectMapper](https://github.com/tristanhimmelman/AlamofireObjectMapper)
+- [Alamofire](https://github.com/Alamofire/Alamofire)
+- [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper)
+
+---
+
 ## Installation
 
 ### Installation via CocoaPods
@@ -406,6 +414,8 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
   }
 }
 ```
+
+---
 
 ## Author
 
