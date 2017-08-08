@@ -28,7 +28,7 @@
 import Alamofire
 import AlamofireObjectMapper
 
-open class CDYelpAPIClient: NSObject {
+public class CDYelpAPIClient: NSObject {
     
     fileprivate lazy var manager: Alamofire.SessionManager = {
         if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {

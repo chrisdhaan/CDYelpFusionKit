@@ -15,12 +15,12 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 - [Installation](#installation)
 - [Usage](#usage)
     - [Initialization](#initialization)
-    - [Search API](#search-api)
-    - [Phone Search API](#phone-search-api)
-    - [Transaction Search API](#transaction-search-api)
-    - [Business API](#business-api)
-    - [Reviews API](#reviews-api)
-    - [Autocomplete API](#autocomplete-api)
+    - [Search Endpoint](#search-endpoint)
+    - [Phone Search Endpoint](#phone-search-endpoint)
+    - [Transaction Search Endpoint](#transaction-search-endpoint)
+    - [Business Endpoint](#business-endpoint)
+    - [Reviews Endpoint](#reviews-endpoint)
+    - [Autocomplete Endpoint](#autocomplete-endpoint)
 - [Resources](#resources)
 - [License](#license)
 
@@ -35,13 +35,14 @@ This framework is currently in development. As of release 0.9.0 the code is stab
 ## Features
 
 - [x] Authentication
-- [x] Search API
-- [x] Phone Search API
-- [x] Transaction Search API
-- [x] Business API
-- [ ] Business Match API
-- [x] Reviews API
-- [x] Autocomplete API
+- [ ] API Endpoints
+  - [x] Search
+  - [x] Phone Search
+  - [x] Transaction Search
+  - [x] Business
+  - [ ] Business Match
+  - [x] Reviews
+  - [x] Autocomplete
 - [ ] Deep Linking
 - [ ] Complete CDYelpCategoryFilter Mapping
 - [ ] Documentation
@@ -176,7 +177,7 @@ Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fu
 - Parameters with `// Optional` can take nil as a value.
 - Parameters with `// Required` will throw an exception when passing nil as a value.
 
-### [Search API](https://www.yelp.com/developers/documentation/v3/business_search)
+### [Search Endpoint](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ```swift
 public func searchBusinesses(byTerm term: String?,                 // Optional
@@ -300,7 +301,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 }
 ```
 
-### [Phone Search API](https://www.yelp.com/developers/documentation/v3/business_search_phone)
+### [Phone Search Endpoint](https://www.yelp.com/developers/documentation/v3/business_search_phone)
 
 ```swift
 public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
@@ -320,7 +321,7 @@ yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error
 }
 ```
 
-### [Transaction Search API](https://www.yelp.com/developers/documentation/v3/transactions_search)
+### [Transaction Search Endpoint](https://www.yelp.com/developers/documentation/v3/transactions_search)
 
 ```swift
 public func searchTransactions(byType type: CDYelpTransactionType!, // Required
@@ -346,7 +347,7 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 }
 ```
 
-### [Business API](https://www.yelp.com/developers/documentation/v3/business)
+### [Business Endpoint](https://www.yelp.com/developers/documentation/v3/business)
 
 ```swift
 public func fetchBusiness(byId id: String!, // Required
@@ -363,7 +364,7 @@ yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (bus
   }
 }
 ```
-### [Reviews API](https://www.yelp.com/developers/documentation/v3/business_reviews)
+### [Reviews Endpoint](https://www.yelp.com/developers/documentation/v3/business_reviews)
 
 ```swift
 public func fetchReviews(forBusinessId id: String!, // Required
@@ -387,7 +388,7 @@ yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco"
 }
 ```
 
-### [Autocomplete API](https://www.yelp.com/developers/documentation/v3/autocomplete)
+### [Autocomplete Endpoint](https://www.yelp.com/developers/documentation/v3/autocomplete)
 
 ```swift
 public func autocompleteBusinesses(byText text: String!,  // Required
