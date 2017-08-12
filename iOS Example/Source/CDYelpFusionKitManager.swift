@@ -35,13 +35,8 @@ final class CDYelpFusionKitManager: NSObject {
     var yelpAPIClient: CDYelpAPIClient!
     
     func configure() {
-        // How to authorize with a custom CDYelpOAuthAPIClient
-//        let yelpOAuthManager = CDYelpOAuthAPIClient(clientId: "",
-//                                                    clientSecret: "")
-//        self.yelpAPIClient = CDYelpAPIClient(oAuthAPIClient: yelpOAuthManager)
-//        self.yelpAPIClient.authorize()
-        // How to authorize using the CDYelpAPIClient CDYelpOAuthAPIClient
-        self.yelpAPIClient = CDYelpAPIClient(clientId: "",
-                                             clientSecret: "")
+        // How to authorize using your clientId and clientSecret
+        self.yelpAPIClient = CDYelpAPIClient(clientId: "c2ga0ZniC7rQMICCibYK6g",
+                                             clientSecret: "F4CbFYVJuWVP2pE8QvS2oitpCcFRHCsciQiga74gaYnEAcqrTWwq42IeePyau5Et")
     }
 }

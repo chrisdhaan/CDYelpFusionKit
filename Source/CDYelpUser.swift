@@ -37,6 +37,6 @@ public class CDYelpUser: Mappable {
     
     public func mapping(map: Map) {
         name        <- map["name"]
-        imageUrl    <- map["image_url"]
+        imageUrl    <- (map["image_url"], URLTransform())
     }
 }

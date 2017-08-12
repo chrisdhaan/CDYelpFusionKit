@@ -28,23 +28,26 @@
 import Alamofire
 import AlamofireObjectMapper
 
-public class CDYelpOAuthAPIClient: NSObject {
+class CDYelpOAuthClient: NSObject {
     
-    fileprivate let clientId: String
-    fileprivate let clientSecret: String
+    private let clientId: String
+    private let clientSecret: String
     
     var oAuthCredential: CDYelpOAuthCredential? = nil
     
-    public init(clientId: String!,
-                clientSecret: String!) {
+    // MARK: - Initializers
+    
+    init(clientId: String!,
+         clientSecret: String!) {
         assert((clientId != nil && clientId != "") &&
             (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
-        
         self.clientId = clientId
         self.clientSecret = clientSecret
     }
     
-    public func authorize(completion: @escaping (Bool?, Error?) -> Void) {
+    // MARK: - Authorization Methods
+    
+    func authorize(completion: @escaping (Bool?, Error?) -> Void) {
         let params: Parameters = ["grant_type": "client_credentials",
                                   "client_id": self.clientId,
                                   "client_secret": self.clientSecret]
@@ -53,11 +56,9 @@ public class CDYelpOAuthAPIClient: NSObject {
             case .success(let oAuthCredential):
                 self.oAuthCredential = oAuthCredential
                 completion(true, nil)
-                break
             case .failure(let error):
                 print("authorize() failure: ", error.localizedDescription)
                 completion(false, error)
-                break
             }
         }
     }

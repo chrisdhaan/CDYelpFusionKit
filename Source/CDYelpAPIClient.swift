@@ -30,8 +30,8 @@ import AlamofireObjectMapper
 
 public class CDYelpAPIClient: NSObject {
     
-    fileprivate lazy var manager: Alamofire.SessionManager = {
-        if let accessToken = self.oAuthAPIClient.oAuthCredential?.accessToken {
+    private lazy var manager: Alamofire.SessionManager = {
+        if let accessToken = self.oAuthClient.oAuthCredential?.accessToken {
             // Get the default headers
             var headers = Alamofire.SessionManager.defaultHTTPHeaders
             // Add the Authorization header
@@ -46,7 +46,7 @@ public class CDYelpAPIClient: NSObject {
             return Alamofire.SessionManager()
         }
     }()
-    fileprivate let oAuthAPIClient: CDYelpOAuthAPIClient!
+    private let oAuthClient: CDYelpOAuthClient!
     
     // MARK: - Initializers
     
@@ -63,23 +63,10 @@ public class CDYelpAPIClient: NSObject {
                 clientSecret: String!) {
         assert((clientId != nil && clientId != "") &&
             (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
-        self.oAuthAPIClient = CDYelpOAuthAPIClient(clientId: clientId,
-                                              clientSecret: clientSecret)
+        self.oAuthClient = CDYelpOAuthClient(clientId: clientId,
+                                        clientSecret: clientSecret)
         super.init()
         self.authorize()
-    }
-    
-    ///
-    /// Initializes a new CDYelpAPIClient object.
-    ///
-    /// - parameters:
-    ///   - oAuthAPIClient: (**Required**) An object containing the Yelp application authentication credentials and is used for authenticating with the Yelp Fusion API.
-    ///
-    /// - returns: Void
-    ///
-    public init(oAuthAPIClient: CDYelpOAuthAPIClient!) {
-        self.oAuthAPIClient = oAuthAPIClient
-        super.init()
     }
     
     // MARK: - Authorization Methods
@@ -89,8 +76,8 @@ public class CDYelpAPIClient: NSObject {
     ///
     /// - returns: Void
     ///
-    public func authorize() {
-        self.oAuthAPIClient.authorize { (successful, error) in
+    private func authorize() {
+        self.oAuthClient.authorize { (successful, error) in
             
             if let error = error {
                 print("authorize() failure: ", error.localizedDescription)
@@ -104,7 +91,7 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: Bool
     ///
     public func isAuthorized() -> Bool {
-        if let _ = self.oAuthAPIClient.oAuthCredential?.accessToken {
+        if let _ = self.oAuthClient.oAuthCredential?.accessToken {
             return true
         } else {
             return false
@@ -181,11 +168,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let searchResponse):
                     completion(searchResponse, nil)
-                    break
                 case .failure(let error):
                     print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }
@@ -204,11 +189,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let searchResponse):
                     completion(searchResponse, nil)
-                    break
                 case .failure(let error):
                     print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }
@@ -233,11 +216,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let searchResponse):
                     completion(searchResponse, nil)
-                    break
                 case .failure(let error):
                     print("searchTransactions(byType) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }
@@ -254,11 +235,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let business):
                     completion(business, nil)
-                    break
                 case .failure(let error):
                     print("fetchBusiness(byId) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }
@@ -278,11 +257,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let reviewsResponse):
                     completion(reviewsResponse, nil)
-                    break
                 case .failure(let error):
                     print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }
@@ -309,11 +286,9 @@ public class CDYelpAPIClient: NSObject {
                 switch response.result {
                 case .success(let autocompleteResponse):
                     completion(autocompleteResponse, nil)
-                    break
                 case .failure(let error):
                     print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
                     completion(nil, error)
-                    break
                 }
             }
         }

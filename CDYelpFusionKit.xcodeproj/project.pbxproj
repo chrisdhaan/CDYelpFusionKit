@@ -20,7 +20,7 @@
 		5FBF0EAF1EC000B1004C1F6B /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5FBF0EB01EC000B1004C1F6B /* CDYelpHour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E971EC000B1004C1F6B /* CDYelpHour.swift */; };
 		5FBF0EB11EC000B1004C1F6B /* CDYelpLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E981EC000B1004C1F6B /* CDYelpLocation.swift */; };
-		5FBF0EB21EC000B1004C1F6B /* CDYelpOAuthAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E991EC000B1004C1F6B /* CDYelpOAuthAPIClient.swift */; };
+		5FBF0EB21EC000B1004C1F6B /* CDYelpOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E991EC000B1004C1F6B /* CDYelpOAuthClient.swift */; };
 		5FBF0EB31EC000B1004C1F6B /* CDYelpOAuthCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9A1EC000B1004C1F6B /* CDYelpOAuthCredential.swift */; };
 		5FBF0EB41EC000B1004C1F6B /* CDYelpOAuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9B1EC000B1004C1F6B /* CDYelpOAuthRouter.swift */; };
 		5FBF0EB51EC000B1004C1F6B /* CDYelpOpen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9C1EC000B1004C1F6B /* CDYelpOpen.swift */; };
@@ -102,7 +102,7 @@
 		5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDYelpFusionKit.h; sourceTree = "<group>"; };
 		5FBF0E971EC000B1004C1F6B /* CDYelpHour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpHour.swift; sourceTree = "<group>"; };
 		5FBF0E981EC000B1004C1F6B /* CDYelpLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpLocation.swift; sourceTree = "<group>"; };
-		5FBF0E991EC000B1004C1F6B /* CDYelpOAuthAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpOAuthAPIClient.swift; sourceTree = "<group>"; };
+		5FBF0E991EC000B1004C1F6B /* CDYelpOAuthClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpOAuthClient.swift; sourceTree = "<group>"; };
 		5FBF0E9A1EC000B1004C1F6B /* CDYelpOAuthCredential.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpOAuthCredential.swift; sourceTree = "<group>"; };
 		5FBF0E9B1EC000B1004C1F6B /* CDYelpOAuthRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpOAuthRouter.swift; sourceTree = "<group>"; };
 		5FBF0E9C1EC000B1004C1F6B /* CDYelpOpen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpOpen.swift; sourceTree = "<group>"; };
@@ -193,7 +193,7 @@
 		5FBF0EC11EC000ED004C1F6B /* OAuth */ = {
 			isa = PBXGroup;
 			children = (
-				5FBF0E991EC000B1004C1F6B /* CDYelpOAuthAPIClient.swift */,
+				5FBF0E991EC000B1004C1F6B /* CDYelpOAuthClient.swift */,
 				5FBF0E9A1EC000B1004C1F6B /* CDYelpOAuthCredential.swift */,
 				5FBF0E9B1EC000B1004C1F6B /* CDYelpOAuthRouter.swift */,
 			);
@@ -388,7 +388,7 @@
 				5FBF0EB31EC000B1004C1F6B /* CDYelpOAuthCredential.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,
 				5FBF0EB41EC000B1004C1F6B /* CDYelpOAuthRouter.swift in Sources */,
-				5FBF0EB21EC000B1004C1F6B /* CDYelpOAuthAPIClient.swift in Sources */,
+				5FBF0EB21EC000B1004C1F6B /* CDYelpOAuthClient.swift in Sources */,
 				5FBF0EBB1EC000B1004C1F6B /* CDYelpTerm.swift in Sources */,
 				5FBF0EB11EC000B1004C1F6B /* CDYelpLocation.swift in Sources */,
 				5FBF0EAD1EC000B1004C1F6B /* CDYelpCoordinates.swift in Sources */,
