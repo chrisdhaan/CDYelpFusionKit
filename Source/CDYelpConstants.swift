@@ -29,3 +29,8 @@ struct CDYelpURL {
     static let oAuth    = "https://api.yelp.com/"
     static let base     = "https://api.yelp.com/v3/"
 }
+
+struct CDYelpDefaults {
+    static let accessToken = "CDYelpAccessToken"
+    static let expiresIn = "CDYelpExpiresIn"
+}

@@ -33,8 +33,6 @@ class CDYelpOAuthClient: NSObject {
     private let clientId: String
     private let clientSecret: String
     
-    var oAuthCredential: CDYelpOAuthCredential? = nil
-    
     // MARK: - Initializers
     
     init(clientId: String!,
@@ -54,12 +52,55 @@ class CDYelpOAuthClient: NSObject {
         Alamofire.request(CDYelpOAuthRouter.authorize(parameters: params)).responseObject { (response: DataResponse<CDYelpOAuthCredential>) in
             switch response.result {
             case .success(let oAuthCredential):
-                self.oAuthCredential = oAuthCredential
+                let defaults = UserDefaults.standard
+                // Save access token
+                defaults.set(oAuthCredential.accessToken, forKey: CDYelpDefaults.accessToken)
+                // Get current time in Int format
+                let currentDate = Int(Date().timeIntervalSince1970)
+                var expirationDate = currentDate
+                if let expiresIn = oAuthCredential.expiresIn {
+                    // Add the number of seconds until expiration
+                    expirationDate = expirationDate + expiresIn - 86400
+                }
+                // Save the expiration time
+                defaults.set(expirationDate, forKey: CDYelpDefaults.expiresIn)
+                defaults.synchronize()
                 completion(true, nil)
             case .failure(let error):
                 print("authorize() failure: ", error.localizedDescription)
                 completion(false, error)
             }
+        }
+    }
+    
+    func isAuthorized() -> Bool {
+        let defaults = UserDefaults.standard
+        if let _ = defaults.string(forKey: CDYelpDefaults.accessToken),
+            self.isAuthorizationExpired() == false {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isAuthorizationExpired() -> Bool {
+        let defaults = UserDefaults.standard
+        let expiresIn = defaults.integer(forKey: CDYelpDefaults.expiresIn)
+        let expirationDate = Date(timeIntervalSince1970: TimeInterval(expiresIn))
+        let currentDate = Date()
+        if currentDate > expirationDate {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func accessToken() -> String? {
+        let defaults = UserDefaults.standard
+        if let accessToken = defaults.string(forKey: CDYelpDefaults.accessToken) {
+            return accessToken
+        } else {
+            return nil
         }
     }
 }

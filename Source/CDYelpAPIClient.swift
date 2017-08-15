@@ -31,7 +31,7 @@ import AlamofireObjectMapper
 public class CDYelpAPIClient: NSObject {
     
     private lazy var manager: Alamofire.SessionManager = {
-        if let accessToken = self.oAuthClient.oAuthCredential?.accessToken {
+        if let accessToken = self.oAuthClient.accessToken() {
             // Get the default headers
             var headers = Alamofire.SessionManager.defaultHTTPHeaders
             // Add the Authorization header
@@ -66,36 +66,50 @@ public class CDYelpAPIClient: NSObject {
         self.oAuthClient = CDYelpOAuthClient(clientId: clientId,
                                         clientSecret: clientSecret)
         super.init()
-        self.authorize()
+        self.authenticate()
     }
     
-    // MARK: - Authorization Methods
+    // MARK: - Authentication Methods
     
     ///
-    /// Attempts to authorize the Yelp application credentials with the Yelp Fusion API.
+    /// Attempts to authenticate the Yelp application credentials with the Yelp Fusion API if the Yelp application has not already authenticated.
     ///
     /// - returns: Void
     ///
-    private func authorize() {
-        self.oAuthClient.authorize { (successful, error) in
-            
-            if let error = error {
-                print("authorize() failure: ", error.localizedDescription)
+    private func authenticate() {
+        if self.oAuthClient.isAuthorized() == false {
+            self.oAuthClient.authorize { (successful, error) in
+
+                if let error = error {
+                    print("authorize() failure: ", error.localizedDescription)
+                }
             }
         }
     }
     
     ///
-    /// Determines whether or not the Yelp application has successfully authorized with the Yelp Fusion API.
+    /// Determines whether or not the Yelp application has successfully authenticated with the Yelp Fusion API.
     ///
     /// - returns: Bool
     ///
-    public func isAuthorized() -> Bool {
-        if let _ = self.oAuthClient.oAuthCredential?.accessToken {
+    public func isAuthenticated() -> Bool {
+        if self.oAuthClient.isAuthorized() {
             return true
         } else {
             return false
         }
+    }
+    
+    ///
+    /// Removes the Yelp Fusion API authentication credentials.
+    ///
+    /// - returns: Void
+    ///
+    public func unauthenticate() {
+        let userDefaults = UserDefaults.standard
+        userDefaults.removeObject(forKey: CDYelpDefaults.accessToken)
+        userDefaults.removeObject(forKey: CDYelpDefaults.expiresIn)
+        userDefaults.synchronize()
     }
     
     // MARK: - Yelp Fusion API Methods
@@ -146,7 +160,7 @@ public class CDYelpAPIClient: NSObject {
             assert((limit <= 50), "The limit must be 50 or less to query the Yelp Fusion V3 Developers API search endpoint.")
         }
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
             
             let params = Parameters.searchParameters(withTerm: term,
                                                      location: location,
@@ -180,7 +194,7 @@ public class CDYelpAPIClient: NSObject {
                                  completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
         assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion V3 Developers API phone endpoint.")
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
         
             let params = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
             
@@ -205,7 +219,7 @@ public class CDYelpAPIClient: NSObject {
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion V3 Developers API transactions endpoint.")
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
         
             let params = Parameters.transactionsParameters(withLocation: location,
                                                            latitude: latitude,
@@ -228,7 +242,7 @@ public class CDYelpAPIClient: NSObject {
                               completion: @escaping (CDYelpBusiness?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API business endpoint.")
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
         
             self.manager.request(CDYelpRouter.business(id: id)).responseObject { (response: DataResponse<CDYelpBusiness>) in
                 
@@ -248,7 +262,7 @@ public class CDYelpAPIClient: NSObject {
                              completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API reviews endpoint.")
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
         
             let params = Parameters.reviewsParameters(withLocale: locale)
             
@@ -274,7 +288,7 @@ public class CDYelpAPIClient: NSObject {
             latitude != nil &&
             longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion V3 Developers API autocomplete endpoint.")
         
-        if self.isAuthorized() == true {
+        if self.isAuthenticated() == true {
             
             let params = Parameters.autocompleteParameters(withText: text,
                                                            latitude: latitude,
