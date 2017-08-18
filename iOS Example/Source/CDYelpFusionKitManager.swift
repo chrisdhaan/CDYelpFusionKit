@@ -32,11 +32,11 @@ final class CDYelpFusionKitManager: NSObject {
     
     static let shared = CDYelpFusionKitManager()
     
-    var yelpAPIClient: CDYelpAPIClient!
+    var apiClient: CDYelpAPIClient!
     
     func configure() {
         // How to authorize using your clientId and clientSecret
-        self.yelpAPIClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
-                                             clientSecret: "YOUR_CLIENT_SECRET")
+        self.apiClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
+                                         clientSecret: "YOUR_CLIENT_SECRET")
     }
 }

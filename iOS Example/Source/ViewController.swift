@@ -42,21 +42,21 @@ class ViewController: UIViewController {
 
     // MARK: - Button Methods
     @IBAction func searchButtonPressed(_ sender: UIButton) {
-        CDYelpFusionKitManager.shared.yelpAPIClient.cancelAllPendingAPIRequests()
-        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byTerm: "Food",
-                                                                     location: "San Francisco",
-                                                                     latitude: nil,
-                                                                     longitude: nil,
-                                                                     radius: 10000,
-                                                                     categories: nil,
-                                                                     locale: .english_unitedStates,
-                                                                     limit: 5,
-                                                                     offset: 0,
-                                                                     sortBy: .rating,
-                                                                     priceTiers: nil,
-                                                                     openNow: true,
-                                                                     openAt: nil,
-                                                                     attributes: nil) { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
+        CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byTerm: "Food",
+                                                                 location: "San Francisco",
+                                                                 latitude: nil,
+                                                                 longitude: nil,
+                                                                 radius: 10000,
+                                                                 categories: nil,
+                                                                 locale: .english_unitedStates,
+                                                                 limit: 5,
+                                                                 offset: 0,
+                                                                 sortBy: .rating,
+                                                                 priceTiers: nil,
+                                                                 openNow: true,
+                                                                 openAt: nil,
+                                                                 attributes: nil) { (response, error) in
             
             if let response = response,
                 let businesses = response.businesses,
@@ -65,7 +65,7 @@ class ViewController: UIViewController {
             }
         }
         
-        CDYelpFusionKitManager.shared.yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error) in
             
             if let response = response,
                 let businesses = response.businesses,
@@ -74,10 +74,10 @@ class ViewController: UIViewController {
             }
         }
         
-        CDYelpFusionKitManager.shared.yelpAPIClient.searchTransactions(byType: .foodDelivery,
-                                                                       location: "San Francisco",
-                                                                       latitude: nil,
-                                                                       longitude: nil) { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.searchTransactions(byType: .foodDelivery,
+                                                                   location: "San Francisco",
+                                                                   latitude: nil,
+                                                                   longitude: nil) { (response, error) in
             
             if let response = response,
                 let businesses = response.businesses,
@@ -86,15 +86,15 @@ class ViewController: UIViewController {
             }
         }
         
-        CDYelpFusionKitManager.shared.yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (business, error) in
+        CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (business, error) in
             
             if let business = business {
                 print(business)
             }
         }
         
-        CDYelpFusionKitManager.shared.yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                 locale: nil) { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
+                                                             locale: nil) { (response, error) in
             
             if let response = response,
                 let reviews = response.reviews,
@@ -103,10 +103,10 @@ class ViewController: UIViewController {
             }
         }
         
-        CDYelpFusionKitManager.shared.yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
-                                                                           latitude: 37.786572,
-                                                                           longitude: -122.415192,
-                                                                           locale: nil) { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Hut",
+                                                                       latitude: 37.786572,
+                                                                       longitude: -122.415192,
+                                                                       locale: nil) { (response, error) in
             
             if let response = response,
                 let businesses = response.businesses,

@@ -93,11 +93,7 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: Bool
     ///
     public func isAuthenticated() -> Bool {
-        if self.oAuthClient.isAuthorized() {
-            return true
-        } else {
-            return false
-        }
+        return self.oAuthClient.isAuthorized()
     }
     
     ///

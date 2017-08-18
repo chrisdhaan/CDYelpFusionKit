@@ -30,8 +30,8 @@ import AlamofireObjectMapper
 
 class CDYelpOAuthClient: NSObject {
     
-    private let clientId: String
-    private let clientSecret: String
+    private let clientId: String!
+    private let clientSecret: String!
     
     // MARK: - Initializers
     
