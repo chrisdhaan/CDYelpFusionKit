@@ -1075,9 +1075,28 @@ public enum CDYelpCategoryFilter: String {
     case taxOffice                          = "taxoffice"
     case townHall                           = "townhall"
     
-    // TODO: -
     // Real Estate
     case realEstate             = "realestate"
+    case apartments             = "apartments"
+    case artSpaceRentals        = "artspacerentals"
+    case commercialRealEstate   = "commercialrealestate"
+    case condominiums           = "condominiums"
+    case estateLiquidation      = "estateliquidation"
+    case homeDevelopers         = "homedevelopers"
+    case homeStaging            = "homestaging"
+    case homeownerAssociation   = "homeownerassociation"
+    case housingCooperatives    = "housingcooperatives"
+    case kitchenIncubators      = "kitchenincubators"
+    case mobileHomeDealers      = "mobilehomes"
+    case mobileHomeParks        = "mobileparks"
+    case mortgageBrokers        = "mortgagebrokers"
+    case propertyManagement     = "propertymgmt"
+    case realEstateAgents       = "realestateagents"
+    case realEstateServices     = "realestatesvcs"
+    case landSurveying          = "landsurveying"
+    case realEstatePhotography  = "estatephotography"
+    case sharedOfficeSpaces     = "sharedofficespaces"
+    case universityHousing      = "university_housing"
     
     // Religious Organizations
     case religiousOrganizations = "religiousorgs"
