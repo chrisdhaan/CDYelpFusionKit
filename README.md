@@ -43,6 +43,9 @@ This framework is currently in development. As of release 0.9.0 the code is stab
   - [ ] Business Match
   - [x] Reviews
   - [x] Autocomplete
+  - [ ] Event Lookup
+  - [ ] Event Search
+  - [ ] Featured Event
 - [ ] Deep Linking
 - [ ] Complete CDYelpCategoryFilter Mapping
 - [ ] Documentation
