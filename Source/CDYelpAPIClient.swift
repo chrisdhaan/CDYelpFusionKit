@@ -186,6 +186,15 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns a list of businesses based on the provided phone number. It is possible for more than one businesses having the same phone number (for example, chain stores with the same +1 800 phone number). At this time, this endpoint does not return businesses without any reviews.
+    ///
+    /// - parameters:
+    ///   - byPhoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API phone search endpoint response or error can be parsed.
+    ///
+    /// - returns: (CDYelpSearchResponse?, Error?) -> Void
+    ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
                                  completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
         assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion V3 Developers API phone endpoint.")
@@ -207,6 +216,18 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns a list of businesses which support certain transactions. At this time, this endpoint does not return businesses without any reviews. Currently, this endpoint only supports food delivery in the US.
+    ///
+    /// - parameters:
+    ///   - byType: (**Required**) A transaction type for the Yelp Fusion API to query.
+    ///   - latitude: (**Required when location isn't provided**) The latitude of the location you want delivery from.
+    ///   - longitude: (**Required when location isn't provided**) The longitude of the location you want delivery from.
+    ///   - location: (**Required when latitude and longitude aren't provided**) The address of the location you want delivery from.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API transactions endpoint response or error can be parsed.
+    ///
+    /// - returns: (CDYelpSearchResponse?, Error?) -> Void
+    ///
     public func searchTransactions(byType type: CDYelpTransactionType!,
                                    location: String?,
                                    latitude: Double?,
@@ -234,6 +255,15 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns the detail information of a business. To get a business id, refer to **searchBusinesses(byTerm: )**, **searchBusinesses(byPhoneNumber: )**, **searchTransactions(byType: )** or **autocompleteBusinesses(byText: )**. To get review information for a business, refer to **fetchReviews(forBusinessId: )**. At this time, this endpoint does not return businesses without any reviews.
+    ///
+    /// - parameters:
+    ///   - byId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API business endpoint response or error can be parsed.
+    ///
+    /// - returns: (CDYelpBusiness?, Error?) -> Void
+    ///
     public func fetchBusiness(byId id: String!,
                               completion: @escaping (CDYelpBusiness?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API business endpoint.")
@@ -253,6 +283,16 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns the up to three reviews for a business.
+    ///
+    /// - parameters:
+    ///   - forBusinessId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - locale: (Optional) The interface locale; this determines the language for the reviews to return.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API reviews endpoint response or error can be parsed.
+    ///
+    /// - returns: (CDYelpReviewsResponse?, Error?) -> Void
+    ///
     public func fetchReviews(forBusinessId id: String!,
                              locale: CDYelpLocale?,
                              completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void) {
@@ -275,6 +315,18 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns autocomplete suggestions for search keywords, businesses and categories, based on the input text.
+    ///
+    /// - parameters:
+    ///   - byText: (**Required**) The text for the Yelp Fusion API to query.
+    ///   - latitude: (**Required**) The latitude of the location to look for business autocomplete suggestions.
+    ///   - longitude: (**Required**) The longitude of the location to look for business autocomplete suggestions.
+    ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API autocomplete endpoint response or error can be parsed.
+    ///
+    /// - returns: (CDYelpAutoCompleteResponse?, Error?) -> Void
+    ///
     public func autocompleteBusinesses(byText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
@@ -304,6 +356,11 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// Cancels any in progress or pending API requests.
+    ///
+    /// - returns: Void
+    ///
     public func cancelAllPendingAPIRequests() {
         self.manager.session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) in
             dataTasks.forEach { $0.cancel() }
