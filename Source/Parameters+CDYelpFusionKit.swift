@@ -146,6 +146,17 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return params
     }
     
+    static func businessParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let locale = locale,
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
+        }
+        
+        return params
+    }
+    
     static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
         

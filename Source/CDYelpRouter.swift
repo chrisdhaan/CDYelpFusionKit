@@ -32,7 +32,7 @@ enum CDYelpRouter: URLRequestConvertible {
     case search(parameters: Parameters)
     case phone(parameters: Parameters)
     case transactions(type: String, parameters: Parameters)
-    case business(id: String)
+    case business(id: String, parameters: Parameters)
     case reviews(id: String, parameters: Parameters)
     case autocomplete(parameters: Parameters)
     
@@ -41,7 +41,7 @@ enum CDYelpRouter: URLRequestConvertible {
         case .search(parameters: _),
              .phone(parameters: _),
              .transactions(type: _, parameters: _),
-             .business(id: _),
+             .business(id: _, parameters: _),
              .reviews(id: _, parameters: _),
              .autocomplete(parameters: _):
             return .get
@@ -56,7 +56,7 @@ enum CDYelpRouter: URLRequestConvertible {
             return "businesses/search/phone"
         case .transactions(let type, parameters: _):
             return "transactions/\(type)/search"
-        case .business(let id):
+        case .business(let id, parameters: _):
             return "businesses/\(id)"
         case .reviews(let id, parameters: _):
             return "businesses/\(id)/reviews"
@@ -75,11 +75,10 @@ enum CDYelpRouter: URLRequestConvertible {
         case .search(let parameters),
              .phone(let parameters),
              .transactions(type: _, let parameters),
+             .business(id: _, let parameters),
              .reviews(id: _, let parameters),
              .autocomplete(let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
-        case .business(id: _):
-            urlRequest = try URLEncoding.default.encode(urlRequest, with: nil)
         }
         
         return urlRequest

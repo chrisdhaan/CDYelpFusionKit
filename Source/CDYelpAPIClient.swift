@@ -265,12 +265,15 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: (CDYelpBusiness?, Error?) -> Void
     ///
     public func fetchBusiness(byId id: String!,
+                              locale: CDYelpLocale?,
                               completion: @escaping (CDYelpBusiness?, Error?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API business endpoint.")
         
         if self.isAuthenticated() == true {
         
-            self.manager.request(CDYelpRouter.business(id: id)).responseObject { (response: DataResponse<CDYelpBusiness>) in
+            let params = Parameters.businessParameters(withLocale: locale)
+            
+            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusiness>) in
                 
                 switch response.result {
                 case .success(let business):

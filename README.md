@@ -47,7 +47,8 @@ This framework is currently in development. As of release 0.9.0 the code is stab
   - [ ] Event Search
   - [ ] Featured Event
 - [ ] Deep Linking
-- [ ] Complete CDYelpCategoryFilter Mapping
+- [x] Complete CDYelpCategoryFilter Mapping
+- [ ] Swift 4
 - [ ] Documentation
 
 ---
@@ -353,14 +354,16 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 ### [Business Endpoint](https://www.yelp.com/developers/documentation/v3/business)
 
 ```swift
-public func fetchBusiness(byId id: String!, // Required
+public func fetchBusiness(byId id: String!,      // Required
+                          locale: CDYelpLocale?, // Optional
                           completion: @escaping (CDYelpBusiness?, Error?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
-yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (business, error) in
+yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco"
+                            locale: nil) { (business, error) in
             
   if let business = business {
       print(business)

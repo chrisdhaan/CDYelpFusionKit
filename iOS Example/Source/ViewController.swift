@@ -86,7 +86,8 @@ class ViewController: UIViewController {
             }
         }
         
-        CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco") { (business, error) in
+        CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco",
+                                                              locale: nil) { (business, error) in
             
             if let business = business {
                 print(business)
