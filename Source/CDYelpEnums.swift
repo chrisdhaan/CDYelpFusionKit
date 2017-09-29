@@ -1418,7 +1418,6 @@ public enum CDYelpCategoryFilter: String {
     case wraps                      = "wraps"
     case yugoslav                   = "yugoslav"
     
-    // TODO: -
     // Shopping
     case shopping               = "shopping"
     case adult                  = "adult"

@@ -26,12 +26,6 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 ---
 
-## Pre-Release Software
-
-This framework is currently in development. As of release 0.9.0 the code is stable and in a usable state to install in applications. But be aware that breaking changes may occur until 1.0.0 is released.
-
----
-
 ## Features
 
 - [x] Authentication
@@ -48,7 +42,6 @@ This framework is currently in development. As of release 0.9.0 the code is stab
   - [ ] Featured Event
 - [ ] Deep Linking
 - [x] Complete CDYelpCategoryFilter Mapping
-- [ ] Swift 4
 - [ ] Documentation
 
 ---
@@ -83,9 +76,6 @@ gem install cocoapods
 To integrate CDYelpFusionKit into your Xcode project using CocoaPods, simply add the following line to your Podfile:
 
 ```ruby
-# use this line to install CDYelpFusionKit while in development
-pod "CDYelpFusionKit", :git => "https://github.com/chrisdhaan/CDYelpFusionKit"
-# this line will eventually be used upon the 1.0.0 release of CDYelpFusionKit and can be disregarded for now
 pod "CDYelpFusionKit" "~> 1.0.0"
 ```
 
@@ -109,9 +99,6 @@ brew install carthage
 To integrate CDYelpFusionKit into your Xcode project using Carthage, simply add the following line to your Cartfile:
 
 ```ruby
-# use this line to install CDYelpFusionKit while in development
-github "chrisdhaan/CDYelpFusionKit"
-# this line will eventually be used upon the 1.0.0 release of CDYelpFusionKit and can be disregarded for now
 github "chrisdhaan/CDYelpFusionKit" ~> 1.0.0
 ```
 
@@ -199,6 +186,12 @@ public func searchBusinesses(byTerm term: String?,                 // Optional
                              openAt: Int?,                         // Optional
                              attributes: [CDYelpAttributeFilter]?, // Optional
                              completion: @escaping (CDYelpSearchResponse?, Error?) -> Void);
+```
+
+The Search API has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
+
+```swift
+CDYelpCategoryFilter.activeLife
 ```
 
 The Search API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. The following lines of code show which locales can be passed into the `locale` parameter.
