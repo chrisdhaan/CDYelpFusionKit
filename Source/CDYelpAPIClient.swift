@@ -64,7 +64,7 @@ public class CDYelpAPIClient: NSObject {
         assert((clientId != nil && clientId != "") &&
             (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
         self.oAuthClient = CDYelpOAuthClient(clientId: clientId,
-                                        clientSecret: clientSecret)
+                                             clientSecret: clientSecret)
         super.init()
         self.authenticate()
     }
@@ -128,9 +128,9 @@ public class CDYelpAPIClient: NSObject {
     ///   - openNow: (Optional) When set to true, only businesses open at the current time will be returned. The default value is false. **Notice that open_at and open_now cannot be used together**.
     ///   - openAt: (Optional) An integer representing the Unix time in the same timezone of the search location. If specified, only businesses open at the given time will be returned. **Notice that open_at and open_now cannot be used together**.
     ///   - attributes: (Optional) Additional filters to restrict search results. Use the **CDYelpAttributeFilter** enum to get the list of supported attribute filters. `attributes` can be an array of attributes. If multiple attributes are used, only businesses that satisfy ALL attributes will be returned in search results (e.g. the attributes [.hotAndNew, .cashback] will return businesses that are Hot and New AND offer Cash Back).
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API search endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API search endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpSearchResponse?, Error?) -> Void
+    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchBusinesses(byTerm term: String?,
                                  location: String?,
@@ -146,7 +146,7 @@ public class CDYelpAPIClient: NSObject {
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?,
-                                 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion V3 Developers API search endpoint.")
         if let radius = radius {
@@ -177,10 +177,13 @@ public class CDYelpAPIClient: NSObject {
 
                 switch response.result {
                 case .success(let searchResponse):
-                    completion(searchResponse, nil)
+                    if let error = searchResponse.error {
+                        print("searchBusinesses(byTerm) error: ", error.description ?? "")
+                    }
+                    completion(searchResponse)
                 case .failure(let error):
                     print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
                 }
             }
         }
@@ -191,12 +194,12 @@ public class CDYelpAPIClient: NSObject {
     ///
     /// - parameters:
     ///   - byPhoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API phone search endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API phone search endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpSearchResponse?, Error?) -> Void
+    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
-                                 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion V3 Developers API phone endpoint.")
         
         if self.isAuthenticated() == true {
@@ -207,10 +210,13 @@ public class CDYelpAPIClient: NSObject {
                 
                 switch response.result {
                 case .success(let searchResponse):
-                    completion(searchResponse, nil)
+                    if let error = searchResponse.error {
+                        print("searchBusinesses(byPhone) error: ", error.description ?? "")
+                    }
+                    completion(searchResponse)
                 case .failure(let error):
                     print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
                 }
             }
         }
@@ -224,15 +230,15 @@ public class CDYelpAPIClient: NSObject {
     ///   - latitude: (**Required when location isn't provided**) The latitude of the location you want delivery from.
     ///   - longitude: (**Required when location isn't provided**) The longitude of the location you want delivery from.
     ///   - location: (**Required when latitude and longitude aren't provided**) The address of the location you want delivery from.
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API transactions endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API transactions endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpSearchResponse?, Error?) -> Void
+    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchTransactions(byType type: CDYelpTransactionType!,
                                    location: String?,
                                    latitude: Double?,
                                    longitude: Double?,
-                                   completion: @escaping (CDYelpSearchResponse?, Error?) -> Void) {
+                                   completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion V3 Developers API transactions endpoint.")
         
@@ -246,10 +252,13 @@ public class CDYelpAPIClient: NSObject {
                 
                 switch response.result {
                 case .success(let searchResponse):
-                    completion(searchResponse, nil)
+                    if let error = searchResponse.error {
+                        print("searchTransactions(byType) error: ", error.description ?? "")
+                    }
+                    completion(searchResponse)
                 case .failure(let error):
                     print("searchTransactions(byType) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
                 }
             }
         }
@@ -260,27 +269,137 @@ public class CDYelpAPIClient: NSObject {
     ///
     /// - parameters:
     ///   - byId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API business endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API business endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpBusiness?, Error?) -> Void
+    /// - returns: (CDYelpBusinessResponse?) -> Void
     ///
     public func fetchBusiness(byId id: String!,
                               locale: CDYelpLocale?,
-                              completion: @escaping (CDYelpBusiness?, Error?) -> Void) {
+                              completion: @escaping (CDYelpBusinessResponse?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API business endpoint.")
         
         if self.isAuthenticated() == true {
         
             let params = Parameters.businessParameters(withLocale: locale)
             
-            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusiness>) in
+            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusinessResponse>) in
                 
                 switch response.result {
-                case .success(let business):
-                    completion(business, nil)
+                case .success(let businessResponse):
+                    if let error = businessResponse.error {
+                        print("fetchBusiness(byId) error: ", error.description ?? "")
+                    }
+                    completion(businessResponse)
                 case .failure(let error):
                     print("fetchBusiness(byId) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    ///
+    /// Text
+    ///
+    /// - parameters:
+    ///   - byName: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API business endpoint response can be parsed.
+    ///
+    /// - returns: (CDYelpBusinessResponse?) -> Void
+    ///
+    public func fetchBusinessUsingBestMatch(byName name: String!,
+                                            addressOne: String?,
+                                            addressTwo: String?,
+                                            addressThree: String?,
+                                            city: String!,
+                                            state: String!,
+                                            country: String!,
+                                            latitude: Double?,
+                                            longitude: Double?,
+                                            phone: String?,
+                                            postalCode: String?,
+                                            yelpBusinessId: String?,
+                                            completion: @escaping (CDYelpBusinessResponse?) -> Void) {
+        assert((name != nil && name != ""), "A name is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((city != nil && city != ""), "A city is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((state != nil && state != ""), "A state is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((country != nil && country != ""), "A country is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        
+        if self.isAuthenticated() == true {
+            
+            let params = Parameters.bestMatch(withName: name,
+                                              addressOne: addressOne,
+                                              addressTwo: addressTwo,
+                                              addressThree: addressThree,
+                                              city: city,
+                                              state: state,
+                                              country: country,
+                                              latitude: latitude,
+                                              longitude: longitude,
+                                              phone: phone,
+                                              postalCode: postalCode,
+                                              yelpBusinessId: yelpBusinessId)
+            
+            self.manager.request(CDYelpRouter.bestMatch(parameters: params)).responseObject { (response: DataResponse<CDYelpBusinessResponse>) in
+                
+                switch response.result {
+                case .success(let businessResponse):
+                    if let error = businessResponse.error {
+                        print("fetchBusinessUsingBestMatch(byName) error: ", error.description ?? "")
+                    }
+                    completion(businessResponse)
+                case .failure(let error):
+                    print("fetchBusinessUsingBestMatch(byName) failure: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    public func searchBusinessesUsingLookupMatch(byName name: String!,
+                                                 addressOne: String?,
+                                                 addressTwo: String?,
+                                                 addressThree: String?,
+                                                 city: String!,
+                                                 state: String!,
+                                                 country: String!,
+                                                 latitude: Double?,
+                                                 longitude: Double?,
+                                                 phone: String?,
+                                                 postalCode: String?,
+                                                 yelpBusinessId: String?,
+                                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
+        assert((name != nil && name != ""), "A name is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((city != nil && city != ""), "A city is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((state != nil && state != ""), "A state is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        assert((country != nil && country != ""), "A country is required to query the Yelp Fusion V3 Developers API business match endpoint.")
+        
+        if self.isAuthenticated() == true {
+            
+            let params = Parameters.lookupMatch(withName: name,
+                                                addressOne: addressOne,
+                                                addressTwo: addressTwo,
+                                                addressThree: addressThree,
+                                                city: city,
+                                                state: state,
+                                                country: country,
+                                                latitude: latitude,
+                                                longitude: longitude,
+                                                phone: phone,
+                                                postalCode: postalCode,
+                                                yelpBusinessId: yelpBusinessId)
+            
+            self.manager.request(CDYelpRouter.lookupMatch(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+                
+                switch response.result {
+                case .success(let searchResponse):
+                    if let error = searchResponse.error {
+                        print("searchBusinessesUsingLookupMatch(byName) error: ", error.description ?? "")
+                    }
+                    completion(searchResponse)
+                case .failure(let error):
+                    print("searchBusinessesUsingLookupMatch(byName) failure: ", error.localizedDescription)
+                    completion(nil)
                 }
             }
         }
@@ -292,13 +411,13 @@ public class CDYelpAPIClient: NSObject {
     /// - parameters:
     ///   - forBusinessId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - locale: (Optional) The interface locale; this determines the language for the reviews to return.
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API reviews endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API reviews endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpReviewsResponse?, Error?) -> Void
+    /// - returns: (CDYelpReviewsResponse?) -> Void
     ///
     public func fetchReviews(forBusinessId id: String!,
                              locale: CDYelpLocale?,
-                             completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void) {
+                             completion: @escaping (CDYelpReviewsResponse?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion V3 Developers API reviews endpoint.")
         
         if self.isAuthenticated() == true {
@@ -309,10 +428,13 @@ public class CDYelpAPIClient: NSObject {
                 
                 switch response.result {
                 case .success(let reviewsResponse):
-                    completion(reviewsResponse, nil)
+                    if let error = reviewsResponse.error {
+                        print("fetchReviews(forBusinessId) error: ", error.description ?? "")
+                    }
+                    completion(reviewsResponse)
                 case .failure(let error):
                     print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
                 }
             }
         }
@@ -326,15 +448,15 @@ public class CDYelpAPIClient: NSObject {
     ///   - latitude: (**Required**) The latitude of the location to look for business autocomplete suggestions.
     ///   - longitude: (**Required**) The longitude of the location to look for business autocomplete suggestions.
     ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
-    ///   - completion: A completion block in which Yelp Fusion V3 Developers API autocomplete endpoint response or error can be parsed.
+    ///   - completion: A completion block in which Yelp Fusion V3 Developers API autocomplete endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpAutoCompleteResponse?, Error?) -> Void
+    /// - returns: (CDYelpAutoCompleteResponse?) -> Void
     ///
     public func autocompleteBusinesses(byText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
                                        locale: CDYelpLocale?,
-                                       completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void) {
+                                       completion: @escaping (CDYelpAutoCompleteResponse?) -> Void) {
         assert((text != nil && text != "") &&
             latitude != nil &&
             longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion V3 Developers API autocomplete endpoint.")
@@ -350,10 +472,13 @@ public class CDYelpAPIClient: NSObject {
                 
                 switch response.result {
                 case .success(let autocompleteResponse):
-                    completion(autocompleteResponse, nil)
+                    if let error = autocompleteResponse.error {
+                        print("autocompleteBusinesses(byText) error: ", error.description ?? "")
+                    }
+                    completion(autocompleteResponse)
                 case .failure(let error):
                     print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
-                    completion(nil, error)
+                    completion(nil)
                 }
             }
         }

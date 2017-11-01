@@ -1,6 +1,15 @@
 ## [1.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.0.0)
-Released on 2017-05-07.
+## Authentication and API Endpoints
+Released on 2017-09-28.
 
-#### Added
-- Initial release of CDYelpFusionKit.
-  - Added by [Christopher de Haan](https://github.com/chrisdhaan).
+### Added
+
+- [x] Authentication
+- [x] API Endpoints
+    - [x] Search
+    - [x] Phone Search
+    - [x] Transaction Search
+    - [x] Business
+    - [x] Reviews
+    - [x] Autocomplete
+- [x] Complete CDYelpCategoryFilter Mapping

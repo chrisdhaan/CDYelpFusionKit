@@ -157,6 +157,134 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return params
     }
     
+    static func bestMatch(withName name: String!,
+                          addressOne: String?,
+                          addressTwo: String?,
+                          addressThree: String?,
+                          city: String!,
+                          state: String!,
+                          country: String!,
+                          latitude: Double?,
+                          longitude: Double?,
+                          phone: String?,
+                          postalCode: String?,
+                          yelpBusinessId: String?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let name = name,
+            name != "" {
+            params["name"] = name
+        }
+        if let addressOne = addressOne,
+            addressOne != "" {
+            params["address1"] = addressOne
+        }
+        if let addressTwo = addressTwo,
+            addressTwo != "" {
+            params["address2"] = addressTwo
+        }
+        if let addressThree = addressThree,
+            addressThree != "" {
+            params["address3"] = addressThree
+        }
+        if let city = city,
+            city != "" {
+            params["city"] = city
+        }
+        if let state = state,
+            state != "" {
+            params["state"] = state
+        }
+        if let country = country,
+            country != "" {
+            params["country"] = country
+        }
+        if let latitude = latitude {
+            params["latitude"] = latitude
+        }
+        if let longitude = longitude {
+            params["longitude"] = longitude
+        }
+        if let phone = phone,
+            phone != "" {
+            params["phone"] = phone
+        }
+        if let postalCode = postalCode,
+            postalCode != "" {
+            params["postal_code"] = postalCode
+        }
+        if let yelpBusinessId = yelpBusinessId,
+            yelpBusinessId != "" {
+            params["yelp_business_id"] = yelpBusinessId
+        }
+        
+        return params
+    }
+    
+    static func lookupMatch(withName name: String!,
+                            addressOne: String?,
+                            addressTwo: String?,
+                            addressThree: String?,
+                            city: String!,
+                            state: String!,
+                            country: String!,
+                            latitude: Double?,
+                            longitude: Double?,
+                            phone: String?,
+                            postalCode: String?,
+                            yelpBusinessId: String?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let name = name,
+            name != "" {
+            params["name"] = name
+        }
+        if let addressOne = addressOne,
+            addressOne != "" {
+            params["address1"] = addressOne
+        }
+        if let addressTwo = addressTwo,
+            addressTwo != "" {
+            params["address2"] = addressTwo
+        }
+        if let addressThree = addressThree,
+            addressThree != "" {
+            params["address3"] = addressThree
+        }
+        if let city = city,
+            city != "" {
+            params["city"] = city
+        }
+        if let state = state,
+            state != "" {
+            params["state"] = state
+        }
+        if let country = country,
+            country != "" {
+            params["country"] = country
+        }
+        if let latitude = latitude {
+            params["latitude"] = latitude
+        }
+        if let longitude = longitude {
+            params["longitude"] = longitude
+        }
+        if let phone = phone,
+            phone != "" {
+            params["phone"] = phone
+        }
+        if let postalCode = postalCode,
+            postalCode != "" {
+            params["postal_code"] = postalCode
+        }
+        if let yelpBusinessId = yelpBusinessId,
+            yelpBusinessId != "" {
+            params["yelp_business_id"] = yelpBusinessId
+        }
+        
+        return params
+    }
+    
     static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
         

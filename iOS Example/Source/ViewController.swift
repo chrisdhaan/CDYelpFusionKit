@@ -56,16 +56,16 @@ class ViewController: UIViewController {
                                                                  priceTiers: nil,
                                                                  openNow: true,
                                                                  openAt: nil,
-                                                                 attributes: nil) { (response, error) in
-            
-            if let response = response,
-                let businesses = response.businesses,
-                businesses.count > 0 {
-                print(businesses)
-            }
+                                                                 attributes: nil) { (response) in
+                                                                    
+                                                                    if let response = response,
+                                                                        let businesses = response.businesses,
+                                                                        businesses.count > 0 {
+                                                                        print(businesses)
+                                                                    }
         }
         
-        CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error) in
+        CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
             
             if let response = response,
                 let businesses = response.businesses,
@@ -77,44 +77,81 @@ class ViewController: UIViewController {
         CDYelpFusionKitManager.shared.apiClient.searchTransactions(byType: .foodDelivery,
                                                                    location: "San Francisco",
                                                                    latitude: nil,
-                                                                   longitude: nil) { (response, error) in
-            
-            if let response = response,
-                let businesses = response.businesses,
-                businesses.count > 0 {
-                print(businesses)
-            }
+                                                                   longitude: nil) { (response) in
+                                                                    
+                                                                    if let response = response,
+                                                                        let businesses = response.businesses,
+                                                                        businesses.count > 0 {
+                                                                        print(businesses)
+                                                                    }
         }
         
         CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco",
-                                                              locale: nil) { (business, error) in
-            
-            if let business = business {
-                print(business)
-            }
+                                                              locale: nil) { (businessResponse) in
+                                                                
+                                                                if let business = businessResponse?.business {
+                                                                    print(business)
+                                                                }
+        }
+        
+        CDYelpFusionKitManager.shared.apiClient.fetchBusinessUsingBestMatch(byName: "Taco",
+                                                                            addressOne: nil,
+                                                                            addressTwo: nil,
+                                                                            addressThree: nil,
+                                                                            city: "San Francisco",
+                                                                            state: "CA",
+                                                                            country: "US",
+                                                                            latitude: nil,
+                                                                            longitude: nil,
+                                                                            phone: nil,
+                                                                            postalCode: nil,
+                                                                            yelpBusinessId: nil) { (businessResponse) in
+                                                                                
+                                                                                if let business = businessResponse?.business {
+                                                                                    print(business)
+                                                                                }
+        }
+        
+        CDYelpFusionKitManager.shared.apiClient.searchBusinessesUsingLookupMatch(byName: "Taco",
+                                                                                 addressOne: nil,
+                                                                                 addressTwo: nil,
+                                                                                 addressThree: nil,
+                                                                                 city: "San Francisco",
+                                                                                 state: "CA",
+                                                                                 country: "US",
+                                                                                 latitude: nil,
+                                                                                 longitude: nil,
+                                                                                 phone: nil,
+                                                                                 postalCode: nil,
+                                                                                 yelpBusinessId: nil) { (response) in
+                                                                                    
+                                                                                    if let response = response,
+                                                                                        let businesses = response.businesses,
+                                                                                        businesses.count > 0 {
+                                                                                        print(businesses)
+                                                                                    }
         }
         
         CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
-                                                             locale: nil) { (response, error) in
-            
-            if let response = response,
-                let reviews = response.reviews,
-                reviews.count > 0 {
-                print(reviews)
-            }
+                                                             locale: nil) { (response) in
+                                                                
+                                                                if let response = response,
+                                                                    let reviews = response.reviews,
+                                                                    reviews.count > 0 {
+                                                                    print(reviews)
+                                                                }
         }
         
         CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Hut",
                                                                        latitude: 37.786572,
                                                                        longitude: -122.415192,
-                                                                       locale: nil) { (response, error) in
-            
-            if let response = response,
-                let businesses = response.businesses,
-                businesses.count > 0 {
-                print(businesses)
-            }
+                                                                       locale: nil) { (response) in
+                                                                        
+                                                                        if let response = response,
+                                                                            let businesses = response.businesses,
+                                                                            businesses.count > 0 {
+                                                                            print(businesses)
+                                                                        }
         }
     }
 }
-

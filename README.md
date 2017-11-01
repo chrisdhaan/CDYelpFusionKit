@@ -34,14 +34,13 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [x] Phone Search
   - [x] Transaction Search
   - [x] Business
-  - [ ] Business Match
+  - [x] Business Match
   - [x] Reviews
   - [x] Autocomplete
   - [ ] Event Lookup
   - [ ] Event Search
   - [ ] Featured Event
 - [ ] Deep Linking
-- [x] Complete CDYelpCategoryFilter Mapping
 - [ ] Documentation
 
 ---
@@ -185,7 +184,7 @@ public func searchBusinesses(byTerm term: String?,                 // Optional
                              openNow: Bool?,                       // Optional - Default = false
                              openAt: Int?,                         // Optional
                              attributes: [CDYelpAttributeFilter]?, // Optional
-                             completion: @escaping (CDYelpSearchResponse?, Error?) -> Void);
+                             completion: @escaping (CDYelpSearchResponse?) -> Void);
 ```
 
 The Search API has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
@@ -288,7 +287,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
                                priceTiers: [.oneDollarSign, .twoDollarSigns],
                                openNow: true,
                                openAt: nil,
-                               attributes: nil) { (response, error) in
+                               attributes: nil) { (response) in
             
   if let response = response,
       let businesses = response.businesses,
@@ -302,13 +301,13 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 
 ```swift
 public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
-                                 completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
+                                 completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Phone Search API.
 
 ```swift
-yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response, error) in
+yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
             
   if let response = response,
       let businesses = response.businesses,
@@ -325,7 +324,7 @@ public func searchTransactions(byType type: CDYelpTransactionType!, // Required
                               location: String?,                    // Optional
                               latitude: Double?,                    // Optional
                               longitude: Double?,                   // Optional
-                              completion: @escaping (CDYelpSearchResponse?, Error?) -> Void)
+                              completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Transaction Search API.
@@ -334,7 +333,7 @@ The following lines of code show an example query to the Yelp Fusion Transaction
 yelpAPIClient.searchTransactions(byType: .foodDelivery,
                                  location: "San Francisco",
                                  latitude: nil,
-                                 longitude: nil) { (response, error) in
+                                 longitude: nil) { (response) in
             
   if let response = response,
       let businesses = response.businesses,
@@ -349,26 +348,37 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 ```swift
 public func fetchBusiness(byId id: String!,      // Required
                           locale: CDYelpLocale?, // Optional
-                          completion: @escaping (CDYelpBusiness?, Error?) -> Void)
+                          completion: @escaping (CDYelpBusiness?) -> Void)
 ```
 
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
 yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco"
-                            locale: nil) { (business, error) in
+                            locale: nil) { (business) in
             
   if let business = business {
       print(business)
   }
 }
 ```
+
+### [Business Match Endpoint](https://www.yelp.com/developers/documentation/v3/business_match)
+
+```swift
+```
+
+The following lines of code show an example query to the Yelp Fusion Business API.
+
+```swift
+```
+
 ### [Reviews Endpoint](https://www.yelp.com/developers/documentation/v3/business_reviews)
 
 ```swift
 public func fetchReviews(forBusinessId id: String!, // Required
                          locale: CDYelpLocale?,     // Optional
-                         completion: @escaping (CDYelpReviewsResponse?, Error?) -> Void)
+                         completion: @escaping (CDYelpReviewsResponse?) -> Void)
 ```
 
 The Reviews API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
@@ -377,7 +387,7 @@ The following lines of code show an example query to the Yelp Fusion Business AP
 
 ```swift
 yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
-                           locale: nil) { (reviews, error) in
+                           locale: nil) { (reviews) in
             
   if let response = response,
       let reviews = response.reviews,
@@ -394,7 +404,7 @@ public func autocompleteBusinesses(byText text: String!,  // Required
                                    latitude: Double!,     // Required
                                    longitude: Double!,    // Required
                                    locale: CDYelpLocale?, // Optional
-                                   completion: @escaping (CDYelpAutoCompleteResponse?, Error?) -> Void)
+                                   completion: @escaping (CDYelpAutoCompleteResponse?) -> Void)
 ```
 
 The Autocomplete API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
@@ -405,7 +415,7 @@ The following lines of code show an example query to the Yelp Fusion Business AP
 yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
                                      latitude: 37.786572,
                                      longitude: -122.415192,
-                                     locale: nil) { (response, error) in
+                                     locale: nil) { (response) in
             
   if let response = response,
       let businesses = response.businesses,
