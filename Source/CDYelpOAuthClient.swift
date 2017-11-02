@@ -38,7 +38,7 @@ class CDYelpOAuthClient: NSObject {
     init(clientId: String!,
          clientSecret: String!) {
         assert((clientId != nil && clientId != "") &&
-            (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion V3 Developers API oauth endpoint.")
+            (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion API oauth endpoint.")
         self.clientId = clientId
         self.clientSecret = clientSecret
     }

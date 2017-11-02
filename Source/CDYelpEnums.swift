@@ -1619,6 +1619,14 @@ public enum CDYelpLocale: String {
 }
 
 ///
+/// A list of business match types the Yelp Fusion API supports.
+///
+public enum CDYelpBusinessMatchType: String {
+    case best   = "best"
+    case lookup = "lookup"
+}
+
+///
 /// A list of the price tiers the Yelp Fusion API supports.
 ///
 public enum CDYelpPriceTier: String {
