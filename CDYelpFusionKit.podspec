@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name             = 'CDYelpFusionKit'
-  s.version          = '1.0.0'
-  s.summary          = 'An extensive Swift wrapper for the Yelp Fusion Developers V3 API.'
+  s.version          = '1.1.0'
+  s.summary          = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description      = <<-DESC
-This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion Developers V3 API.
+This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
                        DESC
   s.homepage         = 'https://github.com/chrisdhaan/CDYelpFusionKit'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
