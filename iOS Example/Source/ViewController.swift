@@ -56,7 +56,7 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "EndpointCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CDYelpEndpointCell", for: indexPath)
         
         switch indexPath.row {
         case 0:
@@ -83,7 +83,7 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "API Endpoints"
+            return "Yelp Fusion API Endpoints"
         default:
             return ""
         }
@@ -141,15 +141,15 @@ extension ViewController: UITableViewDelegate {
             }
         case 3:
             CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco",
-                                                                  locale: nil) { (response) in
+                                                                  locale: nil) { (business) in
                                                                     
-                                                                    if let business = response?.business {
+                                                                    if let business = business {
                                                                         print(business)
                                                                     }
             }
         case 4:
             CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byMatchType: .best,
-                                                                     name: "Taco",
+                                                                     name: "Yelp if you need HELP!",
                                                                      addressOne: nil,
                                                                      addressTwo: nil,
                                                                      addressThree: nil,

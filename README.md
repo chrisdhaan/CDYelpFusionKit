@@ -19,6 +19,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Phone Search Endpoint](#phone-search-endpoint)
     - [Transaction Search Endpoint](#transaction-search-endpoint)
     - [Business Endpoint](#business-endpoint)
+    - [Business Match Endpoint](#business-match-endpoint)
     - [Reviews Endpoint](#reviews-endpoint)
     - [Autocomplete Endpoint](#autocomplete-endpoint)
 - [Resources](#resources)
@@ -327,6 +328,12 @@ public func searchTransactions(byType type: CDYelpTransactionType!, // Required
                               completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
+The Transactions API has a `type` parameter which allows for query results to be filtered based off one type of criteria. The following lines of code show which transaction types can be passed into the `byType` parameter.
+
+```swift
+CDYelpTransactionType.foodDelivery
+```
+
 The following lines of code show an example query to the Yelp Fusion Transaction Search API.
 
 ```swift
@@ -366,11 +373,52 @@ yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco"
 ### [Business Match Endpoint](https://www.yelp.com/developers/documentation/v3/business_match)
 
 ```swift
+public func searchBusinesses(byMatchType type: CDYelpBusinessMatchType!, // Required
+                             name: String!,                              // Required
+                             addressOne: String?,                        // Optional
+                             addressTwo: String?,                        // Optional
+                             addressThree: String?,                      // Optional
+                             city: String!,                              // Required
+                             state: String!,                             // Required
+                             country: String!,                           // Required
+                             latitude: Double?,                          // Optional
+                             longitude: Double?,                         // Optional
+                             phone: String?,                             // Optional
+                             postalCode: String?,                        // Optional
+                             yelpBusinessId: String?,                    // Optional
+                             completion: @escaping (CDYelpSearchResponse?) -> Void)
+```
+
+The Business Match API has a `type` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which business match types can be passed into the `byMatchType` parameter.
+
+```swift
+CDYelpBusinessMatchType.best
+CDYelpBusinessMatchType.lookup
 ```
 
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
+yelpAPIClient.fetchBusiness.searchBusinesses(byMatchType: .best,
+                                             name: "Yelp if you need HELP!",
+                                             addressOne: nil,
+                                             addressTwo: nil,
+                                             addressThree: nil,
+                                             city: "San Francisco",
+                                             state: "CA",
+                                             country: "US",
+                                             latitude: nil,
+                                             longitude: nil,
+                                             phone: nil,
+                                             postalCode: nil,
+                                             yelpBusinessId: nil) { (response) in
+
+  if let response = response,
+      let businesses = response.businesses,
+      businesses.count > 0 {
+      print(businesses)
+  }
+}
 ```
 
 ### [Reviews Endpoint](https://www.yelp.com/developers/documentation/v3/business_reviews)

@@ -239,7 +239,7 @@ public class CDYelpAPIClient: NSObject {
                                    latitude: Double?,
                                    longitude: Double?,
                                    completion: @escaping (CDYelpSearchResponse?) -> Void) {
-        assert(type != nil, "A type is required to query the Yelp Fusion API transactions endpoint.")
+        assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
         
@@ -272,25 +272,22 @@ public class CDYelpAPIClient: NSObject {
     ///   - byId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - completion: A completion block in which the Yelp Fusion API business endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpBusinessResponse?) -> Void
+    /// - returns: (CDYelpBusiness?) -> Void
     ///
     public func fetchBusiness(byId id: String!,
                               locale: CDYelpLocale?,
-                              completion: @escaping (CDYelpBusinessResponse?) -> Void) {
+                              completion: @escaping (CDYelpBusiness?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API business endpoint.")
         
         if self.isAuthenticated() == true {
         
             let params = Parameters.businessParameters(withLocale: locale)
             
-            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusinessResponse>) in
+            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusiness>) in
                 
                 switch response.result {
-                case .success(let businessResponse):
-                    if let error = businessResponse.error {
-                        print("fetchBusiness(byId) error: ", error.description ?? "")
-                    }
-                    completion(businessResponse)
+                case .success(let business):
+                    completion(business)
                 case .failure(let error):
                     print("fetchBusiness(byId) failure: ", error.localizedDescription)
                     completion(nil)
@@ -320,7 +317,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     /// - returns: (CDYelpSearchResponse?) -> Void
     ///
-    public func searchBusinesses(byMatchType businessMatchType: CDYelpBusinessMatchType!,
+    public func searchBusinesses(byMatchType type: CDYelpBusinessMatchType!,
                                  name: String!,
                                  addressOne: String?,
                                  addressTwo: String?,
@@ -334,7 +331,7 @@ public class CDYelpAPIClient: NSObject {
                                  postalCode: String?,
                                  yelpBusinessId: String?,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
-        assert(businessMatchType != nil, "A business match type is required to query the Yelp Fusion API business match endpoint.")
+        assert(type != nil, "A business match type is required to query the Yelp Fusion API business match endpoint.")
         assert((name != nil && name != "" && name.characters.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
         if let addressOne = addressOne {
             assert(addressOne.characters.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
@@ -370,7 +367,7 @@ public class CDYelpAPIClient: NSObject {
                                                       postalCode: postalCode,
                                                       yelpBusinessId: yelpBusinessId)
             
-            self.manager.request(CDYelpRouter.matches(type: businessMatchType.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.matches(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
                 
                 switch response.result {
                 case .success(let searchResponse):
