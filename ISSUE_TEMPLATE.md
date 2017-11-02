@@ -22,10 +22,10 @@
 
 ## CDYelpFusionKit Environment
 
-**CDYelpFusionKit version:**
-**Xcode version:**
-**Swift version:**
-**Platform(s) running CDYelpFusionKit:**
+**CDYelpFusionKit version:**  
+**Xcode version:**  
+**Swift version:**  
+**Platform(s) running CDYelpFusionKit:**  
 **macOS version running Xcode:**
 
 ## Demo Project
