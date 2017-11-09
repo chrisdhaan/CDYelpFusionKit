@@ -1,8 +1,8 @@
 //
-//  CDYelpSearchResponse.swift
+//  CDYelpEventsResponse.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 11/29/16.
+//  Created by Christopher de Haan on 11/1/17.
 //
 //  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -27,20 +27,18 @@
 
 import ObjectMapper
 
-public class CDYelpSearchResponse: Mappable {
+public class CDYelpEventsResponse: Mappable {
 
     public var total: Int?
-    public var businesses: [CDYelpBusiness]?
-    public var region: CDYelpRegion?
+    public var events: [CDYelpEvent]?
     public var error: CDYelpError?
     
     public required init?(map: Map) {
     }
     
     public func mapping(map: Map) {
-        total       <- map["total"]
-        businesses  <- map["businesses"]
-        region      <- map["region"]
-        error       <- map["error"]
+        total   <- map["total"]
+        events  <- map["events"]
+        error   <- map["error"]
     }
 }

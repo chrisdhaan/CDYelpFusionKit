@@ -34,11 +34,11 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  latitude: Double?,
                                  longitude: Double?,
                                  radius: Int?,
-                                 categories: [CDYelpCategoryFilter]?,
+                                 categories: [CDYelpBusinessCategoryFilter]?,
                                  locale: CDYelpLocale?,
                                  limit: Int?,
                                  offset: Int?,
-                                 sortBy: CDYelpSortType?,
+                                 sortBy: CDYelpBusinessSortType?,
                                  priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
@@ -251,6 +251,121 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
+        }
+        
+        return params
+    }
+    
+    static func eventParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let locale = locale,
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
+        }
+        
+        return params
+    }
+    
+    static func eventsParameters(withLocale locale: CDYelpLocale?,
+                                 offset: Int?,
+                                 limit: Int?,
+                                 sortBy: CDYelpEventSortByType?,
+                                 sortOn: CDYelpEventSortOnType?,
+                                 startDate: Date?,
+                                 endDate: Date?,
+                                 categories: [CDYelpEventCategoryFilter]?,
+                                 isFree: Bool?,
+                                 location: String?,
+                                 latitude: Double?,
+                                 longitude: Double?,
+                                 radius: Int?,
+                                 excludedEvents: [String]?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let locale = locale,
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
+        }
+        if let offset = offset {
+            params["offset"] = offset
+        }
+        if let limit = limit {
+            params["limit"] = limit
+        }
+        if let sortBy = sortBy,
+            sortBy.rawValue != "" {
+            params["sort_by"] = sortBy.rawValue
+        }
+        if let sortOn = sortOn,
+            sortOn.rawValue != "" {
+            params["sort_on"] = sortOn.rawValue
+        }
+        if let startDate = startDate {
+            params["start_date"] = startDate.timeIntervalSince1970
+        }
+        if let endDate = endDate {
+            params["end_date"] = endDate.timeIntervalSince1970
+        }
+        if let categories = categories,
+            categories.count > 0 {
+            
+            var categoriesString = ""
+            for category in categories {
+                categoriesString = categoriesString + category.rawValue + ","
+            }
+            let parametersString = categoriesString.substring(to: categoriesString.index(before: categoriesString.endIndex))
+            params["categories"] = parametersString
+        }
+        if let isFree = isFree {
+            params["is_free"] = isFree
+        }
+        if let location = location,
+            location != "" {
+            params["location"] = location
+        }
+        if let latitude = latitude {
+            params["latitude"] = latitude
+        }
+        if let longitude = longitude {
+            params["longitude"] = longitude
+        }
+        if let radius = radius {
+            params["radius"] = radius
+        }
+        if let excludedEvents = excludedEvents,
+            excludedEvents.count > 0 {
+            
+            var excludedEventsString = ""
+            for excludedEvent in excludedEvents {
+                excludedEventsString = excludedEventsString + excludedEvent + ","
+            }
+            let parametersString = excludedEventsString.substring(to: excludedEventsString.index(before: excludedEventsString.endIndex))
+            params["excluded_events"] = parametersString
+        }
+        
+        return params
+    }
+    
+    static func featuredEvent(withLocale locale: CDYelpLocale?,
+                              location: String?,
+                              latitude: Double?,
+                              longitude: Double?) -> Parameters {
+        var params: Parameters = [:]
+        
+        if let locale = locale,
+            locale.rawValue != "" {
+            params["locale"] = locale.rawValue
+        }
+        if let location = location,
+            location != "" {
+            params["location"] = location
+        }
+        if let latitude = latitude {
+            params["latitude"] = latitude
+        }
+        if let longitude = longitude {
+            params["longitude"] = longitude
         }
         
         return params

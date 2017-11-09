@@ -22,6 +22,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Business Match Endpoint](#business-match-endpoint)
     - [Reviews Endpoint](#reviews-endpoint)
     - [Autocomplete Endpoint](#autocomplete-endpoint)
+    - [Brand Assets](#brand-assets)
 - [Resources](#resources)
 - [License](#license)
 
@@ -42,6 +43,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [ ] Event Search
   - [ ] Featured Event
 - [ ] Deep Linking
+- [ ] Brand Assets
 - [ ] Documentation
 
 ---
@@ -399,19 +401,19 @@ CDYelpBusinessMatchType.lookup
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
-yelpAPIClient.fetchBusiness.searchBusinesses(byMatchType: .best,
-                                             name: "Yelp if you need HELP!",
-                                             addressOne: nil,
-                                             addressTwo: nil,
-                                             addressThree: nil,
-                                             city: "San Francisco",
-                                             state: "CA",
-                                             country: "US",
-                                             latitude: nil,
-                                             longitude: nil,
-                                             phone: nil,
-                                             postalCode: nil,
-                                             yelpBusinessId: nil) { (response) in
+yelpAPIClient.searchBusinesses(byMatchType: .best,
+                               name: "Yelp if you need HELP!",
+                               addressOne: nil,
+                               addressTwo: nil,
+                               addressThree: nil,
+                               city: "San Francisco",
+                               state: "CA",
+                               country: "US",
+                               latitude: nil,
+                               longitude: nil,
+                               phone: nil,
+                               postalCode: nil,
+                               yelpBusinessId: nil) { (response) in
 
   if let response = response,
       let businesses = response.businesses,

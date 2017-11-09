@@ -137,11 +137,11 @@ public class CDYelpAPIClient: NSObject {
                                  latitude: Double?,
                                  longitude: Double?,
                                  radius: Int?,
-                                 categories: [CDYelpCategoryFilter]?,
+                                 categories: [CDYelpBusinessCategoryFilter]?,
                                  locale: CDYelpLocale?,
                                  limit: Int?,
                                  offset: Int?,
-                                 sortBy: CDYelpSortType?,
+                                 sortBy: CDYelpBusinessSortType?,
                                  priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
@@ -274,7 +274,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     /// - returns: (CDYelpBusiness?) -> Void
     ///
-    public func fetchBusiness(byId id: String!,
+    public func fetchBusiness(forId id: String!,
                               locale: CDYelpLocale?,
                               completion: @escaping (CDYelpBusiness?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API business endpoint.")
@@ -456,6 +456,111 @@ public class CDYelpAPIClient: NSObject {
                     completion(autocompleteResponse)
                 case .failure(let error):
                     print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    public func fetchEvent(forId id: String!,
+                           locale: CDYelpLocale?,
+                           completion: @escaping (CDYelpEvent?) -> Void) {
+        assert((id != nil && id != ""), "An event id is required to query the Yelp Fusion API event endpoint.")
+        
+        if self.isAuthenticated() == true {
+            
+            let params = Parameters.eventParameters(withLocale: locale)
+            
+            self.manager.request(CDYelpRouter.event(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
+            
+                switch response.result {
+                case .success(let event):
+                    completion(event)
+                case .failure(let error):
+                    print("fetchEvent(forId) failure: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    public func searchEvents(byLocale locale: CDYelpLocale?,
+                             offset: Int?,
+                             limit: Int?,
+                             sortBy: CDYelpEventSortByType?,
+                             sortOn: CDYelpEventSortOnType?,
+                             categories: [CDYelpEventCategoryFilter]?,
+                             startDate: Date?,
+                             endDate: Date?,
+                             isFree: Bool?,
+                             location: String?,
+                             latitude: Double?,
+                             longitude: Double?,
+                             radius: Int?,
+                             excludedEvents: [String]?,
+                             completion: @escaping (CDYelpEventsResponse?) -> Void) {
+        if let limit = limit {
+            assert((limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
+        }
+        if let radius = radius {
+            assert((radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
+        }
+        
+        if self.isAuthenticated() == true {
+            
+            let params = Parameters.eventsParameters(withLocale: locale,
+                                                     offset: offset,
+                                                     limit: limit,
+                                                     sortBy: sortBy,
+                                                     sortOn: sortOn,
+                                                     startDate: startDate,
+                                                     endDate: endDate,
+                                                     categories: categories,
+                                                     isFree: isFree,
+                                                     location: location,
+                                                     latitude: latitude,
+                                                     longitude: longitude,
+                                                     radius: radius,
+                                                     excludedEvents: excludedEvents)
+            
+            self.manager.request(CDYelpRouter.events(parameters: params)).responseObject { (response: DataResponse<CDYelpEventsResponse>) in
+                
+                switch response.result {
+                case .success(let eventsResponse):
+                    if let error = eventsResponse.error {
+                        print("searchEvents(byLocale) error: ", error.description ?? "")
+                    }
+                    completion(eventsResponse)
+                case .failure(let error):
+                    print("searchEvents(byLocale) failure: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
+                                   location: String?,
+                                   latitude: Double?,
+                                   longitude: Double?,
+                                   completion: @escaping (CDYelpEvent?) -> Void) {
+        assert((latitude != nil && longitude != nil) ||
+            (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
+        
+        if self.isAuthenticated() == true {
+            
+            let params = Parameters.featuredEvent(withLocale: locale,
+                                                  location: location,
+                                                  latitude: latitude,
+                                                  longitude: longitude)
+            
+            self.manager.request(CDYelpRouter.featuredEvent(parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
+                
+                switch response.result {
+                case .success(let event):
+                    completion(event)
+                case .failure(let error):
+                    print("fetchFeaturedEvent(forLocale) failure: ", error.localizedDescription)
                     completion(nil)
                 }
             }

@@ -36,6 +36,9 @@ enum CDYelpRouter: URLRequestConvertible {
     case matches(type: String, parameters: Parameters)
     case reviews(id: String, parameters: Parameters)
     case autocomplete(parameters: Parameters)
+    case event(id: String, parameters: Parameters)
+    case events(parameters: Parameters)
+    case featuredEvent(parameters: Parameters)
     
     var method: HTTPMethod {
         switch self {
@@ -45,7 +48,10 @@ enum CDYelpRouter: URLRequestConvertible {
              .business(id: _, parameters: _),
              .matches(type: _, parameters: _),
              .reviews(id: _, parameters: _),
-             .autocomplete(parameters: _):
+             .autocomplete(parameters: _),
+             .event(id: _, parameters: _),
+             .events(parameters: _),
+             .featuredEvent(parameters: _):
             return .get
         }
     }
@@ -66,6 +72,12 @@ enum CDYelpRouter: URLRequestConvertible {
             return "businesses/\(id)/reviews"
         case .autocomplete(parameters: _):
             return "autocomplete"
+        case .event(let id, parameters: _):
+            return "events/\(id)"
+        case .events(parameters: _):
+            return "events"
+        case .featuredEvent(parameters: _):
+            return "events/featured"
         }
     }
     
@@ -82,7 +94,10 @@ enum CDYelpRouter: URLRequestConvertible {
              .business(id: _, let parameters),
              .matches(type: _, let parameters),
              .reviews(id: _, let parameters),
-             .autocomplete(let parameters):
+             .autocomplete(let parameters),
+             .event(id: _, let parameters),
+             .events(let parameters),
+             .featuredEvent(let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
         }
         

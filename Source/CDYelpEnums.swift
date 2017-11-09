@@ -41,7 +41,7 @@ public enum CDYelpAttributeFilter: String {
 ///
 /// A list of the business categories the Yelp Fusion API supports.
 ///
-public enum CDYelpCategoryFilter: String {
+public enum CDYelpBusinessCategoryFilter: String {
     // Active Life
     case activeLife                 = "active"
     case atvRentalsAndTours         = "atvrentals"
@@ -1571,6 +1571,59 @@ public enum CDYelpCategoryFilter: String {
 }
 
 ///
+/// A list of business match types the Yelp Fusion API supports.
+///
+public enum CDYelpBusinessMatchType: String {
+    case best   = "best"
+    case lookup = "lookup"
+}
+
+///
+/// A list of the business sort types the Yelp Fusion API supports.
+///
+public enum CDYelpBusinessSortType: String {
+    case bestMatch      = "best_match"
+    case rating         = "rating"
+    case reviewCount    = "review_count"
+    case distance       = "distance"
+}
+
+///
+/// A list of the event categories the Yelp Fusion API supports.
+///
+public enum CDYelpEventCategoryFilter: String {
+    case charities              = "charities"
+    case fashion                = "fashion"
+    case festivalsAndFairs      = "festivals-fairs"
+    case film                   = "film"
+    case foodAndDrink           = "food-and-drink"
+    case kidsAndFamily          = "kids-family"
+    case lecturesAndBooks       = "lectures-books"
+    case music                  = "music"
+    case nightlife              = "nightlife"
+    case other                  = "other"
+    case performingArts         = "performing-arts"
+    case sportsAndActiveLife    = "sports-active-life"
+    case visualArts             = "visual-arts"
+}
+
+///
+/// A list of the event sortBy types the Yelp Fusion API supports.
+///
+public enum CDYelpEventSortByType: String {
+    case ascending  = "asc"
+    case descending = "desc"
+}
+
+///
+/// A list of the event sortOn types the Yelp Fusion API supports.
+///
+public enum CDYelpEventSortOnType: String {
+    case popularity = "popularity"
+    case timeStart  = "time_start"
+}
+
+///
 /// A list of locales the Yelp Fusion API supports. The locale code is in the format of {language code}_{country code}.
 ///
 public enum CDYelpLocale: String {
@@ -1619,14 +1672,6 @@ public enum CDYelpLocale: String {
 }
 
 ///
-/// A list of business match types the Yelp Fusion API supports.
-///
-public enum CDYelpBusinessMatchType: String {
-    case best   = "best"
-    case lookup = "lookup"
-}
-
-///
 /// A list of the price tiers the Yelp Fusion API supports.
 ///
 public enum CDYelpPriceTier: String {
@@ -1634,16 +1679,6 @@ public enum CDYelpPriceTier: String {
     case twoDollarSigns     = "2"
     case threeDollarSigns   = "3"
     case fourDollarSigns    = "4"
-}
-
-///
-/// A list of the sort types the Yelp Fusion API supports.
-///
-public enum CDYelpSortType: String {
-    case bestMatch      = "best_match"
-    case rating         = "rating"
-    case reviewCount    = "review_count"
-    case distance       = "distance"
 }
 
 ///

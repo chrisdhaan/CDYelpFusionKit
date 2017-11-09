@@ -37,7 +37,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -52,7 +52,7 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -66,13 +66,19 @@ extension ViewController: UITableViewDataSource {
         case 2:
             cell.textLabel?.text = "/transactions/{transaction_type}/search"
         case 3:
-            cell.textLabel?.text = "/businesses/id"
+            cell.textLabel?.text = "/businesses/{id}"
         case 4:
             cell.textLabel?.text = "/businesses/matches/{business_match_type}"
         case 5:
             cell.textLabel?.text = "/businesses/{id}/reviews"
         case 6:
             cell.textLabel?.text = "/autocomplete"
+        case 7:
+            cell.textLabel?.text = "/events/{id}"
+        case 8:
+            cell.textLabel?.text = "/events"
+        case 9:
+            cell.textLabel?.text = "/events/featured"
         default:
             cell.textLabel?.text = ""
         }
@@ -140,7 +146,7 @@ extension ViewController: UITableViewDelegate {
                                                                         }
             }
         case 3:
-            CDYelpFusionKitManager.shared.apiClient.fetchBusiness(byId: "north-india-restaurant-san-francisco",
+            CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
                                                                   locale: nil) { (business) in
                                                                     
                                                                     if let business = business {
@@ -161,7 +167,7 @@ extension ViewController: UITableViewDelegate {
                                                                      phone: nil,
                                                                      postalCode: nil,
                                                                      yelpBusinessId: nil) { (response) in
-                                                                                    
+                                                                        
                                                                         if let response = response,
                                                                             let businesses = response.businesses,
                                                                             businesses.count > 0 {
@@ -189,6 +195,46 @@ extension ViewController: UITableViewDelegate {
                                                                                 businesses.count > 0 {
                                                                                 print(businesses)
                                                                             }
+            }
+        case 7:
+            CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
+                                                               locale: nil) { (event) in
+                                                                
+                                                                if let event = event {
+                                                                    print(event)
+                                                                }
+            }
+        case 8:
+            CDYelpFusionKitManager.shared.apiClient.searchEvents(byLocale: nil,
+                                                                 offset: nil,
+                                                                 limit: 5,
+                                                                 sortBy: .descending,
+                                                                 sortOn: .popularity,
+                                                                 categories: [.music, .foodAndDrink],
+                                                                 startDate: nil,
+                                                                 endDate: nil,
+                                                                 isFree: false,
+                                                                 location: nil,
+                                                                 latitude: 37.786572,
+                                                                 longitude: -122.415192,
+                                                                 radius: 10000,
+                                                                 excludedEvents: nil) { (response) in
+                                                                    
+                                                                    if let response = response,
+                                                                        let events = response.events,
+                                                                        events.count > 0 {
+                                                                        print(events)
+                                                                    }
+            }
+        case 9:
+            CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
+                                                                       location: nil,
+                                                                       latitude: 37.786572,
+                                                                       longitude: -122.415192) { (event) in
+                                                                        
+                                                                        if let event = event {
+                                                                            print(event)
+                                                                        }
             }
         default:
             break
