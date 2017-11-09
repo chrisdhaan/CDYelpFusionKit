@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
+		5F854DFE1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854DFD1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift */; };
+		5F854E071FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854E061FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift */; };
+		5F854E1C1FB44D6A00335D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		5FBF0EA71EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */; };
 		5FBF0EA81EC000B1004C1F6B /* CDYelpBusiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */; };
@@ -89,6 +92,9 @@
 
 /* Begin PBXFileReference section */
 		5F09D2E91F282938001877E9 /* CDYelpEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEnums.swift; sourceTree = "<group>"; };
+		5F854DFD1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
+		5F854E061FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
+		5F854E1B1FB44D6A00335D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		5FBF0E671EBFFEB0004C1F6B /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAPIClient.swift; sourceTree = "<group>"; };
 		5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAutoCompleteResponse.swift; sourceTree = "<group>"; };
@@ -130,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F854E1A1FB44D4400335D73 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5F854E1B1FB44D6A00335D73 /* Images.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		5FBF0E5D1EBFFEB0004C1F6B = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +168,7 @@
 				5FBF0EC01EC000C3004C1F6B /* Model */,
 				5FBF0EC11EC000ED004C1F6B /* OAuth */,
 				5FBF0EC21EC00106004C1F6B /* Core */,
+				5F854E1A1FB44D4400335D73 /* Resources */,
 				5FBF0EC31EC00122004C1F6B /* Supporting Files */,
 			);
 			path = Source;
@@ -163,6 +178,8 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */,
+				5F854DFD1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift */,
+				5F854E061FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -361,6 +378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F854E1C1FB44D6A00335D73 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,10 +398,12 @@
 				5FBF0EAE1EC000B1004C1F6B /* CDYelpError.swift in Sources */,
 				5FBF0EB81EC000B1004C1F6B /* CDYelpReviewsResponse.swift in Sources */,
 				5FBF0EB91EC000B1004C1F6B /* CDYelpRouter.swift in Sources */,
+				5F854E071FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift in Sources */,
 				5FBF0EBE1EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift in Sources */,
 				5FBF0EAC1EC000B1004C1F6B /* CDYelpConstants.swift in Sources */,
 				5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */,
 				5FBF0EAB1EC000B1004C1F6B /* CDYelpCenter.swift in Sources */,
+				5F854DFE1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift in Sources */,
 				5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */,
 				5FBF0EB31EC000B1004C1F6B /* CDYelpOAuthCredential.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,

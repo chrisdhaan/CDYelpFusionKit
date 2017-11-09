@@ -1,8 +1,8 @@
 //
-//  CDYelpConstants.swift
+//  UIImage+CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 11/9/17.
 //
 //  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,14 +25,23 @@
 //  THE SOFTWARE.
 //
 
-let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
+import UIKit
 
-struct CDYelpURL {
-    static let oAuth    = "https://api.yelp.com/"
-    static let base     = "https://api.yelp.com/v3/"
-}
-
-struct CDYelpDefaults {
-    static let accessToken = "CDYelpAccessToken"
-    static let expiresIn = "CDYelpExpiresIn"
+public extension UIImage {
+    
+    class func yelpBurstLogoRed() -> UIImage? {
+        return UIImage(named: "yelp_burst_logo_red", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+    }
+    
+    class func yelpBurstLogoWhite() -> UIImage? {
+        return UIImage(named: "yelp_burst_logo_white", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+    }
+    
+    class func yelpLogo() -> UIImage? {
+        return UIImage(named: "yelp_logo", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+    }
+    
+    class func yelpLogoOutline() -> UIImage? {
+        return UIImage(named: "yelp_logo_outline", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+    }
 }

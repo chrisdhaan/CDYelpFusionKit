@@ -1,8 +1,8 @@
 //
-//  CDYelpConstants.swift
+//  UIColor+CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 11/9/17.
 //
 //  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,14 +25,11 @@
 //  THE SOFTWARE.
 //
 
-let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
+import UIKit
 
-struct CDYelpURL {
-    static let oAuth    = "https://api.yelp.com/"
-    static let base     = "https://api.yelp.com/v3/"
-}
-
-struct CDYelpDefaults {
-    static let accessToken = "CDYelpAccessToken"
-    static let expiresIn = "CDYelpExpiresIn"
+public extension UIColor {
+    
+    class func yelpFiveStarRed() -> UIColor {
+        return UIColor(red: (211.0/255.0), green: (35.0/255.0), blue: (35.0/255.0), alpha: 1.0)
+    }
 }
