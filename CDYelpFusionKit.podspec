@@ -16,5 +16,5 @@ This Swift wrapper covers all possible network endpoints and responses for the Y
 
   s.source_files = 'Source/*.swift'
   s.frameworks = 'CoreLocation', 'MapKit'
-  s.dependency 'AlamofireObjectMapper', '~> 4.0'
+  s.dependency 'AlamofireObjectMapper', '4.1.0'
 end
