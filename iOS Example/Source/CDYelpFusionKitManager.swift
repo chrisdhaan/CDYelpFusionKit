@@ -33,6 +33,7 @@ final class CDYelpFusionKitManager: NSObject {
     static let shared = CDYelpFusionKitManager()
     
     var apiClient: CDYelpAPIClient!
+    var deepLink = CDYelpDeepLink()
     
     func configure() {
         // How to authorize using your clientId and clientSecret

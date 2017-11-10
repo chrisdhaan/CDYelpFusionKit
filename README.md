@@ -22,7 +22,11 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Business Match Endpoint](#business-match-endpoint)
     - [Reviews Endpoint](#reviews-endpoint)
     - [Autocomplete Endpoint](#autocomplete-endpoint)
-    - [Brand Assets](#brand-assets)
+    - [Event Search](#event-search-endpoint)
+    - [Deep Linking](#deep-linking)
+    - [Color Brand Assets](#color-brand-assets)
+    - [Logo Brand Assets](#logo-brand-assets)
+    - [Star Brand Assets](#star-brand-assets)
 - [Resources](#resources)
 - [License](#license)
 
@@ -40,10 +44,10 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [x] Reviews
   - [x] Autocomplete
   - [ ] Event Lookup
-  - [ ] Event Search
+  - [x] Event Search
   - [ ] Featured Event
-- [ ] Deep Linking
-- [ ] Brand Assets
+- [x] Deep Linking
+- [x] Brand Assets
 - [ ] Documentation
 
 ---
@@ -78,7 +82,7 @@ gem install cocoapods
 To integrate CDYelpFusionKit into your Xcode project using CocoaPods, simply add the following line to your Podfile:
 
 ```ruby
-pod "CDYelpFusionKit" "~> 1.1.0"
+pod 'CDYelpFusionKit', '1.1.0'
 ```
 
 Afterwards, run the following command:
@@ -101,7 +105,7 @@ brew install carthage
 To integrate CDYelpFusionKit into your Xcode project using Carthage, simply add the following line to your Cartfile:
 
 ```ruby
-github "chrisdhaan/CDYelpFusionKit" ~> 1.1.0
+github "chrisdhaan/CDYelpFusionKit" == 1.1.0
 ```
 
 Afterwards, run the following command:
@@ -474,6 +478,50 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
   }
 }
 ```
+
+### [Event Search Endpoint](https://www.yelp.com/developers/documentation/v3/event_search)
+
+### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
+
+### [Color Brand Assets](https://www.yelp.com/brand)
+
+```swift
+class func yelpFiveStarRed() -> UIColor
+```
+
+The following lines of code show an example of how to use the Yelp brand color.
+
+```swift
+cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
+```
+
+### [Logo Brand Assets](https://www.yelp.com/brand)
+
+```swift
+class func yelpLogo() -> UIImage?
+class func yelpLogoOutline() -> UIImage?
+```
+
+The following lines of code show an example of how to use the Yelp brand logo.
+
+```swift
+cell.imageView?.image = UIImage.yelpLogo()
+cell.imageView?.image = UIImage.yelpLogoOutline()
+```
+
+```swift
+class func yelpBurstLogoRed() -> UIImage?
+class func yelpBurstLogoWhite() -> UIImage?
+```
+
+The following lines of code show an example of how to use the Yelp brand burst logo.
+
+```swift
+cell.imageView?.image = UIImage.yelpBurstLogoRed()
+cell.imageView?.image = UIImage.yelpBurstLogoWhite()
+```
+
+### [Star Brand Assets](https://www.yelp.com/developers/display_requirements)
 
 ---
 
