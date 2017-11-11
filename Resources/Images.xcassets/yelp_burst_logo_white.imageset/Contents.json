@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "yelp-burst-logo-white.png",
+      "filename" : "yelp_burst_logo_white.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "yelp-burst-logo-white@2x.png",
+      "filename" : "yelp_burst_logo_white@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "yelp-burst-logo-white@3x.png",
+      "filename" : "yelp_burst_logo_white@3x.png",
       "scale" : "3x"
     }
   ],
