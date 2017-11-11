@@ -119,7 +119,7 @@ public class CDYelpAPIClient: NSObject {
     ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
     ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
     ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
-    ///   - categories: (Optional) The categorie(s) to filter the search results with. Use the **CDYelpCategoryFilter** enum to get the list of supported categories. `categories` can be an array of categories (e.g. [.bars, .parks] will filter the results to show businesses that are listed as Bars or Parks).
+    ///   - categories: (Optional) The categorie(s) to filter the search results with. Use the **CDYelpBusinessCategoryFilter** enum to get the list of supported categories. `categories` can be an array of categories (e.g. [.bars, .parks] will filter the results to show businesses that are listed as Bars or Parks).
     ///   - locale: (Optional) Specifies the locale to return the business information in. Use the **CDYelpLocale** enum to get the list of supported locales.
     ///   - limit: (Optional) The number of business results to return. By default, the value is set to 20. **The maximum value is 50**.
     ///   - offset: (Optional) A number the list of returned business results should be offset by.

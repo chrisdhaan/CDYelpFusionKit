@@ -24,6 +24,11 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Autocomplete Endpoint](#autocomplete-endpoint)
     - [Event Search](#event-search-endpoint)
     - [Deep Linking](#deep-linking)
+    - [Search Deep Link](#search-deep-link)
+    - [Business Deep Link](#business-deep-link)
+    - [Check-In Nearby Deep Link](#check-in-nearby-deep-link)
+    - [Check-Ins Deep Link](#check-ins-deep-link)
+    - [Check-In Rankings Deep Link](#check-in-rankings-deep-link)
     - [Color Brand Assets](#color-brand-assets)
     - [Logo Brand Assets](#logo-brand-assets)
     - [Star Brand Assets](#star-brand-assets)
@@ -177,20 +182,20 @@ Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fu
 ### [Search Endpoint](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ```swift
-public func searchBusinesses(byTerm term: String?,                 // Optional
-                             location: String?,                    // Optional
-                             latitude: Double?,                    // Optional
-                             longitude: Double?,                   // Optional
-                             radius: Int?,                         // Optional - Max = 40000
-                             categories: [CDYelpCategoryFilter]?,  // Optional
-                             locale: CDYelpLocale?,                // Optional
-                             limit: Int?,                          // Optional - Default = 20, Max = 50
-                             offset: Int?,                         // Optional
-                             sortBy: CDYelpSortType?,              // Optional - Default = .bestMatch
-                             priceTiers: [CDYelpPriceTier]?,       // Optional
-                             openNow: Bool?,                       // Optional - Default = false
-                             openAt: Int?,                         // Optional
-                             attributes: [CDYelpAttributeFilter]?, // Optional
+public func searchBusinesses(byTerm term: String?,                        // Optional
+                             location: String?,                           // Optional
+                             latitude: Double?,                           // Optional
+                             longitude: Double?,                          // Optional
+                             radius: Int?,                                // Optional - Max = 40000
+                             categories: [CDYelpBusinessCategoryFilter]?, // Optional
+                             locale: CDYelpLocale?,                       // Optional
+                             limit: Int?,                                 // Optional - Default = 20, Max = 50
+                             offset: Int?,                                // Optional
+                             sortBy: CDYelpSortType?,                     // Optional - Default = .bestMatch
+                             priceTiers: [CDYelpPriceTier]?,              // Optional
+                             openNow: Bool?,                              // Optional - Default = false
+                             openAt: Int?,                                // Optional
+                             attributes: [CDYelpAttributeFilter]?,        // Optional
                              completion: @escaping (CDYelpSearchResponse?) -> Void);
 ```
 
@@ -359,7 +364,7 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 ### [Business Endpoint](https://www.yelp.com/developers/documentation/v3/business)
 
 ```swift
-public func fetchBusiness(byId id: String!,      // Required
+public func fetchBusiness(forId id: String!,     // Required
                           locale: CDYelpLocale?, // Optional
                           completion: @escaping (CDYelpBusiness?) -> Void)
 ```
@@ -367,7 +372,7 @@ public func fetchBusiness(byId id: String!,      // Required
 The following lines of code show an example query to the Yelp Fusion Business API.
 
 ```swift
-yelpAPIClient.fetchBusiness(byId: "north-india-restaurant-san-francisco"
+yelpAPIClient.fetchBusiness(forId: "north-india-restaurant-san-francisco"
                             locale: nil) { (business) in
             
   if let business = business {
@@ -483,6 +488,92 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
 
 ### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
 
+The Yelp iPhone application registers URL schemes that can be used to open the Yelp application and perform searches, view business information, or open check-ins.
+
+```swift
+public func isYelpInstalled() -> Bool
+public func openYelp()
+```
+
+The following lines of code show an example of how to check if the Yelp application is installed and then open it.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+if (yelpDeepLink.isYelpInstalled()) {
+    // Do stuff
+}
+yelpDeepLink.openYelp()
+```
+
+### [Search Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+public func openYelpToSearch(withTerm term: String?,                  // Optional
+                             category: CDYelpBusinessCategoryFilter?, // Optional
+                             location: String?)                       // Optional
+```
+
+The Search Deep Link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [Search API](#search-api) for information regarding using the `category` parameter.
+
+The following lines of code show an example query to the Yelp Search Deep Link.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+yelpDeepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "San Francisco, CA")
+```
+
+### [Business Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+public func openYelpToBusiness(forId id: String!) // Required
+```
+
+The following lines of code show an example query to the Yelp Business Deep Link.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+yelpDeepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
+```
+
+### [Check In Nearby Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+public func openYelpToCheckInNearby()
+```
+
+The following lines of code show an example query to the Yelp Check In Nearby Deep Link.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+yelpDeepLink.openYelpToCheckInNearby()
+```
+
+### [Check-Ins Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+public func openYelpToCheckIns()
+```
+
+The following lines of code show an example query to the Yelp Check-Ins Deep Link.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+yelpDeepLink.openYelpToCheckIns()
+```
+
+### [Check-In Rankings Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+public func openYelpToRankedCheckIns()
+```
+
+The following lines of code show an example query to the Yelp Check-In Rankings Deep Link.
+
+```swift
+let yelpDeepLink = CDYelpDeepLink()
+yelpDeepLink.openYelpToCheckInRankings()
+```
+
 ### [Color Brand Assets](https://www.yelp.com/brand)
 
 ```swift
@@ -500,23 +591,15 @@ cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
 ```swift
 class func yelpLogo() -> UIImage?
 class func yelpLogoOutline() -> UIImage?
-```
-
-The following lines of code show an example of how to use the Yelp brand logo.
-
-```swift
-cell.imageView?.image = UIImage.yelpLogo()
-cell.imageView?.image = UIImage.yelpLogoOutline()
-```
-
-```swift
 class func yelpBurstLogoRed() -> UIImage?
 class func yelpBurstLogoWhite() -> UIImage?
 ```
 
-The following lines of code show an example of how to use the Yelp brand burst logo.
+The following lines of code show examples of how to use the Yelp brand logo and the Yelp brand burst logo.
 
 ```swift
+cell.imageView?.image = UIImage.yelpLogo()
+cell.imageView?.image = UIImage.yelpLogoOutline()
 cell.imageView?.image = UIImage.yelpBurstLogoRed()
 cell.imageView?.image = UIImage.yelpBurstLogoWhite()
 ```

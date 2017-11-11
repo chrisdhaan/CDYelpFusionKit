@@ -36,6 +36,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let logoImageView = UIImageView(frame: CGRect(x: 0,
+                                                      y: 0,
+                                                      width: self.tableView.frame.size.width,
+                                                      height: 50))
+        logoImageView.image = UIImage.yelpLogo()
+        logoImageView.contentMode = .scaleAspectFit
+        self.tableView.tableHeaderView = logoImageView
+        
+        let logoOutlineImageView = UIImageView(frame: CGRect(x: 0,
+                                                             y: 0,
+                                                             width: self.tableView.frame.size.width,
+                                                             height: 50))
+        logoOutlineImageView.image = UIImage.yelpLogoOutline()
+        logoOutlineImageView.contentMode = .scaleAspectFit
+        self.tableView.tableFooterView = logoOutlineImageView
     }
     
     override func didReceiveMemoryWarning() {
@@ -69,48 +85,90 @@ extension ViewController: UITableViewDataSource {
         case 0:
             switch indexPath.row {
             case 0:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/businesses/search"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 1:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/search/phone"
+                cell.textLabel?.textColor = UIColor.white
             case 2:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/transactions/{transaction_type}/search"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 3:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/id"
+                cell.textLabel?.textColor = UIColor.white
             case 4:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/businesses/matches/{business_match_type}"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 5:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/{id}/reviews"
+                cell.textLabel?.textColor = UIColor.white
             case 6:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/autocomplete"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 7:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/events/{id}"
+                cell.textLabel?.textColor = UIColor.white
             case 8:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/events"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 9:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/events/featured"
+                cell.textLabel?.textColor = UIColor.white
             default:
                 cell.textLabel?.text = ""
             }
         case 1:
             switch indexPath.row {
             case 0:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 1:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/search"
+                cell.textLabel?.textColor = UIColor.white
             case 2:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/biz"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 3:
-                cell.textLabel?.text = "/check_ins"
-            case 4:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/check_in/nearby"
+                cell.textLabel?.textColor = UIColor.white
+            case 4:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
+                cell.textLabel?.text = "/check_ins"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 5:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/check_in/rankings"
+                cell.textLabel?.textColor = UIColor.white
             default:
                 cell.textLabel?.text = ""
             }
         default:
+            cell.backgroundColor = UIColor.clear
+            cell.imageView?.image = nil
             cell.textLabel?.text = ""
-            cell.imageView?.image = UIImage.yelpBurstLogoWhite()
+            cell.textLabel?.textColor = UIColor.black
         }
         
         return cell
@@ -280,13 +338,13 @@ extension ViewController: UITableViewDelegate {
             case 1:
                 CDYelpFusionKitManager.shared.deepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "San Francisco, CA")
             case 2:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToBusiness(withid: "the-sentinel-san-francisco")
+                CDYelpFusionKitManager.shared.deepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
             case 3:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckIns()
+                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckInNearby()
             case 4:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToNearbyCheckIns()
+                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckIns()
             case 5:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToRankedCheckIns()
+                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckInRankings()
             default:
                 break
             }

@@ -29,18 +29,17 @@ import UIKit
 
 public class CDYelpDeepLink: NSObject {
     
-    func isYelpInstalled() -> Bool {
-        guard let url = URL(string: CDYelpURL.deepLink) else {
-            return false
-        }
-        return UIApplication.shared.canOpenURL(url)
-    }
+    // MARK: - Internal Methods
     
-    func addScheme(toPath path: String) {
+    func addScheme(toPath path: String, openWebIfAppNotInstalled: Bool) {
         if self.isYelpInstalled() {
-            self.openYelp(withPath: "\(CDYelpURL.deepLink):///\(path)")
+            self.openYelp(withPath: "\(CDYelpURL.deepLink)///\(path)")
         } else {
-            self.openYelp(withPath: "\(CDYelpURL.web)\(path)")
+            if openWebIfAppNotInstalled {
+                self.openYelp(withPath: "\(CDYelpURL.web)\(path)")
+            } else {
+                print("The Yelp application is not installed and the deep link being attempted is not available on web.")
+            }
         }
     }
     
@@ -50,6 +49,25 @@ public class CDYelpDeepLink: NSObject {
         }
     }
     
+    // MARK: - Public Methods
+    
+    ///
+    /// Determines whether or not the Yelp application is installed on a device.
+    ///
+    /// - returns: Bool
+    ///
+    public func isYelpInstalled() -> Bool {
+        guard let url = URL(string: CDYelpURL.deepLink) else {
+            return false
+        }
+        return UIApplication.shared.canOpenURL(url)
+    }
+    
+    ///
+    /// Open the Yelp application (if it is installed on a device). If the Yelp application is not installed the Yelp website is loaded.
+    ///
+    /// - returns: Void
+    ///
     public func openYelp() {
         if self.isYelpInstalled() {
             self.openYelp(withPath: CDYelpURL.deepLink)
@@ -58,6 +76,16 @@ public class CDYelpDeepLink: NSObject {
         }
     }
     
+    ///
+    /// Open the Yelp application (if it is installed on a device) to the search page. If the Yelp application is not installed the Yelp website is loaded.
+    ///
+    /// - parameters:
+    ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
+    ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpBusinessCategoryFilter** enum to get the list of supported categories.
+    ///   - location: A location to filter the search results with. Specifying no location will use current location.
+    ///
+    /// - returns: Void
+    ///
     public func openYelpToSearch(withTerm term: String?,
                                  category: CDYelpBusinessCategoryFilter?,
                                  location: String?) {
@@ -88,11 +116,19 @@ public class CDYelpDeepLink: NSObject {
             path += "location=\(location)"
         }
         
-        self.addScheme(toPath: path)
+        self.addScheme(toPath: path, openWebIfAppNotInstalled: true)
     }
     
-    public func openYelpToBusiness(withid id: String!) {
-        assert((id != nil && id != ""), "A business id is required to open Yelp to a specific business page.")
+    ///
+    /// Open the Yelp application (if it is installed on a device) to a business page. If the Yelp application is not installed the Yelp website is loaded.
+    ///
+    /// - parameters:
+    ///   - forId: (**Required**) The identifier of the business for the Yelp application to query.
+    ///
+    /// - returns: Void
+    ///
+    public func openYelpToBusiness(forId id: String!) {
+        assert((id != nil && id != ""), "A business id is to query the Yelp business deep link.")
         
         var path = "biz/"
         
@@ -100,18 +136,33 @@ public class CDYelpDeepLink: NSObject {
             path += "\(id)"
         }
         
-        self.addScheme(toPath: path)
+        self.addScheme(toPath: path, openWebIfAppNotInstalled: true)
     }
     
+    ///
+    /// Open the Yelp application (if it is installed on a device) to the check-in nearby page. If the Yelp application is not installed the Yelp website is **NOT** loaded.
+    ///
+    /// - returns: Void
+    ///
+    public func openYelpToCheckInNearby() {
+        self.addScheme(toPath: "check_in/nearby", openWebIfAppNotInstalled: false)
+    }
+    
+    ///
+    /// Open the Yelp application (if it is installed on a device) to the check-ins page. If the Yelp application is not installed the Yelp website is **NOT** loaded.
+    ///
+    /// - returns: Void
+    ///
     public func openYelpToCheckIns() {
-        self.addScheme(toPath: "check_ins")
+        self.addScheme(toPath: "check_ins", openWebIfAppNotInstalled: false)
     }
     
-    public func openYelpToNearbyCheckIns() {
-        self.addScheme(toPath: "check_in/nearby")
-    }
-    
-    public func openYelpToRankedCheckIns() {
-        self.addScheme(toPath: "check_in/rankings")
+    ///
+    /// Open the Yelp application (if it is installed on a device) to the check-ins page sorted by rankings. If the Yelp application is not installed the Yelp website is **NOT** loaded.
+    ///
+    /// - returns: Void
+    ///
+    public func openYelpToCheckInRankings() {
+        self.addScheme(toPath: "check_in/rankings", openWebIfAppNotInstalled: false)
     }
 }
