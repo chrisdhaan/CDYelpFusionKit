@@ -123,7 +123,7 @@ public class CDYelpAPIClient: NSObject {
     ///   - locale: (Optional) Specifies the locale to return the business information in. Use the **CDYelpLocale** enum to get the list of supported locales.
     ///   - limit: (Optional) The number of business results to return. By default, the value is set to 20. **The maximum value is 50**.
     ///   - offset: (Optional) A number the list of returned business results should be offset by.
-    ///   - sortBy: (Optional) The sort mode that will be used on the returned business results. Use the **CDYelpSortType** enum to get the list of supported sort types. By default sortBy is set to `.bestMatch`. The `.rating` sort is not strictly sorted by the rating value, but by an adjusted rating value that takes into account the number of ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars doesn’t immediately jump to the top.
+    ///   - sortBy: (Optional) The sort mode that will be used on the returned business results. Use the **CDYelpBusinessSortType** enum to get the list of supported sort types. By default sortBy is set to `.bestMatch`. The `.rating` sort is not strictly sorted by the rating value, but by an adjusted rating value that takes into account the number of ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars doesn’t immediately jump to the top.
     ///   - price: (Optional) The pricing levels to filter the search result with. Use the **CDYelpPriceTier** enum to get the list of supported pricing levels. `price` can be an array of pricing levels (e.g. [.oneDollarSign, .twoDollarSigns, .threeDollarSigns] will filter the results to show businesses that are listed as $, $$, or $$$).
     ///   - openNow: (Optional) When set to true, only businesses open at the current time will be returned. The default value is false. **Notice that open_at and open_now cannot be used together**.
     ///   - openAt: (Optional) An integer representing the Unix time in the same timezone of the search location. If specified, only businesses open at the given time will be returned. **Notice that open_at and open_now cannot be used together**.
@@ -462,6 +462,16 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns the detailed information of a Yelp event. To get an event id, refer to **searchEvents(byLocale: )** or **fetchFeaturedEvent(forLocale: )**. To enable this endpoint, please join the Yelp Developer Beta Program.
+    ///
+    /// - parameters:
+    ///   - forId: (**Required**) The identifier of the event for the Yelp Fusion API to query.
+    ///   - locale: (Optional) The locale to return the event information in.
+    ///   - completion: A completion block in which the Yelp Fusion API event endpoint response can be parsed.
+    ///
+    /// - returns: (CDYelpEvent?) -> Void
+    ///
     public func fetchEvent(forId id: String!,
                            locale: CDYelpLocale?,
                            completion: @escaping (CDYelpEvent?) -> Void) {
@@ -484,6 +494,27 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns events based on the provided search criteria. To enable this endpoint, please join the Yelp Developer Beta Program.
+    ///
+    /// - parameters:
+    ///   - locale: (Optional) The locale to return the event information in.
+    ///   - offset: (Optional) A number the list of returned events should be offset by.
+    ///   - limit: (Optional) The number of events results to return. By default, the value is set to 3. **The maximum value is 50**.
+    ///   - sortBy: (Optional) The sort by mode that will be used on the returned events results. Use the **CDYelpEvetSortByType** enum to get the list of supported sort types. By default sortBy is set to `.descending`.
+    ///   - sortOn: (Optional) The sort on mode that will be used on the returned events results. Use the **CDYelpEvetSortOnType** enum to get the list of supported sort types. By default sortBy is set to `.popularity`.
+    ///   - startDate: (Optional) A unix timestamp that queiries events only beginiing at or after the specified time.
+    ///   - endDate: (Optional) A unix timestamp that queiries events only ending at or before the specified time.
+    ///   - isFree: (Optional) When set to true, only events that are free to attend will be returned. By default, no filter is applied so both free and paid events will be returned.
+    ///   - location: (Optional) Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
+    ///   - latitude: (Optional) The latitude of the location the Yelp Fusion API should search nearby.
+    ///   - longitude: (Optional) The longitude of the location the Yelp Fusion API should search nearby.
+    ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
+    ///   - excludedEvent: (Optional) A list of event ids. Events associated with these event ids in this list will not show up in the response.
+    ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
+    ///
+    /// - returns: (CDYelpEventsResponse?) -> Void
+    ///
     public func searchEvents(byLocale locale: CDYelpLocale?,
                              offset: Int?,
                              limit: Int?,
@@ -539,6 +570,18 @@ public class CDYelpAPIClient: NSObject {
         }
     }
     
+    ///
+    /// This endpoint returns the featured event for a given location. Featured events are chosen by Yelp's community managers. To enable this endpoint, please join the Yelp Developer Beta Program.
+    ///
+    /// - parameters:
+    ///   - locale: (Optional) The locale to return the event information in.
+    ///   - location: (**Required**) Can be (Optional) if either latitude or longitude is provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
+    ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
+    ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
+    ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
+    ///
+    /// - returns: (CDYelpEvent?) -> Void
+    ///
     public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
                                    location: String?,
                                    latitude: Double?,

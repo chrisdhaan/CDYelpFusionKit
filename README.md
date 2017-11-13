@@ -22,16 +22,11 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Business Match Endpoint](#business-match-endpoint)
     - [Reviews Endpoint](#reviews-endpoint)
     - [Autocomplete Endpoint](#autocomplete-endpoint)
-    - [Event Search](#event-search-endpoint)
+    - [Event Lookup Endpoint](#event-lookup)
+    - [Event Search Endpoint](#event-search-endpoint)
+    - [Featured Event Endpoint](#featured-event-endpoint)
     - [Deep Linking](#deep-linking)
-    - [Search Deep Link](#search-deep-link)
-    - [Business Deep Link](#business-deep-link)
-    - [Check-In Nearby Deep Link](#check-in-nearby-deep-link)
-    - [Check-Ins Deep Link](#check-ins-deep-link)
-    - [Check-In Rankings Deep Link](#check-in-rankings-deep-link)
-    - [Color Brand Assets](#color-brand-assets)
-    - [Logo Brand Assets](#logo-brand-assets)
-    - [Star Brand Assets](#star-brand-assets)
+    - [Brand Assets](#brand-assets)
 - [Resources](#resources)
 - [License](#license)
 
@@ -484,7 +479,11 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
 }
 ```
 
+### [Event Lookup Endpoint](https://www.yelp.com/developers/documentation/v3/event)
+
 ### [Event Search Endpoint](https://www.yelp.com/developers/documentation/v3/event_search)
+
+### [Featured Event Endpoint](https://www.yelp.com/developers/documentation/v3/featured_event)
 
 ### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
 
@@ -505,7 +504,7 @@ if (yelpDeepLink.isYelpInstalled()) {
 yelpDeepLink.openYelp()
 ```
 
-### [Search Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+### [Search](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
 public func openYelpToSearch(withTerm term: String?,                  // Optional
@@ -522,7 +521,7 @@ let yelpDeepLink = CDYelpDeepLink()
 yelpDeepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "San Francisco, CA")
 ```
 
-### [Business Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+### [Business](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
 public func openYelpToBusiness(forId id: String!) // Required
@@ -535,7 +534,7 @@ let yelpDeepLink = CDYelpDeepLink()
 yelpDeepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
 ```
 
-### [Check In Nearby Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+### [Check In Nearby](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
 public func openYelpToCheckInNearby()
@@ -548,7 +547,7 @@ let yelpDeepLink = CDYelpDeepLink()
 yelpDeepLink.openYelpToCheckInNearby()
 ```
 
-### [Check-Ins Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+### [Check-Ins](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
 public func openYelpToCheckIns()
@@ -561,7 +560,7 @@ let yelpDeepLink = CDYelpDeepLink()
 yelpDeepLink.openYelpToCheckIns()
 ```
 
-### [Check-In Rankings Deep Link](https://www.yelp.com/developers/documentation/v2/iphone)
+### [Check-In Rankings](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
 public func openYelpToRankedCheckIns()
@@ -574,7 +573,9 @@ let yelpDeepLink = CDYelpDeepLink()
 yelpDeepLink.openYelpToCheckInRankings()
 ```
 
-### [Color Brand Assets](https://www.yelp.com/brand)
+### [Brand Assets](https://www.yelp.com/brand)
+
+### [Color](https://www.yelp.com/brand)
 
 ```swift
 class func yelpFiveStarRed() -> UIColor
@@ -586,7 +587,7 @@ The following lines of code show an example of how to use the Yelp brand color.
 cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
 ```
 
-### [Logo Brand Assets](https://www.yelp.com/brand)
+### [Logo](https://www.yelp.com/brand)
 
 ```swift
 class func yelpLogo() -> UIImage?
@@ -604,7 +605,7 @@ cell.imageView?.image = UIImage.yelpBurstLogoRed()
 cell.imageView?.image = UIImage.yelpBurstLogoWhite()
 ```
 
-### [Star Brand Assets](https://www.yelp.com/developers/display_requirements)
+### [Stars](https://www.yelp.com/developers/display_requirements)
 
 ---
 
