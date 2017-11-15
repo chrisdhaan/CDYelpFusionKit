@@ -1682,6 +1682,32 @@ public enum CDYelpPriceTier: String {
 }
 
 ///
+/// A list of the number of filled stars the Yelp stars asset can be returned with.
+///
+public enum CDYelpStars: String {
+    case zero       = "zero"
+    case one        = "one"
+    case oneHalf    = "one_half"
+    case two        = "two"
+    case twoHalf    = "two_half"
+    case three      = "three"
+    case threeHalf  = "three_half"
+    case four       = "four"
+    case fourHalf   = "four_half"
+    case five       = "five"
+}
+
+///
+/// A list of the sizes the Yelp stars asset can be returned in.
+///
+public enum CDYelpStarsSize: String {
+    case small      = "small"
+    case regular    = "regular"
+    case large      = "large"
+    case extraLarge = "extra_large"
+}
+
+///
 /// A list of the transaction types the Yelp Fusion API supports. Currently, only food delivery is supported and it is only supported in the U.S.
 ///
 public enum CDYelpTransactionType: String {

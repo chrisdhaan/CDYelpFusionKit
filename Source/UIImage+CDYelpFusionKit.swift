@@ -30,18 +30,33 @@ import UIKit
 public extension UIImage {
     
     class func yelpBurstLogoRed() -> UIImage? {
-        return UIImage(named: "yelp_burst_logo_red", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+        return UIImage(named: "yelp_burst_logo_red",
+                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                       compatibleWith: nil)
     }
     
     class func yelpBurstLogoWhite() -> UIImage? {
-        return UIImage(named: "yelp_burst_logo_white", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+        return UIImage(named: "yelp_burst_logo_white",
+                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                       compatibleWith: nil)
     }
     
     class func yelpLogo() -> UIImage? {
-        return UIImage(named: "yelp_logo", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+        return UIImage(named: "yelp_logo",
+                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                       compatibleWith: nil)
     }
     
     class func yelpLogoOutline() -> UIImage? {
-        return UIImage(named: "yelp_logo_outline", in: Bundle(identifier: CDYelpFusionKitBundleIdentifier), compatibleWith: nil)
+        return UIImage(named: "yelp_logo_outline",
+                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                       compatibleWith: nil)
+    }
+    
+    class func yelpStars(numberOfStars: CDYelpStars!,
+                         forSize size: CDYelpStarsSize!) -> UIImage? {
+        return UIImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)",
+                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                       compatibleWith: nil)
     }
 }

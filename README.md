@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat)](http://cocoapods.org/pods/CDYelpFusionKit)
 [![Platform](https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat)](http://cocoapods.org/pods/CDYelpFusionKit)
 
-This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion Developers V3 API.
+This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
 
 For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example project after cloning the repo.
 
@@ -35,7 +35,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 ## Features
 
 - [x] Authentication
-- [ ] API Endpoints
+- [x] API Endpoints
   - [x] Search
   - [x] Phone Search
   - [x] Transaction Search
@@ -43,12 +43,17 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [x] Business Match
   - [x] Reviews
   - [x] Autocomplete
-  - [ ] Event Lookup
+  - [x] Event Lookup
   - [x] Event Search
-  - [ ] Featured Event
+  - [x] Featured Event
 - [x] Deep Linking
 - [x] Brand Assets
-- [ ] Documentation
+- [ ] OS Support
+  - [x] iOS
+  - [ ] watchOS
+  - [ ] macOS
+  - [ ] tvOS
+- [x] Documentation
 
 ---
 
@@ -186,7 +191,7 @@ public func searchBusinesses(byTerm term: String?,                        // Opt
                              locale: CDYelpLocale?,                       // Optional
                              limit: Int?,                                 // Optional - Default = 20, Max = 50
                              offset: Int?,                                // Optional
-                             sortBy: CDYelpSortType?,                     // Optional - Default = .bestMatch
+                             sortBy: CDYelpBusinessSortType?,             // Optional - Default = .bestMatch
                              priceTiers: [CDYelpPriceTier]?,              // Optional
                              openNow: Bool?,                              // Optional - Default = false
                              openAt: Int?,                                // Optional
@@ -194,13 +199,13 @@ public func searchBusinesses(byTerm term: String?,                        // Opt
                              completion: @escaping (CDYelpSearchResponse?) -> Void);
 ```
 
-The Search API has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
+The search endpoint has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
 
 ```swift
-CDYelpCategoryFilter.activeLife
+CDYelpBusinessCategoryFilter.activeLife
 ```
 
-The Search API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. The following lines of code show which locales can be passed into the `locale` parameter.
+The search endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. The following lines of code show which locales can be passed into the `locale` parameter.
 
 ```swift
 CDYelpLocale.chinese_hongKong
@@ -247,16 +252,16 @@ CDYelpLocale.swedish_sweden
 CDYelpLocale.turkish_turkey
 ```
 
-The Search API has a `sortBy` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
+The search endpoint has a `sortBy` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
 
 ```swift
-CDYelpSortType.bestMatch   // Default
-CDYelpSortType.rating
-CDYelpSortType.reviewCount
-CDYelpSortType.distance
+CDYelpBusinessSortType.bestMatch   // Default
+CDYelpBusinessSortType.rating
+CDYelpBusinessSortType.reviewCount
+CDYelpBusinessSortType.distance
 ```
 
-The Search API has a `price` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which price tiers can be passed into the `priceTiers` parameter.
+The search endpoint has a `price` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which price tiers can be passed into the `priceTiers` parameter.
 
 ```swift
 CDYelpPriceTier.oneDollarSign
@@ -265,7 +270,7 @@ CDYelpPriceTier.threeDollarSigns
 CDYelpPriceTier.fourDollarSigns
 ```
 
-The Search API has an `attributes` parameter which allows for query results to be filtered based off five types of criteria. The following lines of code show which attributes can be passed into the `attributes` parameter.
+The search endpoint has an `attributes` parameter which allows for query results to be filtered based off five types of criteria. The following lines of code show which attributes can be passed into the `attributes` parameter.
 
 ```swift
 CDYelpAttributeFilter.hotAndNew
@@ -275,7 +280,7 @@ CDYelpAttributeFilter.cashback
 CDYelpAttributeFilter.deals
 ```
 
-The following lines of code show an example query to the Yelp Fusion Search API.
+The following lines of code show an example query to the search endpoint.
 
 ```swift
 // Cancel any API requests previously made
@@ -295,7 +300,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
                                openNow: true,
                                openAt: nil,
                                attributes: nil) { (response) in
-            
+
   if let response = response,
       let businesses = response.businesses,
       businesses.count > 0 {
@@ -311,11 +316,11 @@ public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
                                  completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
-The following lines of code show an example query to the Yelp Fusion Phone Search API.
+The following lines of code show an example query to the phone search endpoint.
 
 ```swift
 yelpAPIClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
-            
+
   if let response = response,
       let businesses = response.businesses,
       businesses.count > 0 {
@@ -334,20 +339,20 @@ public func searchTransactions(byType type: CDYelpTransactionType!, // Required
                               completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
-The Transactions API has a `type` parameter which allows for query results to be filtered based off one type of criteria. The following lines of code show which transaction types can be passed into the `byType` parameter.
+The transactions search endpoint has a `type` parameter which allows for query results to be filtered based off one type of criteria. The following lines of code show which transaction types can be passed into the `byType` parameter.
 
 ```swift
 CDYelpTransactionType.foodDelivery
 ```
 
-The following lines of code show an example query to the Yelp Fusion Transaction Search API.
+The following lines of code show an example query to the transactions search endpoint.
 
 ```swift
 yelpAPIClient.searchTransactions(byType: .foodDelivery,
                                  location: "San Francisco",
                                  latitude: nil,
                                  longitude: nil) { (response) in
-            
+
   if let response = response,
       let businesses = response.businesses,
       businesses.count > 0 {
@@ -364,12 +369,12 @@ public func fetchBusiness(forId id: String!,     // Required
                           completion: @escaping (CDYelpBusiness?) -> Void)
 ```
 
-The following lines of code show an example query to the Yelp Fusion Business API.
+The following lines of code show an example query to the business endpoint.
 
 ```swift
 yelpAPIClient.fetchBusiness(forId: "north-india-restaurant-san-francisco"
                             locale: nil) { (business) in
-            
+
   if let business = business {
       print(business)
   }
@@ -395,14 +400,14 @@ public func searchBusinesses(byMatchType type: CDYelpBusinessMatchType!, // Requ
                              completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
-The Business Match API has a `type` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which business match types can be passed into the `byMatchType` parameter.
+The business match endpoint has a `type` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which business match types can be passed into the `byMatchType` parameter.
 
 ```swift
 CDYelpBusinessMatchType.best
 CDYelpBusinessMatchType.lookup
 ```
 
-The following lines of code show an example query to the Yelp Fusion Business API.
+The following lines of code show an example query to the business match endpoint.
 
 ```swift
 yelpAPIClient.searchBusinesses(byMatchType: .best,
@@ -435,14 +440,14 @@ public func fetchReviews(forBusinessId id: String!, // Required
                          completion: @escaping (CDYelpReviewsResponse?) -> Void)
 ```
 
-The Reviews API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
+The reviews endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
 
-The following lines of code show an example query to the Yelp Fusion Business API.
+The following lines of code show an example query to the reviews endpoint.
 
 ```swift
 yelpAPIClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
                            locale: nil) { (reviews) in
-            
+
   if let response = response,
       let reviews = response.reviews,
       reviews.count > 0 {
@@ -461,16 +466,16 @@ public func autocompleteBusinesses(byText text: String!,  // Required
                                    completion: @escaping (CDYelpAutoCompleteResponse?) -> Void)
 ```
 
-The Autocomplete API has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [Search API](#search-api) for information regarding using the `locale` parameter.
+The autocomplete endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
 
-The following lines of code show an example query to the Yelp Fusion Business API.
+The following lines of code show an example query to the autocomplete endpoint.
 
 ```swift
 yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
                                      latitude: 37.786572,
                                      longitude: -122.415192,
                                      locale: nil) { (response) in
-            
+
   if let response = response,
       let businesses = response.businesses,
       businesses.count > 0 {
@@ -481,9 +486,131 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
 
 ### [Event Lookup Endpoint](https://www.yelp.com/developers/documentation/v3/event)
 
+```swift
+public func fetchEvent(forId id: String!,     // Required
+                       locale: CDYelpLocale?, // Optional
+                       completion: @escaping (CDYelpEvent?) -> Void)
+```
+
+The event lookup endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
+
+The following lines of code show an example query to the event lookup endpoint.
+
+```swift
+yelpAPIClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
+                         locale: nil) { (event) in
+
+  if let event = event {
+      print(event)
+  }
+}
+```
+
 ### [Event Search Endpoint](https://www.yelp.com/developers/documentation/v3/event_search)
 
+```swift
+public func searchEvents(byLocale locale: CDYelpLocale?,           // Optional
+                         offset: Int?,                             // Optional
+                         limit: Int?,                              // Optional - Default = 3, Max = 50
+                         sortBy: CDYelpEventSortByType?,           // Optional - Default = .descending
+                         sortOn: CDYelpEventSortOnType?,           // Optional - Default = .popularity
+                         categories: [CDYelpEventCategoryFilter]?, // Optional
+                         startDate: Date?,                         // Optional
+                         endDate: Date?,                           // Optional
+                         isFree: Bool?,                            // Optional - Default = false
+                         location: String?,                        // Optional
+                         latitude: Double?,                        // Optional
+                         longitude: Double?,                       // Optional
+                         radius: Int?,                             // Optional - Max = 40000
+                         excludedEvents: [String]?,                // Optional
+                         completion: @escaping (CDYelpEventsResponse?) -> Void)
+```
+
+The event search endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
+
+The event search endpoint has a `sortBy` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
+
+```swift
+CDYelpEventSortByType.ascending
+CDYelpEventSortByType.descending // Default
+```
+
+The event search endpoint has a `sortOn` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
+
+```swift
+CDYelpEventSortOnType.popularity // Default
+CDYelpEventSortOnType.timeStart
+```
+
+The event search endpoint has a `categories` parameter which allows for query results to be returned based off thirteen types of categories. The following lines of code show which category types can be passed into the `categories` parameter.
+
+```swift
+CDYelpEventCategoryFilter.charities
+CDYelpEventCategoryFilter.fashion
+CDYelpEventCategoryFilter.festivalsAndFairs
+CDYelpEventCategoryFilter.film
+CDYelpEventCategoryFilter.foodAndDrink
+CDYelpEventCategoryFilter.kidsAndFamily
+CDYelpEventCategoryFilter.lecturesAndBooks
+CDYelpEventCategoryFilter.music
+CDYelpEventCategoryFilter.nightlife
+CDYelpEventCategoryFilter.other
+CDYelpEventCategoryFilter.performingArts
+CDYelpEventCategoryFilter.sportsAndActiveLife
+CDYelpEventCategoryFilter.visualArts
+```
+
+The following lines of code show an example query to the event search endpoint.
+
+```swift
+yelpAPIClient.searchEvents(byLocale: nil,
+                           offset: nil,
+                           limit: 5,
+                           sortBy: .descending,
+                           sortOn: .popularity,
+                           categories: [.music, .foodAndDrink],
+                           startDate: nil,
+                           endDate: nil,
+                           isFree: false,
+                           location: nil,
+                           latitude: 37.786572,
+                           longitude: -122.415192,
+                           radius: 10000,
+                           excludedEvents: nil) { (response) in
+
+  if let response = response,
+      let events = response.events,
+      events.count > 0 {
+      print(events)
+  }
+}
+```
+
 ### [Featured Event Endpoint](https://www.yelp.com/developers/documentation/v3/featured_event)
+
+```swift
+public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?, // Optional
+                               location: String?,               // Optional
+                               latitude: Double?,               // Optional
+                               longitude: Double?,              // Optional
+                               completion: @escaping (CDYelpEvent?) -> Void)
+```
+
+The featured event endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
+
+The following lines of code show an example query to the featured event endpoint.
+
+```swift
+yelpAPIClient.fetchFeaturedEvent(forLocale: nil,
+                                 location: nil,
+                                 latitude: 37.786572,
+                                 longitude: -122.415192) { (event) in
+
+  if let event = event {
+      print(event)
+  }
+}
+```
 
 ### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
 
@@ -512,9 +639,9 @@ public func openYelpToSearch(withTerm term: String?,                  // Optiona
                              location: String?)                       // Optional
 ```
 
-The Search Deep Link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [Search API](#search-api) for information regarding using the `category` parameter.
+The search deep link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [search endpoint](#search-endpoint) for information regarding using the `category` parameter.
 
-The following lines of code show an example query to the Yelp Search Deep Link.
+The following lines of code show an example query to the search deep link.
 
 ```swift
 let yelpDeepLink = CDYelpDeepLink()
@@ -527,7 +654,7 @@ yelpDeepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "S
 public func openYelpToBusiness(forId id: String!) // Required
 ```
 
-The following lines of code show an example query to the Yelp Business Deep Link.
+The following lines of code show an example query to the business deep link.
 
 ```swift
 let yelpDeepLink = CDYelpDeepLink()
@@ -540,7 +667,7 @@ yelpDeepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
 public func openYelpToCheckInNearby()
 ```
 
-The following lines of code show an example query to the Yelp Check In Nearby Deep Link.
+The following lines of code show an example query to the check in nearby deep link.
 
 ```swift
 let yelpDeepLink = CDYelpDeepLink()
@@ -553,7 +680,7 @@ yelpDeepLink.openYelpToCheckInNearby()
 public func openYelpToCheckIns()
 ```
 
-The following lines of code show an example query to the Yelp Check-Ins Deep Link.
+The following lines of code show an example query to the check-ins deep link.
 
 ```swift
 let yelpDeepLink = CDYelpDeepLink()
@@ -566,7 +693,7 @@ yelpDeepLink.openYelpToCheckIns()
 public func openYelpToRankedCheckIns()
 ```
 
-The following lines of code show an example query to the Yelp Check-In Rankings Deep Link.
+The following lines of code show an example query to the check-in rankings deep link.
 
 ```swift
 let yelpDeepLink = CDYelpDeepLink()
@@ -575,13 +702,15 @@ yelpDeepLink.openYelpToCheckInRankings()
 
 ### [Brand Assets](https://www.yelp.com/brand)
 
+The Yelp brand guidelines exist to achieve consistency and make sure the branded elements of Yelp are used correctly across every application.
+
 ### [Color](https://www.yelp.com/brand)
 
 ```swift
 class func yelpFiveStarRed() -> UIColor
 ```
 
-The following lines of code show an example of how to use the Yelp brand color.
+The following lines of code show an example of how to use the brand color.
 
 ```swift
 cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
@@ -596,7 +725,7 @@ class func yelpBurstLogoRed() -> UIImage?
 class func yelpBurstLogoWhite() -> UIImage?
 ```
 
-The following lines of code show examples of how to use the Yelp brand logo and the Yelp brand burst logo.
+The following lines of code show examples of how to use the brand logo and the brand burst logo.
 
 ```swift
 cell.imageView?.image = UIImage.yelpLogo()
@@ -606,6 +735,41 @@ cell.imageView?.image = UIImage.yelpBurstLogoWhite()
 ```
 
 ### [Stars](https://www.yelp.com/developers/display_requirements)
+
+```swift
+class func yelpStars(numberOfStars: CDYelpStars!,
+                     forSize size: CDYelpStarsSize!) -> UIImage?
+```
+
+The stars image has a `numberOfStars` parameter which defines the number of filled stars in the returned image. The following lines of code show which number of stars can be passed into the `numberOfStars` parameter.
+
+```swift
+CDYelpStars.zero
+CDYelpStars.one
+CDYelpStars.oneHalf
+CDYelpStars.two
+CDYelpStars.twoHalf
+CDYelpStars.three
+CDYelpStars.threeHalf
+CDYelpStars.four
+CDYelpStars.fourHalf
+CDYelpStars.five
+```
+
+The stars image has a `forSize` parameter which defines the size of the returned image. The following lines of code show which sizes can be passed into the `forSize` parameter.
+
+```swift
+CDYelpStarsSize.small
+CDYelpStarsSize.regular
+CDYelpStarsSize.large
+CDYelpStarsSize.extraLarge
+```
+
+The following lines of code show an example of how to use the stars image.
+
+```swift
+cell.imageView?.image = UIImage.yelpStars(numberOfStars: .twoHalf, forSize: .large)
+```
 
 ---
 
