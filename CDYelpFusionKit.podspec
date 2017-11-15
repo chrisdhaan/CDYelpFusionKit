@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CDYelpFusionKit'
-  s.version          = '1.1.0'
+  s.version          = '1.2.0'
   s.summary          = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description      = <<-DESC
 This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
@@ -15,6 +15,6 @@ This Swift wrapper covers all possible network endpoints and responses for the Y
   s.requires_arc = true
 
   s.source_files = 'Source/*.swift'
-  s.frameworks = 'CoreLocation', 'MapKit'
+  s.resources = ['Resources/*.xcassets']
   s.dependency 'AlamofireObjectMapper', '4.1.0'
 end

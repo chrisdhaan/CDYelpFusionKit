@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5FBF0E661EBFFEB0004C1F6B"
                BuildableName = "CDYelpFusionKit.framework"
-               BlueprintName = "CDYelpFusionKit"
+               BlueprintName = "CDYelpFusionKit iOS"
                ReferencedContainer = "container:CDYelpFusionKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,6 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -36,6 +37,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -47,7 +49,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5FBF0E661EBFFEB0004C1F6B"
             BuildableName = "CDYelpFusionKit.framework"
-            BlueprintName = "CDYelpFusionKit"
+            BlueprintName = "CDYelpFusionKit iOS"
             ReferencedContainer = "container:CDYelpFusionKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,7 +67,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5FBF0E661EBFFEB0004C1F6B"
             BuildableName = "CDYelpFusionKit.framework"
-            BlueprintName = "CDYelpFusionKit"
+            BlueprintName = "CDYelpFusionKit iOS"
             ReferencedContainer = "container:CDYelpFusionKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

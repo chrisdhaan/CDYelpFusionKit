@@ -49,8 +49,8 @@ class ViewController: UIViewController {
                                                              y: 0,
                                                              width: self.tableView.frame.size.width,
                                                              height: 50))
-        logoOutlineImageView.image = UIImage.yelpLogoOutline()
-        logoOutlineImageView.contentMode = .scaleAspectFit
+        logoOutlineImageView.image = UIImage.yelpStars(numberOfStars: .twoHalf, forSize: .large)
+        logoOutlineImageView.contentMode = .center
         self.tableView.tableFooterView = logoOutlineImageView
     }
     

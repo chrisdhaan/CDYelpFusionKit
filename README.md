@@ -87,7 +87,7 @@ gem install cocoapods
 To integrate CDYelpFusionKit into your Xcode project using CocoaPods, simply add the following line to your Podfile:
 
 ```ruby
-pod 'CDYelpFusionKit', '1.1.0'
+pod 'CDYelpFusionKit', '1.2.0'
 ```
 
 Afterwards, run the following command:
@@ -110,7 +110,7 @@ brew install carthage
 To integrate CDYelpFusionKit into your Xcode project using Carthage, simply add the following line to your Cartfile:
 
 ```ruby
-github "chrisdhaan/CDYelpFusionKit" == 1.1.0
+github "chrisdhaan/CDYelpFusionKit" == 1.2.0
 ```
 
 Afterwards, run the following command:
