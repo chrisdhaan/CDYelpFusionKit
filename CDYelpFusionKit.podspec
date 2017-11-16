@@ -12,7 +12,7 @@ This Swift wrapper covers all possible network endpoints and responses for the Y
   s.social_media_url = 'https://twitter.com/dehaan_solo'
 
   s.ios.deployment_target = '8.0'
-  s.requires_arc = true
+  s.watchos.deployment_target = '2.0'
 
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']

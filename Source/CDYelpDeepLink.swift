@@ -25,6 +25,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 public class CDYelpDeepLink: NSObject {
@@ -166,3 +168,5 @@ public class CDYelpDeepLink: NSObject {
         self.addScheme(toPath: "check_in/rankings", openWebIfAppNotInstalled: false)
     }
 }
+
+#endif

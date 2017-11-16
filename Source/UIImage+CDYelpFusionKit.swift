@@ -25,6 +25,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 public extension UIImage {
@@ -60,3 +62,5 @@ public extension UIImage {
                        compatibleWith: nil)
     }
 }
+
+#endif
