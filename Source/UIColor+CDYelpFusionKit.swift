@@ -25,6 +25,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS) || os(watchOS)
+
 import UIKit
 
 public extension UIColor {
@@ -33,3 +35,5 @@ public extension UIColor {
         return UIColor(red: (211.0/255.0), green: (35.0/255.0), blue: (35.0/255.0), alpha: 1.0)
     }
 }
+
+#endif
