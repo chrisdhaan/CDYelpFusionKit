@@ -64,7 +64,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,6 +73,8 @@ extension ViewController: UITableViewDataSource {
             return 10
         case 1:
             return 6
+        case 2:
+            return 3
         default:
             return 0
         }
@@ -164,6 +166,24 @@ extension ViewController: UITableViewDataSource {
             default:
                 cell.textLabel?.text = ""
             }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
+                cell.textLabel?.text = "/"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
+            case 1:
+                cell.backgroundColor = UIColor.yelpFiveStarRed()
+                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
+                cell.textLabel?.text = "/search"
+                cell.textLabel?.textColor = UIColor.white
+            case 2:
+                cell.imageView?.image = UIImage.yelpBurstLogoRed()
+                cell.textLabel?.text = "/biz"
+                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
+            default:
+                cell.textLabel?.text = ""
+            }
         default:
             cell.backgroundColor = UIColor.clear
             cell.imageView?.image = nil
@@ -180,6 +200,8 @@ extension ViewController: UITableViewDataSource {
             return "Yelp Fusion API Endpoints"
         case 1:
             return "Yelp Fusion Deep Linking"
+        case 2:
+            return "Yelp Fusion Web Linking"
         default:
             return ""
         }
@@ -334,17 +356,77 @@ extension ViewController: UITableViewDelegate {
         case 1:
             switch indexPath.row {
             case 0:
-                CDYelpFusionKitManager.shared.deepLink.openYelp()
+                if let url = URL.yelpDeepLink(),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             case 1:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "San Francisco, CA")
+                if let url = URL.yelpSearchDeepLink(withTerm: "burrito",
+                                                    category: .food,
+                                                    location: "San Francisco, CA"),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             case 2:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
+                if let url = URL.yelpBusinessDeepLink(forId: "the-sentinel-san-francisco"),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             case 3:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckInNearby()
+                if let url = URL.yelpCheckInNearbyDeepLink(),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             case 4:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckIns()
+                if let url = URL.yelpCheckInsDeepLink(),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             case 5:
-                CDYelpFusionKitManager.shared.deepLink.openYelpToCheckInRankings()
+                if let url = URL.yelpCheckInRankingsDeepLink(),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
+            default:
+                break
+            }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                if let url = URL.yelpWebLink(),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
+            case 1:
+                if let url = URL.yelpSearchWebLink(withTerm: "burrito",
+                                                   category: .food,
+                                                   location: "San Francisco, CA"),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
+            case 2:
+                if let url = URL.yelpBusinessWebLink(forId: "the-sentinel-san-francisco"),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url,
+                                              options: [:],
+                                              completionHandler: nil)
+                }
             default:
                 break
             }

@@ -40,6 +40,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Event Search Endpoint](#event-search-endpoint)
     - [Featured Event Endpoint](#featured-event-endpoint)
     - [Deep Linking](#deep-linking)
+    - [Web Linking](#web-linking)
     - [Brand Assets](#brand-assets)
 - [Resources](#resources)
 - [License](#license)
@@ -61,6 +62,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [x] Event Search
   - [x] Featured Event
 - [x] Deep Linking
+- [x] Web Linking
 - [x] Brand Assets
 - [x] OS Support
   - [x] iOS
@@ -73,7 +75,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 ## Requirements
 
-- iOS 8.0+
+- iOS 8.0+ / macOS 10.11+ / tvOS 9.0+ / watchOS 2.0+
 - Xcode 8.1+
 - Swift 3.0+
 - [Yelp API Access](https://www.yelp.com/developers/v3/manage_app)
@@ -628,29 +630,29 @@ yelpAPIClient.fetchFeaturedEvent(forLocale: nil,
 
 ### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
 
-The Yelp iPhone application registers URL schemes that can be used to open the Yelp application and perform searches, view business information, or open check-ins.
+The Yelp iPhone application registers URL schemes that can be used to open the Yelp application, perform searches, view business information, or check-in.
 
 ```swift
-public func isYelpInstalled() -> Bool
-public func openYelp()
+static func yelpDeepLink() -> URL?
 ```
 
 The following lines of code show an example of how to check if the Yelp application is installed and then open it.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-if (yelpDeepLink.isYelpInstalled()) {
-    // Do stuff
+if let url = URL.yelpDeepLink(),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
 }
-yelpDeepLink.openYelp()
 ```
 
 ### [Search](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-public func openYelpToSearch(withTerm term: String?,                  // Optional
-                             category: CDYelpBusinessCategoryFilter?, // Optional
-                             location: String?)                       // Optional
+static func yelpSearchDeepLink(withTerm term: String?,                  // Optional
+                               category: CDYelpBusinessCategoryFilter?, // Optional
+                               location: String?) -> URL?               // Optional
 ```
 
 The search deep link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [search endpoint](#search-endpoint) for information regarding using the `category` parameter.
@@ -658,60 +660,141 @@ The search deep link has a `category` parameter which allows for query results t
 The following lines of code show an example query to the search deep link.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-yelpDeepLink.openYelpToSearch(withTerm: "burrito", category: .food, location: "San Francisco, CA")
+if let url = URL.yelpSearchDeepLink(withTerm: "burrito",
+                                    category: .food,
+                                    location: "San Francisco, CA"),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
 ```
 
 ### [Business](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-public func openYelpToBusiness(forId id: String!) // Required
+static func yelpBusinessDeepLink(forId id: String!) -> URL? // Required
 ```
 
 The following lines of code show an example query to the business deep link.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-yelpDeepLink.openYelpToBusiness(forId: "the-sentinel-san-francisco")
+if let url = URL.yelpBusinessDeepLink(forId: "the-sentinel-san-francisco"),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
 ```
 
 ### [Check In Nearby](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-public func openYelpToCheckInNearby()
+static func yelpCheckInNearbyDeepLink() -> URL?
 ```
 
 The following lines of code show an example query to the check in nearby deep link.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-yelpDeepLink.openYelpToCheckInNearby()
+if let url = URL.yelpCheckInNearbyDeepLink(),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
 ```
 
 ### [Check-Ins](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-public func openYelpToCheckIns()
+static func yelpCheckInsDeepLink() -> URL?
 ```
 
 The following lines of code show an example query to the check-ins deep link.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-yelpDeepLink.openYelpToCheckIns()
+if let url = URL.yelpCheckInsDeepLink(),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
 ```
 
 ### [Check-In Rankings](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-public func openYelpToRankedCheckIns()
+static func yelpCheckInRankingsDeepLink() -> URL?
 ```
 
 The following lines of code show an example query to the check-in rankings deep link.
 
 ```swift
-let yelpDeepLink = CDYelpDeepLink()
-yelpDeepLink.openYelpToCheckInRankings()
+if let url = URL.yelpCheckInRankingsDeepLink(),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
+```
+
+### [Web Linking](https://www.yelp.com/developers/documentation/v2/iphone)
+
+The Yelp website registers URL schemes that can be used to open the Yelp website, perform searches or view business information.
+
+```swift
+static func yelpWebLink() -> URL?
+```
+
+The following lines of code show an example of how to open the Yelp website.
+
+```swift
+if let url = URL.yelpWebLink(),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
+```
+
+### [Search](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+static func yelpSearchWebLink(withTerm term: String?,                  // Optional
+                              category: CDYelpBusinessCategoryFilter?, // Optional
+                              location: String?) -> URL?               // Optional
+```
+
+The search deep link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [search endpoint](#search-endpoint) for information regarding using the `category` parameter.
+
+The following lines of code show an example query to the search web link.
+
+```swift
+if let url = URL.yelpSearchWebLink(withTerm: "burrito",
+                                   category: .food,
+                                   location: "San Francisco, CA"),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
+```
+
+### [Business](https://www.yelp.com/developers/documentation/v2/iphone)
+
+```swift
+static func yelpBusinessWebLink(forId id: String!) -> URL? // Required
+```
+
+The following lines of code show an example query to the business web link.
+
+```swift
+if let url = URL.yelpBusinessWebLink(forId: "the-sentinel-san-francisco"),
+    UIApplication.shared.canOpenURL(url) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: nil)
+}
 ```
 
 ### [Brand Assets](https://www.yelp.com/brand)

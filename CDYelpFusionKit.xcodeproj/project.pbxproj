@@ -38,7 +38,10 @@
 		5FBF0F741EC029AE004C1F6B /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F671EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
 		5FDB32991FAACE8E00A9CF71 /* CDYelpEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB32981FAACE8E00A9CF71 /* CDYelpEvent.swift */; };
 		5FDB32A21FAACF4100A9CF71 /* CDYelpEventsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB32A11FAACF4100A9CF71 /* CDYelpEventsResponse.swift */; };
-		B27588E01FB3B31000095F4A /* CDYelpDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */; };
+		B266344D1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
+		B266344E1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
+		B266344F1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
+		B26634501FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
 		B285D9F81FBD356E00FA9ABB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B285D9F91FBD357800FA9ABB /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B285D9FA1FBD359400FA9ABB /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -70,7 +73,6 @@
 		B285DA141FBD35C100FA9ABB /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
 		B285DA151FBD35C100FA9ABB /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		B285DA161FBD35C100FA9ABB /* CDYelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */; };
-		B285DA171FBD35C100FA9ABB /* CDYelpDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */; };
 		B285DA191FBD361900FA9ABB /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F6B1EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
 		B285DA3A1FBE1B4D00FA9ABB /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */; };
 		B285DA3C1FBE1B9500FA9ABB /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F6F1EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
@@ -104,6 +106,10 @@
 		B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
 		B285DA591FBE1BCE00FA9ABB /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		B285DA5A1FBE1BCE00FA9ABB /* CDYelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */; };
+		B285DA691FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
+		B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
+		B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
+		B285DA6C1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
 		B2C6E1F51FBCF2A800FE8462 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B2C6E1F71FBCF2D000FE8462 /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F731EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
 		B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */; };
@@ -134,7 +140,6 @@
 		B2C6E2121FBCF3A400FE8462 /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
 		B2C6E2131FBCF3A400FE8462 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		B2C6E2141FBCF3A400FE8462 /* CDYelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */; };
-		B2C6E2151FBCF3A400FE8462 /* CDYelpDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -223,10 +228,11 @@
 		5FBF0F5A1EC0299A004C1F6B /* AlamofireObjectMapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlamofireObjectMapper.xcodeproj; path = Carthage/Checkouts/AlamofireObjectMapper/AlamofireObjectMapper.xcodeproj; sourceTree = "<group>"; };
 		5FDB32981FAACE8E00A9CF71 /* CDYelpEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEvent.swift; sourceTree = "<group>"; };
 		5FDB32A11FAACF4100A9CF71 /* CDYelpEventsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEventsResponse.swift; sourceTree = "<group>"; };
-		B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpDeepLink.swift; sourceTree = "<group>"; };
+		B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
 		B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
+		B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
 		B29CB00A1FBBBAE80090F336 /* CDYelpFusionKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CDYelpFusionKit.podspec; sourceTree = "<group>"; };
 		B29CB00B1FBBBAE80090F336 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		B29CB00C1FBBBAE80090F336 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -311,7 +317,6 @@
 				5FBF0EC01EC000C3004C1F6B /* Model */,
 				5FBF0EC11EC000ED004C1F6B /* OAuth */,
 				5FBF0EC21EC00106004C1F6B /* Core */,
-				B27588D31FB3AAA000095F4A /* DeepLink */,
 				5F854E1A1FB44D4400335D73 /* Resources */,
 				5FBF0EC31EC00122004C1F6B /* Supporting Files */,
 			);
@@ -322,8 +327,10 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */,
+				B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */,
 				5F854DFD1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift */,
 				5F854E061FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift */,
+				B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -396,14 +403,6 @@
 				5FBF0F731EC0299A004C1F6B /* AlamofireObjectMapper.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B27588D31FB3AAA000095F4A /* DeepLink */ = {
-			isa = PBXGroup;
-			children = (
-				B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */,
-			);
-			name = DeepLink;
 			sourceTree = "<group>";
 		};
 		B29CB0011FBBBABC0090F336 /* Documentation */ = {
@@ -683,13 +682,13 @@
 			files = (
 				5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */,
 				5FBF0EA71EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift in Sources */,
+				B266344D1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				5FBF0EA81EC000B1004C1F6B /* CDYelpBusiness.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,
 				5FBF0EAA1EC000B1004C1F6B /* CDYelpCategory.swift in Sources */,
 				5FBF0EAB1EC000B1004C1F6B /* CDYelpCenter.swift in Sources */,
 				5FBF0EAC1EC000B1004C1F6B /* CDYelpConstants.swift in Sources */,
 				5FBF0EAD1EC000B1004C1F6B /* CDYelpCoordinates.swift in Sources */,
-				B27588E01FB3B31000095F4A /* CDYelpDeepLink.swift in Sources */,
 				5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */,
 				5FBF0EAE1EC000B1004C1F6B /* CDYelpError.swift in Sources */,
 				5FDB32991FAACE8E00A9CF71 /* CDYelpEvent.swift in Sources */,
@@ -710,6 +709,7 @@
 				5FBF0EBE1EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift in Sources */,
 				5F854DFE1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift in Sources */,
 				5F854E071FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift in Sources */,
+				B285DA691FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,13 +719,13 @@
 			files = (
 				B285DA131FBD35C100FA9ABB /* CDYelpAPIClient.swift in Sources */,
 				B285D9FE1FBD35C100FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
+				B266344E1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285D9FF1FBD35C100FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA001FBD35C100FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
 				B285DA011FBD35C100FA9ABB /* CDYelpCategory.swift in Sources */,
 				B285DA021FBD35C100FA9ABB /* CDYelpCenter.swift in Sources */,
 				B285DA141FBD35C100FA9ABB /* CDYelpConstants.swift in Sources */,
 				B285DA031FBD35C100FA9ABB /* CDYelpCoordinates.swift in Sources */,
-				B285DA171FBD35C100FA9ABB /* CDYelpDeepLink.swift in Sources */,
 				B285DA151FBD35C100FA9ABB /* CDYelpEnums.swift in Sources */,
 				B285DA041FBD35C100FA9ABB /* CDYelpError.swift in Sources */,
 				B285DA051FBD35C100FA9ABB /* CDYelpEvent.swift in Sources */,
@@ -756,6 +756,7 @@
 			files = (
 				B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */,
 				B285DA421FBE1BCE00FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
+				B266344F1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA431FBE1BCE00FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA441FBE1BCE00FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
 				B285DA451FBE1BCE00FA9ABB /* CDYelpCategory.swift in Sources */,
@@ -782,6 +783,7 @@
 				B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B285DA401FBE1BCE00FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */,
 				B285DA411FBE1BCE00FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */,
+				B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,13 +793,13 @@
 			files = (
 				B2C6E2111FBCF3A400FE8462 /* CDYelpAPIClient.swift in Sources */,
 				B2C6E1FC1FBCF3A400FE8462 /* CDYelpAutoCompleteResponse.swift in Sources */,
+				B26634501FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B2C6E1FD1FBCF3A400FE8462 /* CDYelpBusiness.swift in Sources */,
 				B2C6E1FE1FBCF3A400FE8462 /* CDYelpBusinessResponse.swift in Sources */,
 				B2C6E1FF1FBCF3A400FE8462 /* CDYelpCategory.swift in Sources */,
 				B2C6E2001FBCF3A400FE8462 /* CDYelpCenter.swift in Sources */,
 				B2C6E2121FBCF3A400FE8462 /* CDYelpConstants.swift in Sources */,
 				B2C6E2011FBCF3A400FE8462 /* CDYelpCoordinates.swift in Sources */,
-				B2C6E2151FBCF3A400FE8462 /* CDYelpDeepLink.swift in Sources */,
 				B2C6E2131FBCF3A400FE8462 /* CDYelpEnums.swift in Sources */,
 				B2C6E2021FBCF3A400FE8462 /* CDYelpError.swift in Sources */,
 				B2C6E2031FBCF3A400FE8462 /* CDYelpEvent.swift in Sources */,
@@ -818,6 +820,7 @@
 				B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B2C6E1FA1FBCF3A400FE8462 /* UIColor+CDYelpFusionKit.swift in Sources */,
 				B2C6E1FB1FBCF3A400FE8462 /* UIImage+CDYelpFusionKit.swift in Sources */,
+				B285DA6C1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
