@@ -25,7 +25,7 @@ Released on 2017-11-01.
 
 ## [1.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.2.0)
 ## API Endpoints, Deep Linking, and Brand Assets
-Released on 2017-11-09.
+Released on 2017-11-14.
 
 ### Added
 
@@ -35,3 +35,18 @@ Released on 2017-11-09.
     - [x] Featured Event
 - [x] Deep Linking
 - [x] Brand Assets
+
+## [1.3.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.3.0)
+## OS Support, Web Linking, and Deep Linking
+Released on 2017-11-16.
+
+### Added
+
+- [x] OS Support
+    - [x] macOS
+    - [x] tvOS
+    - [x] watchOS
+- [x] Web Linking
+
+### Changed
+- [x] Deep Linking
