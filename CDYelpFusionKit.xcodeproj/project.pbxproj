@@ -72,6 +72,38 @@
 		B285DA161FBD35C100FA9ABB /* CDYelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */; };
 		B285DA171FBD35C100FA9ABB /* CDYelpDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */; };
 		B285DA191FBD361900FA9ABB /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F6B1EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
+		B285DA3A1FBE1B4D00FA9ABB /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */; };
+		B285DA3C1FBE1B9500FA9ABB /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F6F1EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
+		B285DA3D1FBE1BB200FA9ABB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
+		B285DA3E1FBE1BBA00FA9ABB /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */; };
+		B285DA401FBE1BCE00FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854DFD1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift */; };
+		B285DA411FBE1BCE00FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854E061FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift */; };
+		B285DA421FBE1BCE00FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */; };
+		B285DA431FBE1BCE00FA9ABB /* CDYelpBusiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */; };
+		B285DA441FBE1BCE00FA9ABB /* CDYelpBusinessResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E901EC000B1004C1F6B /* CDYelpBusinessResponse.swift */; };
+		B285DA451FBE1BCE00FA9ABB /* CDYelpCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E911EC000B1004C1F6B /* CDYelpCategory.swift */; };
+		B285DA461FBE1BCE00FA9ABB /* CDYelpCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E921EC000B1004C1F6B /* CDYelpCenter.swift */; };
+		B285DA471FBE1BCE00FA9ABB /* CDYelpCoordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E941EC000B1004C1F6B /* CDYelpCoordinates.swift */; };
+		B285DA481FBE1BCE00FA9ABB /* CDYelpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E951EC000B1004C1F6B /* CDYelpError.swift */; };
+		B285DA491FBE1BCE00FA9ABB /* CDYelpEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB32981FAACE8E00A9CF71 /* CDYelpEvent.swift */; };
+		B285DA4A1FBE1BCE00FA9ABB /* CDYelpEventsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB32A11FAACF4100A9CF71 /* CDYelpEventsResponse.swift */; };
+		B285DA4B1FBE1BCE00FA9ABB /* CDYelpHour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E971EC000B1004C1F6B /* CDYelpHour.swift */; };
+		B285DA4C1FBE1BCE00FA9ABB /* CDYelpLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E981EC000B1004C1F6B /* CDYelpLocation.swift */; };
+		B285DA4D1FBE1BCE00FA9ABB /* CDYelpOpen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9C1EC000B1004C1F6B /* CDYelpOpen.swift */; };
+		B285DA4E1FBE1BCE00FA9ABB /* CDYelpRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9D1EC000B1004C1F6B /* CDYelpRegion.swift */; };
+		B285DA4F1FBE1BCE00FA9ABB /* CDYelpReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9E1EC000B1004C1F6B /* CDYelpReview.swift */; };
+		B285DA501FBE1BCE00FA9ABB /* CDYelpReviewsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9F1EC000B1004C1F6B /* CDYelpReviewsResponse.swift */; };
+		B285DA511FBE1BCE00FA9ABB /* CDYelpSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA11EC000B1004C1F6B /* CDYelpSearchResponse.swift */; };
+		B285DA521FBE1BCE00FA9ABB /* CDYelpTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA21EC000B1004C1F6B /* CDYelpTerm.swift */; };
+		B285DA531FBE1BCE00FA9ABB /* CDYelpUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA31EC000B1004C1F6B /* CDYelpUser.swift */; };
+		B285DA541FBE1BCE00FA9ABB /* CDYelpOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E991EC000B1004C1F6B /* CDYelpOAuthClient.swift */; };
+		B285DA551FBE1BCE00FA9ABB /* CDYelpOAuthCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9A1EC000B1004C1F6B /* CDYelpOAuthCredential.swift */; };
+		B285DA561FBE1BCE00FA9ABB /* CDYelpOAuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E9B1EC000B1004C1F6B /* CDYelpOAuthRouter.swift */; };
+		B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
+		B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
+		B285DA591FBE1BCE00FA9ABB /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
+		B285DA5A1FBE1BCE00FA9ABB /* CDYelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA01EC000B1004C1F6B /* CDYelpRouter.swift */; };
 		B2C6E1F51FBCF2A800FE8462 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B2C6E1F71FBCF2D000FE8462 /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F731EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
 		B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */; };
@@ -193,6 +225,8 @@
 		5FDB32A11FAACF4100A9CF71 /* CDYelpEventsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEventsResponse.swift; sourceTree = "<group>"; };
 		B27588DF1FB3B31000095F4A /* CDYelpDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpDeepLink.swift; sourceTree = "<group>"; };
 		B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
 		B29CB00A1FBBBAE80090F336 /* CDYelpFusionKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CDYelpFusionKit.podspec; sourceTree = "<group>"; };
 		B29CB00B1FBBBAE80090F336 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		B29CB00C1FBBBAE80090F336 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -218,6 +252,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B285DA191FBD361900FA9ABB /* AlamofireObjectMapper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B285DA251FBE1AA600FA9ABB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B285DA3C1FBE1B9500FA9ABB /* AlamofireObjectMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +299,7 @@
 				5FBF0E671EBFFEB0004C1F6B /* CDYelpFusionKit.framework */,
 				B2C6E1E61FBCF25A00FE8462 /* CDYelpFusionKit.framework */,
 				B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */,
+				B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,6 +379,7 @@
 			children = (
 				5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */,
 				5FBF0EA41EC000B1004C1F6B /* Info.plist */,
+				B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -403,6 +447,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B285DA261FBE1AA600FA9ABB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B285DA3E1FBE1BBA00FA9ABB /* CDYelpFusionKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B2C6E1E31FBCF25A00FE8462 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -450,6 +502,24 @@
 			productReference = B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		B285DA281FBE1AA600FA9ABB /* CDYelpFusionKit tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B285DA371FBE1AA600FA9ABB /* Build configuration list for PBXNativeTarget "CDYelpFusionKit tvOS" */;
+			buildPhases = (
+				B285DA241FBE1AA600FA9ABB /* Sources */,
+				B285DA251FBE1AA600FA9ABB /* Frameworks */,
+				B285DA261FBE1AA600FA9ABB /* Headers */,
+				B285DA271FBE1AA600FA9ABB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CDYelpFusionKit tvOS";
+			productName = CDYelpFusionKit;
+			productReference = B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		B2C6E1E51FBCF25A00FE8462 /* CDYelpFusionKit watchOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B2C6E1F41FBCF25B00FE8462 /* Build configuration list for PBXNativeTarget "CDYelpFusionKit watchOS" */;
@@ -484,6 +554,9 @@
 					B285D9E71FBD34F400FA9ABB = {
 						CreatedOnToolsVersion = 9.1;
 					};
+					B285DA281FBE1AA600FA9ABB = {
+						CreatedOnToolsVersion = 9.1;
+					};
 					B2C6E1E51FBCF25A00FE8462 = {
 						CreatedOnToolsVersion = 9.1;
 					};
@@ -509,6 +582,7 @@
 			targets = (
 				5FBF0E661EBFFEB0004C1F6B /* CDYelpFusionKit iOS */,
 				B285D9E71FBD34F400FA9ABB /* CDYelpFusionKit macOS */,
+				B285DA281FBE1AA600FA9ABB /* CDYelpFusionKit tvOS */,
 				B2C6E1E51FBCF25A00FE8462 /* CDYelpFusionKit watchOS */,
 			);
 		};
@@ -571,6 +645,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B285DA3A1FBE1B4D00FA9ABB /* Info-tvOS.plist in Resources */,
 				5F854E1C1FB44D6A00335D73 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +655,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B285D9F81FBD356E00FA9ABB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B285DA271FBE1AA600FA9ABB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B285DA3D1FBE1BB200FA9ABB /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,6 +746,42 @@
 				B285D9FB1FBD35C100FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B285D9FC1FBD35C100FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */,
 				B285D9FD1FBD35C100FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */,
+				B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B285DA241FBE1AA600FA9ABB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */,
+				B285DA421FBE1BCE00FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
+				B285DA431FBE1BCE00FA9ABB /* CDYelpBusiness.swift in Sources */,
+				B285DA441FBE1BCE00FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
+				B285DA451FBE1BCE00FA9ABB /* CDYelpCategory.swift in Sources */,
+				B285DA461FBE1BCE00FA9ABB /* CDYelpCenter.swift in Sources */,
+				B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */,
+				B285DA471FBE1BCE00FA9ABB /* CDYelpCoordinates.swift in Sources */,
+				B285DA591FBE1BCE00FA9ABB /* CDYelpEnums.swift in Sources */,
+				B285DA481FBE1BCE00FA9ABB /* CDYelpError.swift in Sources */,
+				B285DA491FBE1BCE00FA9ABB /* CDYelpEvent.swift in Sources */,
+				B285DA4A1FBE1BCE00FA9ABB /* CDYelpEventsResponse.swift in Sources */,
+				B285DA4B1FBE1BCE00FA9ABB /* CDYelpHour.swift in Sources */,
+				B285DA4C1FBE1BCE00FA9ABB /* CDYelpLocation.swift in Sources */,
+				B285DA541FBE1BCE00FA9ABB /* CDYelpOAuthClient.swift in Sources */,
+				B285DA551FBE1BCE00FA9ABB /* CDYelpOAuthCredential.swift in Sources */,
+				B285DA561FBE1BCE00FA9ABB /* CDYelpOAuthRouter.swift in Sources */,
+				B285DA4D1FBE1BCE00FA9ABB /* CDYelpOpen.swift in Sources */,
+				B285DA4E1FBE1BCE00FA9ABB /* CDYelpRegion.swift in Sources */,
+				B285DA4F1FBE1BCE00FA9ABB /* CDYelpReview.swift in Sources */,
+				B285DA501FBE1BCE00FA9ABB /* CDYelpReviewsResponse.swift in Sources */,
+				B285DA5A1FBE1BCE00FA9ABB /* CDYelpRouter.swift in Sources */,
+				B285DA511FBE1BCE00FA9ABB /* CDYelpSearchResponse.swift in Sources */,
+				B285DA521FBE1BCE00FA9ABB /* CDYelpTerm.swift in Sources */,
+				B285DA531FBE1BCE00FA9ABB /* CDYelpUser.swift in Sources */,
+				B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
+				B285DA401FBE1BCE00FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */,
+				B285DA411FBE1BCE00FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,6 +884,7 @@
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
@@ -824,6 +944,7 @@
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -834,7 +955,7 @@
 		5FBF0E701EBFFEB0004C1F6B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -853,7 +974,7 @@
 		5FBF0E711EBFFEB0004C1F6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -904,6 +1025,42 @@
 				PRODUCT_NAME = CDYelpFusionKit;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		B285DA2E1FBE1AA600FA9ABB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Info-tvOS.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.christopherdehaan.CDYelpFusionKit;
+				PRODUCT_NAME = CDYelpFusionKit;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		B285DA2F1FBE1AA600FA9ABB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Info-tvOS.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.christopherdehaan.CDYelpFusionKit;
+				PRODUCT_NAME = CDYelpFusionKit;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
 		};
@@ -969,6 +1126,15 @@
 			buildConfigurations = (
 				B285D9ED1FBD34F400FA9ABB /* Debug */,
 				B285D9EE1FBD34F400FA9ABB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B285DA371FBE1AA600FA9ABB /* Build configuration list for PBXNativeTarget "CDYelpFusionKit tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B285DA2E1FBE1AA600FA9ABB /* Debug */,
+				B285DA2F1FBE1AA600FA9ABB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,10 +1,24 @@
 # CDYelpFusionKit
 
-[![CI Status](http://img.shields.io/travis/chrisdhaan/CDYelpFusionKit.svg?style=flat)](https://travis-ci.org/chrisdhaan/CDYelpFusionKit)
-[![Version](https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat)](http://cocoapods.org/pods/CDYelpFusionKit)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![License](https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat)](http://cocoapods.org/pods/CDYelpFusionKit)
-[![Platform](https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat)](http://cocoapods.org/pods/CDYelpFusionKit)
+<p align="center">
+    <a href="https://travis-ci.org/chrisdhaan/CDYelpFusionKit">
+        <img src="http://img.shields.io/travis/chrisdhaan/CDYelpFusionKit.svg?style=flat" alt="CI Status">
+    </a>
+    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
+        <img src="https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat" alt="Version">
+    </a>
+    <a href="https://github.com/Carthage/Carthage">
+        <img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible">
+    </a>
+    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
+        <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
+    </a>
+    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
+        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platform">
+    </a>
+</p>
+
+<br>
 
 This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
 
@@ -48,11 +62,11 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
   - [x] Featured Event
 - [x] Deep Linking
 - [x] Brand Assets
-- [ ] OS Support
+- [x] OS Support
   - [x] iOS
-  - [ ] watchOS
-  - [ ] macOS
-  - [ ] tvOS
+  - [x] macOS
+  - [x] tvOS
+  - [x] watchOS
 - [x] Documentation
 
 ---
