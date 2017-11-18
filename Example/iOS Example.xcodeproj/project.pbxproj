@@ -17,6 +17,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5F4895381FBF485000659788 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBF0EC41EC003C2004C1F6B /* CDYelpFusionKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B285D9E81FBD34F400FA9ABB;
+			remoteInfo = "CDYelpFusionKit macOS";
+		};
+		5F48953A1FBF485000659788 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBF0EC41EC003C2004C1F6B /* CDYelpFusionKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B285DA291FBE1AA600FA9ABB;
+			remoteInfo = "CDYelpFusionKit tvOS";
+		};
+		5F48953C1FBF485000659788 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBF0EC41EC003C2004C1F6B /* CDYelpFusionKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B2C6E1E61FBCF25A00FE8462;
+			remoteInfo = "CDYelpFusionKit watchOS";
+		};
 		5FBF0EC81EC003C2004C1F6B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FBF0EC41EC003C2004C1F6B /* CDYelpFusionKit.xcodeproj */;
@@ -121,6 +142,9 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0EC91EC003C2004C1F6B /* CDYelpFusionKit.framework */,
+				5F4895391FBF485000659788 /* CDYelpFusionKit.framework */,
+				5F48953B1FBF485000659788 /* CDYelpFusionKit.framework */,
+				5F48953D1FBF485000659788 /* CDYelpFusionKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -154,7 +178,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "Dehaan Solo Software";
 				TargetAttributes = {
 					5FBF0E471EBFFE8D004C1F6B = {
@@ -188,6 +212,27 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		5F4895391FBF485000659788 /* CDYelpFusionKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CDYelpFusionKit.framework;
+			remoteRef = 5F4895381FBF485000659788 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5F48953B1FBF485000659788 /* CDYelpFusionKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CDYelpFusionKit.framework;
+			remoteRef = 5F48953A1FBF485000659788 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5F48953D1FBF485000659788 /* CDYelpFusionKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CDYelpFusionKit.framework;
+			remoteRef = 5F48953C1FBF485000659788 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		5FBF0EC91EC003C2004C1F6B /* CDYelpFusionKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -261,7 +306,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -269,7 +316,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -311,7 +362,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -319,7 +372,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

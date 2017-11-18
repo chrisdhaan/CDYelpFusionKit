@@ -69,7 +69,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             for category in categories {
                 categoriesString = categoriesString + category.rawValue + ","
             }
-            let parametersString = categoriesString.substring(to: categoriesString.index(before: categoriesString.endIndex))
+            let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
             params["categories"] = parametersString
         }
         if let locale = locale,
@@ -93,7 +93,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             for priceTier in priceTiers {
                 priceString = priceString + priceTier.rawValue + ","
             }
-            let parametersString = priceString.substring(to: priceString.index(before: priceString.endIndex))
+            let parametersString = String(priceString[..<priceString.index(before: priceString.endIndex)])
             params["price"] = parametersString
         }
         if let openNow = openNow {
@@ -109,7 +109,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             for attribute in attributes {
                 attributesString = attributesString + attribute.rawValue + ","
             }
-            let parametersString = attributesString.substring(to: attributesString.index(before: attributesString.endIndex))
+            let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
             params["attributes"] = parametersString
         }
         
@@ -314,7 +314,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             for category in categories {
                 categoriesString = categoriesString + category.rawValue + ","
             }
-            let parametersString = categoriesString.substring(to: categoriesString.index(before: categoriesString.endIndex))
+            let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
             params["categories"] = parametersString
         }
         if let isFree = isFree {
@@ -340,7 +340,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             for excludedEvent in excludedEvents {
                 excludedEventsString = excludedEventsString + excludedEvent + ","
             }
-            let parametersString = excludedEventsString.substring(to: excludedEventsString.index(before: excludedEventsString.endIndex))
+            let parametersString = String(excludedEventsString[..<excludedEventsString.index(before: excludedEventsString.endIndex)])
             params["excluded_events"] = parametersString
         }
         

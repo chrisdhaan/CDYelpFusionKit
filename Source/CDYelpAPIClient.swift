@@ -332,24 +332,24 @@ public class CDYelpAPIClient: NSObject {
                                  yelpBusinessId: String?,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert(type != nil, "A business match type is required to query the Yelp Fusion API business match endpoint.")
-        assert((name != nil && name != "" && name.characters.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((name != nil && name != "" && name.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
         if let addressOne = addressOne {
-            assert(addressOne.characters.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+            assert(addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
         if let addressTwo = addressTwo {
-            assert(addressTwo.characters.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+            assert(addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
         if let addressThree = addressThree {
-            assert(addressThree.characters.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+            assert(addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        assert((city != nil && city != "" && city.characters.count <= 64), "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert((state != nil && state != "" && state.characters.count <= 3), "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert((country != nil && country != "" && country.characters.count <= 2), "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((city != nil && city != "" && city.count <= 64), "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((state != nil && state != "" && state.count <= 3), "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((country != nil && country != "" && country.count <= 2), "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
         if let phone = phone {
-            assert(phone.characters.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
+            assert(phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
         }
         if let postalCode = postalCode {
-            assert(postalCode.characters.count <= 12, "postalCode must contain no more than 12 characters to query the Yelp Fusion API business match endpoint.")
+            assert(postalCode.count <= 12, "postalCode must contain no more than 12 characters to query the Yelp Fusion API business match endpoint.")
         }
         
         if self.isAuthenticated() == true {
