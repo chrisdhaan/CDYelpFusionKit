@@ -4,6 +4,9 @@
     <a href="https://travis-ci.org/chrisdhaan/CDYelpFusionKit">
         <img src="http://img.shields.io/travis/chrisdhaan/CDYelpFusionKit.svg?style=flat" alt="CI Status">
     </a>
+    <a href="https://github.com/chrisdhaan/CDYelpFusionKit/releases">
+        <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
+    </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
         <img src="https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat" alt="Version">
     </a>
@@ -11,10 +14,10 @@
         <img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
+        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platform">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platform">
+        <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
     </a>
 </p>
 
@@ -64,7 +67,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 - [x] Deep Linking
 - [x] Web Linking
 - [x] Brand Assets
-- [x] OS Support
+- [x] Platform Support
   - [x] iOS
   - [x] macOS
   - [x] tvOS

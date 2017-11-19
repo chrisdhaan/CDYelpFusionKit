@@ -14,6 +14,8 @@ Released on 2017-09-28.
     - [x] Autocomplete
 - [x] Complete CDYelpCategoryFilter Mapping
 
+---
+
 ## [1.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.1.0)
 ## API Endpoints
 Released on 2017-11-01.
@@ -22,6 +24,8 @@ Released on 2017-11-01.
 
 - [ ] API Endpoints
     - [x] Business Match
+
+---
 
 ## [1.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.2.0)
 ## API Endpoints, Deep Linking, and Brand Assets
@@ -36,17 +40,32 @@ Released on 2017-11-14.
 - [x] Deep Linking
 - [x] Brand Assets
 
+---
+
 ## [1.3.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.3.0)
 ## OS Support, Web Linking, and Deep Linking
 Released on 2017-11-16.
 
 ### Added
 
-- [x] OS Support
+- [x] Platform Support
     - [x] macOS
     - [x] tvOS
     - [x] watchOS
 - [x] Web Linking
 
 ### Changed
+
 - [x] Deep Linking
+
+---
+
+## [1.4.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.4.0)
+## SDK Support
+Released on 2017-11-19.
+
+### Added
+
+- [x] Swift 4.0
+
+---
