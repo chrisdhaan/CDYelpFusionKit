@@ -1,4 +1,17 @@
-# CDYelpFusionKit
+<p align="center">
+    <a>
+        <img src="https://raw.githubusercontent.com/chrisdhaan/CDYelpFusionKit/master/Documentation/cdyelpfusionkit.png" alt="CDYelpFusionKit" width="850" />
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/chrisdhaan/CDYelpFusionKit" target="_blank">
+        <img src="https://raw.githubusercontent.com/chrisdhaan/CDYelpFusionKit/master/Documentation/github.png" alt="Star CDYelpFusionKit On Github" />
+    </a>
+    <a href="http://stackoverflow.com/questions/tagged/cdyelpfusionkit" target="_blank">
+        <img src="https://raw.githubusercontent.com/chrisdhaan/CDYelpFusionKit/master/Documentation/stackoverflow.png" alt="Stack Overflow" />
+    </a>
+</p>
 
 <p align="center">
     <a href="https://travis-ci.org/chrisdhaan/CDYelpFusionKit">
