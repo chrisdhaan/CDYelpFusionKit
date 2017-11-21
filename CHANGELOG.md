@@ -62,7 +62,7 @@ Released on 2017-11-16.
 
 ## [1.4.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.4.0)
 ## SDK Support
-Released on 2017-11-19.
+Released on 2017-11-20.
 
 ### Added
 
