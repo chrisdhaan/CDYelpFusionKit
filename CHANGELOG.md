@@ -43,7 +43,7 @@ Released on 2017-11-14.
 ---
 
 ## [1.3.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.3.0)
-## OS Support, Web Linking, and Deep Linking
+## Platform Support, Web Linking, and Deep Linking
 Released on 2017-11-16.
 
 ### Added
