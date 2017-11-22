@@ -25,6 +25,14 @@ Released on 2017-11-01.
 - [ ] API Endpoints
     - [x] Business Match
 
+### Changed
+
+- [x] CDYelpAPIClient Completion Block Parameters
+    - [x] `@escaping (CDYelpSearchResponse?, Error?)` becomes `@escaping (CDYelpSearchResponse?)`
+    - [x] `@escaping (CDYelpBusiness?, Error?)` becomes `@escaping (CDYelpBusiness?)`
+    - [x] `@escaping (CDYelpReviewsResponse?, Error?)` becomes `@escaping (CDYelpReviewsResponse?)`
+    - [x] `@escaping (CDYelpAutoCompleteResponse?, Error?)` becomes `@escaping (CDYelpAutoCompleteResponse?)`
+
 ---
 
 ## [1.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.2.0)
@@ -39,6 +47,12 @@ Released on 2017-11-14.
     - [x] Featured Event
 - [x] Deep Linking
 - [x] Brand Assets
+
+### Changed
+
+- [x] CDYelpEnums Naming
+    - [x] `CDYelpCategoryFilter` becomes `CDYelpBusinessCategoryFilter`
+    - [x] `CDSortType` becomes `CDYelpBusinessSortType`
 
 ---
 
