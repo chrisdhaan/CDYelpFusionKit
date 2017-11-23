@@ -91,7 +91,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 ## Requirements
 
-- iOS 8.0+ / macOS 10.11+ / tvOS 9.0+ / watchOS 2.0+
+- iOS 8.0+ / macOS 10.10+ / tvOS 9.0+ / watchOS 2.0+
 - Xcode 8.1+
 - Swift 3.0+
 - [Yelp API Access](https://www.yelp.com/developers/v3/manage_app)
