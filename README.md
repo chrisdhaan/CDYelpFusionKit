@@ -80,6 +80,8 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 - [x] Deep Linking
 - [x] Web Linking
 - [x] Brand Assets
+  - [x] Color
+  - [x] Logos
 - [x] Platform Support
   - [x] iOS
   - [x] macOS
