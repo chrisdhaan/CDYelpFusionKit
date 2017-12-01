@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/06/2016.
 //
-//  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,8 @@ class ViewController: UIViewController {
                                                              y: 0,
                                                              width: self.tableView.frame.size.width,
                                                              height: 50))
-        logoOutlineImageView.image = UIImage.yelpStars(numberOfStars: .twoHalf, forSize: .large)
+        logoOutlineImageView.image = UIImage.yelpStars(numberOfStars: .twoHalf,
+                                                       forSize: .large)
         logoOutlineImageView.contentMode = .center
         self.tableView.tableFooterView = logoOutlineImageView
     }
@@ -63,11 +64,13 @@ class ViewController: UIViewController {
 // MARK: - UITableViewDataSource Methods
 
 extension ViewController: UITableViewDataSource {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return 10
@@ -80,8 +83,11 @@ extension ViewController: UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CDYelpEndpointCell", for: indexPath)
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CDYelpEndpointCell",
+                                                 for: indexPath)
         
         switch indexPath.section {
         case 0:
@@ -194,7 +200,8 @@ extension ViewController: UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
             return "Yelp Fusion API Endpoints"
@@ -211,7 +218,9 @@ extension ViewController: UITableViewDataSource {
 // MARK: - UITableView Delegate Methods
 
 extension ViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
             CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
@@ -435,7 +444,8 @@ extension ViewController: UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
         return 0.1
     }
 }

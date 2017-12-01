@@ -110,6 +110,14 @@
 		B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
 		B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
 		B285DA6C1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
+		B2C4A04F1FCE323600B253A2 /* CDColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A04E1FCE323600B253A2 /* CDColor.swift */; };
+		B2C4A0501FCE323600B253A2 /* CDColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A04E1FCE323600B253A2 /* CDColor.swift */; };
+		B2C4A0511FCE323600B253A2 /* CDColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A04E1FCE323600B253A2 /* CDColor.swift */; };
+		B2C4A0521FCE323600B253A2 /* CDColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A04E1FCE323600B253A2 /* CDColor.swift */; };
+		B2C4A0541FCE33D000B253A2 /* CDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A0531FCE33D000B253A2 /* CDImage.swift */; };
+		B2C4A0551FCE33D000B253A2 /* CDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A0531FCE33D000B253A2 /* CDImage.swift */; };
+		B2C4A0561FCE33D000B253A2 /* CDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A0531FCE33D000B253A2 /* CDImage.swift */; };
+		B2C4A0571FCE33D000B253A2 /* CDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4A0531FCE33D000B253A2 /* CDImage.swift */; };
 		B2C6E1F51FBCF2A800FE8462 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B2C6E1F71FBCF2D000FE8462 /* AlamofireObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF0F731EC0299A004C1F6B /* AlamofireObjectMapper.framework */; };
 		B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */; };
@@ -241,6 +249,8 @@
 		B29CB0121FBBBAFE0090F336 /* ISSUE_TEMPLATE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = ISSUE_TEMPLATE.md; sourceTree = "<group>"; };
 		B29CB0131FBBBAFE0090F336 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		B29CB0141FBBBAFE0090F336 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B2C4A04E1FCE323600B253A2 /* CDColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDColor.swift; sourceTree = "<group>"; };
+		B2C4A0531FCE33D000B253A2 /* CDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDImage.swift; sourceTree = "<group>"; };
 		B2C6E1E61FBCF25A00FE8462 /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -314,6 +324,7 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0EBF1EC000BC004C1F6B /* Extensions */,
+				B2C4A0461FCE321B00B253A2 /* Helpers */,
 				5FBF0EC01EC000C3004C1F6B /* Model */,
 				5FBF0EC11EC000ED004C1F6B /* OAuth */,
 				5FBF0EC21EC00106004C1F6B /* Core */,
@@ -425,6 +436,15 @@
 				B29CB00B1FBBBAE80090F336 /* Package.swift */,
 			);
 			name = Deployment;
+			sourceTree = "<group>";
+		};
+		B2C4A0461FCE321B00B253A2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B2C4A04E1FCE323600B253A2 /* CDColor.swift */,
+				B2C4A0531FCE33D000B253A2 /* CDImage.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -700,6 +720,7 @@
 				5FBF0EB21EC000B1004C1F6B /* CDYelpOAuthClient.swift in Sources */,
 				5FBF0EB31EC000B1004C1F6B /* CDYelpOAuthCredential.swift in Sources */,
 				5FBF0EB41EC000B1004C1F6B /* CDYelpOAuthRouter.swift in Sources */,
+				B2C4A0541FCE33D000B253A2 /* CDImage.swift in Sources */,
 				5FBF0EB51EC000B1004C1F6B /* CDYelpOpen.swift in Sources */,
 				5FBF0EB61EC000B1004C1F6B /* CDYelpRegion.swift in Sources */,
 				5FBF0EB71EC000B1004C1F6B /* CDYelpReview.swift in Sources */,
@@ -710,6 +731,7 @@
 				5FBF0EBC1EC000B1004C1F6B /* CDYelpUser.swift in Sources */,
 				5FBF0EBE1EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift in Sources */,
 				5F854DFE1FB44B0F00335D73 /* UIColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A04F1FCE323600B253A2 /* CDColor.swift in Sources */,
 				5F854E071FB44B1F00335D73 /* UIImage+CDYelpFusionKit.swift in Sources */,
 				B285DA691FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
@@ -737,6 +759,7 @@
 				B285DA101FBD35C100FA9ABB /* CDYelpOAuthClient.swift in Sources */,
 				B285DA111FBD35C100FA9ABB /* CDYelpOAuthCredential.swift in Sources */,
 				B285DA121FBD35C100FA9ABB /* CDYelpOAuthRouter.swift in Sources */,
+				B2C4A0551FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285DA091FBD35C100FA9ABB /* CDYelpOpen.swift in Sources */,
 				B285DA0A1FBD35C100FA9ABB /* CDYelpRegion.swift in Sources */,
 				B285DA0B1FBD35C100FA9ABB /* CDYelpReview.swift in Sources */,
@@ -747,6 +770,7 @@
 				B285DA0F1FBD35C100FA9ABB /* CDYelpUser.swift in Sources */,
 				B285D9FB1FBD35C100FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B285D9FC1FBD35C100FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0501FCE323600B253A2 /* CDColor.swift in Sources */,
 				B285D9FD1FBD35C100FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */,
 				B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
@@ -774,6 +798,7 @@
 				B285DA541FBE1BCE00FA9ABB /* CDYelpOAuthClient.swift in Sources */,
 				B285DA551FBE1BCE00FA9ABB /* CDYelpOAuthCredential.swift in Sources */,
 				B285DA561FBE1BCE00FA9ABB /* CDYelpOAuthRouter.swift in Sources */,
+				B2C4A0561FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285DA4D1FBE1BCE00FA9ABB /* CDYelpOpen.swift in Sources */,
 				B285DA4E1FBE1BCE00FA9ABB /* CDYelpRegion.swift in Sources */,
 				B285DA4F1FBE1BCE00FA9ABB /* CDYelpReview.swift in Sources */,
@@ -784,6 +809,7 @@
 				B285DA531FBE1BCE00FA9ABB /* CDYelpUser.swift in Sources */,
 				B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B285DA401FBE1BCE00FA9ABB /* UIColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0511FCE323600B253A2 /* CDColor.swift in Sources */,
 				B285DA411FBE1BCE00FA9ABB /* UIImage+CDYelpFusionKit.swift in Sources */,
 				B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
@@ -811,6 +837,7 @@
 				B2C6E20E1FBCF3A400FE8462 /* CDYelpOAuthClient.swift in Sources */,
 				B2C6E20F1FBCF3A400FE8462 /* CDYelpOAuthCredential.swift in Sources */,
 				B2C6E2101FBCF3A400FE8462 /* CDYelpOAuthRouter.swift in Sources */,
+				B2C4A0571FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B2C6E2071FBCF3A400FE8462 /* CDYelpOpen.swift in Sources */,
 				B2C6E2081FBCF3A400FE8462 /* CDYelpRegion.swift in Sources */,
 				B2C6E2091FBCF3A400FE8462 /* CDYelpReview.swift in Sources */,
@@ -821,6 +848,7 @@
 				B2C6E20D1FBCF3A400FE8462 /* CDYelpUser.swift in Sources */,
 				B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */,
 				B2C6E1FA1FBCF3A400FE8462 /* UIColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0521FCE323600B253A2 /* CDColor.swift in Sources */,
 				B2C6E1FB1FBCF3A400FE8462 /* UIImage+CDYelpFusionKit.swift in Sources */,
 				B285DA6C1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);

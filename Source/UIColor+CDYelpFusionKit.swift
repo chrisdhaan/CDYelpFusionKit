@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/9/17.
 //
-//  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,12 @@
 //  THE SOFTWARE.
 //
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
-import UIKit
-
-public extension UIColor {
+public extension CDColor {
     
-    class func yelpFiveStarRed() -> UIColor {
-        return UIColor(red: (211.0/255.0), green: (35.0/255.0), blue: (35.0/255.0), alpha: 1.0)
+    class func yelpFiveStarRed() -> CDColor {
+        return CDColor(red: (211.0/255.0),
+                       green: (35.0/255.0),
+                       blue: (35.0/255.0),
+                       alpha: 1.0)
     }
 }
-
-#endif

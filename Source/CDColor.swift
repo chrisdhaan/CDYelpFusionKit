@@ -1,8 +1,8 @@
 //
-//  CDYelpBusinessResponse.swift
+//  CDColor.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 11/28/17.
 //
 //  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,18 +25,12 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+import Foundation
 
-public class CDYelpBusinessResponse: Mappable {
-
-    public var business: CDYelpBusiness?
-    public var error: CDYelpError?
-    
-    public required init?(map: Map) {
-    }
-    
-    public func mapping(map: Map) {
-        business    <- map[""]
-        error       <- map["error"]
-    }
-}
+#if os(iOS) || os(tvOS) || os(watchOS)
+    import UIKit
+    public typealias CDColor = UIColor
+#elseif os(macOS)
+    import Cocoa
+    public typealias CDColor = NSColor
+#endif

@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/9/17.
 //
-//  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,42 +25,39 @@
 //  THE SOFTWARE.
 //
 
+public extension CDImage {
+    
+    private class func cdImage(named name: String!) -> CDImage? {
 #if os(iOS) || os(tvOS)
-
-import UIKit
-
-public extension UIImage {
-    
-    class func yelpBurstLogoRed() -> UIImage? {
-        return UIImage(named: "yelp_burst_logo_red",
+        return CDImage(named: name,
                        in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
                        compatibleWith: nil)
+#elseif os(watchOS)
+        return CDImage(named: name)
+#else
+        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
+        return bundle?.image(forResource: name)
+#endif
     }
     
-    class func yelpBurstLogoWhite() -> UIImage? {
-        return UIImage(named: "yelp_burst_logo_white",
-                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
-                       compatibleWith: nil)
+    class func yelpBurstLogoRed() -> CDImage? {
+        return CDImage.cdImage(named: "yelp_burst_logo_red")
     }
     
-    class func yelpLogo() -> UIImage? {
-        return UIImage(named: "yelp_logo",
-                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
-                       compatibleWith: nil)
+    class func yelpBurstLogoWhite() -> CDImage? {
+        return CDImage.cdImage(named: "yelp_burst_logo_white")
     }
     
-    class func yelpLogoOutline() -> UIImage? {
-        return UIImage(named: "yelp_logo_outline",
-                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
-                       compatibleWith: nil)
+    class func yelpLogo() -> CDImage? {
+        return CDImage.cdImage(named: "yelp_logo")
+    }
+    
+    class func yelpLogoOutline() -> CDImage? {
+        return CDImage.cdImage(named: "yelp_logo_outline")
     }
     
     class func yelpStars(numberOfStars: CDYelpStars!,
-                         forSize size: CDYelpStarsSize!) -> UIImage? {
-        return UIImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)",
-                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
-                       compatibleWith: nil)
+                         forSize size: CDYelpStarsSize!) -> CDImage? {
+        return CDImage.cdImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)")
     }
 }
-
-#endif

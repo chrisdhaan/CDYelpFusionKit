@@ -2,9 +2,9 @@
 //  String+CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
-//  Created by Chris De Haan on 11/16/17.
+//  Created by Christopher de Haan on 11/16/17.
 //
-//  Copyright (c) 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
