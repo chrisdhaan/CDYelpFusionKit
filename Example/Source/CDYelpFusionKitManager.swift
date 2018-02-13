@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/6/17.
 //
-//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2018 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@ final class CDYelpFusionKitManager: NSObject {
     
     func configure() {
         // How to authorize using your clientId and clientSecret
-        self.apiClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
-                                         clientSecret: "YOUR_CLIENT_SECRET")
+        self.apiClient = CDYelpAPIClient(apiKey: "YOUR_API_KEY")
     }
 }

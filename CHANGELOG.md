@@ -83,3 +83,15 @@ Released on 2017-11-20.
 - [x] Swift 4.0
 
 ---
+
+## [1.5.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.0)
+## Authentication
+Released on 2018-02-12.
+
+### Changed
+
+- [x] Authentication
+    - [x] `clientId and clientSecret` becomes `apiKey`
+    - [x] Removes `CDYelpOAuthClient`, `CDYelpOAuthCredential`, and `CDYelpOAuthRouter` classes
+
+---

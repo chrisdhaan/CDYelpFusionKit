@@ -67,26 +67,26 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 - [x] Authentication
 - [x] API Endpoints
-  - [x] Search
-  - [x] Phone Search
-  - [x] Transaction Search
-  - [x] Business
-  - [x] Business Match
-  - [x] Reviews
-  - [x] Autocomplete
-  - [x] Event Lookup
-  - [x] Event Search
-  - [x] Featured Event
+    - [x] Search
+    - [x] Phone Search
+    - [x] Transaction Search
+    - [x] Business
+    - [x] Business Match
+    - [x] Reviews
+    - [x] Autocomplete
+    - [x] Event Lookup
+    - [x] Event Search
+    - [x] Featured Event
 - [x] Deep Linking
 - [x] Web Linking
 - [x] Brand Assets
-  - [x] Color
-  - [x] Logos
+    - [x] Color
+    - [x] Logos
 - [x] Platform Support
-  - [x] iOS
-  - [x] macOS
-  - [x] tvOS
-  - [x] watchOS
+    - [x] iOS
+    - [x] macOS
+    - [x] tvOS
+    - [x] watchOS
 - [x] Documentation
 
 ---
@@ -121,7 +121,7 @@ gem install cocoapods
 To integrate CDYelpFusionKit into your Xcode project using CocoaPods, simply add the following line to your Podfile:
 
 ```ruby
-pod 'CDYelpFusionKit', '1.4.0'
+pod 'CDYelpFusionKit', '1.5.0'
 ```
 
 Afterwards, run the following command:
@@ -144,7 +144,7 @@ brew install carthage
 To integrate CDYelpFusionKit into your Xcode project using Carthage, simply add the following line to your Cartfile:
 
 ```ruby
-github "chrisdhaan/CDYelpFusionKit" == 1.4.0
+github "chrisdhaan/CDYelpFusionKit" == 1.5.0
 ```
 
 Afterwards, run the following command:
@@ -167,7 +167,7 @@ To integrate CDYelpFusionKit into your Xcode project using The Swift Package Man
 
 ```swift
 dependencies: [
-    .Package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.4.0")
+    .Package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.5.0")
 ]
 ```
 
@@ -204,8 +204,7 @@ Next, select your application project in the **Project Navigator** to navigate t
 ### Initialization
 
 ```swift
-let yelpAPIClient = CDYelpAPIClient(clientId: "YOUR_CLIENT_ID",
-                                    clientSecret: "YOUR_CLIENT_SECRET")
+let yelpAPIClient = CDYelpAPIClient(apiKey: "YOUR_API_KEY")
 ```
 
 Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fusion API using any of the following methods.

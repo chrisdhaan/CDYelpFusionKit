@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/7/16.
 //
-//  Copyright © 2016-2017 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2018 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,14 @@ import AlamofireObjectMapper
 
 public class CDYelpAPIClient: NSObject {
     
+    private let apiKey: String!
     private lazy var manager: Alamofire.SessionManager = {
-        if let accessToken = self.oAuthClient.accessToken() {
+        if let apiKey = self.apiKey,
+            apiKey != "" {
             // Get the default headers
             var headers = Alamofire.SessionManager.defaultHTTPHeaders
             // Add the Authorization header
-            headers["Authorization"] = "Bearer \(accessToken)"
+            headers["Authorization"] = "Bearer \(apiKey)"
             // Create a custom session configuration
             let configuration = URLSessionConfiguration.default
             // Add the Authorization header
@@ -46,7 +48,6 @@ public class CDYelpAPIClient: NSObject {
             return Alamofire.SessionManager()
         }
     }()
-    private let oAuthClient: CDYelpOAuthClient!
     
     // MARK: - Initializers
     
@@ -54,38 +55,17 @@ public class CDYelpAPIClient: NSObject {
     /// Initializes a new CDYelpAPIClient object.
     ///
     /// - parameters:
-    ///   - clientId: (**Required**) A unique identifier for the Yelp application used for authenticating with the Yelp Fusion API.
-    ///   - clientSecret: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
     ///
     /// - returns: Void
     ///
-    public init(clientId: String!,
-                clientSecret: String!) {
-        assert((clientId != nil && clientId != "") &&
-            (clientSecret != nil && clientSecret != ""), "Both a clientId and clientSecret are required to query the Yelp Fusion API oauth endpoint.")
-        self.oAuthClient = CDYelpOAuthClient(clientId: clientId,
-                                             clientSecret: clientSecret)
+    public init(apiKey: String!) {
+        assert((apiKey != nil && apiKey != ""), "An apiKey is required to query the Yelp Fusion API.")
+        self.apiKey = apiKey
         super.init()
-        self.authenticate()
     }
     
     // MARK: - Authentication Methods
-    
-    ///
-    /// Attempts to authenticate the Yelp application credentials with the Yelp Fusion API if the Yelp application has not already authenticated.
-    ///
-    /// - returns: Void
-    ///
-    private func authenticate() {
-        if self.oAuthClient.isAuthorized() == false {
-            self.oAuthClient.authorize { (successful, error) in
-
-                if let error = error {
-                    print("authorize() failure: ", error.localizedDescription)
-                }
-            }
-        }
-    }
     
     ///
     /// Determines whether or not the Yelp application has successfully authenticated with the Yelp Fusion API.
@@ -93,19 +73,11 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: Bool
     ///
     public func isAuthenticated() -> Bool {
-        return self.oAuthClient.isAuthorized()
-    }
-    
-    ///
-    /// Removes the Yelp Fusion API authentication credentials.
-    ///
-    /// - returns: Void
-    ///
-    public func unauthenticate() {
-        let userDefaults = UserDefaults.standard
-        userDefaults.removeObject(forKey: CDYelpDefaults.accessToken)
-        userDefaults.removeObject(forKey: CDYelpDefaults.expiresIn)
-        userDefaults.synchronize()
+        if let _ = self.apiKey,
+            self.apiKey != "" {
+            return true
+        }
+        return false
     }
     
     // MARK: - Yelp Fusion API Methods
