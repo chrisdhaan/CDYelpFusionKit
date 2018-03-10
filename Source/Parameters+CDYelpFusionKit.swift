@@ -78,7 +78,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let sortBy = sortBy,
             sortBy.rawValue != "" {
-            params["sort_By"] = sortBy.rawValue
+            params["sort_by"] = sortBy.rawValue
         }
         if let priceTiers = priceTiers,
             priceTiers.count > 0 {
