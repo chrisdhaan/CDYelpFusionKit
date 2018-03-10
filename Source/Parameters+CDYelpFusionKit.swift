@@ -64,13 +64,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let categories = categories,
             categories.count > 0 {
-            
-            var categoriesString = ""
-            for category in categories {
-                categoriesString = categoriesString + category.rawValue + ","
-            }
-            let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
-            params["categories"] = parametersString
+            params["categories"] = categories.map{ $0.rawValue }.joined(separator: ",")
         }
         if let locale = locale,
             locale.rawValue != "" {
@@ -88,13 +82,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let priceTiers = priceTiers,
             priceTiers.count > 0 {
-            
-            var priceString = ""
-            for priceTier in priceTiers {
-                priceString = priceString + priceTier.rawValue + ","
-            }
-            let parametersString = String(priceString[..<priceString.index(before: priceString.endIndex)])
-            params["price"] = parametersString
+            params["price"] = priceTiers.map{ $0.rawValue }.joined(separator: ",")
         }
         if let openNow = openNow {
             params["open_now"] = openNow
