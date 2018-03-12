@@ -36,7 +36,7 @@ public extension CDImage {
         return CDImage(named: name)
 #else
         let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        return bundle?.image(forResource: name)
+        return bundle?.image(forResource: NSImage.Name(rawValue: name!))
 #endif
     }
     
