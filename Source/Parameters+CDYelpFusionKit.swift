@@ -28,7 +28,7 @@
 import Alamofire
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
-    
+
     static func searchParameters(withTerm term: String?,
                                  location: String?,
                                  latitude: Double?,
@@ -44,7 +44,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let term = term,
             term != "" {
             params["term"] = term
@@ -64,7 +64,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let categories = categories,
             categories.count > 0 {
-            params["categories"] = categories.map{ $0.rawValue }.joined(separator: ",")
+            params["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
         if let locale = locale,
             locale.rawValue != "" {
@@ -82,7 +82,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let priceTiers = priceTiers,
             priceTiers.count > 0 {
-            params["price"] = priceTiers.map{ $0.rawValue }.joined(separator: ",")
+            params["price"] = priceTiers.map { $0.rawValue }.joined(separator: ",")
         }
         if let openNow = openNow {
             params["open_now"] = openNow
@@ -92,34 +92,34 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let attributes = attributes,
             attributes.count > 0 {
-            
+
             var attributesString = ""
             for attribute in attributes {
-                attributesString = attributesString + attribute.rawValue + ","
+                attributesString += attribute.rawValue + ","
             }
             let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
             params["attributes"] = parametersString
         }
-        
+
         return params
     }
-    
+
     static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let phone = phoneNumber,
             phone != "" {
             params["phone"] = phone
         }
-        
+
         return params
     }
-    
+
     static func transactionsParameters(withLocation location: String?,
                                        latitude: Double?,
                                        longitude: Double?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let location = location,
             location != "" {
             params["location"] = location
@@ -130,21 +130,21 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let longitude = longitude {
             params["longitude"] = longitude
         }
-        
+
         return params
     }
-    
+
     static func businessParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
         }
-        
+
         return params
     }
-    
+
     static func matchesParameters(withName name: String!,
                                   addressOne: String?,
                                   addressTwo: String?,
@@ -158,7 +158,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                   postalCode: String?,
                                   yelpBusinessId: String?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let name = name,
             name != "" {
             params["name"] = name
@@ -205,27 +205,27 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             yelpBusinessId != "" {
             params["yelp_business_id"] = yelpBusinessId
         }
-        
+
         return params
     }
-    
+
     static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
         }
-        
+
         return params
     }
-    
+
     static func autocompleteParameters(withText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
                                        locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let text = text,
             text != "" {
             params["text"] = text
@@ -240,21 +240,21 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
         }
-        
+
         return params
     }
-    
+
     static func eventParameters(withLocale locale: CDYelpLocale?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
         }
-        
+
         return params
     }
-    
+
     static func eventsParameters(withLocale locale: CDYelpLocale?,
                                  offset: Int?,
                                  limit: Int?,
@@ -270,7 +270,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  radius: Int?,
                                  excludedEvents: [String]?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
@@ -297,10 +297,10 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let categories = categories,
             categories.count > 0 {
-            
+
             var categoriesString = ""
             for category in categories {
-                categoriesString = categoriesString + category.rawValue + ","
+                categoriesString += category.rawValue + ","
             }
             let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
             params["categories"] = parametersString
@@ -323,24 +323,24 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         }
         if let excludedEvents = excludedEvents,
             excludedEvents.count > 0 {
-            
+
             var excludedEventsString = ""
             for excludedEvent in excludedEvents {
-                excludedEventsString = excludedEventsString + excludedEvent + ","
+                excludedEventsString += excludedEvent + ","
             }
             let parametersString = String(excludedEventsString[..<excludedEventsString.index(before: excludedEventsString.endIndex)])
             params["excluded_events"] = parametersString
         }
-        
+
         return params
     }
-    
+
     static func featuredEvent(withLocale locale: CDYelpLocale?,
                               location: String?,
                               latitude: Double?,
                               longitude: Double?) -> Parameters {
         var params: Parameters = [:]
-        
+
         if let locale = locale,
             locale.rawValue != "" {
             params["locale"] = locale.rawValue
@@ -355,7 +355,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let longitude = longitude {
             params["longitude"] = longitude
         }
-        
+
         return params
     }
 }

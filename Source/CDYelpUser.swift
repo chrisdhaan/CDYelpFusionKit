@@ -31,10 +31,10 @@ public class CDYelpUser: Mappable {
 
     public var name: String?
     public var imageUrl: URL?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         name        <- map["name"]
         imageUrl    <- (map["image_url"], URLTransform())

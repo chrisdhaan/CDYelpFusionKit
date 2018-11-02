@@ -28,7 +28,7 @@
 import Alamofire
 
 enum CDYelpRouter: URLRequestConvertible {
-    
+
     case search(parameters: Parameters)
     case phone(parameters: Parameters)
     case transactions(type: String, parameters: Parameters)
@@ -39,7 +39,7 @@ enum CDYelpRouter: URLRequestConvertible {
     case event(id: String, parameters: Parameters)
     case events(parameters: Parameters)
     case featuredEvent(parameters: Parameters)
-    
+
     var method: HTTPMethod {
         switch self {
         case .search(parameters: _),
@@ -55,7 +55,7 @@ enum CDYelpRouter: URLRequestConvertible {
             return .get
         }
     }
-    
+
     var path: String {
         switch self {
         case .search(parameters: _):
@@ -80,13 +80,13 @@ enum CDYelpRouter: URLRequestConvertible {
             return "events/featured"
         }
     }
-    
+
     func asURLRequest() throws -> URLRequest {
         let url = try CDYelpURL.base.asURL()
-        
+
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))
         urlRequest.httpMethod = method.rawValue
-        
+
         switch self {
         case .search(let parameters),
              .phone(let parameters),
@@ -100,7 +100,7 @@ enum CDYelpRouter: URLRequestConvertible {
              .featuredEvent(let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
         }
-        
+
         return urlRequest
     }
 }

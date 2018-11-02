@@ -34,10 +34,10 @@ public class CDYelpReview: Mappable {
     public var rating: Int?
     public var timeCreated: String?
     public var user: CDYelpUser?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         text        <- map["text"]
         url         <- (map["url"], URLTransform())

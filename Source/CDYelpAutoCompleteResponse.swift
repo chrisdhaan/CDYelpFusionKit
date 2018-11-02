@@ -33,10 +33,10 @@ public class CDYelpAutoCompleteResponse: Mappable {
     public var businesses: [CDYelpBusiness]?
     public var categories: [CDYelpCategory]?
     public var error: CDYelpError?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         terms       <- map["terms"]
         businesses  <- map["businesses"]

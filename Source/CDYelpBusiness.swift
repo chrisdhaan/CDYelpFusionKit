@@ -28,7 +28,7 @@
 import ObjectMapper
 
 public class CDYelpBusiness: Mappable {
-    
+
     public var id: String?
     public var name: String?
     public var imageUrl: URL?
@@ -46,10 +46,10 @@ public class CDYelpBusiness: Mappable {
     public var coordinates: CDYelpCoordinates?
     public var location: CDYelpLocation?
     public var transactions: [String]?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         id              <- map["id"]
         name            <- map["name"]

@@ -1,0 +1,40 @@
+disabled_rules: # rule identifiers to exclude from running
+included: # paths to include during linting. `--path` is ignored if present.
+  - Source
+  - Example/Source
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Carthage
+  - Example/Resources
+
+# configurable rules can be customized from this configuration file.
+# colon behavior when specifying types or defining dictionaries
+colon:
+  apply_to_dictionaries: false
+# complexity of a function
+cyclomatic_complexity:
+  error: 50
+  warning: 45
+# number of lines allowed in a function
+function_body_length:
+  error: 50
+  warning: 45
+# number of parameters allowed for a function
+function_parameter_count: 15
+# number of lines allowed in a file
+file_length:
+  error: 1200
+  warning: 600
+# rules related to vars/lets
+identifier_name:
+  excluded:
+    - id
+# number of characters allowed in a line
+line_length:
+  error: 200
+  ignores_comments: true
+  ignores_function_declarations: true
+  warning: 189
+# number of lines allowed in a type declaration
+type_body_length:
+  error: 400
+  warning: 300

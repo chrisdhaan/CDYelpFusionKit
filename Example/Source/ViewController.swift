@@ -28,15 +28,15 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak private var tableView: UITableView!
-    
+
     // MARK: - Lifecycle Methods
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+
         let logoImageView = UIImageView(frame: CGRect(x: 0,
                                                       y: 0,
                                                       width: self.tableView.frame.size.width,
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         logoImageView.image = UIImage.yelpLogo()
         logoImageView.contentMode = .scaleAspectFit
         self.tableView.tableHeaderView = logoImageView
-        
+
         let logoOutlineImageView = UIImageView(frame: CGRect(x: 0,
                                                              y: 0,
                                                              width: self.tableView.frame.size.width,
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         logoOutlineImageView.contentMode = .center
         self.tableView.tableFooterView = logoOutlineImageView
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -64,11 +64,11 @@ class ViewController: UIViewController {
 // MARK: - UITableViewDataSource Methods
 
 extension ViewController: UITableViewDataSource {
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
-    
+
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -82,13 +82,14 @@ extension ViewController: UITableViewDataSource {
             return 0
         }
     }
-    
+
+    // swiftlint:disable function_body_length
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "CDYelpEndpointCell",
                                                  for: indexPath)
-        
+
         switch indexPath.section {
         case 0:
             switch indexPath.row {
@@ -196,10 +197,11 @@ extension ViewController: UITableViewDataSource {
             cell.textLabel?.text = ""
             cell.textLabel?.textColor = UIColor.black
         }
-        
+
         return cell
     }
-    
+    // swiftlint:enable function_body_length
+
     func tableView(_ tableView: UITableView,
                    titleForHeaderInSection section: Int) -> String? {
         switch section {
@@ -218,9 +220,11 @@ extension ViewController: UITableViewDataSource {
 // MARK: - UITableView Delegate Methods
 
 extension ViewController: UITableViewDelegate {
-    
+
+    // swiftlint:disable function_body_length
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
+
         switch indexPath.section {
         case 0:
             CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
@@ -240,7 +244,7 @@ extension ViewController: UITableViewDelegate {
                                                                          openNow: true,
                                                                          openAt: nil,
                                                                          attributes: nil) { (response) in
-                                                                            
+
                                                                             if let response = response,
                                                                                 let businesses = response.businesses,
                                                                                 businesses.count > 0 {
@@ -249,7 +253,7 @@ extension ViewController: UITableViewDelegate {
                 }
             case 1:
                 CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
-                    
+
                     if let response = response,
                         let businesses = response.businesses,
                         businesses.count > 0 {
@@ -261,7 +265,7 @@ extension ViewController: UITableViewDelegate {
                                                                            location: "San Francisco",
                                                                            latitude: nil,
                                                                            longitude: nil) { (response) in
-                                                                            
+
                                                                             if let response = response,
                                                                                 let businesses = response.businesses,
                                                                                 businesses.count > 0 {
@@ -271,7 +275,7 @@ extension ViewController: UITableViewDelegate {
             case 3:
                 CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
                                                                       locale: nil) { (business) in
-                                                                        
+
                                                                         if let business = business {
                                                                             print(business)
                                                                         }
@@ -290,7 +294,7 @@ extension ViewController: UITableViewDelegate {
                                                                          phone: nil,
                                                                          postalCode: nil,
                                                                          yelpBusinessId: nil) { (response) in
-                                                                            
+
                                                                             if let response = response,
                                                                                 let businesses = response.businesses,
                                                                                 businesses.count > 0 {
@@ -300,7 +304,7 @@ extension ViewController: UITableViewDelegate {
             case 5:
                 CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
                                                                      locale: nil) { (response) in
-                                                                        
+
                                                                         if let response = response,
                                                                             let reviews = response.reviews,
                                                                             reviews.count > 0 {
@@ -312,7 +316,7 @@ extension ViewController: UITableViewDelegate {
                                                                                latitude: 37.786572,
                                                                                longitude: -122.415192,
                                                                                locale: nil) { (response) in
-                                                                                
+
                                                                                 if let response = response,
                                                                                     let businesses = response.businesses,
                                                                                     businesses.count > 0 {
@@ -322,7 +326,7 @@ extension ViewController: UITableViewDelegate {
             case 7:
                 CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
                                                                    locale: nil) { (event) in
-                                                                    
+
                                                                     if let event = event {
                                                                         print(event)
                                                                     }
@@ -342,7 +346,7 @@ extension ViewController: UITableViewDelegate {
                                                                      longitude: -122.415192,
                                                                      radius: 10000,
                                                                      excludedEvents: nil) { (response) in
-                                                                        
+
                                                                         if let response = response,
                                                                             let events = response.events,
                                                                             events.count > 0 {
@@ -354,7 +358,7 @@ extension ViewController: UITableViewDelegate {
                                                                            location: nil,
                                                                            latitude: 37.786572,
                                                                            longitude: -122.415192) { (event) in
-                                                                            
+
                                                                             if let event = event {
                                                                                 print(event)
                                                                             }
@@ -443,7 +447,8 @@ extension ViewController: UITableViewDelegate {
             break
         }
     }
-    
+    // swiftlint:enable function_body_length
+
     func tableView(_ tableView: UITableView,
                    heightForFooterInSection section: Int) -> CGFloat {
         return 0.1

@@ -49,10 +49,10 @@ public class CDYelpEvent: Mappable {
     public var timeStart: Date?
     public var location: CDYelpLocation?
     public var businessId: String?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         attendingCount  <- map["attending_count"]
         category        <- map["category"]

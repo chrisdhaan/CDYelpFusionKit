@@ -32,10 +32,10 @@ public class CDYelpReviewsResponse: Mappable {
     public var total: Int?
     public var reviews: [CDYelpReview]?
     public var error: CDYelpError?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         total   <- map["total"]
         reviews <- map["reviews"]

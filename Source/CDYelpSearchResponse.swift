@@ -33,10 +33,10 @@ public class CDYelpSearchResponse: Mappable {
     public var businesses: [CDYelpBusiness]?
     public var region: CDYelpRegion?
     public var error: CDYelpError?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         total       <- map["total"]
         businesses  <- map["businesses"]

@@ -28,7 +28,7 @@
 public extension URL {
 
     // MARK: - Private Methods
-    
+
     static private func addScheme(toPath path: String,
                                   forWeb: Bool) -> URL? {
         if forWeb {
@@ -37,16 +37,16 @@ public extension URL {
             return self.yelpURL(withPath: "\(CDYelpURL.deepLink)///\(path)")
         }
     }
-    
+
     static private func yelpURL(withPath path: String) -> URL? {
         if let url = URL(string: path) {
             return url
         }
         return nil
     }
-    
+
     // MARK: - Public Methods
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device).
     ///
@@ -55,7 +55,7 @@ public extension URL {
     static func yelpDeepLink() -> URL? {
         return self.yelpURL(withPath: CDYelpURL.deepLink)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp website.
     ///
@@ -64,7 +64,7 @@ public extension URL {
     static func yelpWebLink() -> URL? {
         return self.yelpURL(withPath: CDYelpURL.web)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the search page.
     ///
@@ -81,11 +81,11 @@ public extension URL {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
-        
+
         return self.addScheme(toPath: path,
                               forWeb: false)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp website to the search page.
     ///
@@ -102,11 +102,11 @@ public extension URL {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
-        
+
         return self.addScheme(toPath: path,
                               forWeb: true)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to a business page.
     ///
@@ -117,13 +117,13 @@ public extension URL {
     ///
     static func yelpBusinessDeepLink(forId id: String!) -> URL? {
         assert((id != nil && id != ""), "A business id is to query the Yelp business deep link.")
-        
+
         let path = String.businessLinkPath(forId: id)
-        
+
         return self.addScheme(toPath: path,
                               forWeb: false)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp website to a business page.
     ///
@@ -134,13 +134,13 @@ public extension URL {
     ///
     static func yelpBusinessWebLink(forId id: String!) -> URL? {
         assert((id != nil && id != ""), "A business id is to query the Yelp business deep link.")
-        
+
         let path = String.businessLinkPath(forId: id)
-        
+
         return self.addScheme(toPath: path,
                               forWeb: true)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the check-in nearby page.
     ///
@@ -150,7 +150,7 @@ public extension URL {
         return self.addScheme(toPath: "check_in/nearby",
                               forWeb: false)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the check-ins page.
     ///
@@ -160,7 +160,7 @@ public extension URL {
         return self.addScheme(toPath: "check_ins",
                               forWeb: false)
     }
-    
+
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the check-ins page sorted by rankings.
     ///

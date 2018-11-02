@@ -29,7 +29,7 @@ import Alamofire
 import AlamofireObjectMapper
 
 public class CDYelpAPIClient: NSObject {
-    
+
     private let apiKey: String!
     private lazy var manager: Alamofire.SessionManager = {
         if let apiKey = self.apiKey,
@@ -48,9 +48,9 @@ public class CDYelpAPIClient: NSObject {
             return Alamofire.SessionManager()
         }
     }()
-    
+
     // MARK: - Initializers
-    
+
     ///
     /// Initializes a new CDYelpAPIClient object.
     ///
@@ -64,24 +64,24 @@ public class CDYelpAPIClient: NSObject {
         self.apiKey = apiKey
         super.init()
     }
-    
+
     // MARK: - Authentication Methods
-    
+
     ///
     /// Determines whether or not the Yelp application has successfully authenticated with the Yelp Fusion API.
     ///
     /// - returns: Bool
     ///
     public func isAuthenticated() -> Bool {
-        if let _ = self.apiKey,
+        if self.apiKey != nil,
             self.apiKey != "" {
             return true
         }
         return false
     }
-    
+
     // MARK: - Yelp Fusion API Methods
-    
+
     ///
     /// This endpoint returns up to 1000 businesses based on the provided search criteria. It has basic information about each business. To get detailed information or reviews, use a returned business id and refer to **fetchBusiness(byId: )** and **fetchReviews(forBusinessId: )**.
     ///
@@ -127,9 +127,9 @@ public class CDYelpAPIClient: NSObject {
         if let limit = limit {
             assert((limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
         }
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.searchParameters(withTerm: term,
                                                      location: location,
                                                      latitude: latitude,
@@ -160,7 +160,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns a list of businesses based on the provided phone number. It is possible for more than one businesses having the same phone number (for example, chain stores with the same +1 800 phone number). At this time, this endpoint does not return businesses without any reviews.
     ///
@@ -173,13 +173,13 @@ public class CDYelpAPIClient: NSObject {
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion API phone endpoint.")
-        
+
         if self.isAuthenticated() == true {
-        
+
             let params = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
-            
+
             self.manager.request(CDYelpRouter.phone(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
-                
+
                 switch response.result {
                 case .success(let searchResponse):
                     if let error = searchResponse.error {
@@ -193,7 +193,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns a list of businesses which support certain transactions. At this time, this endpoint does not return businesses without any reviews. Currently, this endpoint only supports food delivery in the US.
     ///
@@ -214,15 +214,15 @@ public class CDYelpAPIClient: NSObject {
         assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
-        
+
         if self.isAuthenticated() == true {
-        
+
             let params = Parameters.transactionsParameters(withLocation: location,
                                                            latitude: latitude,
                                                            longitude: longitude)
-            
+
             self.manager.request(CDYelpRouter.transactions(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
-                
+
                 switch response.result {
                 case .success(let searchResponse):
                     if let error = searchResponse.error {
@@ -236,7 +236,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns the detail information of a business. To get a business id, refer to **searchBusinesses(byTerm: )**, **searchBusinesses(byPhoneNumber: )**, **searchTransactions(byType: )**, **searchBusinesses(byMatchType: )** or **autocompleteBusinesses(byText: )**. To get review information for a business, refer to **fetchReviews(forBusinessId: )**. At this time, this endpoint does not return businesses without any reviews.
     ///
@@ -250,13 +250,13 @@ public class CDYelpAPIClient: NSObject {
                               locale: CDYelpLocale?,
                               completion: @escaping (CDYelpBusiness?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API business endpoint.")
-        
+
         if self.isAuthenticated() == true {
-        
+
             let params = Parameters.businessParameters(withLocale: locale)
-            
+
             self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusiness>) in
-                
+
                 switch response.result {
                 case .success(let business):
                     completion(business)
@@ -267,7 +267,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoints lets you match business data from other sources against Yelps businesses based on some minimal information provided. Best match will only return 1 business that is the best match based on the information provided. Lookup will return up to 10 businesses that is the best match based on the information provided. At this time, the API does not return businesses without any reviews.
     ///
@@ -323,9 +323,9 @@ public class CDYelpAPIClient: NSObject {
         if let postalCode = postalCode {
             assert(postalCode.count <= 12, "postalCode must contain no more than 12 characters to query the Yelp Fusion API business match endpoint.")
         }
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.matchesParameters(withName: name,
                                                       addressOne: addressOne,
                                                       addressTwo: addressTwo,
@@ -338,9 +338,9 @@ public class CDYelpAPIClient: NSObject {
                                                       phone: phone,
                                                       postalCode: postalCode,
                                                       yelpBusinessId: yelpBusinessId)
-            
+
             self.manager.request(CDYelpRouter.matches(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
-                
+
                 switch response.result {
                 case .success(let searchResponse):
                     if let error = searchResponse.error {
@@ -354,7 +354,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns the up to three reviews for a business.
     ///
@@ -369,13 +369,13 @@ public class CDYelpAPIClient: NSObject {
                              locale: CDYelpLocale?,
                              completion: @escaping (CDYelpReviewsResponse?) -> Void) {
         assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API reviews endpoint.")
-        
+
         if self.isAuthenticated() == true {
-        
+
             let params = Parameters.reviewsParameters(withLocale: locale)
-            
+
             self.manager.request(CDYelpRouter.reviews(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpReviewsResponse>) in
-                
+
                 switch response.result {
                 case .success(let reviewsResponse):
                     if let error = reviewsResponse.error {
@@ -389,7 +389,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns autocomplete suggestions for search keywords, businesses and categories, based on the input text.
     ///
@@ -410,16 +410,16 @@ public class CDYelpAPIClient: NSObject {
         assert((text != nil && text != "") &&
             latitude != nil &&
             longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint.")
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.autocompleteParameters(withText: text,
                                                            latitude: latitude,
                                                            longitude: longitude,
                                                            locale: locale)
-            
+
             self.manager.request(CDYelpRouter.autocomplete(parameters: params)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse>) in
-                
+
                 switch response.result {
                 case .success(let autocompleteResponse):
                     if let error = autocompleteResponse.error {
@@ -433,7 +433,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns the detailed information of a Yelp event. To get an event id, refer to **searchEvents(byLocale: )** or **fetchFeaturedEvent(forLocale: )**. To enable this endpoint, please join the Yelp Developer Beta Program.
     ///
@@ -448,13 +448,13 @@ public class CDYelpAPIClient: NSObject {
                            locale: CDYelpLocale?,
                            completion: @escaping (CDYelpEvent?) -> Void) {
         assert((id != nil && id != ""), "An event id is required to query the Yelp Fusion API event endpoint.")
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.eventParameters(withLocale: locale)
-            
+
             self.manager.request(CDYelpRouter.event(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
-            
+
                 switch response.result {
                 case .success(let event):
                     completion(event)
@@ -465,7 +465,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns events based on the provided search criteria. To enable this endpoint, please join the Yelp Developer Beta Program.
     ///
@@ -508,9 +508,9 @@ public class CDYelpAPIClient: NSObject {
         if let radius = radius {
             assert((radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
         }
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.eventsParameters(withLocale: locale,
                                                      offset: offset,
                                                      limit: limit,
@@ -525,9 +525,9 @@ public class CDYelpAPIClient: NSObject {
                                                      longitude: longitude,
                                                      radius: radius,
                                                      excludedEvents: excludedEvents)
-            
+
             self.manager.request(CDYelpRouter.events(parameters: params)).responseObject { (response: DataResponse<CDYelpEventsResponse>) in
-                
+
                 switch response.result {
                 case .success(let eventsResponse):
                     if let error = eventsResponse.error {
@@ -541,7 +541,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// This endpoint returns the featured event for a given location. Featured events are chosen by Yelp's community managers. To enable this endpoint, please join the Yelp Developer Beta Program.
     ///
@@ -561,16 +561,16 @@ public class CDYelpAPIClient: NSObject {
                                    completion: @escaping (CDYelpEvent?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
             (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
-        
+
         if self.isAuthenticated() == true {
-            
+
             let params = Parameters.featuredEvent(withLocale: locale,
                                                   location: location,
                                                   latitude: latitude,
                                                   longitude: longitude)
-            
+
             self.manager.request(CDYelpRouter.featuredEvent(parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
-                
+
                 switch response.result {
                 case .success(let event):
                     completion(event)
@@ -581,7 +581,7 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
-    
+
     ///
     /// Cancels any in progress or pending API requests.
     ///

@@ -38,10 +38,10 @@ public class CDYelpLocation: Mappable {
     public var country: String?
     public var displayAddress: [String]?
     public var crossStreets: String?
-    
+
     public required init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         addressOne      <- map["address1"]
         addressTwo      <- map["address2"]
