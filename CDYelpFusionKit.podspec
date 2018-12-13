@@ -18,5 +18,5 @@ This Swift wrapper covers all possible network endpoints and responses for the Y
 
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']
-  s.dependency 'AlamofireObjectMapper', '5.1.0'
+  s.dependency 'AlamofireObjectMapper', '5.2.0'
 end

@@ -6,4 +6,4 @@
 	url = https://github.com/tristanhimmelman/AlamofireObjectMapper.git
 [submodule "Carthage/Checkouts/ObjectMapper"]
 	path = Carthage/Checkouts/ObjectMapper
-	url = https://github.com/Hearst-DD/ObjectMapper.git
+	url = https://github.com/tristanhimmelman/ObjectMapper.git
