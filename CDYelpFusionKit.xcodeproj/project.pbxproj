@@ -385,7 +385,7 @@
 				5FBF0F671EC0299A004C1F6B /* AlamofireObjectMapper.framework */,
 				5FBF0F691EC0299A004C1F6B /* AlamofireObjectMapperTests iOS.xctest */,
 				5FBF0F6B1EC0299A004C1F6B /* AlamofireObjectMapper.framework */,
-				5FBF0F6D1EC0299A004C1F6B /* AlamofireObjectMapperTests OSX.xctest */,
+				5FBF0F6D1EC0299A004C1F6B /* AlamofireObjectMapperTests macOS.xctest */,
 				5FBF0F6F1EC0299A004C1F6B /* AlamofireObjectMapper.framework */,
 				5FBF0F711EC0299A004C1F6B /* AlamofireObjectMapperTests tvOS.xctest */,
 				5FBF0F731EC0299A004C1F6B /* AlamofireObjectMapper.framework */,
@@ -615,10 +615,10 @@
 			remoteRef = 5FBF0F6A1EC0299A004C1F6B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5FBF0F6D1EC0299A004C1F6B /* AlamofireObjectMapperTests OSX.xctest */ = {
+		5FBF0F6D1EC0299A004C1F6B /* AlamofireObjectMapperTests macOS.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "AlamofireObjectMapperTests OSX.xctest";
+			path = "AlamofireObjectMapperTests macOS.xctest";
 			remoteRef = 5FBF0F6C1EC0299A004C1F6B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
