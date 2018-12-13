@@ -221,6 +221,8 @@
 		5FBF0F5A1EC0299A004C1F6B /* AlamofireObjectMapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlamofireObjectMapper.xcodeproj; path = Carthage/Checkouts/AlamofireObjectMapper/AlamofireObjectMapper.xcodeproj; sourceTree = "<group>"; };
 		5FDB32981FAACE8E00A9CF71 /* CDYelpEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEvent.swift; sourceTree = "<group>"; };
 		5FDB32A11FAACF4100A9CF71 /* CDYelpEventsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEventsResponse.swift; sourceTree = "<group>"; };
+		B20430A521C2906C0072D3C0 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		B20430A621C2906C0072D3C0 /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = "<group>"; };
 		B25523B2218D02FF007CDD7A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		B25523C5218D037B007CDD7A /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = PULL_REQUEST_TEMPLATE.md; path = .github/PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		B25523C6218D037B007CDD7A /* ISSUE_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = ISSUE_TEMPLATE.md; path = .github/ISSUE_TEMPLATE.md; sourceTree = "<group>"; };
@@ -406,7 +408,9 @@
 		B29CB0091FBBBAC60090F336 /* Deployment */ = {
 			isa = PBXGroup;
 			children = (
+				B20430A621C2906C0072D3C0 /* .swift-version */,
 				B25523B2218D02FF007CDD7A /* .swiftlint.yml */,
+				B20430A521C2906C0072D3C0 /* .travis.yml */,
 				B29CB00A1FBBBAE80090F336 /* CDYelpFusionKit.podspec */,
 				B29CB00C1FBBBAE80090F336 /* LICENSE */,
 				B29CB00B1FBBBAE80090F336 /* Package.swift */,
