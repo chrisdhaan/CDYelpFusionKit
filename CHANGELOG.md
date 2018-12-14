@@ -1,9 +1,10 @@
-## [1.6.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.6.0)
+## [1.5.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.1)
 ## SDK Support and Platform Support
-Released on 2018-12-13.
+Released on 2018-12-14.
 
 ### Added
 
+- [x] Swift 4.2
 - [x] SwiftLint
 
 ### Changed

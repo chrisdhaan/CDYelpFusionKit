@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CDYelpFusionKit'
-  s.version          = '1.6.0'
+  s.version          = '1.5.1'
   s.summary          = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description      = <<-DESC
 This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.

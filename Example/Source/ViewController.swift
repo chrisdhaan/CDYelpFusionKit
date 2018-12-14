@@ -59,6 +59,16 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    func openUrl(_ url: URL) {
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url,
+                                      options: [:],
+                                      completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource Methods
@@ -371,46 +381,34 @@ extension ViewController: UITableViewDelegate {
             case 0:
                 if let url = URL.yelpDeepLink(),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 1:
                 if let url = URL.yelpSearchDeepLink(withTerm: "burrito",
                                                     category: .food,
                                                     location: "San Francisco, CA"),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 2:
                 if let url = URL.yelpBusinessDeepLink(forId: "the-sentinel-san-francisco"),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 3:
                 if let url = URL.yelpCheckInNearbyDeepLink(),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 4:
                 if let url = URL.yelpCheckInsDeepLink(),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 5:
                 if let url = URL.yelpCheckInRankingsDeepLink(),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             default:
                 break
@@ -420,25 +418,19 @@ extension ViewController: UITableViewDelegate {
             case 0:
                 if let url = URL.yelpWebLink(),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 1:
                 if let url = URL.yelpSearchWebLink(withTerm: "burrito",
                                                    category: .food,
                                                    location: "San Francisco, CA"),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             case 2:
                 if let url = URL.yelpBusinessWebLink(forId: "the-sentinel-san-francisco"),
                     UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url,
-                                              options: [:],
-                                              completionHandler: nil)
+                    self.openUrl(url)
                 }
             default:
                 break
