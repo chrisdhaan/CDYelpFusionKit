@@ -94,8 +94,8 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 ## Requirements
 
 - iOS 8.0+ / macOS 10.10+ / tvOS 9.0+ / watchOS 2.0+
-- Xcode 8.1+
-- Swift 3.0+
+- Xcode 8.3+
+- Swift 3.1+
 - [Yelp API Access](https://www.yelp.com/developers/v3/manage_app)
 
 ---
@@ -165,9 +165,19 @@ The Swift Package Manager is integrated into the Swift compiler.
 
 To integrate CDYelpFusionKit into your Xcode project using The Swift Package Manager, simply add the following line to your Package.swift file:
 
+#### Swift 3
+
 ```swift
 dependencies: [
     .Package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.5.1")
+]
+```
+
+#### Swift 4
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.5.1")
 ]
 ```
 
