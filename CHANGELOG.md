@@ -1,13 +1,27 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+`CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
+
+#### 1.x Releases
+- `1.5.x` Releases - [1.5.0](#150) | [1.5.1](#151)
+- `1.4.x` Releases - [1.4.0](#140)
+- `1.3.x` Releases - [1.3.0](#130)
+- `1.2.x` Releases - [1.2.0](#120)
+- `1.1.x` Releases - [1.1.0](#110)
+- `1.0.x` Releases - [1.0.0](#100)
+
+---
+
 ## [1.5.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.1)
 ## SDK Support and Platform Support
 Released on 2018-12-14.
 
-### Added
+#### Added
 
 - [x] Swift 4.2
 - [x] SwiftLint
 
-### Changed
+#### Updated
 
 - [x] Platform Support
     - [x] macOS
@@ -19,7 +33,7 @@ Released on 2018-12-14.
 ## Authentication
 Released on 2018-02-12.
 
-### Changed
+#### Updated
 
 - [x] Authentication
     - [x] `clientId and clientSecret` becomes `apiKey`
@@ -31,7 +45,7 @@ Released on 2018-02-12.
 ## SDK Support
 Released on 2017-11-20.
 
-### Added
+#### Added
 
 - [x] Swift 4.0
 
@@ -41,7 +55,7 @@ Released on 2017-11-20.
 ## Platform Support, Web Linking, and Deep Linking
 Released on 2017-11-16.
 
-### Added
+#### Added
 
 - [x] Platform Support
     - [x] macOS
@@ -49,7 +63,7 @@ Released on 2017-11-16.
     - [x] watchOS
 - [x] Web Linking
 
-### Changed
+#### Updated
 
 - [x] Deep Linking
 
@@ -59,7 +73,7 @@ Released on 2017-11-16.
 ## API Endpoints, Deep Linking, and Brand Assets
 Released on 2017-11-14.
 
-### Added
+#### Added
 
 - [x] API Endpoints
     - [x] Event Lookup
@@ -68,7 +82,7 @@ Released on 2017-11-14.
 - [x] Deep Linking
 - [x] Brand Assets
 
-### Changed
+#### Updated
 
 - [x] CDYelpEnums Naming
     - [x] `CDYelpCategoryFilter` becomes `CDYelpBusinessCategoryFilter`
@@ -80,12 +94,12 @@ Released on 2017-11-14.
 ## API Endpoints
 Released on 2017-11-01.
 
-### Added
+#### Added
 
 - [ ] API Endpoints
     - [x] Business Match
 
-### Changed
+#### Updated
 
 - [x] CDYelpAPIClient Completion Block Parameters
     - [x] `@escaping (CDYelpSearchResponse?, Error?)` becomes `@escaping (CDYelpSearchResponse?)`
@@ -99,7 +113,7 @@ Released on 2017-11-01.
 ## Authentication and API Endpoints
 Released on 2017-09-28.
 
-### Added
+#### Added
 
 - [x] Authentication
 - [ ] API Endpoints
