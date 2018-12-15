@@ -34,10 +34,13 @@
 public enum CDYelpAttributeFilter: String {
     case hotAndNew              = "hot_and_new"
     case requestAQuote          = "request_a_quote"
+    case reservation            = "reservation"
     case waitlistReservation    = "waitlist_reservation"
     case cashback               = "cashback"
     case deals                  = "deals"
     case genderNeutralRestrooms = "gender_neutral_restrooms"
+    case openToAll              = "open_to_all"
+    case wheelchairAccessible   = "wheelchair_accessible"
 }
 
 ///
@@ -1717,7 +1720,9 @@ public enum CDYelpStarsSize: String {
 /// A list of the transaction types the Yelp Fusion API supports. Currently, only food delivery is supported and it is only supported in the U.S.
 ///
 public enum CDYelpTransactionType: String {
-    case foodDelivery   = "delivery"
+    case foodDelivery           = "delivery"
+    case pickup                 = "pickup"
+    case restaurantReservation  = "restaurant_reservation"
 }
 
 // swiftlint:enable file_length
