@@ -29,6 +29,7 @@ import ObjectMapper
 
 public class CDYelpReview: Mappable {
 
+    public var id: String?
     public var text: String?
     public var url: URL?
     public var rating: Int?
@@ -39,6 +40,7 @@ public class CDYelpReview: Mappable {
     }
 
     public func mapping(map: Map) {
+        id          <- map["id"]
         text        <- map["text"]
         url         <- (map["url"], URLTransform())
         rating      <- map["rating"]
