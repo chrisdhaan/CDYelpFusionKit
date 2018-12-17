@@ -340,10 +340,8 @@ public class CDYelpAPIClient: NSObject {
                                                           latitude: latitude,
                                                           longitude: longitude,
                                                           phone: phone,
-                                                          zipCode: zipCode,
-                                                          yelpBusinessId: yelpBusinessId,
-                                                          limit: limit,
-                                                          matchThresholdType: matchThresholdType)
+                                                          postalCode: postalCode,
+                                                          yelpBusinessId: yelpBusinessId)
 
             self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
