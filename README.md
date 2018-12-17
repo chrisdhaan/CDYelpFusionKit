@@ -557,9 +557,9 @@ public func searchEvents(byLocale locale: CDYelpLocale?,           // Optional
                          limit: Int?,                              // Optional - Default = 3, Max = 50
                          sortBy: CDYelpEventSortByType?,           // Optional - Default = .descending
                          sortOn: CDYelpEventSortOnType?,           // Optional - Default = .popularity
-                         categories: [CDYelpEventCategoryFilter]?, // Optional
                          startDate: Date?,                         // Optional
                          endDate: Date?,                           // Optional
+                         categories: [CDYelpEventCategoryFilter]?, // Optional
                          isFree: Bool?,                            // Optional - Default = false
                          location: String?,                        // Optional
                          latitude: Double?,                        // Optional
@@ -611,9 +611,9 @@ yelpAPIClient.searchEvents(byLocale: nil,
                            limit: 5,
                            sortBy: .descending,
                            sortOn: .popularity,
-                           categories: [.music, .foodAndDrink],
                            startDate: nil,
                            endDate: nil,
+                           categories: [.music, .foodAndDrink],
                            isFree: false,
                            location: nil,
                            latitude: 37.786572,

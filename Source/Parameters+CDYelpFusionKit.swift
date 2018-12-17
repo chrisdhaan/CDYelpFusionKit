@@ -43,52 +43,52 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let term = term,
             term != "" {
-            params["term"] = term
+            parameters["term"] = term
         }
         if let location = location,
             location != "" {
-            params["location"] = location
+            parameters["location"] = location
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
         if let radius = radius {
-            params["radius"] = radius
+            parameters["radius"] = radius
         }
         if let categories = categories,
             categories.count > 0 {
-            params["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
+            parameters["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
         if let limit = limit {
-            params["limit"] = limit
+            parameters["limit"] = limit
         }
         if let offset = offset {
-            params["offset"] = offset
+            parameters["offset"] = offset
         }
         if let sortBy = sortBy,
             sortBy.rawValue != "" {
-            params["sort_by"] = sortBy.rawValue
+            parameters["sort_by"] = sortBy.rawValue
         }
         if let priceTiers = priceTiers,
             priceTiers.count > 0 {
-            params["price"] = priceTiers.map { $0.rawValue }.joined(separator: ",")
+            parameters["price"] = priceTiers.map { $0.rawValue }.joined(separator: ",")
         }
         if let openNow = openNow {
-            params["open_now"] = openNow
+            parameters["open_now"] = openNow
         }
         if let openAt = openAt {
-            params["open_at"] = openAt
+            parameters["open_at"] = openAt
         }
         if let attributes = attributes,
             attributes.count > 0 {
@@ -98,51 +98,48 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                 attributesString += attribute.rawValue + ","
             }
             let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
-            params["attributes"] = parametersString
+            parameters["attributes"] = parametersString
         }
 
-        return params
+        return parameters
     }
 
     static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
-        if let phone = phoneNumber,
-            phone != "" {
-            params["phone"] = phone
-        }
+        parameters["phone"] = phoneNumber
 
-        return params
+        return parameters
     }
 
     static func transactionsParameters(withLocation location: String?,
                                        latitude: Double?,
                                        longitude: Double?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let location = location,
             location != "" {
-            params["location"] = location
+            parameters["location"] = location
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
 
-        return params
+        return parameters
     }
 
     static func businessParameters(withLocale locale: CDYelpLocale?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
 
-        return params
+        return parameters
     }
 
     static func matchesParameters(withName name: String!,
@@ -157,102 +154,102 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                   phone: String?,
                                   postalCode: String?,
                                   yelpBusinessId: String?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let name = name,
             name != "" {
-            params["name"] = name
+            parameters["name"] = name
         }
         if let addressOne = addressOne,
             addressOne != "" {
-            params["address1"] = addressOne
+            parameters["address1"] = addressOne
         }
         if let addressTwo = addressTwo,
             addressTwo != "" {
-            params["address2"] = addressTwo
+            parameters["address2"] = addressTwo
         }
         if let addressThree = addressThree,
             addressThree != "" {
-            params["address3"] = addressThree
+            parameters["address3"] = addressThree
         }
         if let city = city,
             city != "" {
-            params["city"] = city
+            parameters["city"] = city
         }
         if let state = state,
             state != "" {
-            params["state"] = state
+            parameters["state"] = state
         }
         if let country = country,
             country != "" {
-            params["country"] = country
+            parameters["country"] = country
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
         if let phone = phone,
             phone != "" {
-            params["phone"] = phone
+            parameters["phone"] = phone
         }
         if let postalCode = postalCode,
             postalCode != "" {
-            params["postal_code"] = postalCode
+            parameters["postal_code"] = postalCode
         }
         if let yelpBusinessId = yelpBusinessId,
             yelpBusinessId != "" {
-            params["yelp_business_id"] = yelpBusinessId
+            parameters["yelp_business_id"] = yelpBusinessId
         }
 
-        return params
+        return parameters
     }
 
     static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
 
-        return params
+        return parameters
     }
 
     static func autocompleteParameters(withText text: String!,
                                        latitude: Double!,
                                        longitude: Double!,
                                        locale: CDYelpLocale?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let text = text,
             text != "" {
-            params["text"] = text
+            parameters["text"] = text
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
 
-        return params
+        return parameters
     }
 
     static func eventParameters(withLocale locale: CDYelpLocale?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
 
-        return params
+        return parameters
     }
 
     static func eventsParameters(withLocale locale: CDYelpLocale?,
@@ -269,31 +266,31 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  longitude: Double?,
                                  radius: Int?,
                                  excludedEvents: [String]?) -> Parameters {
-        var params: Parameters = [:]
+        var parameters: Parameters = [:]
 
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
         if let offset = offset {
-            params["offset"] = offset
+            parameters["offset"] = offset
         }
         if let limit = limit {
-            params["limit"] = limit
+            parameters["limit"] = limit
         }
         if let sortBy = sortBy,
             sortBy.rawValue != "" {
-            params["sort_by"] = sortBy.rawValue
+            parameters["sort_by"] = sortBy.rawValue
         }
         if let sortOn = sortOn,
             sortOn.rawValue != "" {
-            params["sort_on"] = sortOn.rawValue
+            parameters["sort_on"] = sortOn.rawValue
         }
         if let startDate = startDate {
-            params["start_date"] = startDate.timeIntervalSince1970
+            parameters["start_date"] = startDate.timeIntervalSince1970
         }
         if let endDate = endDate {
-            params["end_date"] = endDate.timeIntervalSince1970
+            parameters["end_date"] = endDate.timeIntervalSince1970
         }
         if let categories = categories,
             categories.count > 0 {
@@ -303,23 +300,23 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                 categoriesString += category.rawValue + ","
             }
             let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
-            params["categories"] = parametersString
+            parameters["categories"] = parametersString
         }
         if let isFree = isFree {
-            params["is_free"] = isFree
+            parameters["is_free"] = isFree
         }
         if let location = location,
             location != "" {
-            params["location"] = location
+            parameters["location"] = location
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
         if let radius = radius {
-            params["radius"] = radius
+            parameters["radius"] = radius
         }
         if let excludedEvents = excludedEvents,
             excludedEvents.count > 0 {
@@ -329,33 +326,33 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                 excludedEventsString += excludedEvent + ","
             }
             let parametersString = String(excludedEventsString[..<excludedEventsString.index(before: excludedEventsString.endIndex)])
-            params["excluded_events"] = parametersString
+            parameters["excluded_events"] = parametersString
         }
 
-        return params
+        return parameters
     }
 
-    static func featuredEvent(withLocale locale: CDYelpLocale?,
-                              location: String?,
-                              latitude: Double?,
-                              longitude: Double?) -> Parameters {
-        var params: Parameters = [:]
+    static func featuredEventParameters(withLocale locale: CDYelpLocale?,
+                                        location: String?,
+                                        latitude: Double?,
+                                        longitude: Double?) -> Parameters {
+        var parameters: Parameters = [:]
 
         if let locale = locale,
             locale.rawValue != "" {
-            params["locale"] = locale.rawValue
+            parameters["locale"] = locale.rawValue
         }
         if let location = location,
             location != "" {
-            params["location"] = location
+            parameters["location"] = location
         }
         if let latitude = latitude {
-            params["latitude"] = latitude
+            parameters["latitude"] = latitude
         }
         if let longitude = longitude {
-            params["longitude"] = longitude
+            parameters["longitude"] = longitude
         }
 
-        return params
+        return parameters
     }
 }

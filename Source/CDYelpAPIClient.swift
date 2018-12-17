@@ -82,6 +82,8 @@ public class CDYelpAPIClient: NSObject {
 
     // MARK: - Yelp Fusion API Methods
 
+    // MARK: - Business Endpoints
+
     ///
     /// This endpoint returns up to 1000 businesses based on the provided search criteria. It has basic information about each business. To get detailed information or reviews, use a returned business id and refer to **fetchBusiness(byId: )** and **fetchReviews(forBusinessId: )**.
     ///
@@ -130,22 +132,22 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.searchParameters(withTerm: term,
-                                                     location: location,
-                                                     latitude: latitude,
-                                                     longitude: longitude,
-                                                     radius: radius,
-                                                     categories: categories,
-                                                     locale: locale,
-                                                     limit: limit,
-                                                     offset: offset,
-                                                     sortBy: sortBy,
-                                                     priceTiers: priceTiers,
-                                                     openNow: openNow,
-                                                     openAt: openAt,
-                                                     attributes: attributes)
+            let parameters = Parameters.searchParameters(withTerm: term,
+                                                         location: location,
+                                                         latitude: latitude,
+                                                         longitude: longitude,
+                                                         radius: radius,
+                                                         categories: categories,
+                                                         locale: locale,
+                                                         limit: limit,
+                                                         offset: offset,
+                                                         sortBy: sortBy,
+                                                         priceTiers: priceTiers,
+                                                         openNow: openNow,
+                                                         openAt: openAt,
+                                                         attributes: attributes)
 
-            self.manager.request(CDYelpRouter.search(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.search(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -176,9 +178,9 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
+            let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
 
-            self.manager.request(CDYelpRouter.phone(parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.phone(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -217,11 +219,12 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.transactionsParameters(withLocation: location,
-                                                           latitude: latitude,
-                                                           longitude: longitude)
+            let parameters = Parameters.transactionsParameters(withLocation: location,
+                                                               latitude: latitude,
+                                                               longitude: longitude)
 
-            self.manager.request(CDYelpRouter.transactions(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.transactions(type: type.rawValue,
+                                                           parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -253,9 +256,10 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.businessParameters(withLocale: locale)
+            let parameters = Parameters.businessParameters(withLocale: locale)
 
-            self.manager.request(CDYelpRouter.business(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpBusiness>) in
+            self.manager.request(CDYelpRouter.business(id: id,
+                                                       parameters: parameters)).responseObject { (response: DataResponse<CDYelpBusiness>) in
 
                 switch response.result {
                 case .success(let business):
@@ -326,20 +330,22 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.matchesParameters(withName: name,
-                                                      addressOne: addressOne,
-                                                      addressTwo: addressTwo,
-                                                      addressThree: addressThree,
-                                                      city: city,
-                                                      state: state,
-                                                      country: country,
-                                                      latitude: latitude,
-                                                      longitude: longitude,
-                                                      phone: phone,
-                                                      postalCode: postalCode,
-                                                      yelpBusinessId: yelpBusinessId)
+            let parameters = Parameters.matchesParameters(withName: name,
+                                                          addressOne: addressOne,
+                                                          addressTwo: addressTwo,
+                                                          addressThree: addressThree,
+                                                          city: city,
+                                                          state: state,
+                                                          country: country,
+                                                          latitude: latitude,
+                                                          longitude: longitude,
+                                                          phone: phone,
+                                                          zipCode: zipCode,
+                                                          yelpBusinessId: yelpBusinessId,
+                                                          limit: limit,
+                                                          matchThresholdType: matchThresholdType)
 
-            self.manager.request(CDYelpRouter.matches(type: type.rawValue, parameters: params)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -372,9 +378,10 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.reviewsParameters(withLocale: locale)
+            let parameters = Parameters.reviewsParameters(withLocale: locale)
 
-            self.manager.request(CDYelpRouter.reviews(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpReviewsResponse>) in
+            self.manager.request(CDYelpRouter.reviews(id: id,
+                                                      parameters: parameters)).responseObject { (response: DataResponse<CDYelpReviewsResponse>) in
 
                 switch response.result {
                 case .success(let reviewsResponse):
@@ -413,12 +420,12 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.autocompleteParameters(withText: text,
-                                                           latitude: latitude,
-                                                           longitude: longitude,
-                                                           locale: locale)
+            let parameters = Parameters.autocompleteParameters(withText: text,
+                                                               latitude: latitude,
+                                                               longitude: longitude,
+                                                               locale: locale)
 
-            self.manager.request(CDYelpRouter.autocomplete(parameters: params)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse>) in
+            self.manager.request(CDYelpRouter.autocomplete(parameters: parameters)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse>) in
 
                 switch response.result {
                 case .success(let autocompleteResponse):
@@ -433,6 +440,8 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
+
+    // MARK: - Event Endpoints
 
     ///
     /// This endpoint returns the detailed information of a Yelp event. To get an event id, refer to **searchEvents(byLocale: )** or **fetchFeaturedEvent(forLocale: )**. To enable this endpoint, please join the Yelp Developer Beta Program.
@@ -451,9 +460,10 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.eventParameters(withLocale: locale)
+            let parameters = Parameters.eventParameters(withLocale: locale)
 
-            self.manager.request(CDYelpRouter.event(id: id, parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
+            self.manager.request(CDYelpRouter.event(id: id,
+                                                    parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent>) in
 
                 switch response.result {
                 case .success(let event):
@@ -492,9 +502,9 @@ public class CDYelpAPIClient: NSObject {
                              limit: Int?,
                              sortBy: CDYelpEventSortByType?,
                              sortOn: CDYelpEventSortOnType?,
-                             categories: [CDYelpEventCategoryFilter]?,
                              startDate: Date?,
                              endDate: Date?,
+                             categories: [CDYelpEventCategoryFilter]?,
                              isFree: Bool?,
                              location: String?,
                              latitude: Double?,
@@ -511,22 +521,22 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.eventsParameters(withLocale: locale,
-                                                     offset: offset,
-                                                     limit: limit,
-                                                     sortBy: sortBy,
-                                                     sortOn: sortOn,
-                                                     startDate: startDate,
-                                                     endDate: endDate,
-                                                     categories: categories,
-                                                     isFree: isFree,
-                                                     location: location,
-                                                     latitude: latitude,
-                                                     longitude: longitude,
-                                                     radius: radius,
-                                                     excludedEvents: excludedEvents)
+            let parameters = Parameters.eventsParameters(withLocale: locale,
+                                                         offset: offset,
+                                                         limit: limit,
+                                                         sortBy: sortBy,
+                                                         sortOn: sortOn,
+                                                         startDate: startDate,
+                                                         endDate: endDate,
+                                                         categories: categories,
+                                                         isFree: isFree,
+                                                         location: location,
+                                                         latitude: latitude,
+                                                         longitude: longitude,
+                                                         radius: radius,
+                                                         excludedEvents: excludedEvents)
 
-            self.manager.request(CDYelpRouter.events(parameters: params)).responseObject { (response: DataResponse<CDYelpEventsResponse>) in
+            self.manager.request(CDYelpRouter.events(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEventsResponse>) in
 
                 switch response.result {
                 case .success(let eventsResponse):
@@ -564,12 +574,12 @@ public class CDYelpAPIClient: NSObject {
 
         if self.isAuthenticated() == true {
 
-            let params = Parameters.featuredEvent(withLocale: locale,
-                                                  location: location,
-                                                  latitude: latitude,
-                                                  longitude: longitude)
+            let parameters = Parameters.featuredEventParameters(withLocale: locale,
+                                                                location: location,
+                                                                latitude: latitude,
+                                                                longitude: longitude)
 
-            self.manager.request(CDYelpRouter.featuredEvent(parameters: params)).responseObject { (response: DataResponse<CDYelpEvent>) in
+            self.manager.request(CDYelpRouter.featuredEvent(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent>) in
 
                 switch response.result {
                 case .success(let event):
