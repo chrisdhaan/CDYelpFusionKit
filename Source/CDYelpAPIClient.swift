@@ -343,7 +343,7 @@ public class CDYelpAPIClient: NSObject {
                                                           postalCode: postalCode,
                                                           yelpBusinessId: yelpBusinessId)
 
-            self.manager.request(CDYelpRouter.matches(type: type,
+            self.manager.request(CDYelpRouter.matches(type: type.rawValue,
                                                       parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
