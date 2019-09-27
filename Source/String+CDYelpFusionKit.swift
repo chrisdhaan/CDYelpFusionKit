@@ -28,7 +28,7 @@
 extension String {
 
     static func searchLinkPath(withTerm term: String?,
-                               category: CDYelpBusinessCategoryFilter?,
+                               category: CDYelpCategoryAlias?,
                                location: String?) -> String {
         var path = "search"
 

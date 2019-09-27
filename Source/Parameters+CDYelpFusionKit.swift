@@ -34,7 +34,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  latitude: Double?,
                                  longitude: Double?,
                                  radius: Int?,
-                                 categories: [CDYelpBusinessCategoryFilter]?,
+                                 categories: [CDYelpCategoryAlias]?,
                                  locale: CDYelpLocale?,
                                  limit: Int?,
                                  offset: Int?,

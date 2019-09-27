@@ -70,13 +70,13 @@ public extension URL {
     ///
     /// - parameters:
     ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
-    ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpBusinessCategoryFilter** enum to get the list of supported categories.
+    ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories.
     ///   - location: A location to filter the search results with. Specifying no location will use current location.
     ///
     /// - returns: URL?
     ///
     static func yelpSearchDeepLink(withTerm term: String?,
-                                   category: CDYelpBusinessCategoryFilter?,
+                                   category: CDYelpCategoryAlias?,
                                    location: String?) -> URL? {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,

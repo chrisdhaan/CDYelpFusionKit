@@ -230,7 +230,7 @@ public func searchBusinesses(byTerm term: String?,                        // Opt
                              latitude: Double?,                           // Optional
                              longitude: Double?,                          // Optional
                              radius: Int?,                                // Optional - Max = 40000
-                             categories: [CDYelpBusinessCategoryFilter]?, // Optional
+                             categories: [CDYelpCategoryAlias]?,          // Optional
                              locale: CDYelpLocale?,                       // Optional
                              limit: Int?,                                 // Optional - Default = 20, Max = 50
                              offset: Int?,                                // Optional
@@ -245,7 +245,7 @@ public func searchBusinesses(byTerm term: String?,                        // Opt
 The search endpoint has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
 
 ```swift
-CDYelpBusinessCategoryFilter.activeLife
+CDYelpCategoryAlias.activeLife
 ```
 
 The search endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. The following lines of code show which locales can be passed into the `locale` parameter.
@@ -679,9 +679,9 @@ if let url = URL.yelpDeepLink(),
 ### [Search](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-static func yelpSearchDeepLink(withTerm term: String?,                  // Optional
-                               category: CDYelpBusinessCategoryFilter?, // Optional
-                               location: String?) -> URL?               // Optional
+static func yelpSearchDeepLink(withTerm term: String?,         // Optional
+                               category: CDYelpCategoryAlias?, // Optional
+                               location: String?) -> URL?      // Optional
 ```
 
 The search deep link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [search endpoint](#search-endpoint) for information regarding using the `category` parameter.
@@ -789,9 +789,9 @@ if let url = URL.yelpWebLink(),
 ### [Search](https://www.yelp.com/developers/documentation/v2/iphone)
 
 ```swift
-static func yelpSearchWebLink(withTerm term: String?,                  // Optional
-                              category: CDYelpBusinessCategoryFilter?, // Optional
-                              location: String?) -> URL?               // Optional
+static func yelpSearchWebLink(withTerm term: String?,         // Optional
+                              category: CDYelpCategoryAlias?, // Optional
+                              location: String?) -> URL?      // Optional
 ```
 
 The search deep link has a `category` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. Refer to the [search endpoint](#search-endpoint) for information regarding using the `category` parameter.
