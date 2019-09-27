@@ -1578,11 +1578,21 @@ public enum CDYelpBusinessCategoryFilter: String {
 // swiftlint:enable identifier_name
 
 ///
-/// A list of business match types the Yelp Fusion API supports.
+/// A list of business match threshold types the Yelp Fusion API supports.
 ///
-public enum CDYelpBusinessMatchType: String {
-    case best
-    case lookup
+public enum CDYelpBusinessMatchThresholdType: String {
+    ///
+    /// Do not apply any match quality threshold; all potential business matches will be returned.
+    ///
+    case none
+    ///
+    /// Apply a match quality threshold such that only very closely matching businesses will be returned.
+    ///
+    case normal
+    ///
+    /// Apply a very strict match quality threshold.
+    ///
+    case strict
 }
 
 ///

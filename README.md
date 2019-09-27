@@ -427,19 +427,20 @@ yelpAPIClient.fetchBusiness(forId: "north-india-restaurant-san-francisco"
 ### [Business Match Endpoint](https://www.yelp.com/developers/documentation/v3/business_match)
 
 ```swift
-public func searchBusinesses(byMatchType type: CDYelpBusinessMatchType!, // Required
-                             name: String!,                              // Required
-                             addressOne: String?,                        // Optional
-                             addressTwo: String?,                        // Optional
-                             addressThree: String?,                      // Optional
-                             city: String!,                              // Required
-                             state: String!,                             // Required
-                             country: String!,                           // Required
-                             latitude: Double?,                          // Optional
-                             longitude: Double?,                         // Optional
-                             phone: String?,                             // Optional
-                             postalCode: String?,                        // Optional
-                             yelpBusinessId: String?,                    // Optional
+public func searchBusinesses(name: String!,                                       // Required - Max length = 64
+                             addressOne: String?,                                 // Optional - Max length = 64
+                             addressTwo: String?,                                 // Optional - Max length = 64
+                             addressThree: String?,                               // Optional - Max length = 64
+                             city: String!,                                       // Required - Max length = 64
+                             state: String!,                                      // Required - Max length = 3
+                             country: String!,                                    // Required - Max length = 2
+                             latitude: Double?,                                   // Optional - Min = -90, Max = +90
+                             longitude: Double?,                                  // Optional - Min = -180, Max = +180
+                             phone: String?,                                      // Optional - Max length = 32
+                             zipCode: String?,                                    // Optional
+                             yelpBusinessId: String?,                             // Optional
+                             limit: Int?                                          // Optional - Min = 1, Default = 3, Max = 10
+                             matchThresholdType: CDYelpBusinessMatchThresholdType // Required
                              completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
@@ -453,9 +454,8 @@ CDYelpBusinessMatchType.lookup
 The following lines of code show an example query to the business match endpoint.
 
 ```swift
-yelpAPIClient.searchBusinesses(byMatchType: .best,
-                               name: "Yelp if you need HELP!",
-                               addressOne: nil,
+yelpAPIClient.searchBusinesses(name: "Gary Danko",
+                               addressOne: "800 N Point St",
                                addressTwo: nil,
                                addressThree: nil,
                                city: "San Francisco",
@@ -464,8 +464,10 @@ yelpAPIClient.searchBusinesses(byMatchType: .best,
                                latitude: nil,
                                longitude: nil,
                                phone: nil,
-                               postalCode: nil,
-                               yelpBusinessId: nil) { (response) in
+                               zipCode: nil,
+                               yelpBusinessId: nil,
+                               limit: 5,
+                               matchThresholdType: .normal) { (response) in
 
   if let response = response,
       let businesses = response.businesses,

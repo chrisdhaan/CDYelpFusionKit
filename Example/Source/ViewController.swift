@@ -291,8 +291,7 @@ extension ViewController: UITableViewDelegate {
                                                                         }
                 }
             case 4:
-                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byMatchType: .best,
-                                                                         name: "Yelp if you need HELP!",
+                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Yelp if you need HELP!",
                                                                          addressOne: nil,
                                                                          addressTwo: nil,
                                                                          addressThree: nil,
@@ -302,8 +301,10 @@ extension ViewController: UITableViewDelegate {
                                                                          latitude: nil,
                                                                          longitude: nil,
                                                                          phone: nil,
-                                                                         postalCode: nil,
-                                                                         yelpBusinessId: nil) { (response) in
+                                                                         zipCode: nil,
+                                                                         yelpBusinessId: nil,
+                                                                         limit: 5,
+                                                                         matchThresholdType: .normal) { (response) in
 
                                                                             if let response = response,
                                                                                 let businesses = response.businesses,

@@ -152,8 +152,10 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                   latitude: Double?,
                                   longitude: Double?,
                                   phone: String?,
-                                  postalCode: String?,
-                                  yelpBusinessId: String?) -> Parameters {
+                                  zipCode: String?,
+                                  yelpBusinessId: String?,
+                                  limit: Int?,
+                                  matchThresholdType: CDYelpBusinessMatchThresholdType!) -> Parameters {
         var parameters: Parameters = [:]
 
         if let name = name,
@@ -194,7 +196,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             phone != "" {
             parameters["phone"] = phone
         }
-        if let postalCode = postalCode,
+        if let postalCode = zipCode,
             postalCode != "" {
             parameters["postal_code"] = postalCode
         }
@@ -202,6 +204,10 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             yelpBusinessId != "" {
             parameters["yelp_business_id"] = yelpBusinessId
         }
+        if let limit = limit {
+            parameters["limit"] = limit
+        }
+        parameters["match_threshold"] = matchThresholdType
 
         return parameters
     }

@@ -276,7 +276,6 @@ public class CDYelpAPIClient: NSObject {
     /// This endpoints lets you match business data from other sources against Yelps businesses based on some minimal information provided. Best match will only return 1 business that is the best match based on the information provided. Lookup will return up to 10 businesses that is the best match based on the information provided. At this time, the API does not return businesses without any reviews.
     ///
     /// - parameters:
-    ///   - byMatchType: (**Required**) A business match type for the Yelp Fusion API to query.
     ///   - name: (**Required**) The name of the business. Maximum length is 64; only digits, letters, spaces, and !#$%&+,­./:?@'are allowed
     ///   - addressOne: (Optional) The first line of the business’s address. Maximum length is 64; only digits, letters, spaces, and ­’/#&,.: are allowed.
     ///   - addressTwo: (Optional) The second line of the business’s address. Maximum length is 64; only digits, letters, spaces, and ­’/#&,.: are allowed.
@@ -287,15 +286,16 @@ public class CDYelpAPIClient: NSObject {
     ///   - latitude: (Optional) The WGS84 latitude of the business in decimal degrees. Must be between ­-90 and +90.
     ///   - longitude: (Optional) The WGS84 longitude of the business in decimal degrees. Must be between ­-180 and +180.
     ///   - phone: (Optional) The phone number of the business which can be submitted as (a) locally ­formatted with digits only (e.g., 016703080) or (b) internationally­ formatted with a leading + sign and digits only after (+35316703080). Maximum length is 32.
-    ///   - postalCode: (Optional) The postal code of the business. Maximum length is 12.
+    ///   - zipCode: (Optional) The zip code of the business.
     ///   - yelpBusinessId: (Optional) Unique Yelp identifier of the business if available. Used as a hint when finding a matching business.
+    ///   - limit: (Optional)
+    ///   - matchThresholdType: (**Required**) Specifies whether a match quality threshold should be applied to the matched businesses. Use the **CDYelpBusinessMatchThresholdType** enum to get the list of supported thresholds.
     ///   - completion: A completion block in which the Yelp Fusion API business match endpoint response can be parsed.
     ///
     /// - returns: (CDYelpSearchResponse?) -> Void
     ///
-    public func searchBusinesses(byMatchType type: CDYelpBusinessMatchType!,
-                                 name: String!,
-                                 addressOne: String?,
+    public func searchBusinesses(name: String!,
+                                 addressOne: String!,
                                  addressTwo: String?,
                                  addressThree: String?,
                                  city: String!,
@@ -304,29 +304,35 @@ public class CDYelpAPIClient: NSObject {
                                  latitude: Double?,
                                  longitude: Double?,
                                  phone: String?,
-                                 postalCode: String?,
+                                 zipCode: String?,
                                  yelpBusinessId: String?,
+                                 limit: Int?,
+                                 matchThresholdType: CDYelpBusinessMatchThresholdType!,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
-        assert(type != nil, "A business match type is required to query the Yelp Fusion API business match endpoint.")
-        assert((name != nil && name != "" && name.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        if let addressOne = addressOne {
-            assert(addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
-        }
+        assert((name != nil && name.count > 0 && name.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((addressOne != nil && addressOne.count > 0 && addressOne.count <= 64), "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         if let addressTwo = addressTwo {
-            assert(addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+            assert((addressTwo.count > 0 && addressTwo.count <= 64), "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
         if let addressThree = addressThree {
-            assert(addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+            assert((addressThree.count > 0 && addressThree.count <= 64), "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        assert((city != nil && city != "" && city.count <= 64), "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert((state != nil && state != "" && state.count <= 3), "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert((country != nil && country != "" && country.count <= 2), "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((city != nil && city.count > 0 && city.count <= 64), "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((state != nil && state.count > 0 && state.count <= 3), "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
+        assert((country != nil && country.count > 0 && country.count <= 2), "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
+        if let latitude = latitude {
+            assert((latitude >= -90.0 && latitude <= 90.0), "latitude must be between -90 and +90 to query the Yelp Fustion API business match endpoint")
+        }
+        if let longitude = longitude {
+            assert((longitude >= -180.0 && longitude <= 180.0), "longitude must be between -180 and +180 to query the Yelp Fustion API business match endpoint")
+        }
         if let phone = phone {
-            assert(phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
+            assert((phone.count > 0 && phone.count <= 32), "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
         }
-        if let postalCode = postalCode {
-            assert(postalCode.count <= 12, "postalCode must contain no more than 12 characters to query the Yelp Fusion API business match endpoint.")
+        if let limit = limit {
+            assert((limit > 0 && limit <= 10), "The limit must be between 1 and 10 to query the Yelp Fusion API business match endpoint.")
         }
+        assert((matchThresholdType != nil && matchThresholdType.rawValue.count > 0), "A match threshold type is required to query the Yelp Fusion API business match endpoint")
 
         if self.isAuthenticated() == true {
 
@@ -340,11 +346,12 @@ public class CDYelpAPIClient: NSObject {
                                                           latitude: latitude,
                                                           longitude: longitude,
                                                           phone: phone,
-                                                          postalCode: postalCode,
-                                                          yelpBusinessId: yelpBusinessId)
+                                                          zipCode: zipCode,
+                                                          yelpBusinessId: yelpBusinessId,
+                                                          limit: limit,
+                                                          matchThresholdType: matchThresholdType)
 
-            self.manager.request(CDYelpRouter.matches(type: type.rawValue,
-                                                      parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
 
                 switch response.result {
                 case .success(let searchResponse):

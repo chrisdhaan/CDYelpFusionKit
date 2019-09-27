@@ -33,7 +33,7 @@ enum CDYelpRouter: URLRequestConvertible {
     case phone(parameters: Parameters)
     case transactions(type: String, parameters: Parameters)
     case business(id: String, parameters: Parameters)
-    case matches(type: String, parameters: Parameters)
+    case matches(parameters: Parameters)
     case reviews(id: String, parameters: Parameters)
     case autocomplete(parameters: Parameters)
     case event(id: String, parameters: Parameters)
@@ -46,7 +46,7 @@ enum CDYelpRouter: URLRequestConvertible {
              .phone(parameters: _),
              .transactions(type: _, parameters: _),
              .business(id: _, parameters: _),
-             .matches(type: _, parameters: _),
+             .matches(parameters: _),
              .reviews(id: _, parameters: _),
              .autocomplete(parameters: _),
              .event(id: _, parameters: _),
@@ -66,8 +66,8 @@ enum CDYelpRouter: URLRequestConvertible {
             return "transactions/\(type)/search"
         case .business(let id, parameters: _):
             return "businesses/\(id)"
-        case .matches(let type, parameters: _):
-            return "businesses/matches/\(type)"
+        case .matches(parameters: _):
+            return "businesses/matches"
         case .reviews(let id, parameters: _):
             return "businesses/\(id)/reviews"
         case .autocomplete(parameters: _):
@@ -92,7 +92,7 @@ enum CDYelpRouter: URLRequestConvertible {
              .phone(let parameters),
              .transactions(type: _, let parameters),
              .business(id: _, let parameters),
-             .matches(type: _, let parameters),
+             .matches(let parameters),
              .reviews(id: _, let parameters),
              .autocomplete(let parameters),
              .event(id: _, let parameters),
