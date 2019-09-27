@@ -33,7 +33,7 @@ public class CDYelpAPIClient: NSObject {
     private let apiKey: String!
     private lazy var manager: Alamofire.SessionManager = {
         if let apiKey = self.apiKey,
-            apiKey != "" {
+            apiKey.count > 0 {
             // Get the default headers
             var headers = Alamofire.SessionManager.defaultHTTPHeaders
             // Add the Authorization header
@@ -60,7 +60,7 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: Void
     ///
     public init(apiKey: String!) {
-        assert((apiKey != nil && apiKey != ""), "An apiKey is required to query the Yelp Fusion API.")
+        assert((apiKey != nil && apiKey.count > 0), "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
         super.init()
     }
@@ -74,7 +74,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     public func isAuthenticated() -> Bool {
         if self.apiKey != nil,
-            self.apiKey != "" {
+            self.apiKey.count > 0 {
             return true
         }
         return false
@@ -122,12 +122,12 @@ public class CDYelpAPIClient: NSObject {
                                  attributes: [CDYelpAttributeFilter]?,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
-            (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
+            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
         if let radius = radius {
-            assert((radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
+            assert((radius > 0 && radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
         }
         if let limit = limit {
-            assert((limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
+            assert((limit > 0 && limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
         }
 
         if self.isAuthenticated() == true {
@@ -174,7 +174,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
-        assert((phoneNumber != nil && phoneNumber != ""), "A business phone number is required to query the Yelp Fusion API phone endpoint.")
+        assert((phoneNumber != nil && phoneNumber.count > 0), "A business phone number is required to query the Yelp Fusion API phone endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -215,7 +215,7 @@ public class CDYelpAPIClient: NSObject {
                                    completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
         assert((latitude != nil && longitude != nil) ||
-            (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
+            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -252,7 +252,7 @@ public class CDYelpAPIClient: NSObject {
     public func fetchBusiness(forId id: String!,
                               locale: CDYelpLocale?,
                               completion: @escaping (CDYelpBusiness?) -> Void) {
-        assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API business endpoint.")
+        assert((id != nil && id.count > 0), "A business id is required to query the Yelp Fusion API business endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -373,7 +373,7 @@ public class CDYelpAPIClient: NSObject {
     public func fetchReviews(forBusinessId id: String!,
                              locale: CDYelpLocale?,
                              completion: @escaping (CDYelpReviewsResponse?) -> Void) {
-        assert((id != nil && id != ""), "A business id is required to query the Yelp Fusion API reviews endpoint.")
+        assert((id != nil && id.count > 0), "A business id is required to query the Yelp Fusion API reviews endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -413,7 +413,7 @@ public class CDYelpAPIClient: NSObject {
                                        longitude: Double!,
                                        locale: CDYelpLocale?,
                                        completion: @escaping (CDYelpAutoCompleteResponse?) -> Void) {
-        assert((text != nil && text != "") &&
+        assert((text != nil && text.count > 0) &&
             latitude != nil &&
             longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint.")
 
@@ -455,7 +455,7 @@ public class CDYelpAPIClient: NSObject {
     public func fetchEvent(forId id: String!,
                            locale: CDYelpLocale?,
                            completion: @escaping (CDYelpEvent?) -> Void) {
-        assert((id != nil && id != ""), "An event id is required to query the Yelp Fusion API event endpoint.")
+        assert((id != nil && id.count > 0), "An event id is required to query the Yelp Fusion API event endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -512,10 +512,10 @@ public class CDYelpAPIClient: NSObject {
                              excludedEvents: [String]?,
                              completion: @escaping (CDYelpEventsResponse?) -> Void) {
         if let limit = limit {
-            assert((limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
+            assert((limit > 0 && limit <= 50), "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
         }
         if let radius = radius {
-            assert((radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
+            assert((radius > 0 && radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
         }
 
         if self.isAuthenticated() == true {
@@ -569,7 +569,7 @@ public class CDYelpAPIClient: NSObject {
                                    longitude: Double?,
                                    completion: @escaping (CDYelpEvent?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
-            (location != nil && location != ""), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
+            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
 
         if self.isAuthenticated() == true {
 

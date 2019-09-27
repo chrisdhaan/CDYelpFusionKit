@@ -116,7 +116,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpBusinessDeepLink(forId id: String!) -> URL? {
-        assert((id != nil && id != ""), "A business id is to query the Yelp business deep link.")
+        assert((id != nil && id.count > 0), "A business id is to query the Yelp business deep link.")
 
         let path = String.businessLinkPath(forId: id)
 
@@ -133,7 +133,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpBusinessWebLink(forId id: String!) -> URL? {
-        assert((id != nil && id != ""), "A business id is to query the Yelp business deep link.")
+        assert((id != nil && id.count > 0), "A business id is to query the Yelp business deep link.")
 
         let path = String.businessLinkPath(forId: id)
 
