@@ -30,7 +30,7 @@ import PackageDescription
 let package = Package(
     name: "CDYelpFusionKit",
     dependencies: [
-        .Package(url: "https://github.com/tristanhimmelman/AlamofireObjectMapper.git", "5.2.0")
+        .Package(url: "https://github.com/tristanhimmelman/AlamofireObjectMapper.git", "5.2.1")
     ],
     exclude: []
 )

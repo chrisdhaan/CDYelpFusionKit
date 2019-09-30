@@ -35,7 +35,7 @@ let package = Package(
             targets: ["CDYelpFusionKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/tristanhimmelman/AlamofireObjectMapper.git", "5.2.0")
+        .package(url: "https://github.com/tristanhimmelman/AlamofireObjectMapper.git", "5.2.1")
     ],
     targets: [
         .target(
