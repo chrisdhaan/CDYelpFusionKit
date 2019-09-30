@@ -55,6 +55,8 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Event Lookup Endpoint](#event-lookup)
     - [Event Search Endpoint](#event-search-endpoint)
     - [Featured Event Endpoint](#featured-event-endpoint)
+    - [All Categories Endpoint](#all-categories-endpoint)
+    - [Category Details Endpoint](#category-details-endpoint)
     - [Deep Linking](#deep-linking)
     - [Web Linking](#web-linking)
     - [Brand Assets](#brand-assets)
@@ -77,6 +79,8 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [x] Event Lookup
     - [x] Event Search
     - [x] Featured Event
+    - [x] All Categories
+    - [x] Category Details
 - [x] Deep Linking
 - [x] Web Linking
 - [x] Brand Assets
