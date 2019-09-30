@@ -444,11 +444,12 @@ public func searchBusinesses(name: String!,                                     
                              completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
-The business match endpoint has a `type` parameter which allows for query results to be filtered based off two types of criteria. The following lines of code show which business match types can be passed into the `byMatchType` parameter.
+The business match endpoint has a `matchThresholdType` parameter which allows for query results to be filtered based off three types of criteria. The following lines of code show which business match threshold types can be passed into the `matchThresholdType` parameter.
 
 ```swift
-CDYelpBusinessMatchType.best
-CDYelpBusinessMatchType.lookup
+CDYelpBusinessMatchThresholdType.none
+CDYelpBusinessMatchThresholdType.normal
+CDYelpBusinessMatchThresholdType.strict
 ```
 
 The following lines of code show an example query to the business match endpoint.
