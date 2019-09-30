@@ -93,7 +93,7 @@ public class CDYelpAPIClient: NSObject {
     ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
     ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
     ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
-    ///   - categories: (Optional) The categorie(s) to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories. `categories` can be an array of categories (e.g. [.bars, .parks] will filter the results to show businesses that are listed as Bars or Parks).
+    ///   - categories: (Optional) The categorie(s) to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases. `categories` can be an array of categories (e.g. [.bars, .parks] will filter the results to show businesses that are listed as Bars or Parks).
     ///   - locale: (Optional) Specifies the locale to return the business information in. Use the **CDYelpLocale** enum to get the list of supported locales.
     ///   - limit: (Optional) The number of business results to return. By default, the value is set to 20. **The maximum value is 50**.
     ///   - offset: (Optional) A number the list of returned business results should be offset by.
@@ -597,6 +597,70 @@ public class CDYelpAPIClient: NSObject {
             }
         }
     }
+
+    // MARK: - Category Endpoints
+
+    ///
+    /// This endpoint returns all Yelp business categories across all locales by default. To enable this endpoint, please join the Yelp Developer Beta Program.
+    ///
+    /// - parameters:
+    ///   - locale: (Optional) The locale to return the category information in.
+    ///
+    /// - returns: (CDYelpCategoriesResponse?) -> Void
+    ///
+    public func fetchCategories(forLocale locale: CDYelpLocale?,
+                                completion: @escaping (CDYelpCategoriesResponse?) -> Void) {
+
+        if self.isAuthenticated() == true {
+
+            let parameters = Parameters.categoriesParameters(withLocale: locale)
+
+            self.manager.request(CDYelpRouter.allCategories(parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoriesResponse>) in
+
+                switch response.result {
+                case .success(let event):
+                    completion(event)
+                case .failure(let error):
+                    print("fetchCategories(forLocale) alias: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+
+    ///
+    /// This endpoint returns detailed information about the Yelp category specified by a Yelp category alias.  To get a category alias, refer to **fetchCategories(forLocale: )**. To enable this endpoint, please join the Yelp Developer Beta Program.
+    ///
+    /// - parameters:
+    ///   - alias: (**Required**) The alias to return category details for. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases.
+    ///   - locale: (Optional) The locale to return the category information in.
+    ///
+    /// - returns: (CDYelpCategoryResponse?) -> Void
+    ///
+    public func fetchCategory(forAlias alias: CDYelpCategoryAlias!,
+                              andLocale locale: CDYelpLocale?,
+                              completion: @escaping (CDYelpCategoryResponse?) -> Void) {
+        assert((alias != nil && alias.rawValue.count > 0), "A category alias is required to query the Yelp Fusion API category details endpoint.")
+
+        if self.isAuthenticated() == true {
+
+            let parameters = Parameters.categoriesParameters(withLocale: locale)
+
+            self.manager.request(CDYelpRouter.categoryDetails(alias: alias.rawValue,
+                                                              parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoryResponse>) in
+
+                switch response.result {
+                case .success(let event):
+                    completion(event)
+                case .failure(let error):
+                    print("fetchCategory(forAlias) alias: ", error.localizedDescription)
+                    completion(nil)
+                }
+            }
+        }
+    }
+
+    // MARK: - Request Methods
 
     ///
     /// Cancels any in progress or pending API requests.

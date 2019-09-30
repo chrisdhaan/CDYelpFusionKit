@@ -1,8 +1,8 @@
 //
-//  CDYelpCategory.swift
+//  CDYelpCategoriesResponse.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/6/17.
+//  Created by Christopher de Haan on 9/27/19.
 //
 //  Copyright © 2016-2018 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -27,22 +27,14 @@
 
 import ObjectMapper
 
-public class CDYelpCategory: Mappable {
+public class CDYelpCategoriesResponse: Mappable {
 
-    public var alias: String?
-    public var title: String?
-    public var parentAliases: [String]?
-    public var countryWhitelist: [String]?
-    public var countryBlacklist: [String]?
+    public var categories: [CDYelpCategory]?
 
     public required init?(map: Map) {
     }
 
     public func mapping(map: Map) {
-        alias               <- map["alias"]
-        title               <- map["title"]
-        parentAliases       <- map["parent_aliases"]
-        countryWhitelist    <- map["country_whitelist"]
-        countryBlacklist    <- map["country_blacklist"]
+        categories  <- map["categories"]
     }
 }

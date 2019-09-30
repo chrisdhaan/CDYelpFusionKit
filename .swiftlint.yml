@@ -12,8 +12,8 @@ colon:
   apply_to_dictionaries: false
 # complexity of a function
 cyclomatic_complexity:
-  error: 50
-  warning: 45
+  error: 55
+  warning: 50
 # number of lines allowed in a function
 function_body_length:
   error: 50
@@ -23,7 +23,7 @@ function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
   error: 1200
-  warning: 600
+  warning: 700
 # rules related to vars/lets
 identifier_name:
   excluded:
@@ -33,8 +33,8 @@ line_length:
   error: 200
   ignores_comments: true
   ignores_function_declarations: true
-  warning: 189
+  warning: 195
 # number of lines allowed in a type declaration
 type_body_length:
   error: 400
-  warning: 300
+  warning: 350

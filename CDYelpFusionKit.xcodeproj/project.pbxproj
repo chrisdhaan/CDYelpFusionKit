@@ -39,6 +39,14 @@
 		B266344E1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
 		B266344F1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
 		B26634501FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */; };
+		B267ED56233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */; };
+		B267ED57233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */; };
+		B267ED58233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */; };
+		B267ED59233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */; };
+		B267ED5B233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */; };
+		B267ED5C233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */; };
+		B267ED5D233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */; };
+		B267ED5E233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */; };
 		B285D9F81FBD356E00FA9ABB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B285D9F91FBD357800FA9ABB /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B285D9FA1FBD359400FA9ABB /* CDYelpFusionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBF0E961EC000B1004C1F6B /* CDYelpFusionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -227,6 +235,8 @@
 		B25523C5218D037B007CDD7A /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = PULL_REQUEST_TEMPLATE.md; path = .github/PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		B25523C6218D037B007CDD7A /* ISSUE_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = ISSUE_TEMPLATE.md; path = .github/ISSUE_TEMPLATE.md; sourceTree = "<group>"; };
 		B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
+		B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpCategoriesResponse.swift; sourceTree = "<group>"; };
+		B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpCategoryResponse.swift; sourceTree = "<group>"; };
 		B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA391FBE1B4D00FA9ABB /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
@@ -341,7 +351,9 @@
 				5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */,
 				5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */,
 				5FBF0E901EC000B1004C1F6B /* CDYelpBusinessResponse.swift */,
+				B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */,
 				5FBF0E911EC000B1004C1F6B /* CDYelpCategory.swift */,
+				B267ED5A233EADAB007B902A /* CDYelpCategoryResponse.swift */,
 				5FBF0E921EC000B1004C1F6B /* CDYelpCenter.swift */,
 				5FBF0E941EC000B1004C1F6B /* CDYelpCoordinates.swift */,
 				5FBF0E951EC000B1004C1F6B /* CDYelpError.swift */,
@@ -767,12 +779,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C4A04F1FCE323600B253A2 /* CDColor.swift in Sources */,
+				5F854DFE1FB44B0F00335D73 /* CDColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0541FCE33D000B253A2 /* CDImage.swift in Sources */,
+				5F854E071FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift in Sources */,
 				5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */,
 				5FBF0EA71EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift in Sources */,
-				B266344D1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				5FBF0EA81EC000B1004C1F6B /* CDYelpBusiness.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,
+				B267ED56233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */,
 				5FBF0EAA1EC000B1004C1F6B /* CDYelpCategory.swift in Sources */,
+				B267ED5B233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */,
 				5FBF0EAB1EC000B1004C1F6B /* CDYelpCenter.swift in Sources */,
 				5FBF0EAC1EC000B1004C1F6B /* CDYelpConstants.swift in Sources */,
 				5FBF0EAD1EC000B1004C1F6B /* CDYelpCoordinates.swift in Sources */,
@@ -782,7 +799,6 @@
 				5FDB32A21FAACF4100A9CF71 /* CDYelpEventsResponse.swift in Sources */,
 				5FBF0EB01EC000B1004C1F6B /* CDYelpHour.swift in Sources */,
 				5FBF0EB11EC000B1004C1F6B /* CDYelpLocation.swift in Sources */,
-				B2C4A0541FCE33D000B253A2 /* CDImage.swift in Sources */,
 				5FBF0EB51EC000B1004C1F6B /* CDYelpOpen.swift in Sources */,
 				5FBF0EB61EC000B1004C1F6B /* CDYelpRegion.swift in Sources */,
 				5FBF0EB71EC000B1004C1F6B /* CDYelpReview.swift in Sources */,
@@ -792,9 +808,7 @@
 				5FBF0EBB1EC000B1004C1F6B /* CDYelpTerm.swift in Sources */,
 				5FBF0EBC1EC000B1004C1F6B /* CDYelpUser.swift in Sources */,
 				5FBF0EBE1EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift in Sources */,
-				5F854DFE1FB44B0F00335D73 /* CDColor+CDYelpFusionKit.swift in Sources */,
-				B2C4A04F1FCE323600B253A2 /* CDColor.swift in Sources */,
-				5F854E071FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift in Sources */,
+				B266344D1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA691FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -803,12 +817,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C4A0501FCE323600B253A2 /* CDColor.swift in Sources */,
+				B285D9FC1FBD35C100FA9ABB /* CDColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0551FCE33D000B253A2 /* CDImage.swift in Sources */,
+				B285D9FD1FBD35C100FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B285DA131FBD35C100FA9ABB /* CDYelpAPIClient.swift in Sources */,
 				B285D9FE1FBD35C100FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
-				B266344E1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285D9FF1FBD35C100FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA001FBD35C100FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
+				B267ED57233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */,
 				B285DA011FBD35C100FA9ABB /* CDYelpCategory.swift in Sources */,
+				B267ED5C233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */,
 				B285DA021FBD35C100FA9ABB /* CDYelpCenter.swift in Sources */,
 				B285DA141FBD35C100FA9ABB /* CDYelpConstants.swift in Sources */,
 				B285DA031FBD35C100FA9ABB /* CDYelpCoordinates.swift in Sources */,
@@ -818,7 +837,6 @@
 				B285DA061FBD35C100FA9ABB /* CDYelpEventsResponse.swift in Sources */,
 				B285DA071FBD35C100FA9ABB /* CDYelpHour.swift in Sources */,
 				B285DA081FBD35C100FA9ABB /* CDYelpLocation.swift in Sources */,
-				B2C4A0551FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285DA091FBD35C100FA9ABB /* CDYelpOpen.swift in Sources */,
 				B285DA0A1FBD35C100FA9ABB /* CDYelpRegion.swift in Sources */,
 				B285DA0B1FBD35C100FA9ABB /* CDYelpReview.swift in Sources */,
@@ -828,9 +846,7 @@
 				B285DA0E1FBD35C100FA9ABB /* CDYelpTerm.swift in Sources */,
 				B285DA0F1FBD35C100FA9ABB /* CDYelpUser.swift in Sources */,
 				B285D9FB1FBD35C100FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
-				B285D9FC1FBD35C100FA9ABB /* CDColor+CDYelpFusionKit.swift in Sources */,
-				B2C4A0501FCE323600B253A2 /* CDColor.swift in Sources */,
-				B285D9FD1FBD35C100FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
+				B266344E1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -839,12 +855,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C4A0511FCE323600B253A2 /* CDColor.swift in Sources */,
+				B285DA401FBE1BCE00FA9ABB /* CDColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0561FCE33D000B253A2 /* CDImage.swift in Sources */,
+				B285DA411FBE1BCE00FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */,
 				B285DA421FBE1BCE00FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
-				B266344F1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA431FBE1BCE00FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA441FBE1BCE00FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
+				B267ED58233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */,
 				B285DA451FBE1BCE00FA9ABB /* CDYelpCategory.swift in Sources */,
+				B267ED5D233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */,
 				B285DA461FBE1BCE00FA9ABB /* CDYelpCenter.swift in Sources */,
 				B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */,
 				B285DA471FBE1BCE00FA9ABB /* CDYelpCoordinates.swift in Sources */,
@@ -854,7 +875,6 @@
 				B285DA4A1FBE1BCE00FA9ABB /* CDYelpEventsResponse.swift in Sources */,
 				B285DA4B1FBE1BCE00FA9ABB /* CDYelpHour.swift in Sources */,
 				B285DA4C1FBE1BCE00FA9ABB /* CDYelpLocation.swift in Sources */,
-				B2C4A0561FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285DA4D1FBE1BCE00FA9ABB /* CDYelpOpen.swift in Sources */,
 				B285DA4E1FBE1BCE00FA9ABB /* CDYelpRegion.swift in Sources */,
 				B285DA4F1FBE1BCE00FA9ABB /* CDYelpReview.swift in Sources */,
@@ -864,9 +884,7 @@
 				B285DA521FBE1BCE00FA9ABB /* CDYelpTerm.swift in Sources */,
 				B285DA531FBE1BCE00FA9ABB /* CDYelpUser.swift in Sources */,
 				B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */,
-				B285DA401FBE1BCE00FA9ABB /* CDColor+CDYelpFusionKit.swift in Sources */,
-				B2C4A0511FCE323600B253A2 /* CDColor.swift in Sources */,
-				B285DA411FBE1BCE00FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
+				B266344F1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -875,12 +893,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C4A0521FCE323600B253A2 /* CDColor.swift in Sources */,
+				B2C6E1FA1FBCF3A400FE8462 /* CDColor+CDYelpFusionKit.swift in Sources */,
+				B2C4A0571FCE33D000B253A2 /* CDImage.swift in Sources */,
+				B2C6E1FB1FBCF3A400FE8462 /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B2C6E2111FBCF3A400FE8462 /* CDYelpAPIClient.swift in Sources */,
 				B2C6E1FC1FBCF3A400FE8462 /* CDYelpAutoCompleteResponse.swift in Sources */,
-				B26634501FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B2C6E1FD1FBCF3A400FE8462 /* CDYelpBusiness.swift in Sources */,
 				B2C6E1FE1FBCF3A400FE8462 /* CDYelpBusinessResponse.swift in Sources */,
+				B267ED59233EAD3C007B902A /* CDYelpCategoriesResponse.swift in Sources */,
 				B2C6E1FF1FBCF3A400FE8462 /* CDYelpCategory.swift in Sources */,
+				B267ED5E233EADAB007B902A /* CDYelpCategoryResponse.swift in Sources */,
 				B2C6E2001FBCF3A400FE8462 /* CDYelpCenter.swift in Sources */,
 				B2C6E2121FBCF3A400FE8462 /* CDYelpConstants.swift in Sources */,
 				B2C6E2011FBCF3A400FE8462 /* CDYelpCoordinates.swift in Sources */,
@@ -890,7 +913,6 @@
 				B2C6E2041FBCF3A400FE8462 /* CDYelpEventsResponse.swift in Sources */,
 				B2C6E2051FBCF3A400FE8462 /* CDYelpHour.swift in Sources */,
 				B2C6E2061FBCF3A400FE8462 /* CDYelpLocation.swift in Sources */,
-				B2C4A0571FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B2C6E2071FBCF3A400FE8462 /* CDYelpOpen.swift in Sources */,
 				B2C6E2081FBCF3A400FE8462 /* CDYelpRegion.swift in Sources */,
 				B2C6E2091FBCF3A400FE8462 /* CDYelpReview.swift in Sources */,
@@ -900,9 +922,7 @@
 				B2C6E20C1FBCF3A400FE8462 /* CDYelpTerm.swift in Sources */,
 				B2C6E20D1FBCF3A400FE8462 /* CDYelpUser.swift in Sources */,
 				B2C6E1F91FBCF3A400FE8462 /* Parameters+CDYelpFusionKit.swift in Sources */,
-				B2C6E1FA1FBCF3A400FE8462 /* CDColor+CDYelpFusionKit.swift in Sources */,
-				B2C4A0521FCE323600B253A2 /* CDColor.swift in Sources */,
-				B2C6E1FB1FBCF3A400FE8462 /* CDImage+CDYelpFusionKit.swift in Sources */,
+				B26634501FBEA1B8003B09CE /* String+CDYelpFusionKit.swift in Sources */,
 				B285DA6C1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

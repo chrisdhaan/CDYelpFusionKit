@@ -361,4 +361,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 
         return parameters
     }
+
+    static func categoriesParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+        var parameters: Parameters = [:]
+
+        if let locale = locale,
+            locale.rawValue != "" {
+            parameters["locale"] = locale.rawValue
+        }
+
+        return parameters
+    }
 }

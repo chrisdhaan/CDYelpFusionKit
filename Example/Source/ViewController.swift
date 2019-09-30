@@ -83,7 +83,7 @@ extension ViewController: UITableViewDataSource {
                    numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 10
+            return 12
         case 1:
             return 6
         case 2:
@@ -104,100 +104,57 @@ extension ViewController: UITableViewDataSource {
         case 0:
             switch indexPath.row {
             case 0:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/businesses/search"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 1:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/search/phone"
-                cell.textLabel?.textColor = UIColor.white
             case 2:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/transactions/{transaction_type}/search"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 3:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/id"
-                cell.textLabel?.textColor = UIColor.white
             case 4:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/businesses/matches/{business_match_type}"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 5:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/businesses/{id}/reviews"
-                cell.textLabel?.textColor = UIColor.white
             case 6:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/autocomplete"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 7:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/events/{id}"
-                cell.textLabel?.textColor = UIColor.white
             case 8:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/events"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 9:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/events/featured"
-                cell.textLabel?.textColor = UIColor.white
+            case 10:
+                cell.textLabel?.text = "categories"
+            case 11:
+                cell.textLabel?.text = "/categories/{alias}"
             default:
                 cell.textLabel?.text = ""
             }
         case 1:
             switch indexPath.row {
             case 0:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 1:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/search"
-                cell.textLabel?.textColor = UIColor.white
             case 2:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/biz"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 3:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/check_in/nearby"
-                cell.textLabel?.textColor = UIColor.white
             case 4:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/check_ins"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 5:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/check_in/rankings"
-                cell.textLabel?.textColor = UIColor.white
             default:
                 cell.textLabel?.text = ""
             }
         case 2:
             switch indexPath.row {
             case 0:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             case 1:
-                cell.backgroundColor = UIColor.yelpFiveStarRed()
-                cell.imageView?.image = UIImage.yelpBurstLogoWhite()
                 cell.textLabel?.text = "/search"
-                cell.textLabel?.textColor = UIColor.white
             case 2:
-                cell.imageView?.image = UIImage.yelpBurstLogoRed()
                 cell.textLabel?.text = "/biz"
-                cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
             default:
                 cell.textLabel?.text = ""
             }
@@ -206,6 +163,16 @@ extension ViewController: UITableViewDataSource {
             cell.imageView?.image = nil
             cell.textLabel?.text = ""
             cell.textLabel?.textColor = UIColor.black
+        }
+
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor.white
+            cell.imageView?.image = UIImage.yelpBurstLogoRed()
+            cell.textLabel?.textColor = UIColor.yelpFiveStarRed()
+        } else {
+            cell.backgroundColor = UIColor.yelpFiveStarRed()
+            cell.imageView?.image = UIImage.yelpBurstLogoWhite()
+            cell.textLabel?.textColor = UIColor.white
         }
 
         return cell
@@ -373,6 +340,21 @@ extension ViewController: UITableViewDelegate {
                                                                             if let event = event {
                                                                                 print(event)
                                                                             }
+                }
+            case 10:
+                CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil) { (categories) in
+
+                    if let categories = categories {
+                        print(category)
+                    }
+                }
+            case 11:
+                CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
+                                                                      andLocale: nil) { (category) in
+
+                                                                        if let category = category {
+                                                                            print(category)
+                                                                        }
                 }
             default:
                 break

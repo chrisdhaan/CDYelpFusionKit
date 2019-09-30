@@ -658,6 +658,54 @@ yelpAPIClient.fetchFeaturedEvent(forLocale: nil,
 }
 ```
 
+### [All Categories Endpoint](https://www.yelp.com/developers/documentation/v3/all_categories)
+
+```swift
+public func fetchCategories(forLocale locale: CDYelpLocale?, // Optional
+                            completion: @escaping (CDYelpCategoriesResponse?) -> Void)
+```
+
+The all categories endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
+
+The following lines of code show an example query to the featured event endpoint.
+
+```swift
+yelpAPIClient.fetchCategories(forLocale: nil) { (categories) in
+
+  if let categories = categories {
+    print(categories)
+  }
+}
+```
+
+### [Category Details Endpoint](https://www.yelp.com/developers/documentation/v3/category)
+
+```swift
+public func fetchCategory(forAlias alias: CDYelpCategoryAlias!, // Required
+                          andLocale locale: CDYelpLocale?,      // Optional
+                          completion: @escaping (CDYelpCategoryResponse?) -> Void)
+```
+
+The category details endpoint has an `alias` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `alias` parameter.
+
+```swift
+CDYelpCategoryAlias.activeLife
+```
+
+The category details endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
+
+The following lines of code show an example query to the featured event endpoint.
+
+```swift
+yelpAPIClient.fetchCategory(forAlias: .fastFood,
+                            andLocale: nil) { (category) in
+
+  if let category = category {
+    print(category)
+  }
+}
+```
+
 ### [Deep Linking](https://www.yelp.com/developers/documentation/v2/iphone)
 
 The Yelp iPhone application registers URL schemes that can be used to open the Yelp application, perform searches, view business information, or check-in.
