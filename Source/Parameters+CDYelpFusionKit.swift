@@ -207,7 +207,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let limit = limit {
             parameters["limit"] = limit
         }
-        parameters["match_threshold"] = matchThresholdType
+        parameters["match_threshold"] = matchThresholdType.rawValue
 
         return parameters
     }

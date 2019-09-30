@@ -225,20 +225,20 @@ Once you've created a CDYelpAPIClient object you can use it to query the Yelp Fu
 ### [Search Endpoint](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ```swift
-public func searchBusinesses(byTerm term: String?,                        // Optional
-                             location: String?,                           // Optional
-                             latitude: Double?,                           // Optional
-                             longitude: Double?,                          // Optional
-                             radius: Int?,                                // Optional - Max = 40000
-                             categories: [CDYelpCategoryAlias]?,          // Optional
-                             locale: CDYelpLocale?,                       // Optional
-                             limit: Int?,                                 // Optional - Default = 20, Max = 50
-                             offset: Int?,                                // Optional
-                             sortBy: CDYelpBusinessSortType?,             // Optional - Default = .bestMatch
-                             priceTiers: [CDYelpPriceTier]?,              // Optional
-                             openNow: Bool?,                              // Optional - Default = false
-                             openAt: Int?,                                // Optional
-                             attributes: [CDYelpAttributeFilter]?,        // Optional
+public func searchBusinesses(byTerm term: String?,                 // Optional
+                             location: String?,                    // Optional
+                             latitude: Double?,                    // Optional
+                             longitude: Double?,                   // Optional
+                             radius: Int?,                         // Optional - Max = 40000
+                             categories: [CDYelpCategoryAlias]?,   // Optional
+                             locale: CDYelpLocale?,                // Optional
+                             limit: Int?,                          // Optional - Default = 20, Max = 50
+                             offset: Int?,                         // Optional
+                             sortBy: CDYelpBusinessSortType?,      // Optional - Default = .bestMatch
+                             priceTiers: [CDYelpPriceTier]?,       // Optional
+                             openNow: Bool?,                       // Optional - Default = false
+                             openAt: Int?,                         // Optional
+                             attributes: [CDYelpAttributeFilter]?, // Optional
                              completion: @escaping (CDYelpSearchResponse?) -> Void);
 ```
 
@@ -298,7 +298,7 @@ CDYelpLocale.turkish_turkey
 The search endpoint has a `sortBy` parameter which allows for query results to be filtered based off four types of criteria. The following lines of code show which sort types can be passed into the `sortBy` parameter.
 
 ```swift
-CDYelpBusinessSortType.bestMatch   // Default
+CDYelpBusinessSortType.bestMatch // Default
 CDYelpBusinessSortType.rating
 CDYelpBusinessSortType.reviewCount
 CDYelpBusinessSortType.distance
@@ -427,20 +427,20 @@ yelpAPIClient.fetchBusiness(forId: "north-india-restaurant-san-francisco"
 ### [Business Match Endpoint](https://www.yelp.com/developers/documentation/v3/business_match)
 
 ```swift
-public func searchBusinesses(name: String!,                                       // Required - Max length = 64
-                             addressOne: String?,                                 // Optional - Max length = 64
-                             addressTwo: String?,                                 // Optional - Max length = 64
-                             addressThree: String?,                               // Optional - Max length = 64
-                             city: String!,                                       // Required - Max length = 64
-                             state: String!,                                      // Required - Max length = 3
-                             country: String!,                                    // Required - Max length = 2
-                             latitude: Double?,                                   // Optional - Min = -90, Max = +90
-                             longitude: Double?,                                  // Optional - Min = -180, Max = +180
-                             phone: String?,                                      // Optional - Max length = 32
-                             zipCode: String?,                                    // Optional
-                             yelpBusinessId: String?,                             // Optional
-                             limit: Int?                                          // Optional - Min = 1, Default = 3, Max = 10
-                             matchThresholdType: CDYelpBusinessMatchThresholdType // Required
+public func searchBusinesses(name: String!,                                        // Required - Max length = 64
+                             addressOne: String?,                                  // Optional - Max length = 64
+                             addressTwo: String?,                                  // Optional - Max length = 64
+                             addressThree: String?,                                // Optional - Max length = 64
+                             city: String!,                                        // Required - Max length = 64
+                             state: String!,                                       // Required - Max length = 3
+                             country: String!,                                     // Required - Max length = 2
+                             latitude: Double?,                                    // Optional - Min = -90, Max = +90
+                             longitude: Double?,                                   // Optional - Min = -180, Max = +180
+                             phone: String?,                                       // Optional - Max length = 32
+                             zipCode: String?,                                     // Optional
+                             yelpBusinessId: String?,                              // Optional
+                             limit: Int?,                                          // Optional - Min = 1, Default = 3, Max = 10
+                             matchThresholdType: CDYelpBusinessMatchThresholdType, // Required
                              completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
@@ -670,9 +670,10 @@ The all categories endpoint has a `locale` parameter which allows for query resu
 The following lines of code show an example query to the featured event endpoint.
 
 ```swift
-yelpAPIClient.fetchCategories(forLocale: nil) { (categories) in
+yelpAPIClient.fetchCategories(forLocale: nil) { (response) in
 
-  if let categories = categories {
+  if let response = response,
+      let categories = response.categories {
     print(categories)
   }
 }
@@ -698,9 +699,10 @@ The following lines of code show an example query to the featured event endpoint
 
 ```swift
 yelpAPIClient.fetchCategory(forAlias: .fastFood,
-                            andLocale: nil) { (category) in
+                            andLocale: nil) { (response) in
 
-  if let category = category {
+  if let response = response,
+      let category = response.category {
     print(category)
   }
 }

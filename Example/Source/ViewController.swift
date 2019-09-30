@@ -258,8 +258,8 @@ extension ViewController: UITableViewDelegate {
                                                                         }
                 }
             case 4:
-                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Yelp if you need HELP!",
-                                                                         addressOne: nil,
+                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Gary Danko",
+                                                                         addressOne: "800 N Point St",
                                                                          addressTwo: nil,
                                                                          addressThree: nil,
                                                                          city: "San Francisco",
@@ -342,17 +342,19 @@ extension ViewController: UITableViewDelegate {
                                                                             }
                 }
             case 10:
-                CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil) { (categories) in
+                CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil) { (response) in
 
-                    if let categories = categories {
-                        print(category)
+                    if let response = response,
+                        let categories = response.categories {
+                        print(categories)
                     }
                 }
             case 11:
                 CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
-                                                                      andLocale: nil) { (category) in
+                                                                      andLocale: nil) { (response) in
 
-                                                                        if let category = category {
+                                                                        if let response = response,
+                                                                            let category = response.category {
                                                                             print(category)
                                                                         }
                 }

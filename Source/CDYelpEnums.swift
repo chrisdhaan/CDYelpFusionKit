@@ -1588,7 +1588,7 @@ public enum CDYelpBusinessMatchThresholdType: String {
     ///
     /// Apply a match quality threshold such that only very closely matching businesses will be returned.
     ///
-    case normal
+    case normal = "default"
     ///
     /// Apply a very strict match quality threshold.
     ///
