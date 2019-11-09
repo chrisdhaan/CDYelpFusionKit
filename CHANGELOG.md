@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.2](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.2)
 ## API Endpoints
-Released on 2019-09-30.
+Released on 2019-11-09.
 
 #### Added
 
