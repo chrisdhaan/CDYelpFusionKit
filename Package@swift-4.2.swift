@@ -1,6 +1,6 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 //
-//  Package@swift-4.swift
+//  Package@swift-4.2.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 12/14/18.
@@ -41,7 +41,7 @@ let package = Package(
     targets: [
         .target(
             name: "CDYelpFusionKit",
-            path: "CDYelpFusionKit")
+            path: "Source")
     ],
-    swiftLanguageVersions: [3, 4]
+    swiftLanguageVersions: [.v3, .v4]
 )

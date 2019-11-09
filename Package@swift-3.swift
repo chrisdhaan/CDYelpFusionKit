@@ -1,3 +1,4 @@
+// swift-tools-version:3.0
 //
 //  Package@swift-3.swift
 //  CDYelpFusionKit
