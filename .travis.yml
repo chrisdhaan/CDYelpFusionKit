@@ -32,9 +32,7 @@ env:
 
     - DESTINATION="arch=x86_64"                             SCHEME="$MACOS_FRAMEWORK_SCHEME"   BUILD_FRAMEWORK="YES" BUILD_EXAMPLE="NO"  POD_LINT="YES"
 before_install:
-  - gem install cocoapods -v 1.5.3 --no-rdoc --no-ri --no-document --quiet
-  - gem uninstall xcodeproj
-  - gem install xcodeproj -v 1.8.2
+  - gem install --pre --no-rdoc --no-ri --no-document --quiet
   - pod repo update
 script:
   - set -o pipefail
@@ -58,5 +56,5 @@ script:
 
   # Run `pod lib lint` if specified
   - if [ $POD_LINT == "YES" ]; then
-      travis_wait 60 pod lib lint --allow-warnings --use-libraries;
+      travis_wait 60 pod lib lint --swift-version=4.2 --allow-warnings --use-libraries;
     fi
