@@ -12,6 +12,14 @@
 		5F6BC9D624FBF71100EC41A7 /* Alamofire+ObjectMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6BC9D424FBF71100EC41A7 /* Alamofire+ObjectMapper.swift */; };
 		5F6BC9D724FBF71100EC41A7 /* Alamofire+ObjectMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6BC9D424FBF71100EC41A7 /* Alamofire+ObjectMapper.swift */; };
 		5F6BC9D824FBF71100EC41A7 /* Alamofire+ObjectMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6BC9D424FBF71100EC41A7 /* Alamofire+ObjectMapper.swift */; };
+		5F6BC9E824FBFAE100EC41A7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9AB24FBF0E300EC41A7 /* Alamofire.framework */; };
+		5F6BC9F224FBFAEE00EC41A7 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9C424FBF0ED00EC41A7 /* ObjectMapper.framework */; };
+		5F6BC9F424FC037700EC41A7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9AF24FBF0E300EC41A7 /* Alamofire.framework */; };
+		5F6BC9F524FC037C00EC41A7 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9C624FBF0ED00EC41A7 /* ObjectMapper.framework */; };
+		5F6BC9F624FC038900EC41A7 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9CA24FBF0ED00EC41A7 /* ObjectMapper.framework */; };
+		5F6BC9F724FC038D00EC41A7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9B324FBF0E300EC41A7 /* Alamofire.framework */; };
+		5F6BC9F824FC039200EC41A7 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9C824FBF0ED00EC41A7 /* ObjectMapper.framework */; };
+		5F6BC9F924FC039600EC41A7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6BC9B724FBF0E300EC41A7 /* Alamofire.framework */; };
 		5F854DFE1FB44B0F00335D73 /* CDColor+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854DFD1FB44B0F00335D73 /* CDColor+CDYelpFusionKit.swift */; };
 		5F854E071FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854E061FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift */; };
 		5F854E1C1FB44D6A00335D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
@@ -312,6 +320,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F6BC9E824FBFAE100EC41A7 /* Alamofire.framework in Frameworks */,
+				5F6BC9F224FBFAEE00EC41A7 /* ObjectMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +329,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F6BC9F424FC037700EC41A7 /* Alamofire.framework in Frameworks */,
+				5F6BC9F524FC037C00EC41A7 /* ObjectMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +338,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F6BC9F724FC038D00EC41A7 /* Alamofire.framework in Frameworks */,
+				5F6BC9F624FC038900EC41A7 /* ObjectMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +347,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F6BC9F924FC039600EC41A7 /* Alamofire.framework in Frameworks */,
+				5F6BC9F824FC039200EC41A7 /* ObjectMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
