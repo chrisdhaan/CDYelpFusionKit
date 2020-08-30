@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/9/17.
 //
-//  Copyright © 2016-2019 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2020 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,17 +35,8 @@ public extension CDImage {
 #elseif os(watchOS)
         return CDImage(named: name)
 #else
-#if swift(>=4.2)
         let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
         return bundle?.image(forResource: name)
-#elseif swift(>=4.0)
-        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        let resource = CDImage.Name(rawValue: name)
-        return bundle?.image(forResource: resource)
-#else
-        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        return bundle?.image(forResource: name)
-#endif
 #endif
     }
 

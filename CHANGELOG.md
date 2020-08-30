@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
+#### 2.x Releases
+- `2.0.x` Releases - [2.0.0](#200)
+
 #### 1.x Releases
-- `1.5.x` Releases - [1.5.0](#150) | [1.5.1](#151) | [1.5.2](#152)
+- `1.5.x` Releases - [1.5.0](#150) | [1.5.1](#151)
 - `1.4.x` Releases - [1.4.0](#140)
 - `1.3.x` Releases - [1.3.0](#130)
 - `1.2.x` Releases - [1.2.0](#120)
@@ -12,9 +15,9 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.5.2](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.2)
+## [2.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.0.0)
 ## API Endpoints
-Released on 2019-11-09.
+Released on 2020-08-30.
 
 #### Added
 

@@ -97,16 +97,15 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 ## Requirements
 
-- iOS 8.0+ / macOS 10.10+ / tvOS 9.0+ / watchOS 2.0+
-- Xcode 8.3+
-- Swift 3.1+
+- iOS 10.0+ / macOS 10.12+ / tvOS 10.0+ / watchOS 3.0+
+- Xcode 10.2+
+- Swift 5+
 - [Yelp API Access](https://www.yelp.com/developers/v3/manage_app)
 
 ---
 
 ## Dependencies
 
-- [AlamofireObjectMapper](https://github.com/tristanhimmelman/AlamofireObjectMapper)
 - [Alamofire](https://github.com/Alamofire/Alamofire)
 - [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper)
 
@@ -114,102 +113,69 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 ## Installation
 
-### Installation via CocoaPods
+### CocoaPods
 
-CDYelpFusionKit is available through [CocoaPods](http://cocoapods.org). CocoaPods is a dependency manager that automates and simplifies the process of using 3rd-party libraries like CDYelpFusionKit in your projects. You can install CocoaPods with the following command:
-
-```ruby
-gem install cocoapods
-```
-
-To integrate CDYelpFusionKit into your Xcode project using CocoaPods, simply add the following line to your Podfile:
+[CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate CDYelpFusionKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '1.5.2'
+pod 'CDYelpFusionKit', '2.0.0'
 ```
 
-Afterwards, run the following command:
+### Carthage
 
-```ruby
-pod install
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. To integrate CDYelpFusionKit into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "chrisdhaan/CDYelpFusionKit" == 2.0.0
 ```
 
-### Installation via Carthage
+### Swift Package Manager
 
-CDYelpFusionKit is available through [Carthage](https://github.com/Carthage/Carthage). Carthage is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. It is in early development, but CDYelpFusionKit does support its use on supported platforms.
 
-You can install Carthage via [Homebrew](http://brew.sh) with the following commands:
-
-```ruby
-brew update
-brew install carthage
-```
-
-To integrate CDYelpFusionKit into your Xcode project using Carthage, simply add the following line to your Cartfile:
-
-```ruby
-github "chrisdhaan/CDYelpFusionKit" == 1.5.2
-```
-
-Afterwards, run the following command:
-
-```ruby
-carthage update
-```
-
-Next, add the built CDYelpFusionKit.framework into your Xcode project.
-
-### Installation via Swift Package Manager
-
-CDYelpFusionKit is available through the [Swift Package Manager](https://swift.org/package-manager). The Swift Package Manager is a tool for automating the distribution of Swift code.
-
-The Swift Package Manager is in early development, but CDYelpFusionKit does support its use on supported platforms. Until the Swift Package Manager supports non-host platforms, it is recommended to use CocoaPods, Carthage, or Git Submodules to build iOS, watchOS, and tvOS apps.
-
-The Swift Package Manager is integrated into the Swift compiler.
-
-To integrate CDYelpFusionKit into your Xcode project using The Swift Package Manager, simply add the following line to your Package.swift file:
-
-#### Swift 3
+Once you have your Swift package set up, adding CDYelpFusionKit as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
 
 ```swift
 dependencies: [
-    .Package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.5.2")
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
 ]
 ```
 
-#### Swift 4
+### Git Submodule
 
-```swift
-dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", "1.5.2")
-]
+If you prefer not to use any of the aforementioned dependency managers, you can integrate CDYelpFusionKit into your project manually.
+
+- Open up Terminal, `cd` into your top-level project directory, and run the following command "if" your project is not initialized as a git repository:
+
+```bash
+$ git init
 ```
 
-Afterwards, run the following command:
-
-```ruby
-swift package fetch
-```
-
-### Installation via Git Submodule
-
-CDYelpFusionKit is available through [Git Submodule](https://git-scm.com/docs/git-submodule) Git Submodule allows you to keep another Git repository in a subdirectory of your repository.
-
-If your project is not initialized as a git repository, navigate into your top-level project directory, and install Git Submodule with the following command:
-
-```git
-git init
-```
-
-To integrate CDYelpFusionKit into your Xcode project using Git Submodule, simply run the following command:
+- Add CDYelpFusionKit as a git [submodule](https://git-scm.com/docs/git-submodule) by running the following command:
 
 ```git
 git submodule add https://github.com/chrisdhaan/CDYelpFusionKit.git
 ```
 
-Afterwards, open the new **CDYelpFusionKit** folder, and drag the **CDYelpFusionKit.xcodeproj** into the **Project Navigator** of your Xcode project. A common location for the **CDYelpFusionKit.xcodeproj** is directly below the **Products** folder.
+- Open the new `CDYelpFusionKit` folder, and drag the `CDYelpFusionKit.xcodeproj` into the Project Navigator of your application's Xcode project.
 
-Next, select your application project in the **Project Navigator** to navigate to the target configuration window and select the application target under the **Targets** heading in the sidebar. In the tab bar at the top of that window, open the **General** panel. Click on the **+** button under the **Embedded Binaries** section. You will see two different CDYelpFusionKit.xcodeproj folders, each with a version of the CDYelpFusionKit.framework nested inside a Products folder. It does not matter which Products folder you choose from, select the CDYelpFusionKit.framework for iOS.
+    > It should appear nested underneath your application's blue project icon. Whether it is above or below all the other Xcode groups does not matter.
+
+- Select the `CDYelpFusionKit.xcodeproj` in the Project Navigator and verify the deployment target matches that of your application target.
+- Next, select your application project in the Project Navigator (blue project icon) to navigate to the target configuration window and select the application target under the "Targets" heading in the sidebar.
+- In the tab bar at the top of that window, open the "General" panel.
+- Click on the `+` button under the "Embedded Binaries" section.
+- You will see two different `CDYelpFusionKit.xcodeproj` folders each with two different versions of the `CDYelpFusionKit.framework` nested inside a `Products` folder.
+
+    > It does not matter which `Products` folder you choose from, but it does matter whether you choose the top or bottom `CDYelpFusionKit.framework`.
+
+- Select the top `CDYelpFusionKit.framework` for iOS and the bottom one for macOS.
+
+    > You can verify which one you selected by inspecting the build log for your project. The build target for `CDYelpFusionKit` will be listed as either `CDYelpFusionKit iOS`, `CDYelpFusionKit macOS`, `CDYelpFusionKit tvOS` or `CDYelpFusionKit watchOS`.
+
+- And that's it!
+
+  > The `CDYelpFusionKit.framework` is automagically added as a target dependency, linked framework and embedded framework in a copy files build phase which is all you need to build on the simulator and a device.
 
 ---
 
