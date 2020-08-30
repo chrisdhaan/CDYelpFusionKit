@@ -26,26 +26,25 @@
 //
 
 import Alamofire
-import AlamofireObjectMapper
 
 public class CDYelpAPIClient: NSObject {
 
     private let apiKey: String!
-    private lazy var manager: Alamofire.SessionManager = {
+    private lazy var manager: Alamofire.Session = {
         if let apiKey = self.apiKey,
             apiKey.count > 0 {
             // Get the default headers
-            var headers = Alamofire.SessionManager.defaultHTTPHeaders
+            var headers = HTTPHeaders.default
             // Add the Authorization header
             headers["Authorization"] = "Bearer \(apiKey)"
             // Create a custom session configuration
             let configuration = URLSessionConfiguration.default
             // Add the Authorization header
-            configuration.httpAdditionalHeaders = headers
+            configuration.httpAdditionalHeaders = headers.dictionary
             // Create a session manager with the custom configuration
-            return Alamofire.SessionManager(configuration: configuration)
+            return Alamofire.Session(configuration: configuration)
         } else {
-            return Alamofire.SessionManager()
+            return Alamofire.Session()
         }
     }()
 
@@ -147,7 +146,7 @@ public class CDYelpAPIClient: NSObject {
                                                          openAt: openAt,
                                                          attributes: attributes)
 
-            self.manager.request(CDYelpRouter.search(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.search(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -180,7 +179,7 @@ public class CDYelpAPIClient: NSObject {
 
             let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
 
-            self.manager.request(CDYelpRouter.phone(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.phone(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -224,7 +223,7 @@ public class CDYelpAPIClient: NSObject {
                                                                longitude: longitude)
 
             self.manager.request(CDYelpRouter.transactions(type: type.rawValue,
-                                                           parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+                                                           parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -259,7 +258,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.businessParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.business(id: id,
-                                                       parameters: parameters)).responseObject { (response: DataResponse<CDYelpBusiness>) in
+                                                       parameters: parameters)).responseObject { (response: DataResponse<CDYelpBusiness, AFError>) in
 
                 switch response.result {
                 case .success(let business):
@@ -351,7 +350,7 @@ public class CDYelpAPIClient: NSObject {
                                                           limit: limit,
                                                           matchThresholdType: matchThresholdType)
 
-            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse>) in
+            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -387,7 +386,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.reviewsParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.reviews(id: id,
-                                                      parameters: parameters)).responseObject { (response: DataResponse<CDYelpReviewsResponse>) in
+                                                      parameters: parameters)).responseObject { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
 
                 switch response.result {
                 case .success(let reviewsResponse):
@@ -431,7 +430,7 @@ public class CDYelpAPIClient: NSObject {
                                                                longitude: longitude,
                                                                locale: locale)
 
-            self.manager.request(CDYelpRouter.autocomplete(parameters: parameters)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse>) in
+            self.manager.request(CDYelpRouter.autocomplete(parameters: parameters)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
 
                 switch response.result {
                 case .success(let autocompleteResponse):
@@ -469,7 +468,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.eventParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.event(id: id,
-                                                    parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent>) in
+                                                    parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -542,7 +541,7 @@ public class CDYelpAPIClient: NSObject {
                                                          radius: radius,
                                                          excludedEvents: excludedEvents)
 
-            self.manager.request(CDYelpRouter.events(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEventsResponse>) in
+            self.manager.request(CDYelpRouter.events(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEventsResponse, AFError>) in
 
                 switch response.result {
                 case .success(let eventsResponse):
@@ -585,7 +584,7 @@ public class CDYelpAPIClient: NSObject {
                                                                 latitude: latitude,
                                                                 longitude: longitude)
 
-            self.manager.request(CDYelpRouter.featuredEvent(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent>) in
+            self.manager.request(CDYelpRouter.featuredEvent(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -615,7 +614,7 @@ public class CDYelpAPIClient: NSObject {
 
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            self.manager.request(CDYelpRouter.allCategories(parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoriesResponse>) in
+            self.manager.request(CDYelpRouter.allCategories(parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -647,7 +646,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.categoryDetails(alias: alias.rawValue,
-                                                              parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoryResponse>) in
+                                                              parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
 
                 switch response.result {
                 case .success(let event):
