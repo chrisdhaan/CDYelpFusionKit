@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CDYelpFusionKit'
-  s.version = '2.0.0'
+  s.version = '2.1.0'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description = <<-DESC
@@ -15,11 +15,11 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.watchos.deployment_target = '3.0'
 
-  s.swift_versions = ['5.0', '5.1']
+  s.swift_versions = ['5.1', '5.2']
 
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']
 
-  s.dependency 'Alamofire', '5.0.5'
-  s.dependency 'ObjectMapper', '4.0.0'
+  s.dependency 'Alamofire', '5.2.2'
+  s.dependency 'ObjectMapper', '4.2.0'
 end
