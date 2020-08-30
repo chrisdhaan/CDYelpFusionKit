@@ -16,11 +16,12 @@ All notable changes to this project will be documented in this file.
 ---
 
 ## [2.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.0.0)
-## API Endpoints
+## SDK Support and API Endpoints
 Released on 2020-08-30.
 
 #### Added
 
+- [x] Swift 5.0
 - [x] API Endpoints
     - [x] All Categories
     - [x] Category Details
