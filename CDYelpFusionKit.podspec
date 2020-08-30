@@ -4,8 +4,8 @@ Pod::Spec.new do |s|
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description = <<-DESC
-    This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
-  DESC
+  This Swift wrapper covers all possible network endpoints and responses for the Yelp Fusion API.
+                         DESC
   s.homepage = 'https://github.com/chrisdhaan/CDYelpFusionKit'
   s.author = { 'Christopher de Haan' => 'contact@christopherdehaan.me' }
   s.source = { :git => 'https://github.com/chrisdhaan/CDYelpFusionKit.git', :tag => s.version.to_s }
@@ -15,8 +15,11 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.watchos.deployment_target = '3.0'
 
+  s.swift_versions = ['5.0', '5.1']
+
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']
+
   s.dependency 'Alamofire', '5.0.5'
   s.dependency 'ObjectMapper', '4.0.0'
 end
