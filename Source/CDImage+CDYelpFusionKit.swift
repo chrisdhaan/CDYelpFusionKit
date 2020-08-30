@@ -35,17 +35,8 @@ public extension CDImage {
 #elseif os(watchOS)
         return CDImage(named: name)
 #else
-#if swift(>=4.2)
         let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
         return bundle?.image(forResource: name)
-#elseif swift(>=4.0)
-        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        let resource = CDImage.Name(rawValue: name)
-        return bundle?.image(forResource: resource)
-#else
-        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        return bundle?.image(forResource: name)
-#endif
 #endif
     }
 
