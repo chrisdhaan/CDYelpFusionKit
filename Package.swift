@@ -29,18 +29,25 @@ import PackageDescription
 
 let package = Package(
     name: "CDYelpFusionKit",
+    platforms: [
+        .macOS(.v10_12),
+        .iOS(.v10),
+        .tvOS(.v10),
+        .watchOS(.v3)
+    ],
     products: [
         .library(
             name: "CDYelpFusionKit",
             targets: ["CDYelpFusionKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/tristanhimmelman/AlamofireObjectMapper.git", "5.2.1")
+        .package(url: "https://github.com/Alamofire/Alamofire.git", "5.0.5")
+        .package(url: "https://github.com/tristanhimmelman/ObjectMapper", "4.0.0")
     ],
     targets: [
         .target(
             name: "CDYelpFusionKit",
             path: "CDYelpFusionKit")
     ],
-    swiftLanguageVersions: [3, 4]
+    swiftLanguageVersions: [.v5])
 )
