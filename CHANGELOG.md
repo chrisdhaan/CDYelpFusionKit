@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
 #### 2.x Releases
+- `2.1.x` Releases - [2.1.0](#210)
 - `2.0.x` Releases - [2.0.0](#200)
 
 #### 1.x Releases
@@ -15,12 +16,23 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.0)
+## SDK Support
+Released on 2020-08-31.
+
+#### Added
+
+- [x] Swift 5.1
+
+---
+
 ## [2.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.0.0)
-## API Endpoints
+## SDK Support and API Endpoints
 Released on 2020-08-30.
 
 #### Added
 
+- [x] Swift 5.0
 - [x] API Endpoints
     - [x] All Categories
     - [x] Category Details
