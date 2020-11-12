@@ -31,9 +31,9 @@ public class CDYelpBusiness: Mappable {
 
     public var id: String?
     public var name: String?
-    public var imageUrl: URL?
+    public var imageUrl: String?
     public var isClosed: Bool?
-    public var url: URL?
+    public var url: String?
     public var price: String?
     public var phone: String?
     public var displayPhone: String?
@@ -53,9 +53,9 @@ public class CDYelpBusiness: Mappable {
     public func mapping(map: Map) {
         id              <- map["id"]
         name            <- map["name"]
-        imageUrl        <- (map["image_url"], URLTransform())
+        imageUrl        <- (map["image_url"])
         isClosed        <- map["is_closed"]
-        url             <- (map["url"], URLTransform())
+        url             <- (map["url"])
         price           <- map["price"]
         phone           <- map["phone"]
         displayPhone    <- map["display_phone"]
