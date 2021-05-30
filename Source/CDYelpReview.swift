@@ -31,7 +31,7 @@ public class CDYelpReview: Mappable {
 
     public var id: String?
     public var text: String?
-    public var url: URL?
+    public var url: String?
     public var rating: Int?
     public var timeCreated: String?
     public var user: CDYelpUser?
@@ -42,7 +42,7 @@ public class CDYelpReview: Mappable {
     public func mapping(map: Map) {
         id          <- map["id"]
         text        <- map["text"]
-        url         <- (map["url"], URLTransform())
+        url         <- map["url"]
         rating      <- map["rating"]
         timeCreated <- map["time_created"]
         user        <- map["user"]
