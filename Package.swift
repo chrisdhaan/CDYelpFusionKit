@@ -1,3 +1,4 @@
+// swift-tools-version:5.1
 //
 //  Package.swift
 //  CDYelpFusionKit
@@ -50,4 +51,3 @@ let package = Package(
             path: "CDYelpFusionKit")
     ],
     swiftLanguageVersions: [.v5])
-)
