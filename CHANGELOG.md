@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
 #### 2.x Releases
-- `2.1.x` Releases - [2.1.0](#210)
+- `2.1.x` Releases - [2.1.0](#210) | [2.1.1](#211)
 - `2.0.x` Releases - [2.0.0](#200)
 
 #### 1.x Releases
