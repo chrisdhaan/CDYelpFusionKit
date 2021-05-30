@@ -16,6 +16,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.1.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.1)
+## Bug Fixes
+Released on 2021-05-30.
+
+#### Updated
+
+- [x] Models
+    - [x] `URL` types to `String`
+    - [x] `Date` types to `String`
+- [x] Switch Package Manager
+    - [x] To build with `swift-tools-version:5.1`
+
+---
+
 ## [2.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.0)
 ## SDK Support
 Released on 2020-08-31.
