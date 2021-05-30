@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2020 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2021 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,17 +30,17 @@ import ObjectMapper
 public class CDYelpUser: Mappable {
 
     public var id: String?
-    public var profileUrl: URL?
+    public var profileUrl: String?
     public var name: String?
-    public var imageUrl: URL?
+    public var imageUrl: String?
 
     public required init?(map: Map) {
     }
 
     public func mapping(map: Map) {
         id          <- map["id"]
-        profileUrl  <- (map["profile_url"], URLTransform())
+        profileUrl  <- map["profile_url"]
         name        <- map["name"]
-        imageUrl    <- (map["image_url"], URLTransform())
+        imageUrl    <- map["image_url"]
     }
 }

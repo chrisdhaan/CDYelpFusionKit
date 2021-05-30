@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2020 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2021 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ public class CDYelpReview: Mappable {
 
     public var id: String?
     public var text: String?
-    public var url: URL?
+    public var url: String?
     public var rating: Int?
     public var timeCreated: String?
     public var user: CDYelpUser?
@@ -42,7 +42,7 @@ public class CDYelpReview: Mappable {
     public func mapping(map: Map) {
         id          <- map["id"]
         text        <- map["text"]
-        url         <- (map["url"], URLTransform())
+        url         <- map["url"]
         rating      <- map["rating"]
         timeCreated <- map["time_created"]
         user        <- map["user"]

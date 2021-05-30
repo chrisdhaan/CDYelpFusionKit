@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/1/17.
 //
-//  Copyright © 2016-2020 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2021 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -34,9 +34,9 @@ public class CDYelpEvent: Mappable {
     public var cost: Int?
     public var costMax: Int?
     public var description: String?
-    public var eventSiteUrl: URL?
+    public var eventSiteUrl: String?
     public var id: String?
-    public var imageUrl: URL?
+    public var imageUrl: String?
     public var interestedCount: Int?
     public var isCanceled: Bool?
     public var isFree: Bool?
@@ -44,9 +44,9 @@ public class CDYelpEvent: Mappable {
     public var latitude: Double?
     public var longitude: Double?
     public var name: String?
-    public var ticketsUrl: URL?
-    public var timeEnd: Date?
-    public var timeStart: Date?
+    public var ticketsUrl: String?
+    public var timeEnd: String?
+    public var timeStart: String?
     public var location: CDYelpLocation?
     public var businessId: String?
 
@@ -59,9 +59,9 @@ public class CDYelpEvent: Mappable {
         cost            <- map["cost"]
         costMax         <- map["cost_max"]
         description     <- map["description"]
-        eventSiteUrl    <- (map["event_site_url"], URLTransform())
+        eventSiteUrl    <- map["event_site_url"]
         id              <- map["id"]
-        imageUrl        <- (map["image_url"], URLTransform())
+        imageUrl        <- map["image_url"]
         interestedCount <- map["interested_count"]
         isCanceled      <- map["is_canceled"]
         isFree          <- map["is_free"]
@@ -69,9 +69,9 @@ public class CDYelpEvent: Mappable {
         latitude        <- map["latitude"]
         longitude       <- map["longitude"]
         name            <- map["name"]
-        ticketsUrl      <- (map["tickets_url"], URLTransform())
-        timeEnd         <- (map["time_end"], DateTransform())
-        timeStart       <- (map["time_start"], DateTransform())
+        ticketsUrl      <- map["tickets_url"]
+        timeEnd         <- map["time_end"]
+        timeStart       <- map["time_start"]
         location        <- map["location"]
         businessId      <- map["business_id"]
     }

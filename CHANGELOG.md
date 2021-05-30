@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
 #### 2.x Releases
-- `2.1.x` Releases - [2.1.0](#210)
+- `2.1.x` Releases - [2.1.0](#210) | [2.1.1](#211)
 - `2.0.x` Releases - [2.0.0](#200)
 
 #### 1.x Releases
@@ -13,6 +13,20 @@ All notable changes to this project will be documented in this file.
 - `1.2.x` Releases - [1.2.0](#120)
 - `1.1.x` Releases - [1.1.0](#110)
 - `1.0.x` Releases - [1.0.0](#100)
+
+---
+
+## [2.1.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.1)
+## Bug Fixes
+Released on 2021-05-30.
+
+#### Updated
+
+- [x] Models
+    - [x] `URL` types to `String`
+    - [x] `Date` types to `String`
+- [x] Switch Package Manager
+    - [x] To build with `swift-tools-version:5.1`
 
 ---
 
