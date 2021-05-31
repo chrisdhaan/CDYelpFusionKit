@@ -30,7 +30,7 @@ public struct CDYelpEvent: Decodable {
     public let attendingCount: Int?
     public let category: String?
     public let cost: Int?
-    public let costMax: Int?
+    public let costMax: Double?
     public let description: String?
     public let eventSiteUrl: URL?
     public let id: String?
@@ -42,9 +42,9 @@ public struct CDYelpEvent: Decodable {
     public let latitude: Double?
     public let longitude: Double?
     public let name: String?
+    public let ticketsUrl: String?
     public let timeEnd: String?
     public let timeStart: String?
-    public let ticketsUrl: URL?
     public let location: CDYelpLocation?
     public let businessId: String?
 
