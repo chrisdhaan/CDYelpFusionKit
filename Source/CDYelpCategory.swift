@@ -25,24 +25,19 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpCategory: Codable {
 
-public class CDYelpCategory: Mappable {
+    public let alias: String?
+    public let title: String?
+    public let parentAliases: [String]?
+    public let countryWhitelist: [String]?
+    public let countryBlacklist: [String]?
 
-    public var alias: String?
-    public var title: String?
-    public var parentAliases: [String]?
-    public var countryWhitelist: [String]?
-    public var countryBlacklist: [String]?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        alias               <- map["alias"]
-        title               <- map["title"]
-        parentAliases       <- map["parent_aliases"]
-        countryWhitelist    <- map["country_whitelist"]
-        countryBlacklist    <- map["country_blacklist"]
+    enum CodingKeys: String, CodingKey {
+        case alias
+        case title
+        case parentAliases = "parent_aliases"
+        case countryWhitelist = "country_whitelist"
+        case countryBlacklist = "country_blacklist"
     }
 }

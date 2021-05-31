@@ -25,22 +25,17 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpOpen: Codable {
 
-public class CDYelpOpen: Mappable {
+    public let isOvernight: Bool?
+    public let end: String?
+    public let day: Int?
+    public let start: String?
 
-    public var isOvernight: Bool?
-    public var end: String?
-    public var day: Int?
-    public var start: String?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        isOvernight <- map["is_overnight"]
-        end         <- map["end"]
-        day         <- map["day"]
-        start       <- map["start"]
+    enum CodingKeys: String, CodingKey {
+        case isOvernight = "is_overnight"
+        case end
+        case day
+        case start
     }
 }

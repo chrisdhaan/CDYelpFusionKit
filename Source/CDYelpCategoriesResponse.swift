@@ -25,16 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpCategoriesResponse: Codable {
 
-public class CDYelpCategoriesResponse: Mappable {
+    public let categories: [CDYelpCategory]?
 
-    public var categories: [CDYelpCategory]?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        categories  <- map["categories"]
+    enum CodingKeys: String, CodingKey {
+        case categories
     }
 }

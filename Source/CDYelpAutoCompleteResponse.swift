@@ -25,22 +25,17 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpAutoCompleteResponse: Codable {
 
-public class CDYelpAutoCompleteResponse: Mappable {
+    public let terms: [CDYelpTerm]?
+    public let businesses: [CDYelpBusiness]?
+    public let categories: [CDYelpCategory]?
+    public let error: CDYelpError?
 
-    public var terms: [CDYelpTerm]?
-    public var businesses: [CDYelpBusiness]?
-    public var categories: [CDYelpCategory]?
-    public var error: CDYelpError?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        terms       <- map["terms"]
-        businesses  <- map["businesses"]
-        categories  <- map["categories"]
-        error       <- map["error"]
+    enum CodingKeys: String, CodingKey {
+        case terms
+        case businesses
+        case categories
+        case error
     }
 }

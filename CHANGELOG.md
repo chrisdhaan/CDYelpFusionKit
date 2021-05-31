@@ -25,7 +25,7 @@ Released on 2021-05-30.
 - [x] Models
     - [x] `URL` types to `String`
     - [x] `Date` types to `String`
-- [x] Switch Package Manager
+- [x] Swift Package Manager
     - [x] To build with `swift-tools-version:5.1`
 
 ---

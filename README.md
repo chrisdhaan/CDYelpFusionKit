@@ -107,7 +107,6 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 ## Dependencies
 
 - [Alamofire](https://github.com/Alamofire/Alamofire)
-- [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper)
 
 ---
 

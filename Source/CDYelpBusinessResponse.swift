@@ -25,18 +25,13 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpBusinessResponse: Codable {
 
-public class CDYelpBusinessResponse: Mappable {
+    public let business: CDYelpBusiness?
+    public let error: CDYelpError?
 
-    public var business: CDYelpBusiness?
-    public var error: CDYelpError?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        business    <- map[""]
-        error       <- map["error"]
+    enum CodingKeys: String, CodingKey {
+        case business = ""
+        case error
     }
 }

@@ -146,7 +146,7 @@ public class CDYelpAPIClient: NSObject {
                                                          openAt: openAt,
                                                          attributes: attributes)
 
-            self.manager.request(CDYelpRouter.search(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+            self.manager.request(CDYelpRouter.search(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -179,7 +179,7 @@ public class CDYelpAPIClient: NSObject {
 
             let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
 
-            self.manager.request(CDYelpRouter.phone(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+            self.manager.request(CDYelpRouter.phone(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -223,7 +223,7 @@ public class CDYelpAPIClient: NSObject {
                                                                longitude: longitude)
 
             self.manager.request(CDYelpRouter.transactions(type: type.rawValue,
-                                                           parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+                                                           parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -258,7 +258,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.businessParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.business(id: id,
-                                                       parameters: parameters)).responseObject { (response: DataResponse<CDYelpBusiness, AFError>) in
+                                                       parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpBusiness, AFError>) in
 
                 switch response.result {
                 case .success(let business):
@@ -350,7 +350,7 @@ public class CDYelpAPIClient: NSObject {
                                                           limit: limit,
                                                           matchThresholdType: matchThresholdType)
 
-            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseObject { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+            self.manager.request(CDYelpRouter.matches(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
                 switch response.result {
                 case .success(let searchResponse):
@@ -386,7 +386,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.reviewsParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.reviews(id: id,
-                                                      parameters: parameters)).responseObject { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
+                                                      parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
 
                 switch response.result {
                 case .success(let reviewsResponse):
@@ -430,7 +430,7 @@ public class CDYelpAPIClient: NSObject {
                                                                longitude: longitude,
                                                                locale: locale)
 
-            self.manager.request(CDYelpRouter.autocomplete(parameters: parameters)).responseObject { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
+            self.manager.request(CDYelpRouter.autocomplete(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
 
                 switch response.result {
                 case .success(let autocompleteResponse):
@@ -468,7 +468,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.eventParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.event(id: id,
-                                                    parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent, AFError>) in
+                                                    parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpEvent, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -541,7 +541,7 @@ public class CDYelpAPIClient: NSObject {
                                                          radius: radius,
                                                          excludedEvents: excludedEvents)
 
-            self.manager.request(CDYelpRouter.events(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEventsResponse, AFError>) in
+            self.manager.request(CDYelpRouter.events(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpEventsResponse, AFError>) in
 
                 switch response.result {
                 case .success(let eventsResponse):
@@ -584,7 +584,7 @@ public class CDYelpAPIClient: NSObject {
                                                                 latitude: latitude,
                                                                 longitude: longitude)
 
-            self.manager.request(CDYelpRouter.featuredEvent(parameters: parameters)).responseObject { (response: DataResponse<CDYelpEvent, AFError>) in
+            self.manager.request(CDYelpRouter.featuredEvent(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpEvent, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -614,7 +614,7 @@ public class CDYelpAPIClient: NSObject {
 
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            self.manager.request(CDYelpRouter.allCategories(parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
+            self.manager.request(CDYelpRouter.allCategories(parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
 
                 switch response.result {
                 case .success(let event):
@@ -646,7 +646,7 @@ public class CDYelpAPIClient: NSObject {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
             self.manager.request(CDYelpRouter.categoryDetails(alias: alias.rawValue,
-                                                              parameters: parameters)).responseObject { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
+                                                              parameters: parameters)).responseDecodable { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
 
                 switch response.result {
                 case .success(let event):

@@ -25,48 +25,43 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpBusiness: Codable {
 
-public class CDYelpBusiness: Mappable {
+    public let id: String?
+    public let name: String?
+    public let imageUrl: String?
+    public let isClosed: Bool?
+    public let url: String?
+    public let price: String?
+    public let phone: String?
+    public let displayPhone: String?
+    public let photos: [String]?
+    public let hours: [CDYelpHour]?
+    public let rating: Double?
+    public let reviewCount: Int?
+    public let categories: [CDYelpCategory]?
+    public let distance: Double?
+    public let coordinates: CDYelpCoordinates?
+    public let location: CDYelpLocation?
+    public let transactions: [String]?
 
-    public var id: String?
-    public var name: String?
-    public var imageUrl: String?
-    public var isClosed: Bool?
-    public var url: String?
-    public var price: String?
-    public var phone: String?
-    public var displayPhone: String?
-    public var photos: [String]?
-    public var hours: [CDYelpHour]?
-    public var rating: Double?
-    public var reviewCount: Int?
-    public var categories: [CDYelpCategory]?
-    public var distance: Double?
-    public var coordinates: CDYelpCoordinates?
-    public var location: CDYelpLocation?
-    public var transactions: [String]?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        id              <- map["id"]
-        name            <- map["name"]
-        imageUrl        <- map["image_url"]
-        isClosed        <- map["is_closed"]
-        url             <- map["url"]
-        price           <- map["price"]
-        phone           <- map["phone"]
-        displayPhone    <- map["display_phone"]
-        photos          <- map["photos"]
-        hours           <- map["hours"]
-        rating          <- map["rating"]
-        reviewCount     <- map["review_count"]
-        categories      <- map["categories"]
-        distance        <- map["distance"]
-        coordinates     <- map["coordinates"]
-        location        <- map["location"]
-        transactions    <- map["transactions"]
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case imageUrl = "image_url"
+        case isClosed = "is_closed"
+        case url
+        case price
+        case phone
+        case displayPhone = "display_phone"
+        case photos
+        case hours
+        case rating
+        case reviewCount = "review_count"
+        case categories
+        case distance
+        case coordinates
+        case location
+        case transactions
     }
 }
