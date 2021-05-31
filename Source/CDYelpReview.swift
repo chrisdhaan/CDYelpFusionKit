@@ -29,7 +29,7 @@ public struct CDYelpReview: Decodable {
 
     public let id: String?
     public let text: String?
-    public let url: String?
+    public let url: URL?
     public let rating: Int?
     public let timeCreated: String?
     public let user: CDYelpUser?

@@ -28,9 +28,9 @@
 public struct CDYelpUser: Decodable {
 
     public let id: String?
-    public let profileUrl: String?
+    public let profileUrl: URL?
     public let name: String?
-    public let imageUrl: String?
+    public let imageUrl: URL?
 
     enum CodingKeys: String, CodingKey {
         case id

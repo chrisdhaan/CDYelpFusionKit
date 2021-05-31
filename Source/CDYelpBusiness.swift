@@ -29,9 +29,9 @@ public struct CDYelpBusiness: Decodable {
 
     public let id: String?
     public let name: String?
-    public let imageUrl: String?
+    public let imageUrl: URL?
     public let isClosed: Bool?
-    public let url: String?
+    public let url: URL?
     public let price: String?
     public let phone: String?
     public let displayPhone: String?
