@@ -37,5 +37,5 @@ line_length:
   warning: 195
 # number of lines allowed in a type declaration
 type_body_length:
-  error: 400
-  warning: 350
+  error: 450
+  warning: 400
