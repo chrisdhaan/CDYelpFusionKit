@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpAutoCompleteResponse: Codable {
+public struct CDYelpAutoCompleteResponse: Decodable {
 
     public let terms: [CDYelpTerm]?
     public let businesses: [CDYelpBusiness]?

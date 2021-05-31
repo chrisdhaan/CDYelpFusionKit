@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpError: Codable {
+public struct CDYelpError: Decodable {
 
     public let description: String?
     public let field: String?

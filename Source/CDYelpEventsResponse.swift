@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpEventsResponse: Codable {
+public struct CDYelpEventsResponse: Decodable {
 
     public let total: Int?
     public let events: [CDYelpEvent]?

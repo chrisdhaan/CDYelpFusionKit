@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpTerm: Codable {
+public struct CDYelpTerm: Decodable {
 
     public let text: String?
 

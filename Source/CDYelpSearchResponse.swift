@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpSearchResponse: Codable {
+public struct CDYelpSearchResponse: Decodable {
 
     public let total: Int?
     public let businesses: [CDYelpBusiness]?

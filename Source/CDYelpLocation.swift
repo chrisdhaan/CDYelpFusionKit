@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpLocation: Codable {
+public struct CDYelpLocation: Decodable {
 
     public let addressOne: String?
     public let addressTwo: String?

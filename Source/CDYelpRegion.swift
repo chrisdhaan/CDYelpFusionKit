@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpRegion: Codable {
+public struct CDYelpRegion: Decodable {
 
     public let center: CDYelpCenter?
 

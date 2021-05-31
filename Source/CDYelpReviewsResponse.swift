@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpReviewsResponse: Codable {
+public struct CDYelpReviewsResponse: Decodable {
 
     public let total: Int?
     public let possibleLanguages: [String]?

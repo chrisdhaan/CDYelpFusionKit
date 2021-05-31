@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpBusinessResponse: Codable {
+public struct CDYelpBusinessResponse: Decodable {
 
     public let business: CDYelpBusiness?
     public let error: CDYelpError?

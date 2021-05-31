@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpUser: Codable {
+public struct CDYelpUser: Decodable {
 
     public let id: String?
     public let profileUrl: String?

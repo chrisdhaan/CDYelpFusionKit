@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCategoryResponse: Codable {
+public struct CDYelpCategoryResponse: Decodable {
 
     public let category: CDYelpCategory?
 

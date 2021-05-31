@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCategory: Codable {
+public struct CDYelpCategory: Decodable {
 
     public let alias: String?
     public let title: String?
