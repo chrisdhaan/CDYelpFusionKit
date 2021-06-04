@@ -32,7 +32,7 @@ public class CDYelpAPIClient: NSObject {
     private let apiKey: String!
     private lazy var manager: Alamofire.Session = {
         if let apiKey = self.apiKey,
-            apiKey.count > 0 {
+           apiKey.count > 0 {
             // Get the default headers
             var headers = HTTPHeaders.default
             // Add the Authorization header
@@ -73,7 +73,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     public func isAuthenticated() -> Bool {
         if self.apiKey != nil,
-            self.apiKey.count > 0 {
+           self.apiKey.count > 0 {
             return true
         }
         return false
@@ -121,7 +121,7 @@ public class CDYelpAPIClient: NSObject {
                                  attributes: [CDYelpAttributeFilter]?,
                                  completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
+                (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
         if let radius = radius {
             assert((radius > 0 && radius <= 40000), "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
         }
@@ -151,17 +151,17 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
-                switch response.result {
-                case .success(let searchResponse):
-                    if let error = searchResponse.error {
-                        print("searchBusinesses(byTerm) error: ", error.description ?? "")
+                    switch response.result {
+                    case .success(let searchResponse):
+                        if let error = searchResponse.error {
+                            print("searchBusinesses(byTerm) error: ", error.description ?? "")
+                        }
+                        completion(searchResponse)
+                    case .failure(let error):
+                        print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
+                        completion(nil)
                     }
-                    completion(searchResponse)
-                case .failure(let error):
-                    print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
-                    completion(nil)
                 }
-            }
         }
     }
 
@@ -187,17 +187,17 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
-                switch response.result {
-                case .success(let searchResponse):
-                    if let error = searchResponse.error {
-                        print("searchBusinesses(byPhone) error: ", error.description ?? "")
+                    switch response.result {
+                    case .success(let searchResponse):
+                        if let error = searchResponse.error {
+                            print("searchBusinesses(byPhone) error: ", error.description ?? "")
+                        }
+                        completion(searchResponse)
+                    case .failure(let error):
+                        print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
+                        completion(nil)
                     }
-                    completion(searchResponse)
-                case .failure(let error):
-                    print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
-                    completion(nil)
                 }
-            }
         }
     }
 
@@ -220,7 +220,7 @@ public class CDYelpAPIClient: NSObject {
                                    completion: @escaping (CDYelpSearchResponse?) -> Void) {
         assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
         assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
+                (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -234,17 +234,17 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
-                switch response.result {
-                case .success(let searchResponse):
-                    if let error = searchResponse.error {
-                        print("searchTransactions(byType) error: ", error.description ?? "")
+                    switch response.result {
+                    case .success(let searchResponse):
+                        if let error = searchResponse.error {
+                            print("searchTransactions(byType) error: ", error.description ?? "")
+                        }
+                        completion(searchResponse)
+                    case .failure(let error):
+                        print("searchTransactions(byType) failure: ", error.localizedDescription)
+                        completion(nil)
                     }
-                    completion(searchResponse)
-                case .failure(let error):
-                    print("searchTransactions(byType) failure: ", error.localizedDescription)
-                    completion(nil)
                 }
-            }
         }
     }
 
@@ -272,14 +272,14 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpBusiness, AFError>) in
 
-                switch response.result {
-                case .success(let business):
-                    completion(business)
-                case .failure(let error):
-                    print("fetchBusiness(byId) failure: ", error.localizedDescription)
-                    completion(nil)
+                    switch response.result {
+                    case .success(let business):
+                        completion(business)
+                    case .failure(let error):
+                        print("fetchBusiness(byId) failure: ", error.localizedDescription)
+                        completion(nil)
+                    }
                 }
-            }
         }
     }
 
@@ -367,17 +367,17 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
 
-                switch response.result {
-                case .success(let searchResponse):
-                    if let error = searchResponse.error {
-                        print("searchBusinessMatches(byType) error: ", error.description ?? "")
+                    switch response.result {
+                    case .success(let searchResponse):
+                        if let error = searchResponse.error {
+                            print("searchBusinessMatches(byType) error: ", error.description ?? "")
+                        }
+                        completion(searchResponse)
+                    case .failure(let error):
+                        print("searchBusinessMatches(byType) failure: ", error.localizedDescription)
+                        completion(nil)
                     }
-                    completion(searchResponse)
-                case .failure(let error):
-                    print("searchBusinessMatches(byType) failure: ", error.localizedDescription)
-                    completion(nil)
                 }
-            }
         }
     }
 
@@ -399,24 +399,27 @@ public class CDYelpAPIClient: NSObject {
         if self.isAuthenticated() == true {
 
             let parameters = Parameters.reviewsParameters(withLocale: locale)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
 
             self.manager
                 .request(CDYelpRouter.reviews(id: id,
                                               parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
+                .responseDecodable(decoder: decoder,
+                                   completionHandler: { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
+                                    switch response.result {
+                                    case .success(let reviewsResponse):
+                                        if let error = reviewsResponse.error {
+                                            print("fetchReviews(forBusinessId) error: ", error.description ?? "")
+                                        }
+                                        completion(reviewsResponse)
+                                    case .failure(let error):
+                                        print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
+                                        completion(nil)
+                                    }
+                                   })
 
-                switch response.result {
-                case .success(let reviewsResponse):
-                    if let error = reviewsResponse.error {
-                        print("fetchReviews(forBusinessId) error: ", error.description ?? "")
-                    }
-                    completion(reviewsResponse)
-                case .failure(let error):
-                    print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
-                    completion(nil)
-                }
-            }
         }
     }
 
@@ -438,8 +441,8 @@ public class CDYelpAPIClient: NSObject {
                                        locale: CDYelpLocale?,
                                        completion: @escaping (CDYelpAutoCompleteResponse?) -> Void) {
         assert((text != nil && text.count > 0) &&
-            latitude != nil &&
-            longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint.")
+                latitude != nil &&
+                longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -453,17 +456,17 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
 
-                switch response.result {
-                case .success(let autocompleteResponse):
-                    if let error = autocompleteResponse.error {
-                        print("autocompleteBusinesses(byText) error: ", error.description ?? "")
+                    switch response.result {
+                    case .success(let autocompleteResponse):
+                        if let error = autocompleteResponse.error {
+                            print("autocompleteBusinesses(byText) error: ", error.description ?? "")
+                        }
+                        completion(autocompleteResponse)
+                    case .failure(let error):
+                        print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
+                        completion(nil)
                     }
-                    completion(autocompleteResponse)
-                case .failure(let error):
-                    print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
-                    completion(nil)
                 }
-            }
         }
     }
 
@@ -487,21 +490,23 @@ public class CDYelpAPIClient: NSObject {
         if self.isAuthenticated() == true {
 
             let parameters = Parameters.eventParameters(withLocale: locale)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             self.manager
                 .request(CDYelpRouter.event(id: id,
                                             parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpEvent, AFError>) in
-
-                switch response.result {
-                case .success(let event):
-                    completion(event)
-                case .failure(let error):
-                    print("fetchEvent(forId) failure: ", error.localizedDescription)
-                    completion(nil)
-                }
-            }
+                .responseDecodable(decoder: decoder,
+                                   completionHandler: { (response: DataResponse<CDYelpEvent, AFError>) in
+                                    switch response.result {
+                                    case .success(let event):
+                                        completion(event)
+                                    case .failure(let error):
+                                        print("fetchEvent(forId) failure: ", error.localizedDescription)
+                                        completion(nil)
+                                    }
+                                   })
         }
     }
 
@@ -564,23 +569,26 @@ public class CDYelpAPIClient: NSObject {
                                                          longitude: longitude,
                                                          radius: radius,
                                                          excludedEvents: excludedEvents)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             self.manager
                 .request(CDYelpRouter.events(parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpEventsResponse, AFError>) in
+                .responseDecodable(decoder: decoder,
+                                   completionHandler: { (response: DataResponse<CDYelpEventsResponse, AFError>) in
+                                    switch response.result {
+                                    case .success(let eventsResponse):
+                                        if let error = eventsResponse.error {
+                                            print("searchEvents(byLocale) error: ", error.description ?? "")
+                                        }
+                                        completion(eventsResponse)
+                                    case .failure(let error):
+                                        print("searchEvents(byLocale) failure: ", error.localizedDescription)
+                                        completion(nil)
+                                    }
+                                   })
 
-                switch response.result {
-                case .success(let eventsResponse):
-                    if let error = eventsResponse.error {
-                        print("searchEvents(byLocale) error: ", error.description ?? "")
-                    }
-                    completion(eventsResponse)
-                case .failure(let error):
-                    print("searchEvents(byLocale) failure: ", error.localizedDescription)
-                    completion(nil)
-                }
-            }
         }
     }
 
@@ -602,7 +610,7 @@ public class CDYelpAPIClient: NSObject {
                                    longitude: Double?,
                                    completion: @escaping (CDYelpEvent?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
+                (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
 
         if self.isAuthenticated() == true {
 
@@ -610,20 +618,22 @@ public class CDYelpAPIClient: NSObject {
                                                                 location: location,
                                                                 latitude: latitude,
                                                                 longitude: longitude)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             self.manager
                 .request(CDYelpRouter.featuredEvent(parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpEvent, AFError>) in
-
-                switch response.result {
-                case .success(let event):
-                    completion(event)
-                case .failure(let error):
-                    print("fetchFeaturedEvent(forLocale) failure: ", error.localizedDescription)
-                    completion(nil)
-                }
-            }
+                .responseDecodable(decoder: decoder,
+                                   completionHandler: { (response: DataResponse<CDYelpEvent, AFError>) in
+                                    switch response.result {
+                                    case .success(let event):
+                                        completion(event)
+                                    case .failure(let error):
+                                        print("fetchFeaturedEvent(forLocale) failure: ", error.localizedDescription)
+                                        completion(nil)
+                                    }
+                                   })
         }
     }
 
@@ -649,14 +659,14 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
 
-                switch response.result {
-                case .success(let event):
-                    completion(event)
-                case .failure(let error):
-                    print("fetchCategories(forLocale) alias: ", error.localizedDescription)
-                    completion(nil)
+                    switch response.result {
+                    case .success(let event):
+                        completion(event)
+                    case .failure(let error):
+                        print("fetchCategories(forLocale) alias: ", error.localizedDescription)
+                        completion(nil)
+                    }
                 }
-            }
         }
     }
 
@@ -684,14 +694,14 @@ public class CDYelpAPIClient: NSObject {
                 .validate()
                 .responseDecodable { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
 
-                switch response.result {
-                case .success(let event):
-                    completion(event)
-                case .failure(let error):
-                    print("fetchCategory(forAlias) alias: ", error.localizedDescription)
-                    completion(nil)
+                    switch response.result {
+                    case .success(let event):
+                        completion(event)
+                    case .failure(let error):
+                        print("fetchCategory(forAlias) alias: ", error.localizedDescription)
+                        completion(nil)
+                    }
                 }
-            }
         }
     }
 

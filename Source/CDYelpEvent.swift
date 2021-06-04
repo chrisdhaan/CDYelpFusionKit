@@ -43,8 +43,8 @@ public struct CDYelpEvent: Decodable {
     public let longitude: Double?
     public let name: String?
     public let ticketsUrl: String?
-    public let timeEnd: String?
-    public let timeStart: String?
+    public let timeEnd: Date?
+    public let timeStart: Date?
     public let location: CDYelpLocation?
     public let businessId: String?
 

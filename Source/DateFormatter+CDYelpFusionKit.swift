@@ -1,8 +1,8 @@
 //
-//  CDYelpReview.swift
+//  DateFormatter+CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 6/1/21.
 //
 //  Copyright © 2016-2021 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,21 +25,16 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpReview: Decodable {
+extension DateFormatter {
+  static let events: DateFormatter = {
+   let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+    return formatter
+  }()
 
-    public let id: String?
-    public let text: String?
-    public let url: URL?
-    public let rating: Int?
-    public let timeCreated: Date?
-    public let user: CDYelpUser?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case text
-        case url
-        case rating
-        case timeCreated = "time_created"
-        case user
-    }
+  static let reviews: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    return formatter
+  }()
 }
