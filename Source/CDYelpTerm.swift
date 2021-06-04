@@ -25,16 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpTerm: Decodable {
 
-public class CDYelpTerm: Mappable {
+    public let text: String?
 
-    public var text: String?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        text    <- map["text"]
+    enum CodingKeys: String, CodingKey {
+        case text
     }
 }

@@ -21,5 +21,4 @@ Pod::Spec.new do |s|
   s.resources = ['Resources/*.xcassets']
 
   s.dependency 'Alamofire', '5.2.2'
-  s.dependency 'ObjectMapper', '4.2.0'
 end

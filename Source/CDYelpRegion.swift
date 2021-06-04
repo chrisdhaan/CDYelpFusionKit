@@ -25,16 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpRegion: Decodable {
 
-public class CDYelpRegion: Mappable {
+    public let center: CDYelpCenter?
 
-    public var center: CDYelpCenter?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        center  <- map["center"]
+    enum CodingKeys: String, CodingKey {
+        case center
     }
 }

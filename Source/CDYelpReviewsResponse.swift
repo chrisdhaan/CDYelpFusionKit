@@ -25,22 +25,17 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpReviewsResponse: Decodable {
 
-public class CDYelpReviewsResponse: Mappable {
+    public let total: Int?
+    public let possibleLanguages: [String]?
+    public let reviews: [CDYelpReview]?
+    public let error: CDYelpError?
 
-    public var total: Int?
-    public var possibleLanguages: [String]?
-    public var reviews: [CDYelpReview]?
-    public var error: CDYelpError?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        total               <- map["total"]
-        possibleLanguages   <- map["possible_languages"]
-        reviews             <- map["reviews"]
-        error               <- map["error"]
+    enum CodingKeys: String, CodingKey {
+        case total
+        case possibleLanguages = "possible_languages"
+        case reviews
+        case error
     }
 }

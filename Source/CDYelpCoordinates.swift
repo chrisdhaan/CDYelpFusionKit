@@ -25,18 +25,13 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpCoordinates: Decodable {
 
-public class CDYelpCoordinates: Mappable {
+    public let latitude: Double?
+    public let longitude: Double?
 
-    public var latitude: Double?
-    public var longitude: Double?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        latitude    <- map["latitude"]
-        longitude   <- map["longitude"]
+    enum CodingKeys: String, CodingKey {
+        case latitude
+        case longitude
     }
 }
