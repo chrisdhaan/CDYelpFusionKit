@@ -325,7 +325,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 
 ```swift
 public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
-                                 completion: @escaping (CDYelpSearchResponse?) -> Void)
+                             completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
 The following lines of code show an example query to the phone search endpoint.
@@ -486,7 +486,7 @@ The autocomplete endpoint has a `locale` parameter which allows for query result
 The following lines of code show an example query to the autocomplete endpoint.
 
 ```swift
-yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
+yelpAPIClient.autocompleteBusinesses(byText: "Pizza Delivery",
                                      latitude: 37.786572,
                                      longitude: -122.415192,
                                      locale: nil) { (response) in
@@ -512,7 +512,7 @@ The event lookup endpoint has a `locale` parameter which allows for query result
 The following lines of code show an example query to the event lookup endpoint.
 
 ```swift
-yelpAPIClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
+yelpAPIClient.fetchEvent(forId: "san-francisco-yelp-celebrates-pride-month-2021",
                          locale: nil) { (event) in
 
   if let event = event {

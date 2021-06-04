@@ -286,8 +286,8 @@ extension ViewController: UITableViewDelegate {
                 }
             case 6:
                 CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Delivery",
-                                                                               latitude: 37.786882,
-                                                                               longitude: 122.399972,
+                                                                               latitude: 37.786572,
+                                                                               longitude: -122.415192,
                                                                                locale: nil) { (response) in
                     if let response = response {
                         if let businesses = response.businesses,
