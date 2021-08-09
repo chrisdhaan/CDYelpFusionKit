@@ -49,7 +49,7 @@ let package = Package(
     targets: [
         .target(
             name: "CDYelpFusionKit",
+            dependencies: .product(name: "Alamofire", package: "Alamofire"),
             path: "Source"),
-            dependencies: [ .product(name: "Alamofire", package: "Alamofire"),]
     ],
     swiftLanguageVersions: [.v5])
