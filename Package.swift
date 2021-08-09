@@ -42,8 +42,7 @@ let package = Package(
             targets: ["CDYelpFusionKit"])
     ],
     dependencies: [
-        .package(name: "Alamofire", 
-                 url: "https://github.com/Alamofire/Alamofire.git", 
+        .package(url: "https://github.com/Alamofire/Alamofire.git", 
                  .upToNextMajor(from: "5.4.3"))
     ],
     targets: [
