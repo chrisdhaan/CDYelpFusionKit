@@ -25,6 +25,12 @@
 //  THE SOFTWARE.
 //
 
+#if !os(OSX)
+ import UIKit
+#else
+ import Foundation
+#endif
+
 public extension URL {
 
     // MARK: - Private Methods
