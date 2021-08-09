@@ -47,6 +47,6 @@ let package = Package(
     targets: [
         .target(
             name: "CDYelpFusionKit",
-            path: "CDYelpFusionKit")
+            path: "Source")
     ],
     swiftLanguageVersions: [.v5])
