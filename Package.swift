@@ -47,7 +47,7 @@ let package = Package(
     targets: [
         .target(
             name: "CDYelpFusionKit",
-            path: "Source")
+            path: "Source"),
             linkerSettings: [.linkedFramework("Alamofire", .when(platforms: [.iOS])
     ],
     swiftLanguageVersions: [.v5])
