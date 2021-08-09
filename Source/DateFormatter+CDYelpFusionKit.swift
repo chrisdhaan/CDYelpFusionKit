@@ -25,6 +25,12 @@
 //  THE SOFTWARE.
 //
 
+#if !os(OSX)
+ import UIKit
+#else
+ import Foundation
+#endif
+
 extension DateFormatter {
   static let events: DateFormatter = {
    let formatter = DateFormatter()
