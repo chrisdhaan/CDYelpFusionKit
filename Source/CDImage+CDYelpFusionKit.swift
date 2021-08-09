@@ -25,6 +25,12 @@
 //  THE SOFTWARE.
 //
 
+#if !os(OSX)
+ import UIKit
+#else
+ import Foundation
+#endif
+
 public extension CDImage {
 
     private class func cdImage(named name: String!) -> CDImage? {
