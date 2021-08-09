@@ -50,7 +50,7 @@ let package = Package(
             name: "CDYelpFusionKit",
             path: "Source",
             dependencies: [.product(name: "Alamofire", package: "Alamofire")],
-            linkerSettings: [.linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS])]
+            linkerSettings: [.linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS])],
         ),
     ],
     swiftLanguageVersions: [.v5])
