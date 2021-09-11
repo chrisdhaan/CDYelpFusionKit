@@ -25,6 +25,12 @@
 //  THE SOFTWARE.
 //
 
+#if !os(OSX)
+    import UIKit
+#else
+    import Foundation
+#endif
+
 public struct CDYelpEvent: Decodable {
 
     public let attendingCount: Int?
