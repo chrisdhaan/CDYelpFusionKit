@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
+#### 3.x Releases
+- `3.0.x` Releases - [3.0.0](#300)
+
 #### 2.x Releases
 - `2.1.x` Releases - [2.1.0](#210) | [2.1.1](#211)
 - `2.0.x` Releases - [2.0.0](#200)
@@ -13,6 +16,21 @@ All notable changes to this project will be documented in this file.
 - `1.2.x` Releases - [1.2.0](#120)
 - `1.1.x` Releases - [1.1.0](#110)
 - `1.0.x` Releases - [1.0.0](#100)
+
+---
+
+## [3.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.0.0)
+## Dependencies
+Released on 2021-09-11.
+
+#### Updated
+
+- [x] Models
+    - [x] Decodable, Encodable APIs
+
+#### Removed
+- [x] Dependencies
+    - [x] ObjectMapper
 
 ---
 
