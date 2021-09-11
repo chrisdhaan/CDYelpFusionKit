@@ -27,6 +27,8 @@ Released on 2021-09-11.
 
 - [x] Models
     - [x] Decodable, Encodable APIs
+- [x] Switch Package Manager
+    - [x] Configuration
 
 #### Removed
 - [x] Dependencies
