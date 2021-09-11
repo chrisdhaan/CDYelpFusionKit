@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']
 
-  s.dependency 'Alamofire', '5.2.2'
+  s.dependency 'Alamofire', '5.4.3'
 end
