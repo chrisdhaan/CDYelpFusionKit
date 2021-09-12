@@ -18,39 +18,11 @@ concurrency:
   group: ci
   cancel-in-progress: true
 jobs:
-#   macOS_5_1:
-#     name: Build macOS (5.1)
-#     runs-on: macOS-10.15
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: macOS (5.1)
-#         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
-#   macOS_5_2:
-#     name: Test macOS (5.2)
-#     runs-on: macOS-10.15
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: macOS (5.2)
-#         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
-  macOS_5_3:
-    name: Test macOS (5.3)
+  macOS_5_1:
+    name: Build macOS (5.1)
     runs-on: macOS-10.15
     env:
-      DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
@@ -62,14 +34,62 @@ jobs:
             ${{ runner.os }}-carthage-
       - name: Dependencies
         run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
-      - name: macOS (5.3) - Debug
+      - name: macOS (5.1) - Debug
         run: |
           set -o pipefail
           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
-      - name: macOS (5.3) - Release
+      - name: macOS (5.1) - Release
         run: |
           set -o pipefail
           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
+  macOS_5_2:
+    name: Test macOS (5.2)
+    runs-on: macOS-10.15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: Carthage
+          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
+      - name: Dependencies
+        run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
+      - name: macOS (5.2) - Debug
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+      - name: macOS (5.2) - Release
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
+#   macOS_5_3:
+#     name: Test macOS (5.3)
+#     runs-on: macOS-10.15
+#     env:
+#       DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+#     timeout-minutes: 10
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/cache@v2
+#         with:
+#           path: Carthage
+#           key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+#           restore-keys: |
+#             ${{ runner.os }}-carthage-
+#       - name: Dependencies
+#         run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
+#       - name: macOS (5.3) - Debug
+#         run: |
+#           set -o pipefail
+#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+#       - name: macOS (5.3) - Release
+#         run: |
+#           set -o pipefail
+#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
 #   Catalyst:
 #     name: Test Catalyst
 #     runs-on: macOS-10.15
@@ -123,22 +143,28 @@ jobs:
 #           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
 #   tvOS:
 #     name: Test tvOS
-#     runs-on: firebreak
+#     runs-on: macOS-10.15
 #     env:
-#       DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
+#       DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
 #     timeout-minutes: 10
 #     strategy:
 #       matrix:
 #         destination: ["OS=14.5,name=Apple TV"]
 #     steps:
 #       - uses: actions/checkout@v2
+#       - uses: actions/cache@v2
+#         with:
+#           path: Carthage
+#           key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+#           restore-keys: |
+#             ${{ runner.os }}-carthage-
 #       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
+#         run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
 #       - name: tvOS - ${{ matrix.destination }}
-#         xcodebuild -showsdks
-#         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean build | xcpretty
+#         run: |
+#           set -o pipefail
+#           xcodebuild -showsdks
+#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean build | xcpretty
 #   watchOS:
 #     name: Test watchOS
 #     runs-on: firebreak
