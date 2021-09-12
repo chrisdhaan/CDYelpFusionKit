@@ -101,12 +101,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: Dependencies
         run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
+      - name: iOS - ${{ matrix.destination }} - Debug
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Debug clean build | xcpretty
       - name: iOS - ${{ matrix.destination }} - Release
         run: |
           set -o pipefail
-          xcodebuild -version
-          xcodebuild -showsdks
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release -arch arm64e ONLY_ACTIVE_ARCH=NO clean build | xcpretty
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
 #   tvOS:
 #     name: Test tvOS
 #     runs-on: firebreak
@@ -123,6 +125,7 @@ jobs:
 #           carthage bootstrap --no-use-binaries --cache-builds
 #           bundle exec pod install
 #       - name: tvOS - ${{ matrix.destination }}
+#         xcodebuild -showsdks
 #         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean build | xcpretty
 #   watchOS:
 #     name: Test watchOS
