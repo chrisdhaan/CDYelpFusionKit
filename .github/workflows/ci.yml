@@ -106,7 +106,7 @@ jobs:
           set -o pipefail
           xcodebuild -version
           xcodebuild -showsdks
-          arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release ONLY_ACTIVE_ARCH=NO clean build | xcpretty
+          ONLY_ACTIVE_ARCH=NO arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
 #   tvOS:
 #     name: Test tvOS
 #     runs-on: firebreak
