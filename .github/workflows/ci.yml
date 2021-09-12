@@ -91,12 +91,12 @@ jobs:
   iOS:
     name: Test iOS
     runs-on: macOS-10.15
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
     timeout-minutes: 10
     strategy:
       matrix:
-        destination: ["OS=14.5,name=iPhone 12 Pro"]
+        destination: ["OS=14.4,name=iPhone 12 Pro"]
     steps:
       - uses: actions/checkout@v2
       - name: Dependencies
