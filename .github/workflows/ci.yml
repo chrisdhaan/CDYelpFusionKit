@@ -26,6 +26,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: macOS (5.1)
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   macOS_5_2:
@@ -36,6 +40,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: macOS (5.2)
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   macOS_5_3:
@@ -46,6 +54,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: macOS (5.3)
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   macOS_5_4:
@@ -56,6 +68,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: macOS (5.4)
         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   Catalyst:
@@ -66,6 +82,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: Catalyst
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" clean build | xcpretty
   iOS:
@@ -79,6 +99,10 @@ jobs:
         destination: ["OS=14.5,name=iPhone 12 Pro"]
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: iOS - ${{ matrix.destination }}
         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   tvOS:
@@ -92,6 +116,10 @@ jobs:
         destination: ["OS=14.5,name=Apple TV"]
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: tvOS - ${{ matrix.destination }}
         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   watchOS:
@@ -105,6 +133,10 @@ jobs:
         destination: ["OS=7.4,name=Apple Watch Series 6 - 44mm"]
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: watchOS - ${{ matrix.destination }}
         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit watchOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   SPM:
@@ -115,6 +147,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: SPM Test
         run: arch -arch arm64e swift build -c debug
   Linux:
@@ -125,6 +161,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: SPM Linux build
         run: swift build -c debug
   Linux_Nightly:
@@ -135,6 +175,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          carthage bootstrap --no-use-binaries --cache-builds
+          bundle exec pod install
       - name: SPM Linux build
         run: swift build -c debug
   Windows:
@@ -145,6 +189,10 @@ jobs:
     - name: "Clone Project"
       uses: actions/checkout@v2
     - uses: seanmiddleditch/gha-setup-vsdevenv@master
+    - name: Dependencies
+      run: |
+        carthage bootstrap --no-use-binaries --cache-builds
+        bundle exec pod install
     - name: Install Swift
       run: |
         Install-Binary -Url "https://swift.org/builds/swift-5.4.1-release/windows10/swift-5.4.1-RELEASE/swift-5.4.1-RELEASE-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
