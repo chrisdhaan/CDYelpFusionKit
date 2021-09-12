@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: macOS (5.2)
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   macOS_5_3:
     name: Test macOS (5.3)
     runs-on: macOS-10.15
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: macOS (5.3)
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   macOS_5_4:
     name: Test macOS (5.4)
     runs-on: firebreak
@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: macOS (5.4)
-        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
   Catalyst:
     name: Test Catalyst
     runs-on: macOS-10.15
@@ -67,7 +67,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Catalyst
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" clean build | xcpretty
   iOS:
     name: Test iOS
     runs-on: firebreak
@@ -80,7 +80,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: iOS - ${{ matrix.destination }}
-        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   tvOS:
     name: Test tvOS
     runs-on: firebreak
@@ -93,7 +93,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: tvOS - ${{ matrix.destination }}
-        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit tvOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   watchOS:
     name: Test watchOS
     runs-on: firebreak
@@ -106,7 +106,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: watchOS - ${{ matrix.destination }}
-        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit watchOS" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit watchOS" -destination "${{ matrix.destination }}" clean build | xcpretty
   SPM:
     name: Test with SPM
     runs-on: firebreak
@@ -116,7 +116,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: SPM Test
-        run: arch -arch arm64e swift test -c debug
+        run: arch -arch arm64e swift build -c debug
   Linux:
     name: Linux
     runs-on: ubuntu-20.04
@@ -126,7 +126,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: SPM Linux build
-        run: swift build --build-tests -c debug
+        run: swift build -c debug
   Linux_Nightly:
     name: Linux Nightly
     runs-on: ubuntu-20.04
@@ -136,7 +136,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: SPM Linux build
-        run: swift build --build-tests -c debug
+        run: swift build -c debug
   Windows:
     name: Windows
     runs-on: windows-2019
@@ -167,5 +167,5 @@ jobs:
       run: |
         cd ${{ github.workspace}}
         set SDKROOT=%SystemDrive%\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk
-        %SystemDrive%\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift-build.exe --build-tests -c debug -Xlinker /INCREMENTAL:NO -v
+        %SystemDrive%\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift-build.exe -c debug -Xlinker /INCREMENTAL:NO -v
         if not exist .build\x86_64-unknown-windows-msvc\debug\Alamofire.swiftmodule exit 1
