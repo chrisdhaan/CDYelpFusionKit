@@ -83,16 +83,22 @@ jobs:
           key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
           restore-keys: |
             ${{ runner.os }}-carthage-
+      - uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
       - name: Dependencies
         run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
-#       - name: iOS - ${{ matrix.destination }} - Debug
-#         run: |
-#           set -o pipefail
-#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Debug clean build | xcpretty
-#       - name: iOS - ${{ matrix.destination }} - Release
-#         run: |
-#           set -o pipefail
-#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
+      - name: iOS - ${{ matrix.destination }} - Debug
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Debug clean build | xcpretty
+      - name: iOS - ${{ matrix.destination }} - Release
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
       - name: Pod Lib Lint
         run: |
           gem install cocoapods --no-document --quiet
