@@ -90,10 +90,14 @@ jobs:
             ${{ runner.os }}-carthage-
       - name: Dependencies
         run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
-      - name: Catalyst
+      - name: Catalyst - Debug
         run: |
           set -o pipefail
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" clean build | xcpretty
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+      - name: Catalyst - Release
+        run: |
+          set -o pipefail
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
 #   iOS:
 #     name: Test iOS
 #     runs-on: macOS-10.15
