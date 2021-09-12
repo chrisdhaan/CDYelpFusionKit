@@ -96,7 +96,6 @@ jobs:
       - name: Pod Lib Lint
         run: |
           gem install cocoapods --no-document --quiet
-          pod repo update
           pod lib lint --allow-warnings --use-libraries
 #   tvOS:
 #     name: Test tvOS
