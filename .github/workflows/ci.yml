@@ -46,36 +46,8 @@ jobs:
 #           bundle exec pod install
 #       - name: macOS (5.2)
 #         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
-#   macOS_5_3:
-#     name: Test macOS (5.3)
-#     runs-on: macOS-10.15
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: macOS (5.3)
-#         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
-#   macOS_5_4:
-#     name: Test macOS (5.4)
-#     runs-on: firebreak
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: macOS (5.4)
-#         run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" clean build | xcpretty
-  Catalyst:
-    name: Test Catalyst
+  macOS_5_3:
+    name: Test macOS (5.3)
     runs-on: macOS-10.15
     env:
       DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
@@ -89,15 +61,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-carthage-
       - name: Dependencies
-        run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
-      - name: Catalyst - Debug
+        run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
+      - name: macOS (5.3) - Debug
         run: |
           set -o pipefail
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
-      - name: Catalyst - Release
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+      - name: macOS (5.3) - Release
         run: |
           set -o pipefail
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
+#   Catalyst:
+#     name: Test Catalyst
+#     runs-on: macOS-10.15
+#     env:
+#       DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+#     timeout-minutes: 10
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/cache@v2
+#         with:
+#           path: Carthage
+#           key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+#           restore-keys: |
+#             ${{ runner.os }}-carthage-
+#       - name: Dependencies
+#         run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
+#       - name: Catalyst - Debug
+#         run: |
+#           set -o pipefail
+#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+#       - name: Catalyst - Release
+#         run: |
+#           set -o pipefail
+#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
 #   iOS:
 #     name: Test iOS
 #     runs-on: macOS-10.15
