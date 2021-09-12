@@ -100,9 +100,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Dependencies
-        run: carthage update --use-submodules --use-xcframeworks -platform ios --cache-builds
+        run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
       - name: iOS - ${{ matrix.destination }}
-        run: set -o pipefail && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" clean build | xcpretty
+        run: set -o pipefail && xcodebuild -version && xcodebuild -showsdks && arch -arch arm64e env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit iOS" -destination "${{ matrix.destination }}" clean build | xcpretty
 #   tvOS:
 #     name: Test tvOS
 #     runs-on: firebreak
