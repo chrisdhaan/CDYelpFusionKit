@@ -21,18 +21,30 @@ All notable changes to this project will be documented in this file.
 
 ## [3.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.0.0)
 ## Dependencies
-Released on 2021-09-11.
+Released on 2021-09-12.
+
+#### Added
+- [x] Client
+    - [x] `validate` to API methods
 
 #### Updated
 
+- [x] Client
+    - [x] `responseObject` model transformation to `responseDecodable`
 - [x] Models
     - [x] Decodable, Encodable APIs
+    - [x] `class` to `struct`
+    - [x] `var` to `let`
+- [x] Dependencies
+    - [x] Alamofire
 - [x] Switch Package Manager
     - [x] Configuration
 
 #### Removed
 - [x] Dependencies
     - [x] ObjectMapper
+- [x] Travis CI
+    - [x] Configuration
 
 ---
 
