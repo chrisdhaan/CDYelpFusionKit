@@ -14,8 +14,8 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/chrisdhaan/CDYelpFusionKit">
-        <img src="http://img.shields.io/travis/chrisdhaan/CDYelpFusionKit.svg?style=flat" alt="CI Status">
+    <a href="https://github.com/chrisdhaan/CDYelpFusionKit/actions/workflows/ci.yml">
+        <img src="https://github.com/chrisdhaan/CDYelpFusionKit/actions/workflows/ci.yml/badge.svg" alt="CI Status">
     </a>
     <a href="https://github.com/chrisdhaan/CDYelpFusionKit/releases">
         <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
@@ -136,7 +136,7 @@ Once you have your Swift package set up, adding CDYelpFusionKit as a dependency 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.0.0"))
 ]
 ```
 
