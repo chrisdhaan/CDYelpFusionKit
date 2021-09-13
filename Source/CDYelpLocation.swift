@@ -25,32 +25,27 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpLocation: Decodable {
 
-public class CDYelpLocation: Mappable {
+    public let addressOne: String?
+    public let addressTwo: String?
+    public let addressThree: String?
+    public let city: String?
+    public let state: String?
+    public let zipCode: String?
+    public let country: String?
+    public let displayAddress: [String]?
+    public let crossStreets: String?
 
-    public var addressOne: String?
-    public var addressTwo: String?
-    public var addressThree: String?
-    public var city: String?
-    public var state: String?
-    public var zipCode: String?
-    public var country: String?
-    public var displayAddress: [String]?
-    public var crossStreets: String?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        addressOne      <- map["address1"]
-        addressTwo      <- map["address2"]
-        addressThree    <- map["address3"]
-        city            <- map["city"]
-        state           <- map["state"]
-        zipCode         <- map["zip_code"]
-        country         <- map["country"]
-        displayAddress  <- map["display_address"]
-        crossStreets    <- map["cross_streets"]
+    enum CodingKeys: String, CodingKey {
+        case addressOne = "address1"
+        case addressTwo = "address2"
+        case addressThree = "address3"
+        case city
+        case state
+        case zipCode = "zip_code"
+        case country
+        case displayAddress = "display_address"
+        case crossStreets = "cross_streets"
     }
 }

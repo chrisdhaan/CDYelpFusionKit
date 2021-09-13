@@ -221,12 +221,11 @@ extension ViewController: UITableViewDelegate {
                                                                          openNow: true,
                                                                          openAt: nil,
                                                                          attributes: nil) { (response) in
-
-                                                                            if let response = response,
-                                                                                let businesses = response.businesses,
-                                                                                businesses.count > 0 {
-                                                                                print(businesses)
-                                                                            }
+                    if let response = response,
+                       let businesses = response.businesses,
+                       businesses.count > 0 {
+                        print(businesses)
+                    }
                 }
             case 1:
                 CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
@@ -242,20 +241,18 @@ extension ViewController: UITableViewDelegate {
                                                                            location: "San Francisco",
                                                                            latitude: nil,
                                                                            longitude: nil) { (response) in
-
-                                                                            if let response = response,
-                                                                                let businesses = response.businesses,
-                                                                                businesses.count > 0 {
-                                                                                print(businesses)
-                                                                            }
+                    if let response = response,
+                       let businesses = response.businesses,
+                       businesses.count > 0 {
+                        print(businesses)
+                    }
                 }
             case 3:
                 CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
                                                                       locale: nil) { (business) in
-
-                                                                        if let business = business {
-                                                                            print(business)
-                                                                        }
+                    if let business = business {
+                        print(business)
+                    }
                 }
             case 4:
                 CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Gary Danko",
@@ -272,42 +269,47 @@ extension ViewController: UITableViewDelegate {
                                                                          yelpBusinessId: nil,
                                                                          limit: 5,
                                                                          matchThresholdType: .normal) { (response) in
-
-                                                                            if let response = response,
-                                                                                let businesses = response.businesses,
-                                                                                businesses.count > 0 {
-                                                                                print(businesses)
-                                                                            }
+                    if let response = response,
+                       let businesses = response.businesses,
+                       businesses.count > 0 {
+                        print(businesses)
+                    }
                 }
             case 5:
                 CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
                                                                      locale: nil) { (response) in
-
-                                                                        if let response = response,
-                                                                            let reviews = response.reviews,
-                                                                            reviews.count > 0 {
-                                                                            print(reviews)
-                                                                        }
+                    if let response = response,
+                       let reviews = response.reviews,
+                       reviews.count > 0 {
+                        print(reviews)
+                    }
                 }
             case 6:
-                CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Hut",
+                CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Delivery",
                                                                                latitude: 37.786572,
                                                                                longitude: -122.415192,
                                                                                locale: nil) { (response) in
-
-                                                                                if let response = response,
-                                                                                    let businesses = response.businesses,
-                                                                                    businesses.count > 0 {
-                                                                                    print(businesses)
-                                                                                }
+                    if let response = response {
+                        if let businesses = response.businesses,
+                           businesses.count > 0 {
+                            print(businesses)
+                        }
+                        if let categories = response.categories,
+                           categories.count > 0 {
+                            print(categories)
+                        }
+                        if let terms = response.terms,
+                           terms.count > 0 {
+                            print(terms)
+                        }
+                    }
                 }
             case 7:
-                CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
+                CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-celebrates-pride-month-2021",
                                                                    locale: nil) { (event) in
-
-                                                                    if let event = event {
-                                                                        print(event)
-                                                                    }
+                    if let event = event {
+                        print(event)
+                    }
                 }
             case 8:
                 CDYelpFusionKitManager.shared.apiClient.searchEvents(byLocale: nil,
@@ -324,22 +326,20 @@ extension ViewController: UITableViewDelegate {
                                                                      longitude: -122.415192,
                                                                      radius: 10000,
                                                                      excludedEvents: nil) { (response) in
-
-                                                                        if let response = response,
-                                                                            let events = response.events,
-                                                                            events.count > 0 {
-                                                                            print(events)
-                                                                        }
+                    if let response = response,
+                       let events = response.events,
+                       events.count > 0 {
+                        print(events)
+                    }
                 }
             case 9:
                 CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
                                                                            location: nil,
                                                                            latitude: 37.786572,
                                                                            longitude: -122.415192) { (event) in
-
-                                                                            if let event = event {
-                                                                                print(event)
-                                                                            }
+                    if let event = event {
+                        print(event)
+                    }
                 }
             case 10:
                 CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil) { (response) in
@@ -352,11 +352,10 @@ extension ViewController: UITableViewDelegate {
             case 11:
                 CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
                                                                       andLocale: nil) { (response) in
-
-                                                                        if let response = response,
-                                                                            let category = response.category {
-                                                                            print(category)
-                                                                        }
+                    if let response = response,
+                       let category = response.category {
+                        print(category)
+                    }
                 }
             default:
                 break

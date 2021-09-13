@@ -25,54 +25,55 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+#if !os(OSX)
+    import UIKit
+#else
+    import Foundation
+#endif
 
-public class CDYelpEvent: Mappable {
+public struct CDYelpEvent: Decodable {
 
-    public var attendingCount: Int?
-    public var category: String?
-    public var cost: Int?
-    public var costMax: Int?
-    public var description: String?
-    public var eventSiteUrl: String?
-    public var id: String?
-    public var imageUrl: String?
-    public var interestedCount: Int?
-    public var isCanceled: Bool?
-    public var isFree: Bool?
-    public var isOfficial: Bool?
-    public var latitude: Double?
-    public var longitude: Double?
-    public var name: String?
-    public var ticketsUrl: String?
-    public var timeEnd: String?
-    public var timeStart: String?
-    public var location: CDYelpLocation?
-    public var businessId: String?
+    public let attendingCount: Int?
+    public let category: String?
+    public let cost: Int?
+    public let costMax: Double?
+    public let description: String?
+    public let eventSiteUrl: URL?
+    public let id: String?
+    public let imageUrl: URL?
+    public let interestedCount: Int?
+    public let isCanceled: Bool?
+    public let isFree: Bool?
+    public let isOfficial: Bool?
+    public let latitude: Double?
+    public let longitude: Double?
+    public let name: String?
+    public let ticketsUrl: String?
+    public let timeEnd: Date?
+    public let timeStart: Date?
+    public let location: CDYelpLocation?
+    public let businessId: String?
 
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        attendingCount  <- map["attending_count"]
-        category        <- map["category"]
-        cost            <- map["cost"]
-        costMax         <- map["cost_max"]
-        description     <- map["description"]
-        eventSiteUrl    <- map["event_site_url"]
-        id              <- map["id"]
-        imageUrl        <- map["image_url"]
-        interestedCount <- map["interested_count"]
-        isCanceled      <- map["is_canceled"]
-        isFree          <- map["is_free"]
-        isOfficial      <- map["is_official"]
-        latitude        <- map["latitude"]
-        longitude       <- map["longitude"]
-        name            <- map["name"]
-        ticketsUrl      <- map["tickets_url"]
-        timeEnd         <- map["time_end"]
-        timeStart       <- map["time_start"]
-        location        <- map["location"]
-        businessId      <- map["business_id"]
+    enum CodingKeys: String, CodingKey {
+        case attendingCount = "attending_count"
+        case category
+        case cost
+        case costMax = "cost_max"
+        case description
+        case eventSiteUrl = "event_site_url"
+        case id
+        case imageUrl = "image_url"
+        case interestedCount = "interested_count"
+        case isCanceled = "is_canceled"
+        case isFree = "is_free"
+        case isOfficial = "is_official"
+        case latitude
+        case longitude
+        case name
+        case ticketsUrl = "tickets_url"
+        case timeEnd = "time_end"
+        case timeStart = "time_start"
+        case location
+        case businessId = "business_id"
     }
 }

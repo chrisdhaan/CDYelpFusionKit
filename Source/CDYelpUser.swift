@@ -25,22 +25,23 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+#if !os(OSX)
+    import UIKit
+#else
+    import Foundation
+#endif
 
-public class CDYelpUser: Mappable {
+public struct CDYelpUser: Decodable {
 
-    public var id: String?
-    public var profileUrl: String?
-    public var name: String?
-    public var imageUrl: String?
+    public let id: String?
+    public let profileUrl: URL?
+    public let name: String?
+    public let imageUrl: URL?
 
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        id          <- map["id"]
-        profileUrl  <- map["profile_url"]
-        name        <- map["name"]
-        imageUrl    <- map["image_url"]
+    enum CodingKeys: String, CodingKey {
+        case id
+        case profileUrl = "profile_url"
+        case name
+        case imageUrl = "image_url"
     }
 }

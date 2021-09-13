@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CDYelpFusionKit'
-  s.version = '2.1.1'
+  s.version = '3.0.0'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'
   s.description = <<-DESC
@@ -20,6 +20,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Source/*.swift'
   s.resources = ['Resources/*.xcassets']
 
-  s.dependency 'Alamofire', '5.2.2'
-  s.dependency 'ObjectMapper', '4.2.0'
+  s.dependency 'Alamofire', '5.4.3'
 end

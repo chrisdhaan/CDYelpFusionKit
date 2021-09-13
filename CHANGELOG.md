@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
+#### 3.x Releases
+- `3.0.x` Releases - [3.0.0](#300)
+
 #### 2.x Releases
 - `2.1.x` Releases - [2.1.0](#210) | [2.1.1](#211)
 - `2.0.x` Releases - [2.0.0](#200)
@@ -16,6 +19,35 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [3.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.0.0)
+## Dependencies
+Released on 2021-09-12.
+
+#### Added
+- [x] Client
+    - [x] `validate` to API methods
+
+#### Updated
+
+- [x] Client
+    - [x] `responseObject` model transformation to `responseDecodable`
+- [x] Models
+    - [x] Decodable, Encodable APIs
+    - [x] `class` to `struct`
+    - [x] `var` to `let`
+- [x] Dependencies
+    - [x] Alamofire
+- [x] Switch Package Manager
+    - [x] Configuration
+
+#### Removed
+- [x] Dependencies
+    - [x] ObjectMapper
+- [x] Travis CI
+    - [x] Configuration
+
+---
+
 ## [2.1.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.1)
 ## Bug Fixes
 Released on 2021-05-30.
@@ -25,7 +57,7 @@ Released on 2021-05-30.
 - [x] Models
     - [x] `URL` types to `String`
     - [x] `Date` types to `String`
-- [x] Switch Package Manager
+- [x] Swift Package Manager
     - [x] To build with `swift-tools-version:5.1`
 
 ---

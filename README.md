@@ -107,7 +107,6 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 ## Dependencies
 
 - [Alamofire](https://github.com/Alamofire/Alamofire)
-- [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper)
 
 ---
 
@@ -118,7 +117,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 [CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate CDYelpFusionKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '2.1.1'
+pod 'CDYelpFusionKit', '3.0.0'
 ```
 
 ### Carthage
@@ -126,7 +125,7 @@ pod 'CDYelpFusionKit', '2.1.1'
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. To integrate CDYelpFusionKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "chrisdhaan/CDYelpFusionKit" == 2.1.1
+github "chrisdhaan/CDYelpFusionKit" == 3.0.0
 ```
 
 ### Swift Package Manager
@@ -326,7 +325,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 
 ```swift
 public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
-                                 completion: @escaping (CDYelpSearchResponse?) -> Void)
+                             completion: @escaping (CDYelpSearchResponse?) -> Void)
 ```
 
 The following lines of code show an example query to the phone search endpoint.
@@ -487,7 +486,7 @@ The autocomplete endpoint has a `locale` parameter which allows for query result
 The following lines of code show an example query to the autocomplete endpoint.
 
 ```swift
-yelpAPIClient.autocompleteBusinesses(byText: "Pizza Hut",
+yelpAPIClient.autocompleteBusinesses(byText: "Pizza Delivery",
                                      latitude: 37.786572,
                                      longitude: -122.415192,
                                      locale: nil) { (response) in
@@ -513,7 +512,7 @@ The event lookup endpoint has a `locale` parameter which allows for query result
 The following lines of code show an example query to the event lookup endpoint.
 
 ```swift
-yelpAPIClient.fetchEvent(forId: "city-of-san-francisco-san-francisco",
+yelpAPIClient.fetchEvent(forId: "san-francisco-yelp-celebrates-pride-month-2021",
                          locale: nil) { (event) in
 
   if let event = event {

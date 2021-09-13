@@ -25,20 +25,15 @@
 //  THE SOFTWARE.
 //
 
-import ObjectMapper
+public struct CDYelpHour: Decodable {
 
-public class CDYelpHour: Mappable {
+    public let hoursType: String?
+    public let open: [CDYelpOpen]?
+    public let isOpenNow: Bool?
 
-    public var hoursType: String?
-    public var open: [CDYelpOpen]?
-    public var isOpenNow: Bool?
-
-    public required init?(map: Map) {
-    }
-
-    public func mapping(map: Map) {
-        hoursType   <- map["hours_type"]
-        open        <- map["open"]
-        isOpenNow   <- map["is_open_now"]
+    enum CodingKeys: String, CodingKey {
+        case hoursType = "hours_type"
+        case open
+        case isOpenNow = "is_open_now"
     }
 }

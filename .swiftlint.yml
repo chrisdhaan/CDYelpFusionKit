@@ -1,4 +1,5 @@
 disabled_rules: # rule identifiers to exclude from running
+  - inclusive_language
 included: # paths to include during linting. `--path` is ignored if present.
   - Source
   - Example/Source
@@ -12,18 +13,18 @@ colon:
   apply_to_dictionaries: false
 # complexity of a function
 cyclomatic_complexity:
-  error: 55
-  warning: 50
+  error: 60
+  warning: 55
 # number of lines allowed in a function
 function_body_length:
-  error: 50
-  warning: 45
+  error: 60
+  warning: 55
 # number of parameters allowed for a function
 function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
   error: 1200
-  warning: 700
+  warning: 750
 # rules related to vars/lets
 identifier_name:
   excluded:
@@ -36,5 +37,5 @@ line_length:
   warning: 195
 # number of lines allowed in a type declaration
 type_body_length:
-  error: 400
-  warning: 350
+  error: 450
+  warning: 400
