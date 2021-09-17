@@ -47,13 +47,13 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "CDYelpFusionKit",
             dependencies: [
                 .product(name: "Alamofire", package: "Alamofire")
             ],
+            path: "Source",
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS]))
-            ],
-            name: "CDYelpFusionKit",
-            path: "Source")
+            ])
     ],
     swiftLanguageVersions: [.v5])
