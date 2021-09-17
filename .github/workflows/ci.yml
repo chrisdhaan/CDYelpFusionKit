@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-carthage-
       - name: Dependencies
-        run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
+        run: carthage update --use-submodules --platform macos --cache-builds
       - name: macOS (5.1) - Debug
         run: |
           set -o pipefail
