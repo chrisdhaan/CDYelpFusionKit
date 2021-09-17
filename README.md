@@ -117,7 +117,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 [CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate CDYelpFusionKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '3.0.0'
+pod 'CDYelpFusionKit', '3.0.1'
 ```
 
 ### Carthage
@@ -125,7 +125,7 @@ pod 'CDYelpFusionKit', '3.0.0'
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. To integrate CDYelpFusionKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "chrisdhaan/CDYelpFusionKit" == 3.0.0
+github "chrisdhaan/CDYelpFusionKit" == 3.0.1
 ```
 
 ### Swift Package Manager
@@ -136,7 +136,7 @@ Once you have your Swift package set up, adding CDYelpFusionKit as a dependency 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.0.1"))
 ]
 ```
 
