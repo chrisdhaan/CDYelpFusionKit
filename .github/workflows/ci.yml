@@ -18,11 +18,35 @@ concurrency:
   group: ci
   cancel-in-progress: true
 jobs:
-  macOS_5_1:
-    name: Test macOS (5.1)
+#  macOS_5_1:
+#    name: Test macOS (5.1)
+#    runs-on: macOS-10.15
+#    env:
+#      DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
+#    timeout-minutes: 10
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/cache@v2
+#        with:
+#          path: Carthage
+#          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+#          restore-keys: |
+#            ${{ runner.os }}-carthage-
+#      - name: Dependencies
+#        run: carthage update --use-submodules --platform macos --cache-builds
+#      - name: macOS (5.1) - Debug
+#        run: |
+#          set -o pipefail
+#          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
+#      - name: macOS (5.1) - Release
+#        run: |
+#          set -o pipefail
+#          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
+  macOS_5_2:
+    name: Test macOS (5.2)
     runs-on: macOS-10.15
     env:
-      DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
@@ -33,12 +57,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-carthage-
       - name: Dependencies
-        run: carthage update --use-submodules --platform macos --cache-builds
-      - name: macOS (5.1) - Debug
+        run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
+      - name: macOS (5.2) - Debug
         run: |
           set -o pipefail
           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
-      - name: macOS (5.1) - Release
+      - name: macOS (5.2) - Release
         run: |
           set -o pipefail
           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
@@ -181,70 +205,38 @@ jobs:
 #        run: |
 #          set -o pipefail
 #          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit watchOS" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
-  SPM:
-    name: Test with SPM
-    runs-on: macOS-10.15
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+#  SPM:
+#    name: Test with SPM
+#    runs-on: macOS-10.15
+#    env:
+#      DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+#    timeout-minutes: 10
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: SPM Test
+#        run: swift build -c debug
+  Linux:
+    name: Linux
+    runs-on: ubuntu-20.04
+    container:
+      image: swift:5.4.1-focal
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - name: SPM Test
+      - name: SPM Linux build
+        run: swift build -c debug
+  Linux_Nightly:
+    name: Linux Nightly
+    runs-on: ubuntu-20.04
+    container:
+      image: swiftlang/swift:nightly-focal
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - name: SPM Linux build
         run: swift build -c debug
 ##############################
 ### In Progress
-#   macOS_5_2:
-#     name: Test macOS (5.2)
-#     runs-on: macOS-10.15
-#     env:
-#       DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: actions/cache@v2
-#         with:
-#           path: Carthage
-#           key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
-#           restore-keys: |
-#             ${{ runner.os }}-carthage-
-#       - name: Dependencies
-#         run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
-#       - name: macOS (5.2) - Debug
-#         run: |
-#           set -o pipefail
-#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Debug clean build | xcpretty
-#       - name: macOS (5.2) - Release
-#         run: |
-#           set -o pipefail
-#           env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit macOS" -destination "platform=macOS" -configuration Release clean build | xcpretty
-#   Linux:
-#     name: Linux
-#     runs-on: ubuntu-20.04
-#     container:
-#       image: swift:5.4.1-focal
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: SPM Linux build
-#         run: swift build -c debug
-#   Linux_Nightly:
-#     name: Linux Nightly
-#     runs-on: ubuntu-20.04
-#     container:
-#       image: swiftlang/swift:nightly-focal
-#     timeout-minutes: 10
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Dependencies
-#         run: |
-#           carthage bootstrap --no-use-binaries --cache-builds
-#           bundle exec pod install
-#       - name: SPM Linux build
-#         run: swift build -c debug
 #   Windows:
 #     name: Windows
 #     runs-on: windows-2019
