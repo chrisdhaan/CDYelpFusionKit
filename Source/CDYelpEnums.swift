@@ -31,7 +31,7 @@
 ///
 /// A list of the business attributes the Yelp Fusion API supports.
 ///
-public enum CDYelpAttributeFilter: String {
+public enum CDYelpAttributeFilter: String, CaseIterable {
     case hotAndNew              = "hot_and_new"
     case requestAQuote          = "request_a_quote"
     case reservation            = "reservation"
@@ -47,7 +47,7 @@ public enum CDYelpAttributeFilter: String {
 /// A list of the business categories the Yelp Fusion API supports.
 ///
 // swiftlint:disable type_body_length
-public enum CDYelpCategoryAlias: String {
+public enum CDYelpCategoryAlias: String, CaseIterable {
     // Active Life
     case activeLife                 = "active"
     case atvRentalsAndTours         = "atvrentals"
@@ -1608,7 +1608,7 @@ public enum CDYelpBusinessSortType: String {
 ///
 /// A list of the event categories the Yelp Fusion API supports.
 ///
-public enum CDYelpEventCategoryFilter: String {
+public enum CDYelpEventCategoryFilter: String, CaseIterable {
     case charities              = "charities"
     case fashion                = "fashion"
     case festivalsAndFairs      = "festivals-fairs"
