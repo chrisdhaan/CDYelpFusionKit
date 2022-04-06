@@ -34,8 +34,9 @@
 public struct CDYelpBusiness: Decodable {
 
     public let id: String?
+    public let alias: String?
     public let name: String?
-    public let imageUrl: URL?
+    public let imageUrl: String?
     public let isClosed: Bool?
     public let url: URL?
     public let price: String?
