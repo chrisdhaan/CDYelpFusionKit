@@ -54,6 +54,7 @@ public struct CDYelpBusiness: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case id
+        case alias
         case name
         case imageUrl = "image_url"
         case isClosed = "is_closed"
