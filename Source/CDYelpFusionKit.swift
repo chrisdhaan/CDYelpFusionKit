@@ -1,8 +1,8 @@
 //
-//  CDImage.swift
+//  CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 11/28/17.
+//  Created by Chris De Haan on 6/11/22.
 //
 //  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -27,10 +27,10 @@
 
 import Foundation
 
-#if os(iOS) || os(tvOS) || os(watchOS)
-    import UIKit
-    public typealias CDImage = UIImage
-#elseif os(macOS)
-    import Cocoa
-    public typealias CDImage = NSImage
+// Enforce minimum Swift version for all platforms and build systems.
+#if swift(<5.3)
+#error("CDYelpFusionKit doesn't support Swift versions below 5.3.")
 #endif
+
+/// Current CDYelpFusionKit version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.
+let version = "3.1.0"

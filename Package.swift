@@ -1,11 +1,11 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.6
 //
 //  Package.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 05/07/2017.
 //
-//  Copyright © 2016-2021 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.4.3"))
+            url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.1"))
     ],
     targets: [
         .target(
@@ -52,6 +52,7 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire")
             ],
             path: "Source",
+            exclude: ["Info.plist"],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS]))
             ])

@@ -21,13 +21,16 @@
         <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat" alt="Version">
-    </a>
-    <a href="https://github.com/Carthage/Carthage">
-        <img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible">
+        <img src="https://img.shields.io/badge/Swift-5.3_5.4_5.5_5.6-Orange?style=flat-square" alt="Swift">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platform">
+        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platforms">
+    </a>
+    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
+        <img src="https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat" alt="CocoaPods Compatible">
+    </a>
+    <a href="https://github.com/Carthage/Carthage">
+        <img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage Compatible">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
         <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
@@ -42,7 +45,9 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 
 - [Features](#features)
 - [Requirements](#requirements)
+- [Dependencies](#dependencies)
 - [Installation](#installation)
+- [Contributing](#contributing)
 - [Usage](#usage)
     - [Initialization](#initialization)
     - [Search Endpoint](#search-endpoint)
@@ -60,6 +65,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
     - [Deep Linking](#deep-linking)
     - [Web Linking](#web-linking)
     - [Brand Assets](#brand-assets)
+- [Author](#author)
 - [Resources](#resources)
 - [License](#license)
 
@@ -98,8 +104,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 ## Requirements
 
 - iOS 10.0+ / macOS 10.12+ / tvOS 10.0+ / watchOS 3.0+
-- Xcode 11+
-- Swift 5.1+
+- Swift 5.3+
 - [Yelp API Access](https://www.yelp.com/developers/v3/manage_app)
 
 ---
@@ -117,7 +122,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 [CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate CDYelpFusionKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '3.0.1'
+pod 'CDYelpFusionKit', '3.1.0'
 ```
 
 ### Carthage
@@ -125,18 +130,18 @@ pod 'CDYelpFusionKit', '3.0.1'
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. To integrate CDYelpFusionKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "chrisdhaan/CDYelpFusionKit" == 3.0.1
+github "chrisdhaan/CDYelpFusionKit" == 3.1.0
 ```
 
 ### Swift Package Manager
 
-The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. It is in early development, but CDYelpFusionKit does support its use on supported platforms.
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
 
 Once you have your Swift package set up, adding CDYelpFusionKit as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.0.1"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.1.0"))
 ]
 ```
 
@@ -175,6 +180,12 @@ git submodule add https://github.com/chrisdhaan/CDYelpFusionKit.git
 - And that's it!
 
   > The `CDYelpFusionKit.framework` is automagically added as a target dependency, linked framework and embedded framework in a copy files build phase which is all you need to build on the simulator and a device.
+
+---
+
+## Contributing
+
+Before contributing to CDYelpFusionKit, please read the instructions detailed in our [contribution guide](https://github.com/chrisdhaan/CDYelpFusionKit/blob/master/CONTRIBUTING.md).
 
 ---
 
@@ -923,9 +934,13 @@ cell.imageView?.image = UIImage.yelpStars(numberOfStars: .twoHalf, forSize: .lar
 
 Christopher de Haan, contact@christopherdehaan.me
 
+---
+
 ## Resources
 
 Visit the [Yelp Developers](https://www.yelp.com/developers) portal for additional resources regarding the Yelp API.
+
+---
 
 ## License
 
