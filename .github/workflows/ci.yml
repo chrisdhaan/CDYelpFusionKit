@@ -58,7 +58,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-carthage-
       - name: Dependencies
-        run: carthage update --use-submodules --platform macos --cache-builds
+        run: carthage update --use-submodules --use-xcframeworks --platform macos --cache-builds
       - name: ${{ matrix.name }} - Debug
         run: |
           set -o pipefail
@@ -123,11 +123,11 @@ jobs:
       - name: ${{ matrix.name }} - Debug
         run: |
           set -o pipefail
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit ${{ matrix.scheme }}" -destination "${{ matrix.destination }}" -configuration Debug clean build | xcpretty
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "${{ matrix.scheme }}" -destination "${{ matrix.destination }}" -configuration Debug clean build | xcpretty
       - name: ${{ matrix.name }} - Release
         run: |
           set -o pipefail
-          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "CDYelpFusionKit ${{ matrix.scheme }}" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
+          env NSUnbufferedIO=YES xcodebuild -project "CDYelpFusionKit.xcodeproj" -scheme "${{ matrix.scheme }}" -destination "${{ matrix.destination }}" -configuration Release clean build | xcpretty
   iOS:
     name: Test iOS
     runs-on: ${{ matrix.runsOn }}
@@ -140,14 +140,17 @@ jobs:
         include:
           - runsOn: macOS-11
             xcode: "Xcode_12.5.1.app"
+            dependencies: "carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds"
             name: "iOS 14.5"
             destination: "OS=14.5,name=iPhone 12 Pro"
           - runsOn: macOS-11
             xcode: "Xcode_11.7.app"
+            dependencies: "carthage update --use-submodules --platform ios --cache-builds"
             name: "iOS 13.7"
             destination: "OS=13.7,name=iPhone 11 Pro"
           - runsOn: macOS-10.5
             xcode: "Xcode_10.3.app"
+            dependencies: "carthage update --use-submodules --platform ios --cache-builds"
             name: "iOS 12.4"
             destination: "OS=12.4,name=iPhone Xs"
     steps:
@@ -165,7 +168,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
       - name: Dependencies
-        run: carthage update --use-submodules --use-xcframeworks --platform ios --cache-builds
+        run: ${{ matrix.dependencies }}
       - name: ${{ matrix.name }} - Debug
         run: |
           set -o pipefail
@@ -189,15 +192,18 @@ jobs:
       matrix:
         include:
           - runsOn: macOS-11
-            name: "tvOS 14.5"
             xcode: "Xcode_12.5.1.app"
+            dependencies: "carthage update --use-submodules --use-xcframeworks --platform tvos --cache-builds"
+            name: "tvOS 14.5"
             destination: "OS=14.5,name=Apple TV"
           - runsOn: macOS-11
             xcode: "Xcode_11.7.app"
+            dependencies: "carthage update --use-submodules --platform tvos --cache-builds"
             name: "tvOS 13.4"
             destination: "OS=13.4,name=Apple TV"
           - runsOn: macOS-10.5
             xcode: "Xcode_10.3.app"
+            dependencies: "carthage update --use-submodules --platform tvos --cache-builds"
             name: "tvOS 12.4"
             destination: "OS=12.4,name=Apple TV"
     steps:
@@ -209,7 +215,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-carthage-
       - name: Dependencies
-        run: carthage update --use-submodules --use-xcframeworks --platform tvos --cache-builds
+        run: ${{ matrix.dependencies }}
       - name: ${{ matrix.name }} - Debug
         run: |
           set -o pipefail
