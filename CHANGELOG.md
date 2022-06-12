@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.1.0)
 ## SDK Support
-Released on 2022-06-12.
+Released on 2022-06-13.
 
 #### Added
 

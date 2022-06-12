@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   Latest:
-    name: Test Latest (iOS, tvOS, watchOS)
+    name: Test Latest (iOS, macOS, tvOS, watchOS)
     runs-on: macOS-12
     env:
       DEVELOPER_DIR: "/Applications/Xcode_13.4.1.app/Contents/Developer"
@@ -123,7 +123,7 @@ jobs:
           gem install cocoapods --no-document --quiet
           pod lib lint --allow-warnings --use-libraries
   macOS:
-    name: Test macOS, All Xcodes and Swifts
+    name: Test macOS
     runs-on: ${{ matrix.runsOn }}
     env:
       DEVELOPER_DIR: "/Applications/${{ matrix.xcode }}/Contents/Developer"
@@ -144,9 +144,9 @@ jobs:
           - runsOn: macOS-11
             xcode: "Xcode_13.1.app"
             name: "macOS 11, Xcode 13.1, Swift 5.5.1"
-#          - runsOn: macOS-11
-#            xcode: "Xcode_13.0.app"
-#            name: "macOS 11, Xcode 13.0, Swift 5.5.0"
+          - runsOn: macOS-11
+            xcode: "Xcode_13.0.app"
+            name: "macOS 11, Xcode 13.0, Swift 5.5.0"
           - runsOn: macOS-11
             xcode: "Xcode_12.5.1.app"
             name: "macOS 11, Xcode 12.5.1, Swift 5.4"
@@ -244,19 +244,19 @@ jobs:
         include:
           - xcode: "Xcode_13.4.app"
             runsOn: macOS-12
-            name: "macOS 12, SPM 5.6.1 Test"
+            name: "macOS 12, SPM 5.6.1 Build"
           - xcode: "Xcode_13.3.1.app"
             runsOn: macOS-12
-            name: "macOS 12, SPM 5.6 Test"
+            name: "macOS 12, SPM 5.6 Build"
           - xcode: "Xcode_13.2.1.app"
             runsOn: macOS-11
-            name: "macOS 11, SPM 5.5.2 Test"
+            name: "macOS 11, SPM 5.5.2 Build"
           - xcode: "Xcode_13.1.app"
             runsOn: macOS-11
-            name: "macOS 11, SPM 5.5.1 Test"
-#          - xcode: "Xcode_13.0.app"
-#            runsOn: macOS-11
-#            name: "macOS 11, SPM 5.5 Test"
+            name: "macOS 11, SPM 5.5.1 Build"
+          - xcode: "Xcode_13.0.app"
+            runsOn: macOS-11
+            name: "macOS 11, SPM 5.5 Build"
           - xcode: "Xcode_12.5.1.app"
             runsOn: macOS-11
             name: "macOS 11, SPM 5.4 Build"
