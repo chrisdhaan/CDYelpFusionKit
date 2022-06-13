@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
 #### 3.x Releases
+- `3.0.x` Releases - [3.1.0](#310)
 - `3.0.x` Releases - [3.0.0](#300) | [3.0.1](#301)
 
 #### 2.x Releases
@@ -16,6 +17,25 @@ All notable changes to this project will be documented in this file.
 - `1.2.x` Releases - [1.2.0](#120)
 - `1.1.x` Releases - [1.1.0](#110)
 - `1.0.x` Releases - [1.0.0](#100)
+
+---
+
+## [3.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.1.0)
+## SDK Support
+Released on 2022-06-13.
+
+#### Added
+
+- [x] Swift 5.6
+
+#### Updated
+    
+- [x] Switch Package Manager
+    - [x] Minimum Swift version 5.3
+- [x] Dependencies
+    - [x] Alamofire
+- [x] CI
+    - [x] Tests device, platform, Xcode, and SDK versions
 
 ---
 

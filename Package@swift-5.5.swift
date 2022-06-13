@@ -1,8 +1,9 @@
+// swift-tools-version:5.5
 //
-//  CDImage.swift
+//  Package.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 11/28/17.
+//  Created by Christopher de Haan on 6/10/2022.
 //
 //  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,12 +26,36 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
+import PackageDescription
 
-#if os(iOS) || os(tvOS) || os(watchOS)
-    import UIKit
-    public typealias CDImage = UIImage
-#elseif os(macOS)
-    import Cocoa
-    public typealias CDImage = NSImage
-#endif
+let package = Package(
+    name: "CDYelpFusionKit",
+    platforms: [
+        .macOS(.v10_12),
+        .iOS(.v10),
+        .tvOS(.v10),
+        .watchOS(.v3)
+    ],
+    products: [
+        .library(
+            name: "CDYelpFusionKit",
+            targets: ["CDYelpFusionKit"])
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.1"))
+    ],
+    targets: [
+        .target(
+            name: "CDYelpFusionKit",
+            dependencies: [
+                .product(name: "Alamofire", package: "Alamofire")
+            ],
+            path: "Source",
+            exclude: ["Info.plist"],
+            linkerSettings: [
+                .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS]))
+            ])
+    ],
+    swiftLanguageVersions: [.v5])
+
