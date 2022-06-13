@@ -145,9 +145,6 @@ jobs:
             xcode: "Xcode_13.1.app"
             name: "macOS 11, Xcode 13.1, Swift 5.5.1"
           - runsOn: macOS-11
-            xcode: "Xcode_13.0.app"
-            name: "macOS 11, Xcode 13.0, Swift 5.5.0"
-          - runsOn: macOS-11
             xcode: "Xcode_12.5.1.app"
             name: "macOS 11, Xcode 12.5.1, Swift 5.4"
           - runsOn: macOS-10.15
@@ -254,9 +251,6 @@ jobs:
           - xcode: "Xcode_13.1.app"
             runsOn: macOS-11
             name: "macOS 11, SPM 5.5.1 Build"
-          - xcode: "Xcode_13.0.app"
-            runsOn: macOS-11
-            name: "macOS 11, SPM 5.5 Build"
           - xcode: "Xcode_12.5.1.app"
             runsOn: macOS-11
             name: "macOS 11, SPM 5.4 Build"
