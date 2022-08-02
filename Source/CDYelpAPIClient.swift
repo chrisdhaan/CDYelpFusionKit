@@ -125,7 +125,7 @@ public class CDYelpAPIClient: NSObject {
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?,
-                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse.Business?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
                 (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
         if let radius = radius {
@@ -155,7 +155,7 @@ public class CDYelpAPIClient: NSObject {
             self.manager
                 .request(CDYelpRouter.search(parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Business, AFError>) in
 
                     switch response.result {
                     case .success(let searchResponse):
@@ -181,7 +181,7 @@ public class CDYelpAPIClient: NSObject {
     /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
-                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse.Phone?) -> Void) {
         assert((phoneNumber != nil && phoneNumber.count > 0), "A business phone number is required to query the Yelp Fusion API phone endpoint.")
 
         if self.isAuthenticated() == true {
@@ -191,7 +191,7 @@ public class CDYelpAPIClient: NSObject {
             self.manager
                 .request(CDYelpRouter.phone(parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Phone, AFError>) in
 
                     switch response.result {
                     case .success(let searchResponse):
@@ -223,7 +223,7 @@ public class CDYelpAPIClient: NSObject {
                                    location: String?,
                                    latitude: Double?,
                                    longitude: Double?,
-                                   completion: @escaping (CDYelpSearchResponse?) -> Void) {
+                                   completion: @escaping (CDYelpSearchResponse.Transaction?) -> Void) {
         assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
         assert((latitude != nil && longitude != nil) ||
                 (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
@@ -238,7 +238,7 @@ public class CDYelpAPIClient: NSObject {
                 .request(CDYelpRouter.transactions(type: type.rawValue,
                                                    parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Transaction, AFError>) in
 
                     switch response.result {
                     case .success(let searchResponse):
@@ -265,7 +265,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     public func fetchBusiness(forId id: String!,
                               locale: CDYelpLocale?,
-                              completion: @escaping (CDYelpBusiness?) -> Void) {
+                              completion: @escaping (CDYelpBusinessResponse?) -> Void) {
         assert((id != nil && id.count > 0), "A business id is required to query the Yelp Fusion API business endpoint.")
 
         if self.isAuthenticated() == true {
@@ -276,7 +276,7 @@ public class CDYelpAPIClient: NSObject {
                 .request(CDYelpRouter.business(id: id,
                                                parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpBusiness, AFError>) in
+                .responseDecodable { (response: DataResponse<CDYelpBusinessResponse, AFError>) in
 
                     switch response.result {
                     case .success(let business):
@@ -325,7 +325,7 @@ public class CDYelpAPIClient: NSObject {
                                  yelpBusinessId: String?,
                                  limit: Int?,
                                  matchThresholdType: CDYelpBusinessMatchThresholdType!,
-                                 completion: @escaping (CDYelpSearchResponse?) -> Void) {
+                                 completion: @escaping (CDYelpSearchResponse.BusinessMatch?) -> Void) {
         assert((name != nil && name.count > 0 && name.count <= 64), "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
         assert((addressOne != nil && addressOne.count > 0 && addressOne.count <= 64), "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         if let addressTwo = addressTwo {
@@ -371,7 +371,7 @@ public class CDYelpAPIClient: NSObject {
             self.manager
                 .request(CDYelpRouter.matches(parameters: parameters))
                 .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse, AFError>) in
+                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.BusinessMatch, AFError>) in
 
                     switch response.result {
                     case .success(let searchResponse):
@@ -490,7 +490,7 @@ public class CDYelpAPIClient: NSObject {
     ///
     public func fetchEvent(forId id: String!,
                            locale: CDYelpLocale?,
-                           completion: @escaping (CDYelpEvent?) -> Void) {
+                           completion: @escaping (CDYelpEventResponse?) -> Void) {
         assert((id != nil && id.count > 0), "An event id is required to query the Yelp Fusion API event endpoint.")
 
         if self.isAuthenticated() == true {
@@ -504,7 +504,7 @@ public class CDYelpAPIClient: NSObject {
                                             parameters: parameters))
                 .validate()
                 .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEvent, AFError>) in
+                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
                                     switch response.result {
                                     case .success(let event):
                                         completion(event)
@@ -614,7 +614,7 @@ public class CDYelpAPIClient: NSObject {
                                    location: String?,
                                    latitude: Double?,
                                    longitude: Double?,
-                                   completion: @escaping (CDYelpEvent?) -> Void) {
+                                   completion: @escaping (CDYelpEventResponse?) -> Void) {
         assert((latitude != nil && longitude != nil) ||
                 (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
 
@@ -631,7 +631,7 @@ public class CDYelpAPIClient: NSObject {
                 .request(CDYelpRouter.featuredEvent(parameters: parameters))
                 .validate()
                 .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEvent, AFError>) in
+                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
                                     switch response.result {
                                     case .success(let event):
                                         completion(event)

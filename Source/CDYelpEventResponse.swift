@@ -1,8 +1,8 @@
 //
-//  CDYelpFusionKit.swift
+//  CDYelpEventResponse.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 6/11/22.
+//  Created by Christopher de Haan on 7/4/22.
 //
 //  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,12 +25,26 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
+public struct CDYelpEventResponse: Decodable {
 
-// Enforce minimum Swift version for all platforms and build systems.
-#if swift(<5.3)
-#error("CDYelpFusionKit doesn't support Swift versions below 5.3.")
-#endif
+    public let event: CDYelpEvent?
+    public let error: CDYelpError?
 
-/// Current CDYelpFusionKit version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.
-let version = "3.2.0"
+    public init(from decoder: Decoder) throws {
+        var decodedEvent: CDYelpEvent?
+        do {
+            decodedEvent = try CDYelpEvent(from: decoder)
+        } catch _ {
+            decodedEvent = nil
+        }
+        var decodedError: CDYelpError?
+        do {
+            decodedError = try CDYelpError(from: decoder)
+        } catch _ {
+            decodedError = nil
+        }
+
+        event = decodedEvent
+        error = decodedError
+    }
+}

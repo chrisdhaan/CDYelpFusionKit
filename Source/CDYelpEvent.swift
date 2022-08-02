@@ -38,9 +38,9 @@ public struct CDYelpEvent: Decodable {
     public let cost: Int?
     public let costMax: Double?
     public let description: String?
-    public let eventSiteUrl: URL?
+    public let eventSiteUrl: String?
     public let id: String?
-    public let imageUrl: URL?
+    public let imageUrl: String?
     public let interestedCount: Int?
     public let isCanceled: Bool?
     public let isFree: Bool?
@@ -51,7 +51,7 @@ public struct CDYelpEvent: Decodable {
     public let ticketsUrl: String?
     public let timeEnd: Date?
     public let timeStart: Date?
-    public let location: CDYelpLocation?
+    public let location: CDYelpLocation.Detailed?
     public let businessId: String?
 
     enum CodingKeys: String, CodingKey {
@@ -75,5 +75,21 @@ public struct CDYelpEvent: Decodable {
         case timeStart = "time_start"
         case location
         case businessId = "business_id"
+    }
+
+    public func eventSiteUrlAsUrl() -> URL? {
+        if let eventSiteUrl = self.eventSiteUrl,
+           let asUrl = URL(string: eventSiteUrl) {
+            return asUrl
+        }
+        return nil
+    }
+
+    public func imageUrlAsUrl() -> URL? {
+        if let imageUrl = self.imageUrl,
+           let asUrl = URL(string: imageUrl) {
+            return asUrl
+        }
+        return nil
     }
 }

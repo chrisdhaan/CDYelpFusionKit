@@ -35,9 +35,9 @@ public struct CDYelpReview: Decodable {
 
     public let id: String?
     public let text: String?
-    public let url: URL?
+    public let url: String?
     public let rating: Int?
-    public let timeCreated: Date?
+    public let timeCreated: String?
     public let user: CDYelpUser?
 
     enum CodingKeys: String, CodingKey {
@@ -47,5 +47,21 @@ public struct CDYelpReview: Decodable {
         case rating
         case timeCreated = "time_created"
         case user
+    }
+
+    public func urlAsUrl() -> URL? {
+        if let url = self.url,
+           let asUrl = URL(string: url) {
+            return asUrl
+        }
+        return nil
+    }
+
+    public func timeCreatedAsDate() -> Date? {
+        if let timeCreated = self.timeCreated {
+            let formatter = DateFormatter()
+            return formatter.date(from: timeCreated)
+        }
+        return nil
     }
 }

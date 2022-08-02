@@ -27,11 +27,24 @@
 
 public struct CDYelpBusinessResponse: Decodable {
 
-    public let business: CDYelpBusiness?
+    public let business: CDYelpBusiness.Detailed?
     public let error: CDYelpError?
 
-    enum CodingKeys: String, CodingKey {
-        case business = ""
-        case error
+    public init(from decoder: Decoder) throws {
+        var decodedBusiness: CDYelpBusiness.Detailed?
+        do {
+            decodedBusiness = try CDYelpBusiness.Detailed(from: decoder)
+        } catch _ {
+            decodedBusiness = nil
+        }
+        var decodedError: CDYelpError?
+        do {
+            decodedError = try CDYelpError(from: decoder)
+        } catch _ {
+            decodedError = nil
+        }
+
+        business = decodedBusiness
+        error = decodedError
     }
 }

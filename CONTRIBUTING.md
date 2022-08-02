@@ -8,6 +8,7 @@ Please read it before you start participating.
 * [Asking Questions](#asking-questions)
 * [Reporting Security Issues](#reporting-security-issues)
 * [Reporting Issues](#reporting-other-issues)
+* [Submitting Pull Requests](#submitting-pull-requests)
 * [Developers Certificate of Origin](#developers-certificate-of-origin)
 * [Code of Conduct](#code-of-conduct)
 

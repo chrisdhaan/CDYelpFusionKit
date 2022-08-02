@@ -1,8 +1,8 @@
 //
-//  CDYelpFusionKit.swift
+//  CDYelpMessaging.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 6/11/22.
+//  Created by Christopher de Haan on 6/14/22.
 //
 //  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,12 +25,27 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
-
-// Enforce minimum Swift version for all platforms and build systems.
-#if swift(<5.3)
-#error("CDYelpFusionKit doesn't support Swift versions below 5.3.")
+#if !os(OSX)
+    import UIKit
+#else
+    import Foundation
 #endif
 
-/// Current CDYelpFusionKit version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.
-let version = "3.2.0"
+public struct CDYelpMessaging: Decodable {
+
+    public let url: String?
+    public let useCaseText: String?
+
+    enum CodingKeys: String, CodingKey {
+        case url
+        case useCaseText = "use_case_text"
+    }
+
+    public func urlAsUrl() -> URL? {
+        if let url = self.url,
+           let asUrl = URL(string: url) {
+            return asUrl
+        }
+        return nil
+    }
+}
