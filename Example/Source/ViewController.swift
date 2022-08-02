@@ -249,8 +249,9 @@ extension ViewController: UITableViewDelegate {
                 }
             case 3:
                 CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
-                                                                      locale: nil) { (business) in
-                    if let business = business {
+                                                                      locale: nil) { (response) in
+                    if let response = response,
+                       let business = response.business {
                         print(business)
                     }
                 }
@@ -305,9 +306,10 @@ extension ViewController: UITableViewDelegate {
                     }
                 }
             case 7:
-                CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-celebrates-pride-month-2021",
-                                                                   locale: nil) { (event) in
-                    if let event = event {
+                CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-elite-week-renew-and-rejuvenate-with-redmint",
+                                                                   locale: nil) { (response) in
+                    if let response = response,
+                       let event = response.event {
                         print(event)
                     }
                 }
@@ -336,8 +338,9 @@ extension ViewController: UITableViewDelegate {
                 CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
                                                                            location: nil,
                                                                            latitude: 37.786572,
-                                                                           longitude: -122.415192) { (event) in
-                    if let event = event {
+                                                                           longitude: -122.415192) { (response) in
+                    if let response = response,
+                       let event = response.event {
                         print(event)
                     }
                 }

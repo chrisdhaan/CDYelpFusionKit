@@ -36,7 +36,6 @@ public enum CDYelpAttributeFilter: String {
     case requestAQuote          = "request_a_quote"
     case reservation            = "reservation"
     case waitlistReservation    = "waitlist_reservation"
-    case cashback               = "cashback"
     case deals                  = "deals"
     case genderNeutralRestrooms = "gender_neutral_restrooms"
     case openToAll              = "open_to_all"
@@ -1731,8 +1730,6 @@ public enum CDYelpStarsSize: String {
 ///
 public enum CDYelpTransactionType: String {
     case foodDelivery           = "delivery"
-    case pickup                 = "pickup"
-    case restaurantReservation  = "restaurant_reservation"
 }
 
 // swiftlint:enable file_length

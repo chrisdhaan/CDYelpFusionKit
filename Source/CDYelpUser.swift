@@ -34,14 +34,30 @@
 public struct CDYelpUser: Decodable {
 
     public let id: String?
-    public let profileUrl: URL?
+    public let profileUrl: String?
     public let name: String?
-    public let imageUrl: URL?
+    public let imageUrl: String?
 
     enum CodingKeys: String, CodingKey {
         case id
         case profileUrl = "profile_url"
         case name
         case imageUrl = "image_url"
+    }
+
+    public func profileUrlAsUrl() -> URL? {
+        if let profileUrl = self.profileUrl,
+           let asUrl = URL(string: profileUrl) {
+            return asUrl
+        }
+        return nil
+    }
+
+    public func imageUrlAsUrl() -> URL? {
+        if let imageUrl = self.imageUrl,
+           let asUrl = URL(string: imageUrl) {
+            return asUrl
+        }
+        return nil
     }
 }

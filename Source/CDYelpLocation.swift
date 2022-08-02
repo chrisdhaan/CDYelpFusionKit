@@ -34,8 +34,6 @@ public struct CDYelpLocation: Decodable {
     public let state: String?
     public let zipCode: String?
     public let country: String?
-    public let displayAddress: [String]?
-    public let crossStreets: String?
 
     enum CodingKeys: String, CodingKey {
         case addressOne = "address1"
@@ -45,7 +43,29 @@ public struct CDYelpLocation: Decodable {
         case state
         case zipCode = "zip_code"
         case country
-        case displayAddress = "display_address"
-        case crossStreets = "cross_streets"
+    }
+
+    public struct Detailed: Decodable {
+        public let addressOne: String?
+        public let addressTwo: String?
+        public let addressThree: String?
+        public let displayAddress: [String]?
+        public let crossStreets: String?
+        public let city: String?
+        public let state: String?
+        public let zipCode: String?
+        public let country: String?
+
+        enum CodingKeys: String, CodingKey {
+            case addressOne = "address1"
+            case addressTwo = "address2"
+            case addressThree = "address3"
+            case displayAddress = "display_address"
+            case crossStreets = "cross_streets"
+            case city
+            case state
+            case zipCode = "zip_code"
+            case country
+        }
     }
 }

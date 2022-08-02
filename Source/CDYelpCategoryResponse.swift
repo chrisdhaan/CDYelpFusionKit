@@ -27,9 +27,11 @@
 
 public struct CDYelpCategoryResponse: Decodable {
 
-    public let category: CDYelpCategory?
+    public let category: CDYelpCategory.Detailed?
+    public let error: CDYelpError?
 
     enum CodingKeys: String, CodingKey {
         case category
+        case error
     }
 }

@@ -25,17 +25,58 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpSearchResponse: Decodable {
+public struct CDYelpSearchResponse {
+    public struct Business: Decodable {
 
-    public let total: Int?
-    public let businesses: [CDYelpBusiness]?
-    public let region: CDYelpRegion?
-    public let error: CDYelpError?
+        public let total: Int?
+        public let businesses: [CDYelpBusiness.BusinessSearch]?
+        public let region: CDYelpRegion?
+        public let error: CDYelpError?
 
-    enum CodingKeys: String, CodingKey {
-        case total
-        case businesses
-        case region
-        case error
+        enum CodingKeys: String, CodingKey {
+            case total
+            case businesses
+            case region
+            case error
+        }
+    }
+
+    public struct Phone: Decodable {
+
+        public let total: Int?
+        public let businesses: [CDYelpBusiness.PhoneSearch]?
+        public let error: CDYelpError?
+
+        enum CodingKeys: String, CodingKey {
+            case total
+            case businesses
+            case error
+        }
+    }
+
+    public struct Transaction: Decodable {
+
+        public let total: Int?
+        public let businesses: [CDYelpBusiness.TransactionSearch]?
+        public let error: CDYelpError?
+
+        enum CodingKeys: String, CodingKey {
+            case total
+            case businesses
+            case error
+        }
+    }
+
+    public struct BusinessMatch: Decodable {
+
+        public let total: Int?
+        public let businesses: [CDYelpBusiness.BusinessMatch]?
+        public let error: CDYelpError?
+
+        enum CodingKeys: String, CodingKey {
+            case total
+            case businesses
+            case error
+        }
     }
 }

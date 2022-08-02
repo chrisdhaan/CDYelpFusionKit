@@ -29,15 +29,25 @@ public struct CDYelpCategory: Decodable {
 
     public let alias: String?
     public let title: String?
-    public let parentAliases: [String]?
-    public let countryWhitelist: [String]?
-    public let countryBlacklist: [String]?
 
     enum CodingKeys: String, CodingKey {
         case alias
         case title
-        case parentAliases = "parent_aliases"
-        case countryWhitelist = "country_whitelist"
-        case countryBlacklist = "country_blacklist"
+    }
+
+    public struct Detailed: Decodable {
+        public let alias: String?
+        public let title: String?
+        public let parentAliases: [String]?
+        public let countryWhitelist: [String]?
+        public let countryBlacklist: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case alias
+            case title
+            case parentAliases = "parent_aliases"
+            case countryWhitelist = "country_whitelist"
+            case countryBlacklist = "country_blacklist"
+        }
     }
 }

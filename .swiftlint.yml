@@ -8,34 +8,29 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Example/Resources
 
 # configurable rules can be customized from this configuration file.
-# colon behavior when specifying types or defining dictionaries
-colon:
-  apply_to_dictionaries: false
 # complexity of a function
 cyclomatic_complexity:
   error: 60
   warning: 55
 # number of lines allowed in a function
 function_body_length:
-  error: 60
-  warning: 55
+  error: 50
+  warning: 45
 # number of parameters allowed for a function
 function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
-  error: 1200
-  warning: 750
-# rules related to vars/lets
-identifier_name:
-  excluded:
-    - id
+  error: 735
+  warning: 730
 # number of characters allowed in a line
 line_length:
   error: 200
   ignores_comments: true
-  ignores_function_declarations: true
   warning: 195
+# Allow for types to be definied within a struct 1 level deep
+nesting:
+  type_level: 2
 # number of lines allowed in a type declaration
 type_body_length:
-  error: 450
-  warning: 400
+  error: 370
+  warning: 365

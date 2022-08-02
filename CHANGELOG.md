@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 `CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
 
 #### 3.x Releases
-- `3.0.x` Releases - [3.1.0](#310)
+- `3.2.x` Releases - [3.2.0](#320)
+- `3.1.x` Releases - [3.1.0](#310)
 - `3.0.x` Releases - [3.0.0](#300) | [3.0.1](#301)
 
 #### 2.x Releases
@@ -20,17 +21,59 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [3.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.2.0)
+## Models and Enums
+Released on 2022-08-02.
+
+#### Added
+
+- [x] Models
+    - [x] `CDYelpBusiness.BusinessSearch`, `CDYelpBusiness.PhoneSearch`, `CDYelpBusiness.TransactionSearch`, `CDYelpBusiness.Detailed`, `CDYelpBusiness.BusinessMatch`, and `CDYelpBusiness.Autocomplete` structs
+    - [x] `CDYelpCategoriesResponse.error`
+    - [x] `CDYelpCategory.Detailed` struct
+    - [x] `CDYelpCategoryResponse.error`
+    - [x] `CDYelpEventResponse` struct
+    - [x] `CDYelpLocation.Detailed` struct
+    - [x] `CDYelpMessaging` struct
+    - [x] `CDYelpSearchResponse.Business`, `CDYelpSearchResponse.Phone`, `CDYelpSearchResponse.Transaction`, and `CDYelpSearchResponse.BusinessMatch` structs
+    - [x] `CDYelpSpecialHour` struct
+    - [x] `toDate` methods for `String` representations
+    - [x] `toUrl` methods for `String` representations
+
+#### Updated
+    
+- [x] Models
+    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Business?)`
+    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Phone?)`
+    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Transaction?)`
+    - [x] `@escaping (CDYelpBusiness?)` becomes `@escaping (CDYelpBusinessResponse?)`
+    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.BusinessMatch?)`
+    - [x] `@escaping (CDYelpEvent?)` becomes `@escaping (CDYelpEventResponse?)`
+    - [x] `CDYelpAutocompleteResponse.businesses` type becomes `[CDYelpBusiness.Autocomplete]`
+    - [x] `CDYelpBusinessResponse.business` type becomes `CDYelpBusiness.Detailed`
+    - [x] `CDYelpCategoriesResponse.categories` type becomes `[CDYelpCategory.Detailed]`
+    - [x] `CDYelpCategoryResponse.category` type becomes `CDYelpCategory.Detailed`
+    - [x] `Date` types to `String`
+    - [x] `URL` types to `String`
+
+#### Removed
+
+- [x] CDYelpEnums
+    - [x] `CDYelpAttributeFilter.cashback`, `CDYelpTransactionType.pickup`, and `CDYelpTransactionType.restaurantReservation`
+
+---
+
 ## [3.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.1.0)
 ## SDK Support
 Released on 2022-06-13.
 
 #### Added
 
-- [x] Swift 5.6
+- [x] Swift 5.4, 5.5, and 5.6
 
 #### Updated
     
-- [x] Switch Package Manager
+- [x] Swift Package Manager
     - [x] Minimum Swift version 5.3
 - [x] Dependencies
     - [x] Alamofire
@@ -44,6 +87,7 @@ Released on 2022-06-13.
 Released on 2021-09-17.
 
 #### Added
+
 - [x] CI
     - [x] macOS 5.1 test
     - [x] macOS 5.2 test
@@ -51,7 +95,7 @@ Released on 2021-09-17.
 
 #### Updated
 
-- [x] Switch Package Manager
+- [x] Swift Package Manager
     - [x] Configuration
 
 ---
@@ -61,6 +105,7 @@ Released on 2021-09-17.
 Released on 2021-09-12.
 
 #### Added
+
 - [x] Client
     - [x] `validate` to API methods
 
@@ -74,10 +119,11 @@ Released on 2021-09-12.
     - [x] `var` to `let`
 - [x] Dependencies
     - [x] Alamofire
-- [x] Switch Package Manager
+- [x] Swift Package Manager
     - [x] Configuration
 
 #### Removed
+
 - [x] Dependencies
     - [x] ObjectMapper
 - [x] Travis CI

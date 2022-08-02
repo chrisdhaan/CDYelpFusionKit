@@ -20,8 +20,8 @@
     <a href="https://github.com/chrisdhaan/CDYelpFusionKit/releases">
         <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
     </a>
-    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/badge/Swift-5.3_5.4_5.5_5.6-Orange?style=flat-square" alt="Swift">
+    <a href="https://www.swift.org">
+        <img src="https://img.shields.io/badge/Swift-5.3_5.4_5.5_5.6-orange?style=flat" alt="Swift Versions">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
         <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platforms">
@@ -31,6 +31,9 @@
     </a>
     <a href="https://github.com/Carthage/Carthage">
         <img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage Compatible">
+    </a>
+    <a href="https://www.swift.org/package-manager">
+        <img src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat" alt="Swift Package Manager Compatible">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
         <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
@@ -122,7 +125,7 @@ For a demonstration of the capabilities of CDYelpFusionKit; run the iOS Example 
 [CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate CDYelpFusionKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '3.1.0'
+pod 'CDYelpFusionKit', '3.2.0'
 ```
 
 ### Carthage
@@ -130,7 +133,7 @@ pod 'CDYelpFusionKit', '3.1.0'
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. To integrate CDYelpFusionKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "chrisdhaan/CDYelpFusionKit" == 3.1.0
+github "chrisdhaan/CDYelpFusionKit" == 3.2.0
 ```
 
 ### Swift Package Manager
@@ -141,7 +144,7 @@ Once you have your Swift package set up, adding CDYelpFusionKit as a dependency 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.1.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "3.2.0"))
 ]
 ```
 
@@ -219,7 +222,7 @@ public func searchBusinesses(byTerm term: String?,                 // Optional
                              openNow: Bool?,                       // Optional - Default = false
                              openAt: Int?,                         // Optional
                              attributes: [CDYelpAttributeFilter]?, // Optional
-                             completion: @escaping (CDYelpSearchResponse?) -> Void);
+                             completion: @escaping (CDYelpSearchResponse.Business?) -> Void);
 ```
 
 The search endpoint has a `categories` parameter which allows for query results to be returned based off one thousand four hundred and sixty-one types of categories. The full list of categories can be found in `CDYelpEnums.swift`. The following lines of code show an example of a category that can be passed into the `categories` parameter.
@@ -298,9 +301,12 @@ The search endpoint has an `attributes` parameter which allows for query results
 ```swift
 CDYelpAttributeFilter.hotAndNew
 CDYelpAttributeFilter.requestAQuote
+CDYelpAttributeFilter.reservation
 CDYelpAttributeFilter.waitlistReservation
-CDYelpAttributeFilter.cashback
 CDYelpAttributeFilter.deals
+CDYelpAttributeFilter.genderNeutralRestrooms
+CDYelpAttributeFilter.openToAll
+CDYelpAttributeFilter.wheelchairAccessible
 ```
 
 The following lines of code show an example query to the search endpoint.
@@ -336,7 +342,7 @@ yelpAPIClient.searchBusinesses(byTerm: "Food",
 
 ```swift
 public func searchBusinesses(byPhoneNumber phoneNumber: String!, // Required
-                             completion: @escaping (CDYelpSearchResponse?) -> Void)
+                             completion: @escaping (CDYelpSearchResponse.Phone?) -> Void)
 ```
 
 The following lines of code show an example query to the phone search endpoint.
@@ -359,7 +365,7 @@ public func searchTransactions(byType type: CDYelpTransactionType!, // Required
                               location: String?,                    // Optional
                               latitude: Double?,                    // Optional
                               longitude: Double?,                   // Optional
-                              completion: @escaping (CDYelpSearchResponse?) -> Void)
+                              completion: @escaping (CDYelpSearchResponse.Transaction?) -> Void)
 ```
 
 The transactions search endpoint has a `type` parameter which allows for query results to be filtered based off one type of criteria. The following lines of code show which transaction types can be passed into the `byType` parameter.
@@ -389,7 +395,7 @@ yelpAPIClient.searchTransactions(byType: .foodDelivery,
 ```swift
 public func fetchBusiness(forId id: String!,     // Required
                           locale: CDYelpLocale?, // Optional
-                          completion: @escaping (CDYelpBusiness?) -> Void)
+                          completion: @escaping (CDYelpBusinessResponse?) -> Void)
 ```
 
 The following lines of code show an example query to the business endpoint.
@@ -398,7 +404,8 @@ The following lines of code show an example query to the business endpoint.
 yelpAPIClient.fetchBusiness(forId: "north-india-restaurant-san-francisco"
                             locale: nil) { (business) in
 
-  if let business = business {
+  if let response = response,
+      let business = response.business {
       print(business)
   }
 }
@@ -421,7 +428,7 @@ public func searchBusinesses(name: String!,                                     
                              yelpBusinessId: String?,                              // Optional
                              limit: Int?,                                          // Optional - Min = 1, Default = 3, Max = 10
                              matchThresholdType: CDYelpBusinessMatchThresholdType, // Required
-                             completion: @escaping (CDYelpSearchResponse?) -> Void)
+                             completion: @escaping (CDYelpSearchResponse.BusinessMatch?) -> Void)
 ```
 
 The business match endpoint has a `matchThresholdType` parameter which allows for query results to be filtered based off three types of criteria. The following lines of code show which business match threshold types can be passed into the `matchThresholdType` parameter.
@@ -515,7 +522,7 @@ yelpAPIClient.autocompleteBusinesses(byText: "Pizza Delivery",
 ```swift
 public func fetchEvent(forId id: String!,     // Required
                        locale: CDYelpLocale?, // Optional
-                       completion: @escaping (CDYelpEvent?) -> Void)
+                       completion: @escaping (CDYelpEventResponse?) -> Void)
 ```
 
 The event lookup endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
@@ -526,7 +533,8 @@ The following lines of code show an example query to the event lookup endpoint.
 yelpAPIClient.fetchEvent(forId: "san-francisco-yelp-celebrates-pride-month-2021",
                          locale: nil) { (event) in
 
-  if let event = event {
+  if let response = response,
+      event = response.event {
       print(event)
   }
 }
@@ -619,7 +627,7 @@ public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?, // Optional
                                location: String?,               // Optional
                                latitude: Double?,               // Optional
                                longitude: Double?,              // Optional
-                               completion: @escaping (CDYelpEvent?) -> Void)
+                               completion: @escaping (CDYelpEventResponse?) -> Void)
 ```
 
 The featured event endpoint has a `locale` parameter which allows for query results to be returned based off forty-two types of language and country codes. Refer to the [search endpoint](#search-endpoint) for information regarding using the `locale` parameter.
@@ -632,7 +640,8 @@ yelpAPIClient.fetchFeaturedEvent(forLocale: nil,
                                  latitude: 37.786572,
                                  longitude: -122.415192) { (event) in
 
-  if let event = event {
+  if let response = response,
+      event = response.event {
       print(event)
   }
 }
