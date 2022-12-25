@@ -59,7 +59,7 @@ public struct CDYelpReview: Decodable {
 
     public func timeCreatedAsDate() -> Date? {
         if let timeCreated = self.timeCreated {
-            let formatter = DateFormatter()
+            let formatter = DateFormatter.reviews
             return formatter.date(from: timeCreated)
         }
         return nil
