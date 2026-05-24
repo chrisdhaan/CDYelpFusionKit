@@ -2084,7 +2084,7 @@ Use `\`\`TypeName\`\`` for cross-references to other types in the module. DocC r
 
 See Section 15.2 for the generation command and GitHub Pages configuration.
 
-### 17.7 CI Job
+### 17.7 CI Job ✅
 
 See Section 3.14 for the `documentation` CI job definition.
 
