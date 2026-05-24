@@ -1,291 +1,276 @@
-# Change Log
+# Changelog
+
 All notable changes to this project will be documented in this file.
-`CDYelpFusionKit` adheres to [Semantic Versioning](https://semver.org/).
+CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
-#### 3.x Releases
-- `3.2.x` Releases - [3.2.0](#320)
-- `3.1.x` Releases - [3.1.0](#310)
-- `3.0.x` Releases - [3.0.0](#300) | [3.0.1](#301)
+## Table of Contents
 
-#### 2.x Releases
-- `2.1.x` Releases - [2.1.0](#210) | [2.1.1](#211)
-- `2.0.x` Releases - [2.0.0](#200)
-
-#### 1.x Releases
-- `1.5.x` Releases - [1.5.0](#150) | [1.5.1](#151)
-- `1.4.x` Releases - [1.4.0](#140)
-- `1.3.x` Releases - [1.3.0](#130)
-- `1.2.x` Releases - [1.2.0](#120)
-- `1.1.x` Releases - [1.1.0](#110)
-- `1.0.x` Releases - [1.0.0](#100)
-
----
-
-## [3.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.2.0)
-## Models and Enums
-Released on 2022-08-02.
-
-#### Added
-
-- [x] Models
-    - [x] `CDYelpBusiness.BusinessSearch`, `CDYelpBusiness.PhoneSearch`, `CDYelpBusiness.TransactionSearch`, `CDYelpBusiness.Detailed`, `CDYelpBusiness.BusinessMatch`, and `CDYelpBusiness.Autocomplete` structs
-    - [x] `CDYelpCategoriesResponse.error`
-    - [x] `CDYelpCategory.Detailed` struct
-    - [x] `CDYelpCategoryResponse.error`
-    - [x] `CDYelpEventResponse` struct
-    - [x] `CDYelpLocation.Detailed` struct
-    - [x] `CDYelpMessaging` struct
-    - [x] `CDYelpSearchResponse.Business`, `CDYelpSearchResponse.Phone`, `CDYelpSearchResponse.Transaction`, and `CDYelpSearchResponse.BusinessMatch` structs
-    - [x] `CDYelpSpecialHour` struct
-    - [x] `toDate` methods for `String` representations
-    - [x] `toUrl` methods for `String` representations
-
-#### Updated
-    
-- [x] Models
-    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Business?)`
-    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Phone?)`
-    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.Transaction?)`
-    - [x] `@escaping (CDYelpBusiness?)` becomes `@escaping (CDYelpBusinessResponse?)`
-    - [x] `@escaping (CDYelpSearchResponse?)` becomes `@escaping (CDYelpSearchResponse.BusinessMatch?)`
-    - [x] `@escaping (CDYelpEvent?)` becomes `@escaping (CDYelpEventResponse?)`
-    - [x] `CDYelpAutocompleteResponse.businesses` type becomes `[CDYelpBusiness.Autocomplete]`
-    - [x] `CDYelpBusinessResponse.business` type becomes `CDYelpBusiness.Detailed`
-    - [x] `CDYelpCategoriesResponse.categories` type becomes `[CDYelpCategory.Detailed]`
-    - [x] `CDYelpCategoryResponse.category` type becomes `CDYelpCategory.Detailed`
-    - [x] `Date` types to `String`
-    - [x] `URL` types to `String`
-
-#### Removed
-
-- [x] CDYelpEnums
-    - [x] `CDYelpAttributeFilter.cashback`, `CDYelpTransactionType.pickup`, and `CDYelpTransactionType.restaurantReservation`
+- [4.0.0](#400---2026-05-24)
+- [3.2.0](#320---2022-08-02)
+- [3.1.0](#310---2022-06-13)
+- [3.0.1](#301---2021-09-17)
+- [3.0.0](#300---2021-09-12)
+- [2.1.1](#211---2021-05-30)
+- [2.1.0](#210---2020-08-31)
+- [2.0.0](#200---2020-08-30)
+- [1.5.1](#151---2018-12-14)
+- [1.5.0](#150---2018-02-12)
+- [1.4.0](#140---2017-11-20)
+- [1.3.0](#130---2017-11-16)
+- [1.2.0](#120---2017-11-14)
+- [1.1.0](#110---2017-11-01)
+- [1.0.0](#100---2017-09-28)
 
 ---
 
-## [3.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.1.0)
-## SDK Support
-Released on 2022-06-13.
+## [4.0.0] - 2026-05-24
 
-#### Added
+### Added
 
-- [x] Swift 5.4, 5.5, and 5.6
+- Async/await overloads for all 12 Yelp Fusion API methods (iOS 13+, macOS 10.15+, tvOS 13+, watchOS 6+)
+- Unit test target with model deserialization and router tests (Swift Testing framework)
+- Privacy manifest (PrivacyInfo.xcprivacy) for App Store compliance
+- CLAUDE.md project documentation for Claude Code users
+- Documentation/Usage.md comprehensive usage guide
+- Documentation/ARCHITECTURE.md technical architecture documentation
+- Documentation/CDYelpFusionKit 4.0 Migration Guide.md for version migration
+- Dynamic library product (CDYelpFusionKitDynamic) for SPM consumers
+- SwiftLint CI job for code quality enforcement
+- CodeQL security scanning in CI pipeline
+- visionOS platform support (visionOS 1.0+)
+- DocC API documentation bundle and GitHub Pages publication
 
-#### Updated
-    
-- [x] Swift Package Manager
-    - [x] Minimum Swift version 5.3
-- [x] Dependencies
-    - [x] Alamofire
-- [x] CI
-    - [x] Tests device, platform, Xcode, and SDK versions
+### Updated
 
----
+- swift-tools-version from 5.6 to 6.0
+- Minimum deployment targets: iOS 12.0, macOS 10.13, tvOS 12.0, watchOS 4.0
+- Alamofire dependency from 5.6.1 to 5.9.0+
+- CI runners to macOS-15 and macos-26 with Xcode 16.4 and 26.x
+- CI output formatter from xcpretty to xcbeautify
+- CocoaPods CI to use bundle exec with Gemfile-managed versions
+- GitHub Actions checkout from v3 to v4
+- GitHub Actions cache from v3 to v4
+- Copyright headers to 2016-2026
+- CDYelpAPIClient removed NSObject inheritance (plain Swift class)
+- apiKey parameter from implicitly-unwrapped String! to non-optional String
+- Removed Carthage support; SPM and CocoaPods only
+- Platform conditional imports from #if !os(OSX) to #if os(macOS)
 
-## [3.0.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.0.1)
-## Bug Fixes
-Released on 2021-09-17.
+### Fixed
 
-#### Added
-
-- [x] CI
-    - [x] macOS 5.1 test
-    - [x] macOS 5.2 test
-    - [x] Swift Package Manager test
-
-#### Updated
-
-- [x] Swift Package Manager
-    - [x] Configuration
-
----
-
-## [3.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/3.0.0)
-## Dependencies
-Released on 2021-09-12.
-
-#### Added
-
-- [x] Client
-    - [x] `validate` to API methods
-
-#### Updated
-
-- [x] Client
-    - [x] `responseObject` model transformation to `responseDecodable`
-- [x] Models
-    - [x] Decodable, Encodable APIs
-    - [x] `class` to `struct`
-    - [x] `var` to `let`
-- [x] Dependencies
-    - [x] Alamofire
-- [x] Swift Package Manager
-    - [x] Configuration
-
-#### Removed
-
-- [x] Dependencies
-    - [x] ObjectMapper
-- [x] Travis CI
-    - [x] Configuration
+- apiKey parameter validation from assert to precondition for production safety
+- Print-based error logging removed from library code (no console output from SDK)
+- Example app modernization (removed deprecated UIApplication.openURL patterns)
 
 ---
 
-## [2.1.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.1)
-## Bug Fixes
-Released on 2021-05-30.
+## [3.2.0] - 2022-08-02
 
-#### Updated
+### Added
 
-- [x] Models
-    - [x] `URL` types to `String`
-    - [x] `Date` types to `String`
-- [x] Swift Package Manager
-    - [x] To build with `swift-tools-version:5.1`
+- CDYelpBusiness.BusinessSearch, CDYelpBusiness.PhoneSearch, CDYelpBusiness.TransactionSearch, CDYelpBusiness.Detailed, CDYelpBusiness.BusinessMatch, and CDYelpBusiness.Autocomplete structs
+- CDYelpCategoriesResponse.error property
+- CDYelpCategory.Detailed struct
+- CDYelpCategoryResponse.error property
+- CDYelpEventResponse struct
+- CDYelpLocation.Detailed struct
+- CDYelpMessaging struct
+- CDYelpSearchResponse.Business, CDYelpSearchResponse.Phone, CDYelpSearchResponse.Transaction, and CDYelpSearchResponse.BusinessMatch structs
+- CDYelpSpecialHour struct
+- toDate methods for String representations
+- toUrl methods for String representations
 
----
+### Updated
 
-## [2.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.1.0)
-## SDK Support
-Released on 2020-08-31.
+- CDYelpSearchResponse completion block from @escaping (CDYelpSearchResponse?) to typed variants (Business, Phone, Transaction, BusinessMatch)
+- CDYelpBusiness completion block from @escaping (CDYelpBusiness?) to @escaping (CDYelpBusinessResponse?)
+- CDYelpEvent completion block from @escaping (CDYelpEvent?) to @escaping (CDYelpEventResponse?)
+- CDYelpAutocompleteResponse.businesses type to [CDYelpBusiness.Autocomplete]
+- CDYelpBusinessResponse.business type to CDYelpBusiness.Detailed
+- CDYelpCategoriesResponse.categories type to [CDYelpCategory.Detailed]
+- CDYelpCategoryResponse.category type to CDYelpCategory.Detailed
+- Date types to String throughout models
+- URL types to String throughout models
 
-#### Added
+### Fixed
 
-- [x] Swift 5.1
-
----
-
-## [2.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/2.0.0)
-## SDK Support and API Endpoints
-Released on 2020-08-30.
-
-#### Added
-
-- [x] Swift 5.0
-- [x] API Endpoints
-    - [x] All Categories
-    - [x] Category Details
-
-#### Updated
-
-- [x] API Endpoints
-    - [x] Business Match
-- [x] CDYelpEnums Naming
-    - [x] `CDYelpBusinessCategoryFilter` becomes `CDYelpCategoryAlias`
+- Removed CDYelpAttributeFilter.cashback, CDYelpTransactionType.pickup, and CDYelpTransactionType.restaurantReservation enums
 
 ---
 
-## [1.5.1](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.1)
-## SDK Support and Platform Support
-Released on 2018-12-14.
+## [3.1.0] - 2022-06-13
 
-#### Added
+### Added
 
-- [x] Swift 4.2
-- [x] SwiftLint
+- Swift 5.4 support
+- Swift 5.5 support
+- Swift 5.6 support
 
-#### Updated
+### Updated
 
-- [x] Platform Support
-    - [x] macOS
-        - [x] `CDImage+CDYelpFusionKit` `cdImage(named name: String!) -> CDImage?` to initialize with type `CDImage.Name`
-
----
-
-## [1.5.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.5.0)
-## Authentication
-Released on 2018-02-12.
-
-#### Updated
-
-- [x] Authentication
-    - [x] `clientId and clientSecret` becomes `apiKey`
-    - [x] Removes `CDYelpOAuthClient`, `CDYelpOAuthCredential`, and `CDYelpOAuthRouter` classes
+- Swift Package Manager minimum Swift version to 5.3
+- Alamofire dependency
+- CI test device, platform, Xcode, and SDK versions
 
 ---
 
-## [1.4.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.4.0)
-## SDK Support
-Released on 2017-11-20.
+## [3.0.1] - 2021-09-17
 
-#### Added
+### Added
 
-- [x] Swift 4.0
+- macOS 5.1 CI test
+- macOS 5.2 CI test
+- Swift Package Manager CI test
 
----
+### Updated
 
-## [1.3.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.3.0)
-## Platform Support, Web Linking, and Deep Linking
-Released on 2017-11-16.
-
-#### Added
-
-- [x] Platform Support
-    - [x] macOS
-    - [x] tvOS
-    - [x] watchOS
-- [x] Web Linking
-
-#### Updated
-
-- [x] Deep Linking
+- Swift Package Manager configuration
 
 ---
 
-## [1.2.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.2.0)
-## API Endpoints, Deep Linking, and Brand Assets
-Released on 2017-11-14.
+## [3.0.0] - 2021-09-12
 
-#### Added
+### Added
 
-- [x] API Endpoints
-    - [x] Event Lookup
-    - [x] Event Search
-    - [x] Featured Event
-- [x] Deep Linking
-- [x] Brand Assets
+- validate method to API methods
 
-#### Updated
+### Updated
 
-- [x] CDYelpEnums Naming
-    - [x] `CDYelpCategoryFilter` becomes `CDYelpBusinessCategoryFilter`
-    - [x] `CDSortType` becomes `CDYelpBusinessSortType`
+- Client responseObject model transformation to responseDecodable
+- All models from class to struct
+- All model properties from var to let
+- Decodable and Encodable API conformance
+- Alamofire dependency
+- Swift Package Manager configuration
 
----
+### Fixed
 
-## [1.1.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.1.0)
-## API Endpoints
-Released on 2017-11-01.
-
-#### Added
-
-- [ ] API Endpoints
-    - [x] Business Match
-
-#### Updated
-
-- [x] CDYelpAPIClient Completion Block Parameters
-    - [x] `@escaping (CDYelpSearchResponse?, Error?)` becomes `@escaping (CDYelpSearchResponse?)`
-    - [x] `@escaping (CDYelpBusiness?, Error?)` becomes `@escaping (CDYelpBusiness?)`
-    - [x] `@escaping (CDYelpReviewsResponse?, Error?)` becomes `@escaping (CDYelpReviewsResponse?)`
-    - [x] `@escaping (CDYelpAutoCompleteResponse?, Error?)` becomes `@escaping (CDYelpAutoCompleteResponse?)`
+- Removed ObjectMapper dependency
+- Removed Travis CI configuration
 
 ---
 
-## [1.0.0](https://github.com/chrisdhaan/CDYelpFusionKit/releases/tag/1.0.0)
-## Authentication and API Endpoints
-Released on 2017-09-28.
+## [2.1.1] - 2021-05-30
 
-#### Added
+### Updated
 
-- [x] Authentication
-- [ ] API Endpoints
-    - [x] Search
-    - [x] Phone Search
-    - [x] Transaction Search
-    - [x] Business
-    - [x] Reviews
-    - [x] Autocomplete
-- [x] Complete CDYelpCategoryFilter Mapping
+- Model URL types to String
+- Model Date types to String
+- Swift Package Manager to build with swift-tools-version:5.1
+
+---
+
+## [2.1.0] - 2020-08-31
+
+### Added
+
+- Swift 5.1 support
+
+---
+
+## [2.0.0] - 2020-08-30
+
+### Added
+
+- Swift 5.0 support
+- All Categories API endpoint
+- Category Details API endpoint
+
+### Updated
+
+- Business Match API endpoint
+- CDYelpEnums naming: CDYelpBusinessCategoryFilter becomes CDYelpCategoryAlias
+
+---
+
+## [1.5.1] - 2018-12-14
+
+### Added
+
+- Swift 4.2 support
+- SwiftLint integration
+
+### Updated
+
+- macOS platform support: CDImage+CDYelpFusionKit cdImage(named:) to initialize with CDImage.Name type
+
+---
+
+## [1.5.0] - 2018-02-12
+
+### Updated
+
+- Authentication: clientId and clientSecret becomes apiKey
+- Removed CDYelpOAuthClient, CDYelpOAuthCredential, and CDYelpOAuthRouter classes
+
+---
+
+## [1.4.0] - 2017-11-20
+
+### Added
+
+- Swift 4.0 support
+
+---
+
+## [1.3.0] - 2017-11-16
+
+### Added
+
+- macOS platform support
+- tvOS platform support
+- watchOS platform support
+- Web Linking support
+
+### Updated
+
+- Deep Linking implementation
+
+---
+
+## [1.2.0] - 2017-11-14
+
+### Added
+
+- Event Lookup API endpoint
+- Event Search API endpoint
+- Featured Event API endpoint
+- Deep Linking support
+- Brand Assets (Yelp colors and imagery)
+
+### Updated
+
+- CDYelpEnums naming: CDYelpCategoryFilter becomes CDYelpBusinessCategoryFilter
+- CDYelpEnums naming: CDSortType becomes CDYelpBusinessSortType
+
+---
+
+## [1.1.0] - 2017-11-01
+
+### Added
+
+- Business Match API endpoint
+
+### Updated
+
+- CDYelpAPIClient completion block parameters from @escaping (CDYelpSearchResponse?, Error?) to @escaping (CDYelpSearchResponse?)
+- CDYelpAPIClient completion block parameters from @escaping (CDYelpBusiness?, Error?) to @escaping (CDYelpBusiness?)
+- CDYelpAPIClient completion block parameters from @escaping (CDYelpReviewsResponse?, Error?) to @escaping (CDYelpReviewsResponse?)
+- CDYelpAPIClient completion block parameters from @escaping (CDYelpAutoCompleteResponse?, Error?) to @escaping (CDYelpAutoCompleteResponse?)
+
+---
+
+## [1.0.0] - 2017-09-28
+
+### Added
+
+- Authentication with API key
+- Search API endpoint
+- Phone Search API endpoint
+- Transaction Search API endpoint
+- Business Details API endpoint
+- Reviews API endpoint
+- Autocomplete API endpoint
+- Complete CDYelpCategoryFilter mapping
 
 ---
