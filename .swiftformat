@@ -1,0 +1,4 @@
+--maxwidth 200
+--indent 4
+--linebreaks lf
+--disable wrapSingleLineComments
