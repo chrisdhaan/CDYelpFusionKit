@@ -715,4 +715,294 @@ public class CDYelpAPIClient {
             downloadTasks.forEach { $0.cancel() }
         }
     }
+
+    // MARK: - Async/Await Overloads
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func searchBusinesses(byTerm term: String?,
+                                 location: String?,
+                                 latitude: Double?,
+                                 longitude: Double?,
+                                 radius: Int?,
+                                 categories: [CDYelpCategoryAlias]?,
+                                 locale: CDYelpLocale?,
+                                 limit: Int?,
+                                 offset: Int?,
+                                 sortBy: CDYelpBusinessSortType?,
+                                 priceTiers: [CDYelpPriceTier]?,
+                                 openNow: Bool?,
+                                 openAt: Int?,
+                                 attributes: [CDYelpAttributeFilter]?) async throws -> CDYelpSearchResponse.Business {
+        try await withCheckedThrowingContinuation { continuation in
+            self.searchBusinesses(byTerm: term,
+                                location: location,
+                                latitude: latitude,
+                                longitude: longitude,
+                                radius: radius,
+                                categories: categories,
+                                locale: locale,
+                                limit: limit,
+                                offset: offset,
+                                sortBy: sortBy,
+                                priceTiers: priceTiers,
+                                openNow: openNow,
+                                openAt: openAt,
+                                attributes: attributes) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func searchBusinesses(byPhoneNumber phoneNumber: String!) async throws -> CDYelpSearchResponse.Phone {
+        try await withCheckedThrowingContinuation { continuation in
+            self.searchBusinesses(byPhoneNumber: phoneNumber) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func searchTransactions(byType type: CDYelpTransactionType!,
+                                   location: String?,
+                                   latitude: Double?,
+                                   longitude: Double?) async throws -> CDYelpSearchResponse.Transaction {
+        try await withCheckedThrowingContinuation { continuation in
+            self.searchTransactions(byType: type,
+                                  location: location,
+                                  latitude: latitude,
+                                  longitude: longitude) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchBusiness(forId id: String!,
+                              locale: CDYelpLocale?) async throws -> CDYelpBusinessResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchBusiness(forId: id,
+                             locale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func searchBusinesses(name: String!,
+                                 addressOne: String!,
+                                 addressTwo: String?,
+                                 addressThree: String?,
+                                 city: String!,
+                                 state: String!,
+                                 country: String!,
+                                 latitude: Double?,
+                                 longitude: Double?,
+                                 phone: String?,
+                                 zipCode: String?,
+                                 yelpBusinessId: String?,
+                                 limit: Int?,
+                                 matchThresholdType: CDYelpBusinessMatchThresholdType!) async throws -> CDYelpSearchResponse.BusinessMatch {
+        try await withCheckedThrowingContinuation { continuation in
+            self.searchBusinesses(name: name,
+                                addressOne: addressOne,
+                                addressTwo: addressTwo,
+                                addressThree: addressThree,
+                                city: city,
+                                state: state,
+                                country: country,
+                                latitude: latitude,
+                                longitude: longitude,
+                                phone: phone,
+                                zipCode: zipCode,
+                                yelpBusinessId: yelpBusinessId,
+                                limit: limit,
+                                matchThresholdType: matchThresholdType) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchReviews(forBusinessId id: String!,
+                             locale: CDYelpLocale?) async throws -> CDYelpReviewsResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchReviews(forBusinessId: id,
+                            locale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func autocompleteBusinesses(byText text: String!,
+                                       latitude: Double!,
+                                       longitude: Double!,
+                                       locale: CDYelpLocale?) async throws -> CDYelpAutoCompleteResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.autocompleteBusinesses(byText: text,
+                                      latitude: latitude,
+                                      longitude: longitude,
+                                      locale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchEvent(forId id: String!,
+                           locale: CDYelpLocale?) async throws -> CDYelpEventResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchEvent(forId: id,
+                          locale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func searchEvents(byLocale locale: CDYelpLocale?,
+                             offset: Int?,
+                             limit: Int?,
+                             sortBy: CDYelpEventSortByType?,
+                             sortOn: CDYelpEventSortOnType?,
+                             startDate: Date?,
+                             endDate: Date?,
+                             categories: [CDYelpEventCategoryFilter]?,
+                             isFree: Bool?,
+                             location: String?,
+                             latitude: Double?,
+                             longitude: Double?,
+                             radius: Int?,
+                             excludedEvents: [String]?) async throws -> CDYelpEventsResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.searchEvents(byLocale: locale,
+                            offset: offset,
+                            limit: limit,
+                            sortBy: sortBy,
+                            sortOn: sortOn,
+                            startDate: startDate,
+                            endDate: endDate,
+                            categories: categories,
+                            isFree: isFree,
+                            location: location,
+                            latitude: latitude,
+                            longitude: longitude,
+                            radius: radius,
+                            excludedEvents: excludedEvents) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                if let error = response.error {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
+                                   location: String?,
+                                   latitude: Double?,
+                                   longitude: Double?) async throws -> CDYelpEventResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchFeaturedEvent(forLocale: locale,
+                                  location: location,
+                                  latitude: latitude,
+                                  longitude: longitude) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchCategories(forLocale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchCategory(forAlias alias: CDYelpCategoryAlias!,
+                              andLocale locale: CDYelpLocale?) async throws -> CDYelpCategoryResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchCategory(forAlias: alias,
+                             andLocale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
 }
