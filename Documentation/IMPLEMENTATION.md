@@ -1769,7 +1769,7 @@ Restructure `README.md` as a lean navigation hub, following the CDMarkdownKit v3
 
 ## Section 14: Dependency Updates
 
-### 14.1 Alamofire
+### 14.1 Alamofire ✅
 
 **Current:** `5.6.1` (pinned — released May 2022)  
 **Target:** `~> 5.9` (flexible patch updates within the 5.x major)
