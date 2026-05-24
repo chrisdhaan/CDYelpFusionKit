@@ -1468,7 +1468,7 @@ import Foundation
 }
 ```
 
-### 10.5 Test Framework Note
+### 10.5 Test Framework Note ✅
 
 CDMarkdownKit uses Swift Testing (`import Testing`) introduced in Xcode 16. This is the modern replacement for XCTest for unit tests. All new tests should use Swift Testing syntax (`@Suite`, `@Test`, `#expect`).
 
