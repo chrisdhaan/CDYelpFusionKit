@@ -55,19 +55,8 @@ class ViewController: UIViewController {
         self.tableView.tableFooterView = logoOutlineImageView
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     func openUrl(_ url: URL) {
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url,
-                                      options: [:],
-                                      completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
 
@@ -207,33 +196,40 @@ extension ViewController: UITableViewDelegate {
             CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
             switch indexPath.row {
             case 0:
-                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byTerm: "Food",
-                                                                         location: "San Francisco",
-                                                                         latitude: nil,
-                                                                         longitude: nil,
-                                                                         radius: 10000,
-                                                                         categories: nil,
-                                                                         locale: .english_unitedStates,
-                                                                         limit: 5,
-                                                                         offset: 0,
-                                                                         sortBy: .rating,
-                                                                         priceTiers: nil,
-                                                                         openNow: true,
-                                                                         openAt: nil,
-                                                                         attributes: nil) { (response) in
-                    if let response = response,
-                       let businesses = response.businesses,
-                       businesses.count > 0 {
-                        print(businesses)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byTerm: "Food",
+                                                                                                           location: "San Francisco",
+                                                                                                           latitude: nil,
+                                                                                                           longitude: nil,
+                                                                                                           radius: 10000,
+                                                                                                           categories: nil,
+                                                                                                           locale: .english_unitedStates,
+                                                                                                           limit: 5,
+                                                                                                           offset: 0,
+                                                                                                           sortBy: .rating,
+                                                                                                           priceTiers: nil,
+                                                                                                           openNow: true,
+                                                                                                           openAt: nil,
+                                                                                                           attributes: nil)
+                        if let businesses = response.businesses,
+                           businesses.count > 0 {
+                            print(businesses)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 1:
-                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060") { (response) in
-
-                    if let response = response,
-                        let businesses = response.businesses,
-                        businesses.count > 0 {
-                        print(businesses)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060")
+                        if let businesses = response.businesses,
+                           businesses.count > 0 {
+                            print(businesses)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 2:
