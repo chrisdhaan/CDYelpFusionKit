@@ -1907,7 +1907,7 @@ Update the requirements table (Section 13):
 | watchOS | 4.0+ |
 | visionOS | 1.0+ |
 
-### 16.7 Podspec: swift-docc-plugin Does Not Need visionOS Entry
+### 16.7 Podspec: swift-docc-plugin Does Not Need visionOS Entry ✅
 
 `swift-docc-plugin` is a build-tool plugin only — it generates documentation and is never linked into any target. No visionOS platform entry is needed for it in the podspec.
 
