@@ -33,7 +33,7 @@
 
 import Alamofire
 
-enum CDYelpRouter: URLRequestConvertible {
+enum CDYelpRouter: URLRequestConvertible, Sendable {
 
     case search(parameters: Parameters)
     case phone(parameters: Parameters)

@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCategoriesResponse: Decodable {
+public struct CDYelpCategoriesResponse: Decodable, Sendable {
 
     public let categories: [CDYelpCategory.Detailed]?
     public let error: CDYelpError?

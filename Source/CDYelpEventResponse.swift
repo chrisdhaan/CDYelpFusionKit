@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpEventResponse: Decodable {
+public struct CDYelpEventResponse: Decodable, Sendable {
 
     public let event: CDYelpEvent?
     public let error: CDYelpError?

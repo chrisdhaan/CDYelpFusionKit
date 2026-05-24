@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCategory: Decodable {
+public struct CDYelpCategory: Decodable, Sendable {
 
     public let alias: String?
     public let title: String?
@@ -35,7 +35,7 @@ public struct CDYelpCategory: Decodable {
         case title
     }
 
-    public struct Detailed: Decodable {
+    public struct Detailed: Decodable, Sendable {
         public let alias: String?
         public let title: String?
         public let parentAliases: [String]?

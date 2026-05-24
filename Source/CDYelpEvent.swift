@@ -31,7 +31,7 @@
     import UIKit
 #endif
 
-public struct CDYelpEvent: Decodable {
+public struct CDYelpEvent: Decodable, Sendable {
 
     public let attendingCount: Int?
     public let category: String?

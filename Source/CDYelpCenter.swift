@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCenter: Decodable {
+public struct CDYelpCenter: Decodable, Sendable {
 
     public let latitude: Double?
     public let longitude: Double?

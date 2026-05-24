@@ -31,7 +31,7 @@
     import UIKit
 #endif
 
-public struct CDYelpSpecialHour: Decodable {
+public struct CDYelpSpecialHour: Decodable, Sendable {
 
     public let date: String?
     public let isClosed: Bool?

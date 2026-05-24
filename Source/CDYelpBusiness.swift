@@ -31,8 +31,8 @@
     import UIKit
 #endif
 
-public struct CDYelpBusiness {
-    public struct BusinessSearch: Decodable {
+public struct CDYelpBusiness: Sendable {
+    public struct BusinessSearch: Decodable, Sendable {
 
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
@@ -87,7 +87,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct PhoneSearch: Decodable {
+    public struct PhoneSearch: Decodable, Sendable {
 
         public let id: String?
         public let alias: String?
@@ -138,7 +138,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct TransactionSearch: Decodable {
+    public struct TransactionSearch: Decodable, Sendable {
 
         public let id: String?
         public let alias: String?
@@ -189,7 +189,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct Detailed: Decodable {
+    public struct Detailed: Decodable, Sendable {
 
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
@@ -266,7 +266,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct BusinessMatch: Decodable {
+    public struct BusinessMatch: Decodable, Sendable {
 
         public let id: String?
         public let alias: String?
@@ -285,7 +285,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct Autocomplete: Decodable {
+    public struct Autocomplete: Decodable, Sendable {
 
         public let id: String?
         public let name: String?

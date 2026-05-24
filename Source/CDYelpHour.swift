@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpHour: Decodable {
+public struct CDYelpHour: Decodable, Sendable {
 
     public let hoursType: String?
     public let open: [CDYelpOpen]?

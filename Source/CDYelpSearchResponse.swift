@@ -25,8 +25,8 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpSearchResponse {
-    public struct Business: Decodable {
+public struct CDYelpSearchResponse: Sendable {
+    public struct Business: Decodable, Sendable {
 
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessSearch]?
@@ -41,7 +41,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct Phone: Decodable {
+    public struct Phone: Decodable, Sendable {
 
         public let total: Int?
         public let businesses: [CDYelpBusiness.PhoneSearch]?
@@ -54,7 +54,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct Transaction: Decodable {
+    public struct Transaction: Decodable, Sendable {
 
         public let total: Int?
         public let businesses: [CDYelpBusiness.TransactionSearch]?
@@ -67,7 +67,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct BusinessMatch: Decodable {
+    public struct BusinessMatch: Decodable, Sendable {
 
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessMatch]?

@@ -31,7 +31,7 @@
 ///
 /// A list of the business attributes the Yelp Fusion API supports.
 ///
-public enum CDYelpAttributeFilter: String {
+public enum CDYelpAttributeFilter: String, Sendable {
     case hotAndNew              = "hot_and_new"
     case requestAQuote          = "request_a_quote"
     case reservation            = "reservation"
@@ -46,7 +46,7 @@ public enum CDYelpAttributeFilter: String {
 /// A list of the business categories the Yelp Fusion API supports.
 ///
 // swiftlint:disable type_body_length
-public enum CDYelpCategoryAlias: String {
+public enum CDYelpCategoryAlias: String, Sendable {
     // Active Life
     case activeLife                 = "active"
     case atvRentalsAndTours         = "atvrentals"
@@ -1579,7 +1579,7 @@ public enum CDYelpCategoryAlias: String {
 ///
 /// A list of business match threshold types the Yelp Fusion API supports.
 ///
-public enum CDYelpBusinessMatchThresholdType: String {
+public enum CDYelpBusinessMatchThresholdType: String, Sendable {
     ///
     /// Do not apply any match quality threshold; all potential business matches will be returned.
     ///
@@ -1597,7 +1597,7 @@ public enum CDYelpBusinessMatchThresholdType: String {
 ///
 /// A list of the business sort types the Yelp Fusion API supports.
 ///
-public enum CDYelpBusinessSortType: String {
+public enum CDYelpBusinessSortType: String, Sendable {
     case bestMatch      = "best_match"
     case rating         = "rating"
     case reviewCount    = "review_count"
@@ -1607,7 +1607,7 @@ public enum CDYelpBusinessSortType: String {
 ///
 /// A list of the event categories the Yelp Fusion API supports.
 ///
-public enum CDYelpEventCategoryFilter: String {
+public enum CDYelpEventCategoryFilter: String, Sendable {
     case charities              = "charities"
     case fashion                = "fashion"
     case festivalsAndFairs      = "festivals-fairs"
@@ -1626,7 +1626,7 @@ public enum CDYelpEventCategoryFilter: String {
 ///
 /// A list of the event sortBy types the Yelp Fusion API supports.
 ///
-public enum CDYelpEventSortByType: String {
+public enum CDYelpEventSortByType: String, Sendable {
     case ascending  = "asc"
     case descending = "desc"
 }
@@ -1634,7 +1634,7 @@ public enum CDYelpEventSortByType: String {
 ///
 /// A list of the event sortOn types the Yelp Fusion API supports.
 ///
-public enum CDYelpEventSortOnType: String {
+public enum CDYelpEventSortOnType: String, Sendable {
     case popularity = "popularity"
     case timeStart  = "time_start"
 }
@@ -1642,7 +1642,7 @@ public enum CDYelpEventSortOnType: String {
 ///
 /// A list of locales the Yelp Fusion API supports. The locale code is in the format of {language code}_{country code}.
 ///
-public enum CDYelpLocale: String {
+public enum CDYelpLocale: String, Sendable {
     // swiftlint:disable identifier_name
     case chinese_hongKong           = "zh_HK"
     case chinese_taiwan             = "zh_TW"
@@ -1692,7 +1692,7 @@ public enum CDYelpLocale: String {
 ///
 /// A list of the price tiers the Yelp Fusion API supports.
 ///
-public enum CDYelpPriceTier: String {
+public enum CDYelpPriceTier: String, Sendable {
     case oneDollarSign      = "1"
     case twoDollarSigns     = "2"
     case threeDollarSigns   = "3"
@@ -1702,7 +1702,7 @@ public enum CDYelpPriceTier: String {
 ///
 /// A list of the number of filled stars the Yelp stars asset can be returned with.
 ///
-public enum CDYelpStars: String {
+public enum CDYelpStars: String, Sendable {
     case zero       = "zero"
     case one        = "one"
     case oneHalf    = "one_half"
@@ -1718,7 +1718,7 @@ public enum CDYelpStars: String {
 ///
 /// A list of the sizes the Yelp stars asset can be returned in.
 ///
-public enum CDYelpStarsSize: String {
+public enum CDYelpStarsSize: String, Sendable {
     case small      = "small"
     case regular    = "regular"
     case large      = "large"
@@ -1728,7 +1728,7 @@ public enum CDYelpStarsSize: String {
 ///
 /// A list of the transaction types the Yelp Fusion API supports. Currently, only food delivery is supported and it is only supported in the U.S.
 ///
-public enum CDYelpTransactionType: String {
+public enum CDYelpTransactionType: String, Sendable {
     case foodDelivery           = "delivery"
 }
 

@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpOpen: Decodable {
+public struct CDYelpOpen: Decodable, Sendable {
 
     public let isOvernight: Bool?
     public let end: String?

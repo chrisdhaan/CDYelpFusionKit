@@ -25,7 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpLocation: Decodable {
+public struct CDYelpLocation: Decodable, Sendable {
 
     public let addressOne: String?
     public let addressTwo: String?
@@ -45,7 +45,7 @@ public struct CDYelpLocation: Decodable {
         case country
     }
 
-    public struct Detailed: Decodable {
+    public struct Detailed: Decodable, Sendable {
         public let addressOne: String?
         public let addressTwo: String?
         public let addressThree: String?

@@ -31,7 +31,7 @@
     import UIKit
 #endif
 
-public struct CDYelpUser: Decodable {
+public struct CDYelpUser: Decodable, Sendable {
 
     public let id: String?
     public let profileUrl: String?

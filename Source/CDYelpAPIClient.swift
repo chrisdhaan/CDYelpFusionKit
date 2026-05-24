@@ -33,7 +33,7 @@
 
 import Alamofire
 
-public class CDYelpAPIClient {
+public class CDYelpAPIClient: @unchecked Sendable {
 
     private let apiKey: String
     private lazy var manager: Alamofire.Session = {

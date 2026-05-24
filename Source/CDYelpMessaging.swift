@@ -31,7 +31,7 @@
     import UIKit
 #endif
 
-public struct CDYelpMessaging: Decodable {
+public struct CDYelpMessaging: Decodable, Sendable {
 
     public let url: String?
     public let useCaseText: String?
