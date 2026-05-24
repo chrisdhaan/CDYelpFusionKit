@@ -12,7 +12,7 @@
         <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
     </a>
     <a href="https://www.swift.org">
-        <img src="https://img.shields.io/badge/Swift-5.x-orange?style=flat" alt="Swift Versions">
+        <img src="https://img.shields.io/badge/Swift-5+-orange?style=flat" alt="Swift Versions">
     </a>
     <a href="http://cocoapods.org/pods/CDYelpFusionKit">
         <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platforms">

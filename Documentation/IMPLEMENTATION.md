@@ -1831,7 +1831,7 @@ To preview documentation locally before publishing:
 swift package --disable-sandbox preview-documentation --target CDYelpFusionKit
 ```
 
-### 15.3 Update README Badges
+### 15.3 Update README Badges ✅
 
 Update the Swift version badge to `Swift 5+` and the requirements table to the new deployment targets.
 
