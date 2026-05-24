@@ -2108,17 +2108,20 @@ swiftformat Source Tests
 
 Review the diff and commit all formatting changes. This establishes the baseline so that subsequent `swiftformat --lint` CI runs pass on clean code.
 
-### 18.3 (Optional) Add .swiftformat Configuration
+### 18.3 (Optional) Add .swiftformat Configuration ✅
 
 If any SwiftFormat defaults require project-specific overrides (e.g., to align with SwiftLint's line-length rule), create `.swiftformat` in the repository root:
 
 ```
---maxwidth 149
+--maxwidth 200
 --indent 4
 --linebreaks lf
+--disable wrapSingleLineComments
 ```
 
 If no overrides are needed, SwiftFormat's built-in defaults are used and no configuration file is required. Check whether CDMarkdownKit uses a `.swiftformat` file and mirror it for consistency.
+
+**Note:** Configured with `--maxwidth 200` (aligned with SwiftLint's error threshold) and `--disable wrapSingleLineComments` to preserve documentation comments intact.
 
 ---
 
