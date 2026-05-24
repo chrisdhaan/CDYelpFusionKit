@@ -78,7 +78,7 @@ jobs:
             destination: "OS=14.5,name=iPhone 12 Pro"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
