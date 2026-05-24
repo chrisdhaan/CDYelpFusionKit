@@ -149,12 +149,8 @@ public class CDYelpAPIClient {
 
                     switch response.result {
                     case .success(let searchResponse):
-                        if let error = searchResponse.error {
-                            print("searchBusinesses(byTerm) error: ", error.description ?? "")
-                        }
                         completion(searchResponse)
                     case .failure(let error):
-                        print("searchBusinesses(byTerm) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -185,12 +181,8 @@ public class CDYelpAPIClient {
 
                     switch response.result {
                     case .success(let searchResponse):
-                        if let error = searchResponse.error {
-                            print("searchBusinesses(byPhone) error: ", error.description ?? "")
-                        }
                         completion(searchResponse)
                     case .failure(let error):
-                        print("searchBusinesses(byPhone) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -232,12 +224,8 @@ public class CDYelpAPIClient {
 
                     switch response.result {
                     case .success(let searchResponse):
-                        if let error = searchResponse.error {
-                            print("searchTransactions(byType) error: ", error.description ?? "")
-                        }
                         completion(searchResponse)
                     case .failure(let error):
-                        print("searchTransactions(byType) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -272,7 +260,6 @@ public class CDYelpAPIClient {
                     case .success(let business):
                         completion(business)
                     case .failure(let error):
-                        print("fetchBusiness(byId) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -365,12 +352,8 @@ public class CDYelpAPIClient {
 
                     switch response.result {
                     case .success(let searchResponse):
-                        if let error = searchResponse.error {
-                            print("searchBusinessMatches(byType) error: ", error.description ?? "")
-                        }
                         completion(searchResponse)
                     case .failure(let error):
-                        print("searchBusinessMatches(byType) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -406,12 +389,8 @@ public class CDYelpAPIClient {
                                    completionHandler: { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
                                     switch response.result {
                                     case .success(let reviewsResponse):
-                                        if let error = reviewsResponse.error {
-                                            print("fetchReviews(forBusinessId) error: ", error.description ?? "")
-                                        }
                                         completion(reviewsResponse)
                                     case .failure(let error):
-                                        print("fetchReviews(forBusinessId) failure: ", error.localizedDescription)
                                         completion(nil)
                                     }
                                    })
@@ -454,12 +433,8 @@ public class CDYelpAPIClient {
 
                     switch response.result {
                     case .success(let autocompleteResponse):
-                        if let error = autocompleteResponse.error {
-                            print("autocompleteBusinesses(byText) error: ", error.description ?? "")
-                        }
                         completion(autocompleteResponse)
                     case .failure(let error):
-                        print("autocompleteBusinesses(byText) failure: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -499,7 +474,6 @@ public class CDYelpAPIClient {
                                     case .success(let event):
                                         completion(event)
                                     case .failure(let error):
-                                        print("fetchEvent(forId) failure: ", error.localizedDescription)
                                         completion(nil)
                                     }
                                    })
@@ -575,12 +549,8 @@ public class CDYelpAPIClient {
                                    completionHandler: { (response: DataResponse<CDYelpEventsResponse, AFError>) in
                                     switch response.result {
                                     case .success(let eventsResponse):
-                                        if let error = eventsResponse.error {
-                                            print("searchEvents(byLocale) error: ", error.description ?? "")
-                                        }
                                         completion(eventsResponse)
                                     case .failure(let error):
-                                        print("searchEvents(byLocale) failure: ", error.localizedDescription)
                                         completion(nil)
                                     }
                                    })
@@ -626,7 +596,6 @@ public class CDYelpAPIClient {
                                     case .success(let event):
                                         completion(event)
                                     case .failure(let error):
-                                        print("fetchFeaturedEvent(forLocale) failure: ", error.localizedDescription)
                                         completion(nil)
                                     }
                                    })
@@ -659,7 +628,6 @@ public class CDYelpAPIClient {
                     case .success(let event):
                         completion(event)
                     case .failure(let error):
-                        print("fetchCategories(forLocale) alias: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
@@ -694,7 +662,6 @@ public class CDYelpAPIClient {
                     case .success(let event):
                         completion(event)
                     case .failure(let error):
-                        print("fetchCategory(forAlias) alias: ", error.localizedDescription)
                         completion(nil)
                     }
                 }
