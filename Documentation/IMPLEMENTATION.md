@@ -1891,7 +1891,7 @@ No additional `|| os(visionOS)` guards are needed in CDYelpFusionKit's source be
 
 A step-by-step guide (`Documentation/XCODE_VISION_OS_SETUP.md`) should be created alongside this work, following the CDMarkdownKit pattern.
 
-### 16.5 CI: Add visionOS Job
+### 16.5 CI: Add visionOS Job ✅
 
 See Section 3.13 for the full `visionOS` CI job definition.
 
