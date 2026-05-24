@@ -2066,7 +2066,7 @@ Task {
 }
 ```
 
-### 17.5 DocC-Compatible Doc Comments
+### 17.5 DocC-Compatible Doc Comments ✅
 
 The documentation comments in Section 9.8 should use DocC's double-backtick cross-reference syntax for inter-type links:
 

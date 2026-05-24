@@ -79,27 +79,26 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     // MARK: - Business Endpoints
 
+    /// Searches for businesses based on the provided search criteria.
     ///
-    /// This endpoint returns up to 1000 businesses based on the provided search criteria. It has basic information about each business. To get detailed information or reviews, use a returned business id and refer to **fetchBusiness(byId: )** and **fetchReviews(forBusinessId: )**.
+    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(byId:locale:)`` for detailed information or ``fetchReviews(forBusinessId:locale:)`` for reviews.
     ///
-    /// - parameters:
-    ///   - byTerm: (Optional) A search term for the Yelp Fusion API to query. (e.g. "food", "restaurants"). If `byTerm` isn’t included all data will be searched. The `byTerm` keyword also accepts business names (e.g. "Starbucks").
-    ///   - location: (**Required**) Can be (Optional) if either latitude or longitude is provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for businesses.
-    ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
-    ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
-    ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
-    ///   - categories: (Optional) The categorie(s) to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases. `categories` can be an array of categories (e.g. [.bars, .parks] will filter the results to show businesses that are listed as Bars or Parks).
-    ///   - locale: (Optional) Specifies the locale to return the business information in. Use the **CDYelpLocale** enum to get the list of supported locales.
-    ///   - limit: (Optional) The number of business results to return. By default, the value is set to 20. **The maximum value is 50**.
-    ///   - offset: (Optional) A number the list of returned business results should be offset by.
-    ///   - sortBy: (Optional) The sort mode that will be used on the returned business results. Use the **CDYelpBusinessSortType** enum to get the list of supported sort types. By default sortBy is set to `.bestMatch`. The `.rating` sort is not strictly sorted by the rating value, but by an adjusted rating value that takes into account the number of ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars doesn’t immediately jump to the top.
-    ///   - price: (Optional) The pricing levels to filter the search result with. Use the **CDYelpPriceTier** enum to get the list of supported pricing levels. `price` can be an array of pricing levels (e.g. [.oneDollarSign, .twoDollarSigns, .threeDollarSigns] will filter the results to show businesses that are listed as $, $$, or $$$).
-    ///   - openNow: (Optional) When set to true, only businesses open at the current time will be returned. The default value is false. **Notice that open_at and open_now cannot be used together**.
-    ///   - openAt: (Optional) An integer representing the Unix time in the same timezone of the search location. If specified, only businesses open at the given time will be returned. **Notice that open_at and open_now cannot be used together**.
-    ///   - attributes: (Optional) Additional filters to restrict search results. Use the **CDYelpAttributeFilter** enum to get the list of supported attribute filters. `attributes` can be an array of attributes. If multiple attributes are used, only businesses that satisfy ALL attributes will be returned in search results (e.g. the attributes [.hotAndNew, .cashback] will return businesses that are Hot and New AND offer Cash Back).
-    ///   - completion: A completion block in which the Yelp Fusion API search endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpSearchResponse?) -> Void
+    /// - Parameters:
+    ///   - term: A search term (e.g. "food", "restaurants"). If not provided, all data is searched.
+    ///   - location: A location string (address, city, state, or zip). Required unless latitude and longitude are provided.
+    ///   - latitude: The latitude to search nearby. Required unless location is provided.
+    ///   - longitude: The longitude to search nearby. Required unless location is provided.
+    ///   - radius: Search radius in meters (maximum 40,000).
+    ///   - categories: Category filters using ``CDYelpCategoryAlias``.
+    ///   - locale: Result locale using ``CDYelpLocale``.
+    ///   - limit: Number of results (1-50, default 20).
+    ///   - offset: Result offset for pagination.
+    ///   - sortBy: Sort mode using ``CDYelpBusinessSortType`` (default .bestMatch).
+    ///   - priceTiers: Price filters using ``CDYelpPriceTier``.
+    ///   - openNow: Filter to open businesses only.
+    ///   - openAt: Unix timestamp to filter businesses open at specific time.
+    ///   - attributes: Additional filters using ``CDYelpAttributeFilter``.
+    ///   - completion: Callback with ``CDYelpSearchResponse`` Business results.
     ///
     public func searchBusinesses(byTerm term: String?,
                                  location: String?,
