@@ -289,3 +289,14 @@ jobs:
         run: brew install xcbeautify
       - name: swift test
         run: set -o pipefail && swift test -c debug 2>&1 | xcbeautify --renderer github-actions
+
+  swiftlint:
+    name: SwiftLint
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Lint
+        run: swiftlint lint --strict
