@@ -1917,7 +1917,7 @@ Update the requirements table (Section 13):
 
 CDMarkdownKit 3.1.0 replaced Jazzy with Apple's native DocC documentation system. CDYelpFusionKit should adopt the same migration. DocC integrates directly into SPM, produces a GitHub Pages-compatible static site, and does not require a Ruby gem.
 
-### 17.1 Gemfile: Remove jazzy
+### 17.1 Gemfile: Remove jazzy ✅
 
 The Gemfile (Section 2.1) already reflects this — `gem 'jazzy'` is not included. Run `bundle lock` after any gem changes to regenerate `Gemfile.lock`.
 
