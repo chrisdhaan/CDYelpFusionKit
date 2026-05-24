@@ -1476,7 +1476,7 @@ CDMarkdownKit uses Swift Testing (`import Testing`) introduced in Xcode 16. This
 
 ## Section 11: Documentation
 
-### 11.1 Create CLAUDE.md
+### 11.1 Create CLAUDE.md ✅
 
 **Create `CLAUDE.md`** in the repository root. This file documents the project for Claude Code users.
 
