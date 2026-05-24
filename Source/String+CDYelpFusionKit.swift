@@ -27,6 +27,7 @@
 
 extension String {
 
+    /// Generates a URL search path for Yelp with the specified search criteria.
     static func searchLinkPath(withTerm term: String?,
                                category: CDYelpCategoryAlias?,
                                location: String?) -> String {
@@ -60,6 +61,7 @@ extension String {
         return path
     }
 
+    /// Generates a URL business path for Yelp with the specified business ID.
     static func businessLinkPath(forId id: String!) -> String {
         var path = "biz/"
 

@@ -25,8 +25,10 @@
 //  THE SOFTWARE.
 //
 
+/// A geographic region with center coordinates.
 public struct CDYelpRegion: Decodable, Sendable {
 
+    /// The center coordinates of the region.
     public let center: CDYelpCenter?
 
     enum CodingKeys: String, CodingKey {

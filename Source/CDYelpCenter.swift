@@ -25,9 +25,12 @@
 //  THE SOFTWARE.
 //
 
+/// The center coordinates of a search region.
 public struct CDYelpCenter: Decodable, Sendable {
 
+    /// The latitude of the region center.
     public let latitude: Double?
+    /// The longitude of the region center.
     public let longitude: Double?
 
     enum CodingKeys: String, CodingKey {

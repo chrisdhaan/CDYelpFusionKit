@@ -25,8 +25,10 @@
 //  THE SOFTWARE.
 //
 
+/// A search term suggestion from the autocomplete API.
 public struct CDYelpTerm: Decodable, Sendable {
 
+    /// The text of the search term.
     public let text: String?
 
     enum CodingKeys: String, CodingKey {

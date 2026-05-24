@@ -25,9 +25,12 @@
 //  THE SOFTWARE.
 //
 
+/// Geographic coordinates for a business location.
 public struct CDYelpCoordinates: Decodable, Sendable {
 
+    /// The latitude of the business location.
     public let latitude: Double?
+    /// The longitude of the business location.
     public let longitude: Double?
 
     enum CodingKeys: String, CodingKey {

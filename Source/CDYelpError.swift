@@ -25,10 +25,14 @@
 //  THE SOFTWARE.
 //
 
+/// Error information from the Yelp Fusion API.
 public struct CDYelpError: Decodable, Sendable {
 
+    /// A description of the error.
     public let description: String?
+    /// The field that caused the error, if applicable.
     public let field: String?
+    /// The error code from the API.
     public let code: String?
 
     enum CodingKeys: String, CodingKey {
