@@ -1044,6 +1044,7 @@
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				BuildIndependentTargetsInParallel = YES;
 			};
 			name = Debug;
 		};
@@ -1106,6 +1107,7 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				BuildIndependentTargetsInParallel = YES;
 			};
 			name = Release;
 		};
