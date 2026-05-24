@@ -380,3 +380,20 @@ jobs:
             -scheme "CDYelpFusionKit visionOS" \
             -destination "${{ matrix.destination }}" \
             -configuration Release clean build 2>&1 | xcbeautify --renderer github-actions
+
+  documentation:
+    name: DocC Build
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build DocC
+        run: |
+          swift package --disable-sandbox generate-documentation \
+            --target CDYelpFusionKit \
+            --output-path /tmp/docc-output \
+            --transform-for-static-hosting \
+            --hosting-base-path CDYelpFusionKit \
+            2>&1 | tee docc.log
+      - name: Fail on DocC warnings
+        run: grep -qE "^warning:" docc.log && exit 1 || exit 0
