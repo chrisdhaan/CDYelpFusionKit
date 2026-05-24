@@ -1925,7 +1925,7 @@ The Gemfile (Section 2.1) already reflects this — `gem 'jazzy'` is not include
 
 See Section 2.4 — this file is explicitly not created. If it was ever created, delete it.
 
-### 17.3 swift-docc-plugin Dependency
+### 17.3 swift-docc-plugin Dependency ✅
 
 The `swift-docc-plugin` dependency is already reflected in the Package.swift target state (Section 4). It is a build-tool plugin: it does not become a dependency of the `CDYelpFusionKit` library target and is invisible to consumers.
 
