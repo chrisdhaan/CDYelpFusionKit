@@ -25,12 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import Testing
-import Foundation
 @testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-@Suite struct CDYelpEnumsTests {
-
+struct CDYelpEnumsTests {
     // MARK: - Business Sort Type Tests
 
     @Test func businessSortTypeHasCorrectRawValues() {
@@ -106,7 +105,7 @@ import Foundation
             .charities, .fashion, .festivalsAndFairs, .film,
             .foodAndDrink, .kidsAndFamily, .lecturesAndBooks, .music,
             .nightlife, .other, .performingArts, .sportsAndActiveLife,
-            .visualArts
+            .visualArts,
         ]
         #expect(categories.count >= 13)
     }

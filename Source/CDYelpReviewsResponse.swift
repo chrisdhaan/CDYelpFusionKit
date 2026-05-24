@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpReviewsResponse: Decodable, Sendable {
-
     public let total: Int?
     public let possibleLanguages: [String]?
     public let reviews: [CDYelpReview]?

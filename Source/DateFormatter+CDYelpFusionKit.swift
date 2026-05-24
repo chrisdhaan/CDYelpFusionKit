@@ -32,17 +32,17 @@
 #endif
 
 extension DateFormatter {
-  /// Date formatter for Yelp Events API responses using ISO 8601 format with timezone.
-  static let events: DateFormatter = {
-   let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-    return formatter
-  }()
+    /// Date formatter for Yelp Events API responses using ISO 8601 format with timezone.
+    static let events: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        return formatter
+    }()
 
-  /// Date formatter for Yelp Reviews API responses using standard date and time format.
-  static let reviews: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    return formatter
-  }()
+    /// Date formatter for Yelp Reviews API responses using standard date and time format.
+    static let reviews: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter
+    }()
 }

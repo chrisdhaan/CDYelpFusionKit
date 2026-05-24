@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpLocation: Decodable, Sendable {
-
     public let addressOne: String?
     public let addressTwo: String?
     public let addressThree: String?

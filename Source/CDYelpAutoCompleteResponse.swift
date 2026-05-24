@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpAutoCompleteResponse: Decodable, Sendable {
-
     public let terms: [CDYelpTerm]?
     public let businesses: [CDYelpBusiness.Autocomplete]?
     public let categories: [CDYelpCategory]?

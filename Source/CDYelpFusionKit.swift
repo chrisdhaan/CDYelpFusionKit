@@ -29,7 +29,7 @@ import Foundation
 
 // Enforce minimum Swift version for all platforms and build systems.
 #if swift(<5.3)
-#error("CDYelpFusionKit doesn't support Swift versions below 5.3.")
+    #error("CDYelpFusionKit doesn't support Swift versions below 5.3.")
 #endif
 
 /// Current CDYelpFusionKit version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.

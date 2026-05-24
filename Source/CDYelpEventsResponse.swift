@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpEventsResponse: Decodable, Sendable {
-
     public let total: Int?
     public let events: [CDYelpEvent]?
     public let error: CDYelpError?

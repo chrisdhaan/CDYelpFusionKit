@@ -27,7 +27,6 @@
 
 public struct CDYelpSearchResponse: Sendable {
     public struct Business: Decodable, Sendable {
-
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessSearch]?
         public let region: CDYelpRegion?
@@ -42,7 +41,6 @@ public struct CDYelpSearchResponse: Sendable {
     }
 
     public struct Phone: Decodable, Sendable {
-
         public let total: Int?
         public let businesses: [CDYelpBusiness.PhoneSearch]?
         public let error: CDYelpError?
@@ -55,7 +53,6 @@ public struct CDYelpSearchResponse: Sendable {
     }
 
     public struct Transaction: Decodable, Sendable {
-
         public let total: Int?
         public let businesses: [CDYelpBusiness.TransactionSearch]?
         public let error: CDYelpError?
@@ -68,7 +65,6 @@ public struct CDYelpSearchResponse: Sendable {
     }
 
     public struct BusinessMatch: Decodable, Sendable {
-
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessMatch]?
         public let error: CDYelpError?

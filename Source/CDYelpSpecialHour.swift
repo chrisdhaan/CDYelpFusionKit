@@ -32,7 +32,6 @@
 #endif
 
 public struct CDYelpSpecialHour: Decodable, Sendable {
-
     public let date: String?
     public let isClosed: Bool?
     public let start: String?
@@ -48,7 +47,7 @@ public struct CDYelpSpecialHour: Decodable, Sendable {
     }
 
     public func dateAsDate() -> Date? {
-        if let date = self.date {
+        if let date = date {
             let formatter = DateFormatter()
             return formatter.date(from: date)
         }

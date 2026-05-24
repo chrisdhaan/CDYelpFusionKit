@@ -1,5 +1,5 @@
 //
-//  CDYelpCoordinate.swift
+//  CDYelpCoordinates.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 5/6/17.
@@ -27,7 +27,6 @@
 
 /// Geographic coordinates for a business location.
 public struct CDYelpCoordinates: Decodable, Sendable {
-
     /// The latitude of the business location.
     public let latitude: Double?
     /// The longitude of the business location.

@@ -25,12 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import Testing
-import Foundation
 @testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-@Suite struct CDYelpBusinessResponseTests {
-
+struct CDYelpBusinessResponseTests {
     @Test func businessResponseDecodesFromJSON() throws {
         let json = """
         {

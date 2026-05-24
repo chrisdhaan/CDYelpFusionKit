@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpCategory: Decodable, Sendable {
-
     public let alias: String?
     public let title: String?
 

@@ -32,7 +32,6 @@
 #endif
 
 public struct CDYelpMessaging: Decodable, Sendable {
-
     public let url: String?
     public let useCaseText: String?
 
@@ -42,8 +41,9 @@ public struct CDYelpMessaging: Decodable, Sendable {
     }
 
     public func urlAsUrl() -> URL? {
-        if let url = self.url,
-           let asUrl = URL(string: url) {
+        if let url = url,
+           let asUrl = URL(string: url)
+        {
             return asUrl
         }
         return nil

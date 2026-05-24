@@ -32,7 +32,6 @@
 #endif
 
 public struct CDYelpEvent: Decodable, Sendable {
-
     public let attendingCount: Int?
     public let category: String?
     public let cost: Int?
@@ -78,16 +77,18 @@ public struct CDYelpEvent: Decodable, Sendable {
     }
 
     public func eventSiteUrlAsUrl() -> URL? {
-        if let eventSiteUrl = self.eventSiteUrl,
-           let asUrl = URL(string: eventSiteUrl) {
+        if let eventSiteUrl = eventSiteUrl,
+           let asUrl = URL(string: eventSiteUrl)
+        {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = self.imageUrl,
-           let asUrl = URL(string: imageUrl) {
+        if let imageUrl = imageUrl,
+           let asUrl = URL(string: imageUrl)
+        {
             return asUrl
         }
         return nil

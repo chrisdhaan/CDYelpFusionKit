@@ -1,5 +1,5 @@
 //
-//  UIImage+CDYelpFusionKit.swift
+//  CDImage+CDYelpFusionKit.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 11/9/17.
@@ -32,18 +32,17 @@
 #endif
 
 public extension CDImage {
-
     private class func cdImage(named name: String!) -> CDImage? {
-#if os(iOS) || os(tvOS)
-        return CDImage(named: name,
-                       in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
-                       compatibleWith: nil)
-#elseif os(watchOS)
-        return CDImage(named: name)
-#else
-        let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
-        return bundle?.image(forResource: name)
-#endif
+        #if os(iOS) || os(tvOS)
+            return CDImage(named: name,
+                           in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
+                           compatibleWith: nil)
+        #elseif os(watchOS)
+            return CDImage(named: name)
+        #else
+            let bundle = Bundle(identifier: CDYelpFusionKitBundleIdentifier)
+            return bundle?.image(forResource: name)
+        #endif
     }
 
     class func yelpBurstLogoRed() -> CDImage? {
@@ -63,7 +62,8 @@ public extension CDImage {
     }
 
     class func yelpStars(numberOfStars: CDYelpStars!,
-                         forSize size: CDYelpStarsSize!) -> CDImage? {
+                         forSize size: CDYelpStarsSize!) -> CDImage?
+    {
         return CDImage.cdImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)")
     }
 }

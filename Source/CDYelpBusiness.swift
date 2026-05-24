@@ -33,7 +33,6 @@
 
 public struct CDYelpBusiness: Sendable {
     public struct BusinessSearch: Decodable, Sendable {
-
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
         public let displayPhone: String?
@@ -71,16 +70,18 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
@@ -88,7 +89,6 @@ public struct CDYelpBusiness: Sendable {
     }
 
     public struct PhoneSearch: Decodable, Sendable {
-
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -122,16 +122,18 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
@@ -139,7 +141,6 @@ public struct CDYelpBusiness: Sendable {
     }
 
     public struct TransactionSearch: Decodable, Sendable {
-
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -173,16 +174,18 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
@@ -190,7 +193,6 @@ public struct CDYelpBusiness: Sendable {
     }
 
     public struct Detailed: Decodable, Sendable {
-
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
         public let displayPhone: String?
@@ -238,16 +240,18 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
@@ -255,7 +259,7 @@ public struct CDYelpBusiness: Sendable {
 
         public func photosAsUrls() -> [URL] {
             var asUrls: [URL] = []
-            if let photos = self.photos {
+            if let photos = photos {
                 for photo in photos {
                     if let url = URL(string: photo) {
                         asUrls.append(url)
@@ -267,7 +271,6 @@ public struct CDYelpBusiness: Sendable {
     }
 
     public struct BusinessMatch: Decodable, Sendable {
-
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -286,7 +289,6 @@ public struct CDYelpBusiness: Sendable {
     }
 
     public struct Autocomplete: Decodable, Sendable {
-
         public let id: String?
         public let name: String?
 

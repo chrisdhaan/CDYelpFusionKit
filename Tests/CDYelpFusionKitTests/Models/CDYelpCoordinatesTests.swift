@@ -25,12 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import Testing
-import Foundation
 @testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-@Suite struct CDYelpCoordinatesTests {
-
+struct CDYelpCoordinatesTests {
     @Test func coordinatesDecodesFromJSON() throws {
         let json = """
         {

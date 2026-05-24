@@ -25,12 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import Testing
-import Foundation
 @testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-@Suite struct CDYelpRouterTests {
-
+struct CDYelpRouterTests {
     @Test func searchRouterProducesGetRequest() throws {
         let router = CDYelpRouter.search(parameters: ["term": "coffee", "location": "San Francisco"])
         let request = try router.asURLRequest()
@@ -152,7 +151,7 @@ import Foundation
             .events(parameters: [:]),
             .featuredEvent(parameters: [:]),
             .allCategories(parameters: [:]),
-            .categoryDetails(alias: "test", parameters: [:])
+            .categoryDetails(alias: "test", parameters: [:]),
         ]
 
         for router in routers {
@@ -174,7 +173,7 @@ import Foundation
             .events(parameters: [:]),
             .featuredEvent(parameters: [:]),
             .allCategories(parameters: [:]),
-            .categoryDetails(alias: "test", parameters: [:])
+            .categoryDetails(alias: "test", parameters: [:]),
         ]
 
         for router in routers {
@@ -196,7 +195,7 @@ import Foundation
             "location": "San Francisco",
             "limit": "20",
             "offset": "0",
-            "sort_by": "rating"
+            "sort_by": "rating",
         ]
         let router = CDYelpRouter.search(parameters: parameters)
         let request = try router.asURLRequest()

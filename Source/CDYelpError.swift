@@ -27,7 +27,6 @@
 
 /// Error information from the Yelp Fusion API.
 public struct CDYelpError: Decodable, Error, Sendable {
-
     /// A description of the error.
     public let description: String?
     /// The field that caused the error, if applicable.

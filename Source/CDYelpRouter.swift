@@ -33,8 +33,7 @@
 
 import Alamofire
 
-enum CDYelpRouter: URLRequestConvertible, Sendable {
-
+enum CDYelpRouter: URLRequestConvertible {
     case search(parameters: Parameters)
     case phone(parameters: Parameters)
     case transactions(type: String, parameters: Parameters)
@@ -102,17 +101,17 @@ enum CDYelpRouter: URLRequestConvertible, Sendable {
         urlRequest.httpMethod = method.rawValue
 
         switch self {
-        case .search(let parameters),
-             .phone(let parameters),
+        case let .search(parameters),
+             let .phone(parameters),
              .transactions(type: _, let parameters),
              .business(id: _, let parameters),
-             .matches(let parameters),
+             let .matches(parameters),
              .reviews(id: _, let parameters),
-             .autocomplete(let parameters),
+             let .autocomplete(parameters),
              .event(id: _, let parameters),
-             .events(let parameters),
-             .featuredEvent(let parameters),
-             .allCategories(let parameters),
+             let .events(parameters),
+             let .featuredEvent(parameters),
+             let .allCategories(parameters),
              .categoryDetails(alias: _, let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
         }

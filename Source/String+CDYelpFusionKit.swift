@@ -26,11 +26,11 @@
 //
 
 extension String {
-
     /// Generates a URL search path for Yelp with the specified search criteria.
     static func searchLinkPath(withTerm term: String?,
                                category: CDYelpCategoryAlias?,
-                               location: String?) -> String {
+                               location: String?) -> String
+    {
         var path = "search"
 
         if term != nil || category != nil || location != nil {
@@ -42,17 +42,20 @@ extension String {
         }
 
         if term != nil,
-            let category = category?.rawValue {
+           let category = category?.rawValue
+        {
             path += "&category=\(category)"
         } else if let category = category {
             path += "category=\(category)"
         }
 
         if term != nil,
-            let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
+           let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        {
             path += "&location=\(location)"
         } else if category != nil,
-            let location = location {
+                  let location = location
+        {
             path += "&location=\(location)"
         } else if let location = location {
             path += "location=\(location)"

@@ -32,7 +32,6 @@
 #endif
 
 public struct CDYelpUser: Decodable, Sendable {
-
     public let id: String?
     public let profileUrl: String?
     public let name: String?
@@ -46,16 +45,18 @@ public struct CDYelpUser: Decodable, Sendable {
     }
 
     public func profileUrlAsUrl() -> URL? {
-        if let profileUrl = self.profileUrl,
-           let asUrl = URL(string: profileUrl) {
+        if let profileUrl = profileUrl,
+           let asUrl = URL(string: profileUrl)
+        {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = self.imageUrl,
-           let asUrl = URL(string: imageUrl) {
+        if let imageUrl = imageUrl,
+           let asUrl = URL(string: imageUrl)
+        {
             return asUrl
         }
         return nil

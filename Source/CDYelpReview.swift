@@ -32,7 +32,6 @@
 #endif
 
 public struct CDYelpReview: Decodable, Sendable {
-
     public let id: String?
     public let text: String?
     public let url: String?
@@ -50,15 +49,16 @@ public struct CDYelpReview: Decodable, Sendable {
     }
 
     public func urlAsUrl() -> URL? {
-        if let url = self.url,
-           let asUrl = URL(string: url) {
+        if let url = url,
+           let asUrl = URL(string: url)
+        {
             return asUrl
         }
         return nil
     }
 
     public func timeCreatedAsDate() -> Date? {
-        if let timeCreated = self.timeCreated {
+        if let timeCreated = timeCreated {
             let formatter = DateFormatter()
             return formatter.date(from: timeCreated)
         }

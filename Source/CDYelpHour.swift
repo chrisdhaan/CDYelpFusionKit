@@ -1,5 +1,5 @@
 //
-//  CDYelpHours.swift
+//  CDYelpHour.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 5/7/17.
@@ -26,7 +26,6 @@
 //
 
 public struct CDYelpHour: Decodable, Sendable {
-
     public let hoursType: String?
     public let open: [CDYelpOpen]?
     public let isOpenNow: Bool?
