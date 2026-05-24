@@ -2094,7 +2094,7 @@ See Section 3.14 for the `documentation` CI job definition.
 
 CDMarkdownKit 3.1.0 introduced a SwiftFormat CI job for automated formatting enforcement. CDYelpFusionKit should adopt the same standard to ensure consistent code style across all contributors.
 
-### 18.1 CI Job
+### 18.1 CI Job ✅
 
 See Section 3.12 for the `swiftformat` CI job definition. The job runs `swiftformat Source Tests --lint`, which fails if any file does not match SwiftFormat's expected output.
 
