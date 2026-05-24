@@ -147,7 +147,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(searchResponse):
                         completion(searchResponse)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -178,7 +178,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(searchResponse):
                         completion(searchResponse)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -220,7 +220,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(searchResponse):
                         completion(searchResponse)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -253,7 +253,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(business):
                         completion(business)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -346,7 +346,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(searchResponse):
                         completion(searchResponse)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -383,7 +383,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                        switch response.result {
                                        case let .success(reviewsResponse):
                                            completion(reviewsResponse)
-                                       case let .failure(error):
+                                       case .failure:
                                            completion(nil)
                                        }
                                    })
@@ -425,7 +425,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(autocompleteResponse):
                         completion(autocompleteResponse)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -464,7 +464,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                        switch response.result {
                                        case let .success(event):
                                            completion(event)
-                                       case let .failure(error):
+                                       case .failure:
                                            completion(nil)
                                        }
                                    })
@@ -541,7 +541,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                        switch response.result {
                                        case let .success(eventsResponse):
                                            completion(eventsResponse)
-                                       case let .failure(error):
+                                       case .failure:
                                            completion(nil)
                                        }
                                    })
@@ -585,7 +585,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                        switch response.result {
                                        case let .success(event):
                                            completion(event)
-                                       case let .failure(error):
+                                       case .failure:
                                            completion(nil)
                                        }
                                    })
@@ -615,7 +615,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(event):
                         completion(event)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }
@@ -648,7 +648,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     switch response.result {
                     case let .success(event):
                         completion(event)
-                    case let .failure(error):
+                    case .failure:
                         completion(nil)
                     }
                 }

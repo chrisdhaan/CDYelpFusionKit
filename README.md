@@ -62,7 +62,7 @@ Task {
             limit: 10,
             offset: nil,
             sortBy: .bestMatch,
-            price: nil,
+            priceTiers: nil,
             openNow: nil,
             openAt: nil,
             attributes: nil

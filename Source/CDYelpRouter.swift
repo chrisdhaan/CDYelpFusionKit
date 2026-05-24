@@ -49,47 +49,36 @@ enum CDYelpRouter: URLRequestConvertible {
 
     var method: HTTPMethod {
         switch self {
-        case .search(parameters: _),
-             .phone(parameters: _),
-             .transactions(type: _, parameters: _),
-             .business(id: _, parameters: _),
-             .matches(parameters: _),
-             .reviews(id: _, parameters: _),
-             .autocomplete(parameters: _),
-             .event(id: _, parameters: _),
-             .events(parameters: _),
-             .featuredEvent(parameters: _),
-             .allCategories(parameters: _),
-             .categoryDetails(alias: _, parameters: _):
+        case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete, .event, .events, .featuredEvent, .allCategories, .categoryDetails:
             return .get
         }
     }
 
     var path: String {
         switch self {
-        case .search(parameters: _):
+        case .search:
             return "businesses/search"
-        case .phone(parameters: _):
+        case .phone:
             return "businesses/search/phone"
-        case .transactions(let type, parameters: _):
+        case let .transactions(type, _):
             return "transactions/\(type)/search"
-        case .business(let id, parameters: _):
+        case let .business(id, _):
             return "businesses/\(id)"
-        case .matches(parameters: _):
+        case .matches:
             return "businesses/matches"
-        case .reviews(let id, parameters: _):
+        case let .reviews(id, _):
             return "businesses/\(id)/reviews"
-        case .autocomplete(parameters: _):
+        case .autocomplete:
             return "autocomplete"
-        case .event(let id, parameters: _):
+        case let .event(id, _):
             return "events/\(id)"
-        case .events(parameters: _):
+        case .events:
             return "events"
-        case .featuredEvent(parameters: _):
+        case .featuredEvent:
             return "events/featured"
-        case .allCategories(parameters: _):
+        case .allCategories:
             return "categories"
-        case .categoryDetails(let alias, parameters: _):
+        case let .categoryDetails(alias, _):
             return "categories/\(alias)"
         }
     }

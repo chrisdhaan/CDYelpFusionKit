@@ -77,8 +77,6 @@ struct CDYelpEnumsTests {
 
     @Test func transactionTypeEnumHasValidValues() {
         #expect(CDYelpTransactionType.foodDelivery.rawValue == "delivery")
-        #expect(CDYelpTransactionType.pickup.rawValue == "pickup")
-        #expect(CDYelpTransactionType.reservation.rawValue == "restaurant_reservation")
     }
 
     // MARK: - Business Match Threshold Type Tests

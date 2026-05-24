@@ -76,7 +76,7 @@ client.searchBusinesses(
     limit: 20,
     offset: nil,
     sortBy: .bestMatch,
-    price: nil,
+    priceTiers: nil,
     openNow: nil,
     openAt: nil,
     attributes: nil
@@ -106,7 +106,7 @@ Task {
             limit: 20,
             offset: nil,
             sortBy: .bestMatch,
-            price: nil,
+            priceTiers: nil,
             openNow: nil,
             openAt: nil,
             attributes: nil
@@ -367,7 +367,7 @@ Task {
             limit: 10,
             offset: nil,
             sortBy: .bestMatch,
-            price: nil,
+            priceTiers: nil,
             openNow: nil,
             openAt: nil,
             attributes: nil
@@ -401,7 +401,7 @@ Task {
         limit: 10,
         offset: nil,
         sortBy: .bestMatch,
-        price: nil,
+        priceTiers: nil,
         openNow: nil,
         openAt: nil,
         attributes: nil
@@ -612,7 +612,7 @@ client.searchBusinesses(
     limit: 5,
     offset: nil,
     sortBy: .bestMatch,
-    price: nil,
+    priceTiers: nil,
     openNow: nil,
     openAt: nil,
     attributes: nil

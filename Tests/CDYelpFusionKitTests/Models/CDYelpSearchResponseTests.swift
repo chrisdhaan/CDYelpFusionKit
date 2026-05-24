@@ -37,7 +37,7 @@ struct CDYelpSearchResponseTests {
             "total": 0
         }
         """.data(using: .utf8)!
-        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.Business.self, from: json)
         #expect(response.businesses != nil)
         #expect(response.total == 0)
     }
@@ -46,7 +46,7 @@ struct CDYelpSearchResponseTests {
         let json = """
         {}
         """.data(using: .utf8)!
-        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.Business.self, from: json)
         #expect(response.businesses == nil)
         #expect(response.total == nil)
     }
@@ -67,7 +67,7 @@ struct CDYelpSearchResponseTests {
             "total": 2
         }
         """.data(using: .utf8)!
-        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.Business.self, from: json)
         #expect(response.businesses?.count == 2)
         #expect(response.total == 2)
     }
@@ -79,7 +79,7 @@ struct CDYelpSearchResponseTests {
             "total": 1000
         }
         """.data(using: .utf8)!
-        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.Business.self, from: json)
         #expect(response.total == 1000)
     }
 
@@ -96,7 +96,7 @@ struct CDYelpSearchResponseTests {
             "total": 0
         }
         """.data(using: .utf8)!
-        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.Business.self, from: json)
         #expect(response.region != nil)
     }
 }

@@ -42,10 +42,10 @@ public enum CDYelpAttributeFilter: String, Sendable {
     case wheelchairAccessible = "wheelchair_accessible"
 }
 
+// swiftlint:disable type_body_length
 ///
 /// A list of the business categories the Yelp Fusion API supports.
 ///
-// swiftlint:disable type_body_length
 public enum CDYelpCategoryAlias: String, Sendable {
     // Active Life
     case activeLife = "active"
@@ -1575,7 +1575,7 @@ public enum CDYelpCategoryAlias: String, Sendable {
     case wigs
 }
 
-// swiftlint:enable identifier_name
+// swiftlint:enable type_body_length
 
 ///
 /// A list of business match threshold types the Yelp Fusion API supports.

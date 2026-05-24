@@ -62,7 +62,7 @@ struct CDYelpReviewTests {
             "id": "full-review",
             "text": "Amazing experience from start to finish.",
             "rating": 4,
-            "time_created": 1463810371,
+            "time_created": "2016-05-21 19:42:51",
             "user": {
                 "id": "user123",
                 "profile_url": "https://www.yelp.com/user_details?userid=user123",

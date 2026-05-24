@@ -41,22 +41,26 @@ struct CDYelpBusinessResponseTests {
     }
 
     @Test func businessResponseHandlesMissingOptionals() throws {
+        // CDYelpBusinessResponse decodes business from the root decoder directly.
+        // With an empty JSON object, business is decoded as a Detailed with all nil fields.
         let json = """
         {}
         """.data(using: .utf8)!
         let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
-        #expect(response.business == nil)
+        #expect(response.business?.id == nil)
+        #expect(response.business?.name == nil)
+        #expect(response.error?.code == nil)
     }
 
     @Test func businessResponseDecodesCompleteJSON() throws {
+        // CDYelpBusinessResponse decodes business properties from the root level,
+        // matching the Yelp Fusion /businesses/{id} API response format.
         let json = """
         {
-            "business": {
-                "id": "gary-danko-san-francisco",
-                "name": "Gary Danko",
-                "rating": 4.5,
-                "is_closed": false
-            }
+            "id": "gary-danko-san-francisco",
+            "name": "Gary Danko",
+            "rating": 4.5,
+            "is_closed": false
         }
         """.data(using: .utf8)!
         let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
@@ -64,13 +68,16 @@ struct CDYelpBusinessResponseTests {
         #expect(response.business?.name == "Gary Danko")
     }
 
-    @Test func businessResponseHandlesNullBusiness() throws {
+    @Test func businessResponseDecodesRatingAndStatus() throws {
         let json = """
         {
-            "business": null
+            "id": "test-business",
+            "rating": 4.5,
+            "is_closed": true
         }
         """.data(using: .utf8)!
         let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
-        #expect(response.business == nil)
+        #expect(response.business?.rating == 4.5)
+        #expect(response.business?.isClosed == true)
     }
 }

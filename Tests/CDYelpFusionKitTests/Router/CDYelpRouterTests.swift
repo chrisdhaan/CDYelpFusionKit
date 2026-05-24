@@ -116,7 +116,7 @@ struct CDYelpRouterTests {
         let router = CDYelpRouter.events(parameters: ["location": "San Francisco"])
         let request = try router.asURLRequest()
         #expect(request.url?.path.contains("/events") == true)
-        #expect(!request.url?.path.contains("/events/") ?? false)
+        #expect(!(request.url?.path.contains("/events/") ?? false))
     }
 
     @Test func featuredEventRouterProducesCorrectPath() throws {
@@ -225,6 +225,6 @@ struct CDYelpRouterTests {
         let router = CDYelpRouter.search(parameters: ["term": "coffee"])
         let request = try router.asURLRequest()
         let path = request.url?.path ?? ""
-        #expect(!path.contains("?") ?? false)
+        #expect(!path.contains("?"))
     }
 }
