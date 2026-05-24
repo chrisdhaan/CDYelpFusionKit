@@ -1858,7 +1858,7 @@ CDMarkdownKit 3.1.0 added visionOS as a supported platform. CDYelpFusionKit shou
 
 See Section 4 (Package.swift Modernization) — the updated target state already includes `.visionOS(.v1)` in the platforms array and adds visionOS to the UIKit linker settings.
 
-### 16.2 CocoaPods Podspec: Add visionOS
+### 16.2 CocoaPods Podspec: Add visionOS ✅
 
 See Section 6 (CocoaPods Podspec Modernization) — the updated target state already includes `s.visionos.deployment_target = '1.0'`.
 
