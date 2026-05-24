@@ -1804,7 +1804,7 @@ Carthage/Checkouts/
 
 ## Section 15: Version Bump and Release
 
-### 15.1 Update Version Number
+### 15.1 Update Version Number ✅
 
 Update the version string `3.2.0` → `4.0.0` in:
 - `CDYelpFusionKit.podspec` (`s.version = '4.0.0'`)
