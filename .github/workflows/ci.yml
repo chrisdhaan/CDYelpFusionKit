@@ -40,6 +40,8 @@ jobs:
             destination: "OS=8.5,name=Apple Watch Series 7 - 45mm"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_13.4.1.app/Contents/Developer
       - name: Install xcbeautify
         run: brew install xcbeautify
       - name: ${{ matrix.name }} - Debug
@@ -58,6 +60,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_13.4.app/Contents/Developer
       - name: Install xcbeautify
         run: brew install xcbeautify
       - name: Catalyst - Debug
@@ -82,6 +86,8 @@ jobs:
             destination: "OS=14.5,name=iPhone 12 Pro"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
       - uses: actions/cache@v4
         with:
           path: Pods
@@ -132,6 +138,8 @@ jobs:
             name: "macOS 10.15, Xcode 12.4, Swift 5.3"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/${{ matrix.xcode }}/Contents/Developer
       - name: Install xcbeautify
         run: brew install xcbeautify
       - name: ${{ matrix.name }} - Debug
@@ -156,6 +164,8 @@ jobs:
             destination: "OS=14.5,name=Apple TV"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
       - name: Install xcbeautify
         run: brew install xcbeautify
       - name: ${{ matrix.name }} - Debug
@@ -181,6 +191,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
       - name: Install xcbeautify
         run: brew install xcbeautify
       - name: ${{ matrix.name }} - Debug
@@ -221,5 +233,7 @@ jobs:
             name: "macOS 10.15, SPM 5.3 Build"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/${{ matrix.xcode }}/Contents/Developer
       - name: ${{ matrix.name }}
         run: swift build -c debug
