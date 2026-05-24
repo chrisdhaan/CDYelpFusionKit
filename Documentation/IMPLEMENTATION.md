@@ -1929,7 +1929,7 @@ See Section 2.4 — this file is explicitly not created. If it was ever created,
 
 The `swift-docc-plugin` dependency is already reflected in the Package.swift target state (Section 4). It is a build-tool plugin: it does not become a dependency of the `CDYelpFusionKit` library target and is invisible to consumers.
 
-### 17.4 Create DocC Bundle
+### 17.4 Create DocC Bundle ✅
 
 **Create `Source/CDYelpFusionKit.docc/`** directory containing three files:
 
@@ -2064,7 +2064,6 @@ Task {
         print("Search failed: \(error)")
     }
 }
-```
 ```
 
 ### 17.5 DocC-Compatible Doc Comments
