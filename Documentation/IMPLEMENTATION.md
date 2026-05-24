@@ -1429,7 +1429,7 @@ import Foundation
 }
 ```
 
-### 10.3 Router Tests
+### 10.3 Router Tests ✅
 
 ```swift
 @Suite struct CDYelpRouterTests {
