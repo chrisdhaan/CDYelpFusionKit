@@ -1921,7 +1921,7 @@ CDMarkdownKit 3.1.0 replaced Jazzy with Apple's native DocC documentation system
 
 The Gemfile (Section 2.1) already reflects this — `gem 'jazzy'` is not included. Run `bundle lock` after any gem changes to regenerate `Gemfile.lock`.
 
-### 17.2 Do Not Create .jazzy.yaml
+### 17.2 Do Not Create .jazzy.yaml ✅
 
 See Section 2.4 — this file is explicitly not created. If it was ever created, delete it.
 
