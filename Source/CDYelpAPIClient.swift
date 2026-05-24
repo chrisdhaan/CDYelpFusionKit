@@ -33,7 +33,7 @@
 
 import Alamofire
 
-public class CDYelpAPIClient: NSObject {
+public class CDYelpAPIClient {
 
     private let apiKey: String!
     private lazy var manager: Alamofire.Session = {
@@ -67,7 +67,6 @@ public class CDYelpAPIClient: NSObject {
     public init(apiKey: String!) {
         assert((apiKey != nil && apiKey.count > 0), "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
-        super.init()
     }
 
     // MARK: - Authentication Methods
