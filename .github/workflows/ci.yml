@@ -16,8 +16,8 @@ on:
       - "Source/**"
       - "Tests/**"
 
-concurrency: 
-  group: ci
+concurrency:
+  group: ${{ github.ref_name }}
   cancel-in-progress: true
 jobs:
   Latest:
