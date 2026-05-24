@@ -35,23 +35,18 @@ import Alamofire
 
 public class CDYelpAPIClient {
 
-    private let apiKey: String!
+    private let apiKey: String
     private lazy var manager: Alamofire.Session = {
-        if let apiKey = self.apiKey,
-           apiKey.count > 0 {
-            // Get the default headers
-            var headers = HTTPHeaders.default
-            // Add the Authorization header
-            headers["Authorization"] = "Bearer \(apiKey)"
-            // Create a custom session configuration
-            let configuration = URLSessionConfiguration.default
-            // Add the Authorization header
-            configuration.httpAdditionalHeaders = headers.dictionary
-            // Create a session manager with the custom configuration
-            return Alamofire.Session(configuration: configuration)
-        } else {
-            return Alamofire.Session()
-        }
+        // Get the default headers
+        var headers = HTTPHeaders.default
+        // Add the Authorization header
+        headers["Authorization"] = "Bearer \(self.apiKey)"
+        // Create a custom session configuration
+        let configuration = URLSessionConfiguration.default
+        // Add the Authorization header
+        configuration.httpAdditionalHeaders = headers.dictionary
+        // Create a session manager with the custom configuration
+        return Alamofire.Session(configuration: configuration)
     }()
 
     // MARK: - Initializers
@@ -64,8 +59,8 @@ public class CDYelpAPIClient {
     ///
     /// - returns: Void
     ///
-    public init(apiKey: String!) {
-        assert((apiKey != nil && apiKey.count > 0), "An apiKey is required to query the Yelp Fusion API.")
+    public init(apiKey: String) {
+        precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
     }
 
@@ -77,11 +72,7 @@ public class CDYelpAPIClient {
     /// - returns: Bool
     ///
     public func isAuthenticated() -> Bool {
-        if self.apiKey != nil,
-           self.apiKey.count > 0 {
-            return true
-        }
-        return false
+        return true
     }
 
     // MARK: - Yelp Fusion API Methods
