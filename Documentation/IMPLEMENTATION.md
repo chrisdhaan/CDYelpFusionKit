@@ -1854,7 +1854,7 @@ bundle exec pod trunk push CDYelpFusionKit.podspec --allow-warnings
 
 CDMarkdownKit 3.1.0 added visionOS as a supported platform. CDYelpFusionKit should follow the same pattern to support Apple Vision Pro.
 
-### 16.1 Package.swift: Add visionOS Platform
+### 16.1 Package.swift: Add visionOS Platform ✅
 
 See Section 4 (Package.swift Modernization) — the updated target state already includes `.visionOS(.v1)` in the platforms array and adds visionOS to the UIKit linker settings.
 
