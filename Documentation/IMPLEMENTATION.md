@@ -1449,7 +1449,7 @@ import Foundation
 }
 ```
 
-### 10.4 Enum Tests
+### 10.4 Enum Tests ✅
 
 ```swift
 @Suite struct CDYelpEnumsTests {

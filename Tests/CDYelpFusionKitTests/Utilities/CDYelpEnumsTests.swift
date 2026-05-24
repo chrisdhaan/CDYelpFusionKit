@@ -31,12 +31,21 @@ import Foundation
 
 @Suite struct CDYelpEnumsTests {
 
+    // MARK: - Business Sort Type Tests
+
     @Test func businessSortTypeHasCorrectRawValues() {
         #expect(CDYelpBusinessSortType.bestMatch.rawValue == "best_match")
         #expect(CDYelpBusinessSortType.rating.rawValue == "rating")
         #expect(CDYelpBusinessSortType.reviewCount.rawValue == "review_count")
         #expect(CDYelpBusinessSortType.distance.rawValue == "distance")
     }
+
+    @Test func businessSortTypeEnumCompleteness() {
+        let allSortTypes: [CDYelpBusinessSortType] = [.bestMatch, .rating, .reviewCount, .distance]
+        #expect(allSortTypes.count >= 4)
+    }
+
+    // MARK: - Price Tier Tests
 
     @Test func priceTierHasCorrectRawValues() {
         #expect(CDYelpPriceTier.oneDollarSign.rawValue == "1")
@@ -50,14 +59,22 @@ import Foundation
         #expect(CDYelpPriceTier.fourDollarSigns.rawValue == "4")
     }
 
-    @Test func businessSortTypeEnumCompleteness() {
-        let allSortTypes: [CDYelpBusinessSortType] = [.bestMatch, .rating, .reviewCount, .distance]
-        #expect(allSortTypes.count >= 4)
-    }
+    // MARK: - Locale Tests
 
-    @Test func localeEnumHasValidValues() {
+    @Test func localeEnumHasValidUSValue() {
         #expect(CDYelpLocale.english_unitedStates.rawValue == "en_US")
     }
+
+    @Test func localeEnumHasValidInternationalValues() {
+        #expect(CDYelpLocale.english_canada.rawValue == "en_CA")
+        #expect(CDYelpLocale.english_unitedKingdom.rawValue == "en_GB")
+        #expect(CDYelpLocale.french_france.rawValue == "fr_FR")
+        #expect(CDYelpLocale.german_germany.rawValue == "de_DE")
+        #expect(CDYelpLocale.spanish_spain.rawValue == "es_ES")
+        #expect(CDYelpLocale.japanese_japan.rawValue == "ja_JP")
+    }
+
+    // MARK: - Transaction Type Tests
 
     @Test func transactionTypeEnumHasValidValues() {
         #expect(CDYelpTransactionType.foodDelivery.rawValue == "delivery")
@@ -65,10 +82,105 @@ import Foundation
         #expect(CDYelpTransactionType.reservation.rawValue == "restaurant_reservation")
     }
 
-    @Test func businessMatchTypeEnumHasValidValues() {
-        #expect(CDYelpBusinessMatchType.best.rawValue == "best")
-        #expect(CDYelpBusinessMatchType.address.rawValue == "address")
-        #expect(CDYelpBusinessMatchType.phone.rawValue == "phone")
-        #expect(CDYelpBusinessMatchType.all.rawValue == "all")
+    // MARK: - Business Match Threshold Type Tests
+
+    @Test func businessMatchThresholdTypeHasCorrectRawValues() {
+        #expect(CDYelpBusinessMatchThresholdType.normal.rawValue == "default")
+        #expect(CDYelpBusinessMatchThresholdType.strict.rawValue == "strict")
+    }
+
+    @Test func businessMatchThresholdTypeHandlesNone() {
+        #expect(CDYelpBusinessMatchThresholdType.none.rawValue == "none")
+    }
+
+    // MARK: - Event Category Filter Tests
+
+    @Test func eventCategoryFilterHasValidValues() {
+        #expect(CDYelpEventCategoryFilter.charities.rawValue == "charities")
+        #expect(CDYelpEventCategoryFilter.music.rawValue == "music")
+        #expect(CDYelpEventCategoryFilter.foodAndDrink.rawValue == "food-and-drink")
+    }
+
+    @Test func eventCategoryFilterIncludesMultipleCategories() {
+        let categories: [CDYelpEventCategoryFilter] = [
+            .charities, .fashion, .festivalsAndFairs, .film,
+            .foodAndDrink, .kidsAndFamily, .lecturesAndBooks, .music,
+            .nightlife, .other, .performingArts, .sportsAndActiveLife,
+            .visualArts
+        ]
+        #expect(categories.count >= 13)
+    }
+
+    // MARK: - Event Sort Tests
+
+    @Test func eventSortByTypeHasCorrectRawValues() {
+        #expect(CDYelpEventSortByType.ascending.rawValue == "asc")
+        #expect(CDYelpEventSortByType.descending.rawValue == "desc")
+    }
+
+    @Test func eventSortOnTypeHasCorrectRawValues() {
+        #expect(CDYelpEventSortOnType.popularity.rawValue == "popularity")
+        #expect(CDYelpEventSortOnType.timeStart.rawValue == "time_start")
+    }
+
+    // MARK: - Stars Tests
+
+    @Test func starsEnumIncludesHalfValues() {
+        #expect(CDYelpStars.oneHalf.rawValue == "one_half")
+        #expect(CDYelpStars.twoHalf.rawValue == "two_half")
+        #expect(CDYelpStars.threeHalf.rawValue == "three_half")
+        #expect(CDYelpStars.fourHalf.rawValue == "four_half")
+    }
+
+    @Test func starsEnumIncludesFullValues() {
+        #expect(CDYelpStars.one.rawValue == "one")
+        #expect(CDYelpStars.two.rawValue == "two")
+        #expect(CDYelpStars.three.rawValue == "three")
+        #expect(CDYelpStars.four.rawValue == "four")
+        #expect(CDYelpStars.five.rawValue == "five")
+    }
+
+    @Test func starsEnumIncludesZero() {
+        #expect(CDYelpStars.zero.rawValue == "zero")
+    }
+
+    // MARK: - Stars Size Tests
+
+    @Test func starsSizeEnumHasAllSizes() {
+        #expect(CDYelpStarsSize.small.rawValue == "small")
+        #expect(CDYelpStarsSize.regular.rawValue == "regular")
+        #expect(CDYelpStarsSize.large.rawValue == "large")
+        #expect(CDYelpStarsSize.extraLarge.rawValue == "extra_large")
+    }
+
+    // MARK: - Attribute Filter Tests
+
+    @Test func attributeFilterHasValidValues() {
+        #expect(CDYelpAttributeFilter.hotAndNew.rawValue == "hot_and_new")
+        #expect(CDYelpAttributeFilter.reservation.rawValue == "reservation")
+        #expect(CDYelpAttributeFilter.deals.rawValue == "deals")
+    }
+
+    @Test func attributeFilterIncludesAccessibility() {
+        #expect(CDYelpAttributeFilter.genderNeutralRestrooms.rawValue == "gender_neutral_restrooms")
+        #expect(CDYelpAttributeFilter.wheelchairAccessible.rawValue == "wheelchair_accessible")
+    }
+
+    // MARK: - Category Alias Tests
+
+    @Test func categoryAliasHasCommonFoodCategories() {
+        #expect(CDYelpCategoryAlias.food.rawValue == "food")
+        #expect(CDYelpCategoryAlias.restaurants.rawValue == "restaurants")
+        #expect(CDYelpCategoryAlias.coffeeAndTea.rawValue == "coffee")
+    }
+
+    @Test func categoryAliasHasActiveLifeCategories() {
+        #expect(CDYelpCategoryAlias.activeLife.rawValue == "active")
+        #expect(CDYelpCategoryAlias.gyms.rawValue == "gyms")
+    }
+
+    @Test func categoryAliasUsesCamelCase() {
+        #expect(CDYelpCategoryAlias.atvRentalsAndTours.rawValue == "atvrentals")
+        #expect(CDYelpCategoryAlias.basketballCourts.rawValue == "basketballcourts")
     }
 }
