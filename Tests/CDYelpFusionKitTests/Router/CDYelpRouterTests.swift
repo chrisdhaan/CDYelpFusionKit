@@ -43,4 +43,34 @@ import Foundation
         let request = try router.asURLRequest()
         #expect(request.url?.path.contains("test-id-123") == true)
     }
+
+    @Test func searchRouterIncludesParameters() throws {
+        let parameters = ["term": "pizza", "location": "New York", "limit": "10"]
+        let router = CDYelpRouter.search(parameters: parameters)
+        let request = try router.asURLRequest()
+        let urlString = request.url?.absoluteString ?? ""
+        #expect(urlString.contains("term") == true)
+        #expect(urlString.contains("location") == true)
+    }
+
+    @Test func businessRouterConstructsCorrectPath() throws {
+        let businessId = "gary-danko-san-francisco"
+        let router = CDYelpRouter.business(id: businessId, parameters: [:])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains(businessId) == true)
+    }
+
+    @Test func routerProducesValidURL() throws {
+        let router = CDYelpRouter.search(parameters: ["term": "restaurants"])
+        let request = try router.asURLRequest()
+        #expect(request.url?.scheme == "https")
+        #expect(request.url?.host == "api.yelp.com")
+    }
+
+    @Test func routerHandlesEmptyParameters() throws {
+        let router = CDYelpRouter.search(parameters: [:])
+        let request = try router.asURLRequest()
+        #expect(request.httpMethod == "GET")
+        #expect(request.url != nil)
+    }
 }

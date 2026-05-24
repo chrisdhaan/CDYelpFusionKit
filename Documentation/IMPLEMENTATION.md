@@ -1386,7 +1386,7 @@ Tests/
         └── CDYelpEnumsTests.swift
 ```
 
-### 10.2 Model Deserialization Tests
+### 10.2 Model Deserialization Tests ✅
 
 Use Swift Testing (`import Testing`) per the CDMarkdownKit modernization standard.
 

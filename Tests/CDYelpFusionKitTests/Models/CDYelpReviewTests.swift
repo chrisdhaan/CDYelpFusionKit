@@ -56,4 +56,61 @@ import Foundation
         #expect(review.text == nil)
         #expect(review.rating == nil)
     }
+
+    @Test func reviewDecodesCompleteJSON() throws {
+        let json = """
+        {
+            "id": "full-review",
+            "text": "Amazing experience from start to finish.",
+            "rating": 4,
+            "time_created": 1463810371,
+            "user": {
+                "id": "user123",
+                "profile_url": "https://www.yelp.com/user_details?userid=user123",
+                "image_url": "https://example.com/user.jpg",
+                "name": "John D."
+            },
+            "url": "https://www.yelp.com/biz/review"
+        }
+        """.data(using: .utf8)!
+        let review = try JSONDecoder().decode(CDYelpReview.self, from: json)
+        #expect(review.id == "full-review")
+        #expect(review.rating == 4)
+    }
+
+    @Test func reviewHandlesRatingRange() throws {
+        for rating in 1...5 {
+            let json = """
+            {
+                "id": "review-\(rating)",
+                "rating": \(rating)
+            }
+            """.data(using: .utf8)!
+            let review = try JSONDecoder().decode(CDYelpReview.self, from: json)
+            #expect(review.rating == rating)
+        }
+    }
+
+    @Test func reviewHandlesEmptyText() throws {
+        let json = """
+        {
+            "id": "empty-review",
+            "text": ""
+        }
+        """.data(using: .utf8)!
+        let review = try JSONDecoder().decode(CDYelpReview.self, from: json)
+        #expect(review.text == "")
+    }
+
+    @Test func reviewHandlesLongText() throws {
+        let longText = String(repeating: "A", count: 1000)
+        let json = """
+        {
+            "id": "long-review",
+            "text": "\(longText)"
+        }
+        """.data(using: .utf8)!
+        let review = try JSONDecoder().decode(CDYelpReview.self, from: json)
+        #expect(review.text?.count == 1000)
+    }
 }

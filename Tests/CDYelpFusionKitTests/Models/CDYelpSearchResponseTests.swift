@@ -51,4 +51,53 @@ import Foundation
         #expect(response.businesses == nil)
         #expect(response.total == nil)
     }
+
+    @Test func searchResponseDecodesWithBusinesses() throws {
+        let json = """
+        {
+            "businesses": [
+                {
+                    "id": "business1",
+                    "name": "Restaurant A"
+                },
+                {
+                    "id": "business2",
+                    "name": "Restaurant B"
+                }
+            ],
+            "total": 2
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        #expect(response.businesses?.count == 2)
+        #expect(response.total == 2)
+    }
+
+    @Test func searchResponseDecodesLargeTotal() throws {
+        let json = """
+        {
+            "businesses": [],
+            "total": 1000
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        #expect(response.total == 1000)
+    }
+
+    @Test func searchResponseHandlesRegionData() throws {
+        let json = """
+        {
+            "region": {
+                "center": {
+                    "latitude": 37.7749,
+                    "longitude": -122.4194
+                }
+            },
+            "businesses": [],
+            "total": 0
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpSearchResponse.self, from: json)
+        #expect(response.region != nil)
+    }
 }

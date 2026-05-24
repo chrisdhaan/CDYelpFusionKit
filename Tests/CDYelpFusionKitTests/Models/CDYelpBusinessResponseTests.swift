@@ -48,4 +48,30 @@ import Foundation
         let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
         #expect(response.business == nil)
     }
+
+    @Test func businessResponseDecodesCompleteJSON() throws {
+        let json = """
+        {
+            "business": {
+                "id": "gary-danko-san-francisco",
+                "name": "Gary Danko",
+                "rating": 4.5,
+                "is_closed": false
+            }
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
+        #expect(response.business?.id == "gary-danko-san-francisco")
+        #expect(response.business?.name == "Gary Danko")
+    }
+
+    @Test func businessResponseHandlesNullBusiness() throws {
+        let json = """
+        {
+            "business": null
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpBusinessResponse.self, from: json)
+        #expect(response.business == nil)
+    }
 }

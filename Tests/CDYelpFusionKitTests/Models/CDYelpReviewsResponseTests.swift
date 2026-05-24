@@ -48,4 +48,50 @@ import Foundation
         let response = try JSONDecoder().decode(CDYelpReviewsResponse.self, from: json)
         #expect(response.reviews == nil)
     }
+
+    @Test func reviewsResponseDecodesMultipleReviews() throws {
+        let json = """
+        {
+            "reviews": [
+                {
+                    "id": "review1",
+                    "rating": 5,
+                    "text": "Excellent!"
+                },
+                {
+                    "id": "review2",
+                    "rating": 4,
+                    "text": "Very good"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpReviewsResponse.self, from: json)
+        #expect(response.reviews?.count == 2)
+    }
+
+    @Test func reviewsResponseHandlesEmptyReviews() throws {
+        let json = """
+        {
+            "reviews": []
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpReviewsResponse.self, from: json)
+        #expect(response.reviews?.count == 0)
+    }
+
+    @Test func reviewsResponseHandlesTotalCount() throws {
+        let json = """
+        {
+            "reviews": [
+                {"id": "r1"},
+                {"id": "r2"}
+            ],
+            "total": 150
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpReviewsResponse.self, from: json)
+        #expect(response.reviews?.count == 2)
+        #expect(response.total == 150)
+    }
 }

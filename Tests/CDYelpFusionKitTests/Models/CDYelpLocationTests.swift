@@ -58,4 +58,59 @@ import Foundation
         #expect(location.addressOne == nil)
         #expect(location.state == nil)
     }
+
+    @Test func locationHandlesMultipleAddressLines() throws {
+        let json = """
+        {
+            "address1": "123 Main St",
+            "address2": "Suite 200",
+            "address3": "Building A",
+            "city": "New York",
+            "state": "NY"
+        }
+        """.data(using: .utf8)!
+        let location = try JSONDecoder().decode(CDYelpLocation.self, from: json)
+        #expect(location.addressOne == "123 Main St")
+        #expect(location.addressTwo == "Suite 200")
+        #expect(location.addressThree == "Building A")
+    }
+
+    @Test func locationHandlesInternationalAddress() throws {
+        let json = """
+        {
+            "address1": "10 Downing Street",
+            "city": "London",
+            "country": "UK",
+            "zip_code": "SW1A 2AA"
+        }
+        """.data(using: .utf8)!
+        let location = try JSONDecoder().decode(CDYelpLocation.self, from: json)
+        #expect(location.country == "UK")
+        #expect(location.city == "London")
+    }
+
+    @Test func locationHandlesEmptyZipCode() throws {
+        let json = """
+        {
+            "address1": "Somewhere",
+            "city": "Austin",
+            "zip_code": ""
+        }
+        """.data(using: .utf8)!
+        let location = try JSONDecoder().decode(CDYelpLocation.self, from: json)
+        #expect(location.zipCode == "")
+    }
+
+    @Test func locationHandlesSpecialCharactersInAddress() throws {
+        let json = """
+        {
+            "address1": "Café & Bar Street",
+            "city": "São Paulo",
+            "country": "BR"
+        }
+        """.data(using: .utf8)!
+        let location = try JSONDecoder().decode(CDYelpLocation.self, from: json)
+        #expect(location.addressOne == "Café & Bar Street")
+        #expect(location.city == "São Paulo")
+    }
 }

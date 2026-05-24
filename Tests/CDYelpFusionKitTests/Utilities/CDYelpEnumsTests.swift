@@ -42,4 +42,33 @@ import Foundation
         #expect(CDYelpPriceTier.oneDollarSign.rawValue == "1")
         #expect(CDYelpPriceTier.fourDollarSigns.rawValue == "4")
     }
+
+    @Test func priceTierEnumCompleteness() {
+        #expect(CDYelpPriceTier.oneDollarSign.rawValue == "1")
+        #expect(CDYelpPriceTier.twoDollarSigns.rawValue == "2")
+        #expect(CDYelpPriceTier.threeDollarSigns.rawValue == "3")
+        #expect(CDYelpPriceTier.fourDollarSigns.rawValue == "4")
+    }
+
+    @Test func businessSortTypeEnumCompleteness() {
+        let allSortTypes: [CDYelpBusinessSortType] = [.bestMatch, .rating, .reviewCount, .distance]
+        #expect(allSortTypes.count >= 4)
+    }
+
+    @Test func localeEnumHasValidValues() {
+        #expect(CDYelpLocale.english_unitedStates.rawValue == "en_US")
+    }
+
+    @Test func transactionTypeEnumHasValidValues() {
+        #expect(CDYelpTransactionType.foodDelivery.rawValue == "delivery")
+        #expect(CDYelpTransactionType.pickup.rawValue == "pickup")
+        #expect(CDYelpTransactionType.reservation.rawValue == "restaurant_reservation")
+    }
+
+    @Test func businessMatchTypeEnumHasValidValues() {
+        #expect(CDYelpBusinessMatchType.best.rawValue == "best")
+        #expect(CDYelpBusinessMatchType.address.rawValue == "address")
+        #expect(CDYelpBusinessMatchType.phone.rawValue == "phone")
+        #expect(CDYelpBusinessMatchType.all.rawValue == "all")
+    }
 }

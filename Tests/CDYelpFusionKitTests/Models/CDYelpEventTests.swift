@@ -54,4 +54,47 @@ import Foundation
         #expect(event.id == "event123")
         #expect(event.name == nil)
     }
+
+    @Test func eventDecodesCompleteJSON() throws {
+        let json = """
+        {
+            "id": "yelp-elite-week",
+            "name": "Yelp Elite Week",
+            "description": "Annual celebration",
+            "url": "https://www.yelp.com/events",
+            "image_url": "https://example.com/image.jpg",
+            "is_free": true,
+            "category": "nightlife"
+        }
+        """.data(using: .utf8)!
+        let event = try JSONDecoder().decode(CDYelpEvent.self, from: json)
+        #expect(event.id == "yelp-elite-week")
+        #expect(event.name == "Yelp Elite Week")
+        #expect(event.isFree == true)
+    }
+
+    @Test func eventHandlesEmptyDescription() throws {
+        let json = """
+        {
+            "id": "event456",
+            "name": "Event Name",
+            "description": ""
+        }
+        """.data(using: .utf8)!
+        let event = try JSONDecoder().decode(CDYelpEvent.self, from: json)
+        #expect(event.description == "")
+    }
+
+    @Test func eventHandlesNullValues() throws {
+        let json = """
+        {
+            "id": "event789",
+            "name": "Event",
+            "is_free": null
+        }
+        """.data(using: .utf8)!
+        let event = try JSONDecoder().decode(CDYelpEvent.self, from: json)
+        #expect(event.id == "event789")
+        #expect(event.isFree == nil)
+    }
 }

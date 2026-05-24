@@ -53,4 +53,59 @@ import Foundation
         #expect(category.alias == "restaurants")
         #expect(category.title == nil)
     }
+
+    @Test func categoryDecodesMultipleCategories() throws {
+        let categories = [
+            ("fastfood", "Fast Food"),
+            ("pizza", "Pizza"),
+            ("chinese", "Chinese"),
+            ("japanese", "Japanese"),
+            ("indian", "Indian")
+        ]
+
+        for (alias, title) in categories {
+            let json = """
+            {
+                "alias": "\(alias)",
+                "title": "\(title)"
+            }
+            """.data(using: .utf8)!
+            let category = try JSONDecoder().decode(CDYelpCategory.self, from: json)
+            #expect(category.alias == alias)
+            #expect(category.title == title)
+        }
+    }
+
+    @Test func categoryHandlesEmptyTitle() throws {
+        let json = """
+        {
+            "alias": "empty",
+            "title": ""
+        }
+        """.data(using: .utf8)!
+        let category = try JSONDecoder().decode(CDYelpCategory.self, from: json)
+        #expect(category.title == "")
+    }
+
+    @Test func categoryHandlesUnicodeCharacters() throws {
+        let json = """
+        {
+            "alias": "french",
+            "title": "Français Cuisine"
+        }
+        """.data(using: .utf8)!
+        let category = try JSONDecoder().decode(CDYelpCategory.self, from: json)
+        #expect(category.title == "Français Cuisine")
+    }
+
+    @Test func categoryHandlesHyphenatedAlias() throws {
+        let json = """
+        {
+            "alias": "hot-dogs",
+            "title": "Hot Dogs"
+        }
+        """.data(using: .utf8)!
+        let category = try JSONDecoder().decode(CDYelpCategory.self, from: json)
+        #expect(category.alias == "hot-dogs")
+    }
 }

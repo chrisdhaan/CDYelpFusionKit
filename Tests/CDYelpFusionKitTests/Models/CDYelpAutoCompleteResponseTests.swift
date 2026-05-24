@@ -54,4 +54,69 @@ import Foundation
         #expect(response.categories == nil)
         #expect(response.terms == nil)
     }
+
+    @Test func autoCompleteResponseDecodesWithSuggestions() throws {
+        let json = """
+        {
+            "businesses": [
+                {"id": "biz1", "name": "Business One"}
+            ],
+            "categories": [
+                {"alias": "coffee", "title": "Coffee"}
+            ],
+            "terms": [
+                {"text": "pizza"}
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpAutoCompleteResponse.self, from: json)
+        #expect(response.businesses?.count == 1)
+        #expect(response.categories?.count == 1)
+        #expect(response.terms?.count == 1)
+    }
+
+    @Test func autoCompleteResponseHandlesOnlyBusinesses() throws {
+        let json = """
+        {
+            "businesses": [
+                {"id": "b1"},
+                {"id": "b2"}
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpAutoCompleteResponse.self, from: json)
+        #expect(response.businesses?.count == 2)
+        #expect(response.categories == nil)
+        #expect(response.terms == nil)
+    }
+
+    @Test func autoCompleteResponseHandlesOnlyCategories() throws {
+        let json = """
+        {
+            "categories": [
+                {"alias": "pizza"},
+                {"alias": "burgers"}
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpAutoCompleteResponse.self, from: json)
+        #expect(response.categories?.count == 2)
+        #expect(response.businesses == nil)
+    }
+
+    @Test func autoCompleteResponseHandlesOnlyTerms() throws {
+        let json = """
+        {
+            "terms": [
+                {"text": "sushi"},
+                {"text": "ramen"},
+                {"text": "tempura"}
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpAutoCompleteResponse.self, from: json)
+        #expect(response.terms?.count == 3)
+        #expect(response.businesses == nil)
+        #expect(response.categories == nil)
+    }
 }

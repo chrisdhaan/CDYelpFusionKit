@@ -51,4 +51,52 @@ import Foundation
         #expect(coordinates.latitude == nil)
         #expect(coordinates.longitude == nil)
     }
+
+    @Test func coordinatesHandlesEquatorialCoordinates() throws {
+        let json = """
+        {
+            "latitude": 0.0,
+            "longitude": 0.0
+        }
+        """.data(using: .utf8)!
+        let coordinates = try JSONDecoder().decode(CDYelpCoordinates.self, from: json)
+        #expect(coordinates.latitude == 0.0)
+        #expect(coordinates.longitude == 0.0)
+    }
+
+    @Test func coordinatesHandlesExtremeMeridians() throws {
+        let json = """
+        {
+            "latitude": 90.0,
+            "longitude": 180.0
+        }
+        """.data(using: .utf8)!
+        let coordinates = try JSONDecoder().decode(CDYelpCoordinates.self, from: json)
+        #expect(coordinates.latitude == 90.0)
+        #expect(coordinates.longitude == 180.0)
+    }
+
+    @Test func coordinatesHandlesNegativeCoordinates() throws {
+        let json = """
+        {
+            "latitude": -33.8688,
+            "longitude": -151.2093
+        }
+        """.data(using: .utf8)!
+        let coordinates = try JSONDecoder().decode(CDYelpCoordinates.self, from: json)
+        #expect(coordinates.latitude == -33.8688)
+        #expect(coordinates.longitude == -151.2093)
+    }
+
+    @Test func coordinatesHandlesPrecisionValues() throws {
+        let json = """
+        {
+            "latitude": 37.7749310,
+            "longitude": -122.4194155
+        }
+        """.data(using: .utf8)!
+        let coordinates = try JSONDecoder().decode(CDYelpCoordinates.self, from: json)
+        #expect(coordinates.latitude != nil)
+        #expect(coordinates.longitude != nil)
+    }
 }

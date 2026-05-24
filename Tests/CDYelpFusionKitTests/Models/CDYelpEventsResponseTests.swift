@@ -48,4 +48,51 @@ import Foundation
         let response = try JSONDecoder().decode(CDYelpEventsResponse.self, from: json)
         #expect(response.events == nil)
     }
+
+    @Test func eventsResponseDecodesMultipleEvents() throws {
+        let json = """
+        {
+            "events": [
+                {
+                    "id": "event1",
+                    "name": "Event One"
+                },
+                {
+                    "id": "event2",
+                    "name": "Event Two"
+                },
+                {
+                    "id": "event3",
+                    "name": "Event Three"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpEventsResponse.self, from: json)
+        #expect(response.events?.count == 3)
+    }
+
+    @Test func eventsResponseHandlesPagination() throws {
+        let json = """
+        {
+            "events": [
+                {"id": "e1"},
+                {"id": "e2"}
+            ],
+            "total": 50
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpEventsResponse.self, from: json)
+        #expect(response.total == 50)
+    }
+
+    @Test func eventsResponseHandlesEmptyEvents() throws {
+        let json = """
+        {
+            "events": []
+        }
+        """.data(using: .utf8)!
+        let response = try JSONDecoder().decode(CDYelpEventsResponse.self, from: json)
+        #expect(response.events?.count == 0)
+    }
 }

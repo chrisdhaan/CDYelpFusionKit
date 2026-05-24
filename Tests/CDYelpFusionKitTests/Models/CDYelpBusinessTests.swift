@@ -59,4 +59,56 @@ import Foundation
         #expect(business.rating == nil)
         #expect(business.price == nil)
     }
+
+    @Test func businessSearchHandlesClosedBusiness() throws {
+        let json = """
+        {
+            "id": "closed-id",
+            "name": "Closed Restaurant",
+            "is_closed": true
+        }
+        """.data(using: .utf8)!
+        let business = try JSONDecoder().decode(CDYelpBusiness.BusinessSearch.self, from: json)
+        #expect(business.id == "closed-id")
+        #expect(business.isClosed == true)
+    }
+
+    @Test func businessSearchHandlesVariousPriceTiers() throws {
+        let priceTiers = ["$", "$$", "$$$", "$$$$"]
+        for price in priceTiers {
+            let json = """
+            {
+                "id": "price-test",
+                "name": "Test Restaurant",
+                "price": "\(price)"
+            }
+            """.data(using: .utf8)!
+            let business = try JSONDecoder().decode(CDYelpBusiness.BusinessSearch.self, from: json)
+            #expect(business.price == price)
+        }
+    }
+
+    @Test func businessSearchHandlesZeroRating() throws {
+        let json = """
+        {
+            "id": "zero-rating",
+            "name": "New Business",
+            "rating": 0
+        }
+        """.data(using: .utf8)!
+        let business = try JSONDecoder().decode(CDYelpBusiness.BusinessSearch.self, from: json)
+        #expect(business.rating == 0)
+    }
+
+    @Test func businessSearchHandlesMaxRating() throws {
+        let json = """
+        {
+            "id": "max-rating",
+            "name": "Perfect Business",
+            "rating": 5.0
+        }
+        """.data(using: .utf8)!
+        let business = try JSONDecoder().decode(CDYelpBusiness.BusinessSearch.self, from: json)
+        #expect(business.rating == 5.0)
+    }
 }
