@@ -1895,7 +1895,7 @@ A step-by-step guide (`Documentation/XCODE_VISION_OS_SETUP.md`) should be create
 
 See Section 3.13 for the full `visionOS` CI job definition.
 
-### 16.6 README: Add visionOS to Requirements Table
+### 16.6 README: Add visionOS to Requirements Table ✅
 
 Update the requirements table (Section 13):
 
