@@ -1812,7 +1812,7 @@ Update the version string `3.2.0` → `4.0.0` in:
 - `CDYelpFusionKit.xcodeproj` (MARKETING_VERSION in build settings)
 - `CDYelpFusionKit.xcodeproj` (CURRENT_PROJECT_VERSION if present)
 
-### 15.2 Generate DocC Documentation
+### 15.2 Generate DocC Documentation ✅
 
 After all documentation comments are finalized (Section 9.8) and the DocC bundle is in place (Section 17):
 
