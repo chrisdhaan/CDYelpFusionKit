@@ -2098,7 +2098,7 @@ CDMarkdownKit 3.1.0 introduced a SwiftFormat CI job for automated formatting enf
 
 See Section 3.12 for the `swiftformat` CI job definition. The job runs `swiftformat Source Tests --lint`, which fails if any file does not match SwiftFormat's expected output.
 
-### 18.2 Format Source Files Before 4.0.0 Release
+### 18.2 Format Source Files Before 4.0.0 Release ✅
 
 Before the final 4.0.0 tag, run SwiftFormat to reformat all source files in one clean commit:
 
