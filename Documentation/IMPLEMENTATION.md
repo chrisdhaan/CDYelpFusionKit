@@ -1781,7 +1781,7 @@ Check the [Alamofire Releases](https://github.com/Alamofire/Alamofire/releases) 
 
 Update both `Package.swift` and `CDYelpFusionKit.podspec` to the same version constraint.
 
-### 14.2 Remove Carthage
+### 14.2 Remove Carthage ✅
 
 Delete from the repository root:
 - `Cartfile`
