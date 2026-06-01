@@ -31,10 +31,10 @@ reviews, autocomplete, and category browsing — with both completion-handler an
 - ``CDYelpEventsResponse``
 - ``CDYelpAutoCompleteResponse``
 
-### Routing
-
-- ``CDYelpRouter``
-
 ### Enumerations
 
-- ``CDYelpEnums``
+- ``CDYelpCategoryAlias``
+- ``CDYelpLocale``
+- ``CDYelpBusinessSortType``
+- ``CDYelpPriceTier``
+- ``CDYelpAttributeFilter``

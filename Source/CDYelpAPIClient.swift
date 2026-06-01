@@ -80,7 +80,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     /// Searches for businesses based on the provided search criteria.
     ///
-    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(byId:locale:)`` for detailed information or ``fetchReviews(forBusinessId:locale:)`` for reviews.
+    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(forId:locale:completion:)`` for detailed information or ``fetchReviews(forBusinessId:locale:completion:)`` for reviews.
     ///
     /// - Parameters:
     ///   - term: A search term (e.g. "food", "restaurants"). If not provided, all data is searched.
@@ -158,10 +158,8 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns a list of businesses based on the provided phone number. It is possible for more than one businesses having the same phone number (for example, chain stores with the same +1 800 phone number). At this time, this endpoint does not return businesses without any reviews.
     ///
     /// - parameters:
-    ///   - byPhoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
+    ///   - phoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
     ///   - completion: A completion block in which the Yelp Fusion API phone search endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
                                  completion: @escaping (CDYelpSearchResponse.Phone?) -> Void)
@@ -189,13 +187,11 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns a list of businesses which support certain transactions. At this time, this endpoint does not return businesses without any reviews. Currently, this endpoint only supports food delivery in the US.
     ///
     /// - parameters:
-    ///   - byType: (**Required**) A transaction type for the Yelp Fusion API to query.
+    ///   - type: (**Required**) A transaction type for the Yelp Fusion API to query.
     ///   - latitude: (**Required when location isn't provided**) The latitude of the location you want delivery from.
     ///   - longitude: (**Required when location isn't provided**) The longitude of the location you want delivery from.
     ///   - location: (**Required when latitude and longitude aren't provided**) The address of the location you want delivery from.
     ///   - completion: A completion block in which the Yelp Fusion API transactions endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchTransactions(byType type: CDYelpTransactionType!,
                                    location: String?,
@@ -231,10 +227,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns the detail information of a business. To get a business id, refer to **searchBusinesses(byTerm: )**, **searchBusinesses(byPhoneNumber: )**, **searchTransactions(byType: )**, **searchBusinesses(byMatchType: )** or **autocompleteBusinesses(byText: )**. To get review information for a business, refer to **fetchReviews(forBusinessId: )**. At this time, this endpoint does not return businesses without any reviews.
     ///
     /// - parameters:
-    ///   - byId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - locale: (Optional) The interface locale; this determines the language of the business information returned.
     ///   - completion: A completion block in which the Yelp Fusion API business endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpBusiness?) -> Void
     ///
     public func fetchBusiness(forId id: String!,
                               locale: CDYelpLocale?,
@@ -279,8 +274,6 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - limit: (Optional)
     ///   - matchThresholdType: (**Required**) Specifies whether a match quality threshold should be applied to the matched businesses. Use the **CDYelpBusinessMatchThresholdType** enum to get the list of supported thresholds.
     ///   - completion: A completion block in which the Yelp Fusion API business match endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpSearchResponse?) -> Void
     ///
     public func searchBusinesses(name: String!,
                                  addressOne: String!,
@@ -357,11 +350,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns the up to three reviews for a business.
     ///
     /// - parameters:
-    ///   - forBusinessId: (**Required**) The identifier of the business for the Yelp Fusion API to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - locale: (Optional) The interface locale; this determines the language for the reviews to return.
     ///   - completion: A completion block in which the Yelp Fusion API reviews endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpReviewsResponse?) -> Void
     ///
     public func fetchReviews(forBusinessId id: String!,
                              locale: CDYelpLocale?,
@@ -394,13 +385,11 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns autocomplete suggestions for search keywords, businesses and categories, based on the input text.
     ///
     /// - parameters:
-    ///   - byText: (**Required**) The text for the Yelp Fusion API to query.
+    ///   - text: (**Required**) The text for the Yelp Fusion API to query.
     ///   - latitude: (**Required**) The latitude of the location to look for business autocomplete suggestions.
     ///   - longitude: (**Required**) The longitude of the location to look for business autocomplete suggestions.
     ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
     ///   - completion: A completion block in which the Yelp Fusion API autocomplete endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpAutoCompleteResponse?) -> Void
     ///
     public func autocompleteBusinesses(byText text: String!,
                                        latitude: Double!,
@@ -438,11 +427,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// This endpoint returns the detailed information of a Yelp event. To get an event id, refer to **searchEvents(byLocale: )** or **fetchFeaturedEvent(forLocale: )**. To enable this endpoint, please join the Yelp Developer Beta Program.
     ///
     /// - parameters:
-    ///   - forId: (**Required**) The identifier of the event for the Yelp Fusion API to query.
+    ///   - id: (**Required**) The identifier of the event for the Yelp Fusion API to query.
     ///   - locale: (Optional) The locale to return the event information in.
     ///   - completion: A completion block in which the Yelp Fusion API event endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpEvent?) -> Void
     ///
     public func fetchEvent(forId id: String!,
                            locale: CDYelpLocale?,
@@ -487,10 +474,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - latitude: (Optional) The latitude of the location the Yelp Fusion API should search nearby.
     ///   - longitude: (Optional) The longitude of the location the Yelp Fusion API should search nearby.
     ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
-    ///   - excludedEvent: (Optional) A list of event ids. Events associated with these event ids in this list will not show up in the response.
+    ///   - categories: (Optional) The categories for the Yelp Fusion API to filter events by.
+    ///   - excludedEvents: (Optional) A list of event ids. Events associated with these event ids in this list will not show up in the response.
     ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
-    ///
-    /// - returns: (CDYelpEventsResponse?) -> Void
     ///
     public func searchEvents(byLocale locale: CDYelpLocale?,
                              offset: Int?,
@@ -558,8 +544,6 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
     ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
     ///
-    /// - returns: (CDYelpEvent?) -> Void
-    ///
     public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
                                    location: String?,
                                    latitude: Double?,
@@ -599,8 +583,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - locale: (Optional) The locale to return the category information in.
-    ///
-    /// - returns: (CDYelpCategoriesResponse?) -> Void
+    ///   - completion: A completion block in which the Yelp Fusion API categories endpoint response can be parsed.
     ///
     public func fetchCategories(forLocale locale: CDYelpLocale?,
                                 completion: @escaping (CDYelpCategoriesResponse?) -> Void)
@@ -628,8 +611,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - alias: (**Required**) The alias to return category details for. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases.
     ///   - locale: (Optional) The locale to return the category information in.
-    ///
-    /// - returns: (CDYelpCategoryResponse?) -> Void
+    ///   - completion: A completion block in which the Yelp Fusion API category endpoint response can be parsed.
     ///
     public func fetchCategory(forAlias alias: CDYelpCategoryAlias!,
                               andLocale locale: CDYelpLocale?,
@@ -659,9 +641,6 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     ///
     /// Cancels any in progress or pending API requests.
-    ///
-    /// - returns: Void
-    ///
     public func cancelAllPendingAPIRequests() {
         manager.session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             dataTasks.forEach { $0.cancel() }

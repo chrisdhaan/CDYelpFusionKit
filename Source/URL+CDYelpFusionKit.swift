@@ -75,7 +75,7 @@ public extension URL {
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the search page.
     ///
     /// - parameters:
-    ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
+    ///   - term: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
     ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories.
     ///   - location: A location to filter the search results with. Specifying no location will use current location.
     ///
@@ -97,7 +97,7 @@ public extension URL {
     /// Initializes a URL that can be used to open the Yelp website to the search page.
     ///
     /// - parameters:
-    ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
+    ///   - term: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
     ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories.
     ///   - location: A location to filter the search results with. Specifying no location will use current location.
     ///
@@ -119,7 +119,7 @@ public extension URL {
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to a business page.
     ///
     /// - parameters:
-    ///   - forId: (**Required**) The identifier of the business for the Yelp application to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp application to query.
     ///
     /// - returns: URL?
     ///
@@ -136,7 +136,7 @@ public extension URL {
     /// Initializes a URL that can be used to open the Yelp website to a business page.
     ///
     /// - parameters:
-    ///   - forId: (**Required**) The identifier of the business for the Yelp application to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp application to query.
     ///
     /// - returns: URL?
     ///
