@@ -25,6 +25,12 @@
 //  THE SOFTWARE.
 //
 
+#if os(macOS)
+    import Cocoa
+#else
+    import UIKit
+#endif
+
 public extension CDColor {
     class func yelpFiveStarRed() -> CDColor {
         return CDColor(red: 211.0 / 255.0,

@@ -25,6 +25,8 @@
 //  THE SOFTWARE.
 //
 
+import Foundation
+
 extension String {
     /// Generates a URL search path for Yelp with the specified search criteria.
     static func searchLinkPath(withTerm term: String?,

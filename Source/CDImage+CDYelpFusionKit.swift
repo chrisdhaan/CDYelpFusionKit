@@ -26,14 +26,14 @@
 //
 
 #if os(macOS)
-    import Foundation
+    import AppKit
 #else
     import UIKit
 #endif
 
 public extension CDImage {
     private class func cdImage(named name: String!) -> CDImage? {
-        #if os(iOS) || os(tvOS)
+        #if os(iOS) || os(tvOS) || os(visionOS)
             return CDImage(named: name,
                            in: Bundle(identifier: CDYelpFusionKitBundleIdentifier),
                            compatibleWith: nil)
