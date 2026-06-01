@@ -79,7 +79,7 @@ Task {
 | Platform | Minimum Version |
 |----------|-----------------|
 | iOS | 12.0 |
-| macOS | 10.13 |
+| macOS | 11.0 |
 | tvOS | 12.0 |
 | watchOS | 4.0 |
 | visionOS | 1.0 |

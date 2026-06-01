@@ -43,7 +43,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 ### Updated
 
 - swift-tools-version from 5.6 to 6.0
-- Minimum deployment targets: iOS 12.0, macOS 10.13, tvOS 12.0, watchOS 4.0
+- Minimum deployment targets: iOS 12.0, macOS 11.0, tvOS 12.0, watchOS 4.0
 - Alamofire dependency from 5.6.1 to 5.9.0+
 - CI runners to macOS-15 and macos-26 with Xcode 16.4 and 26.x
 - CI output formatter from xcpretty to xcbeautify

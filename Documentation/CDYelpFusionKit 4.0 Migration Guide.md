@@ -13,7 +13,7 @@ The minimum deployment targets have been raised to align with Swift Package Mana
 | Platform | v3.x | v4.0 | Action Required |
 |----------|------|------|-----------------|
 | iOS | 10.0 | 12.0 | Update project minimum if targeting iOS 10–11 |
-| macOS | 10.12 | 10.13 | Update project minimum if targeting macOS 10.12 |
+| macOS | 10.12 | 11.0 | Update project minimum if targeting macOS 10.x |
 | tvOS | 10.0 | 12.0 | Update project minimum if targeting tvOS 10–11 |
 | watchOS | 3.0 | 4.0 | Update project minimum if targeting watchOS 3 |
 | visionOS | N/A | 1.0 | New platform support |
@@ -38,7 +38,7 @@ platforms: [
 // v4.0
 platforms: [
     .iOS(.v12),
-    .macOS(.v10_13),
+    .macOS(.v11),
     .tvOS(.v12),
     .watchOS(.v4),
     .visionOS(.v1)
@@ -288,7 +288,7 @@ Task {
 
 ## Migration Checklist
 
-- [ ] **Deployment Targets:** Update iOS to 12.0+, macOS to 10.13+, tvOS to 12.0+, watchOS to 4.0+
+- [ ] **Deployment Targets:** Update iOS to 12.0+, macOS to 11.0+, tvOS to 12.0+, watchOS to 4.0+
 - [ ] **Alamofire Dependency:** Update version constraint to `~> 5.9` (SPM) or `~> 5.9` (CocoaPods)
 - [ ] **NSObject Inheritance:** Search codebase for uses of `CDYelpAPIClient` with NSObject-specific methods (reflection, KVO, selectors) and remove
 - [ ] **API Key Parameter:** Remove force-unwraps (`!`) when creating `CDYelpAPIClient`; ensure non-empty string is passed
