@@ -41,6 +41,9 @@ playground.xcworkspace
 # DocC build artifacts (docs/ is tracked intentionally for GitHub Pages)
 /tmp/docc-output/
 
+# Example app secrets
+Example/Secrets.xcconfig
+
 # Implementation planning
 Documentation/IMPLEMENTATION.md
 Documentation/IMPROVEMENTS.md

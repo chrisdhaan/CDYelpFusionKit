@@ -5,7 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
-- [4.0.0](#400---2026-05-24)
+- [4.0.0](#400---2026-06-02)
 - [3.2.0](#320---2022-08-02)
 - [3.1.0](#310---2022-06-13)
 - [3.0.1](#301---2021-09-17)
@@ -23,7 +23,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [4.0.0] - 2026-05-24
+## [4.0.0] - 2026-06-02
 
 ### Added
 
@@ -36,9 +36,12 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - Documentation/CDYelpFusionKit 4.0 Migration Guide.md for version migration
 - Dynamic library product (CDYelpFusionKitDynamic) for SPM consumers
 - SwiftLint CI job for code quality enforcement
+- SwiftFormat CI job for automated formatting enforcement
 - CodeQL security scanning in CI pipeline
 - visionOS platform support (visionOS 1.0+)
 - DocC API documentation bundle and GitHub Pages publication
+- Documentation/API_SCHEMA.md documenting all Yelp Fusion endpoints
+- .swiftformat configuration with project-specific overrides
 
 ### Updated
 
@@ -61,6 +64,8 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - apiKey parameter validation from assert to precondition for production safety
 - Print-based error logging removed from library code (no console output from SDK)
 - Example app modernization (removed deprecated UIApplication.openURL patterns)
+- Example app adopted UIScene lifecycle to resolve pending assert warning
+- Example app API key sourced from Secrets.xcconfig via Info.plist instead of hardcoded placeholder
 
 ---
 

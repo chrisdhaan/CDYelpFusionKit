@@ -1,10 +1,10 @@
 //
-//  CDYelpKitManager.swift
+//  SceneDelegate.swift
 //  iOS Example
 //
-//  Created by Christopher de Haan on 5/6/17.
+//  Created by Christopher de Haan on 06/02/2026.
 //
-//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,9 @@
 //  THE SOFTWARE.
 //
 
-import CDYelpFusionKit
 import UIKit
 
-final class CDYelpFusionKitManager: NSObject {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-    static let shared = CDYelpFusionKitManager()
-
-    var apiClient: CDYelpAPIClient!
-
-    func configure() {
-        let apiKey = Bundle.main.infoDictionary?["YelpAPIKey"] as? String ?? ""
-        self.apiClient = CDYelpAPIClient(apiKey: apiKey)
-    }
+    var window: UIWindow?
 }
