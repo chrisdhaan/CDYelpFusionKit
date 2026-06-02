@@ -83,6 +83,8 @@ swift package --disable-sandbox generate-documentation \
   --output-path docs \
   --transform-for-static-hosting \
   --hosting-base-path CDYelpFusionKit
+# After generating, restore the root redirect (generation overwrites docs/index.html):
+# Replace docs/index.html with a meta-refresh redirect to /CDYelpFusionKit/documentation/cdyelpfusionkit/
 
 # Preview documentation locally
 swift package --disable-sandbox preview-documentation --target CDYelpFusionKit
