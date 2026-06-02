@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/6/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,7 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpLocation: Decodable {
-
+public struct CDYelpLocation: Decodable, Sendable {
     public let addressOne: String?
     public let addressTwo: String?
     public let addressThree: String?
@@ -45,7 +44,7 @@ public struct CDYelpLocation: Decodable {
         case country
     }
 
-    public struct Detailed: Decodable {
+    public struct Detailed: Decodable, Sendable {
         public let addressOne: String?
         public let addressTwo: String?
         public let addressThree: String?

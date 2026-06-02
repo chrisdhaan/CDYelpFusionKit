@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/6/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,9 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpRegion: Decodable {
-
+/// A geographic region with center coordinates.
+public struct CDYelpRegion: Decodable, Sendable {
+    /// The center coordinates of the region.
     public let center: CDYelpCenter?
 
     enum CodingKeys: String, CodingKey {

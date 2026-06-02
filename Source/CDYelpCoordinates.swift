@@ -1,10 +1,10 @@
 //
-//  CDYelpCoordinate.swift
+//  CDYelpCoordinates.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 5/6/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,11 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpCoordinates: Decodable {
-
+/// Geographic coordinates for a business location.
+public struct CDYelpCoordinates: Decodable, Sendable {
+    /// The latitude of the business location.
     public let latitude: Double?
+    /// The longitude of the business location.
     public let longitude: Double?
 
     enum CodingKeys: String, CodingKey {

@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/1/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,13 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
-public struct CDYelpEvent: Decodable {
-
+public struct CDYelpEvent: Decodable, Sendable {
     public let attendingCount: Int?
     public let category: String?
     public let cost: Int?
@@ -78,16 +77,18 @@ public struct CDYelpEvent: Decodable {
     }
 
     public func eventSiteUrlAsUrl() -> URL? {
-        if let eventSiteUrl = self.eventSiteUrl,
-           let asUrl = URL(string: eventSiteUrl) {
+        if let eventSiteUrl = eventSiteUrl,
+           let asUrl = URL(string: eventSiteUrl)
+        {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = self.imageUrl,
-           let asUrl = URL(string: imageUrl) {
+        if let imageUrl = imageUrl,
+           let asUrl = URL(string: imageUrl)
+        {
             return asUrl
         }
         return nil

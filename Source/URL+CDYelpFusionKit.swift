@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/16/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,26 +25,26 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
 public extension URL {
-
     // MARK: - Private Methods
 
-    static private func addScheme(toPath path: String,
-                                  forWeb: Bool) -> URL? {
+    private static func addScheme(toPath path: String,
+                                  forWeb: Bool) -> URL?
+    {
         if forWeb {
-            return self.yelpURL(withPath: "\(CDYelpURL.web)\(path)")
+            return yelpURL(withPath: "\(CDYelpURL.web)\(path)")
         } else {
-            return self.yelpURL(withPath: "\(CDYelpURL.deepLink)///\(path)")
+            return yelpURL(withPath: "\(CDYelpURL.deepLink)///\(path)")
         }
     }
 
-    static private func yelpURL(withPath path: String) -> URL? {
+    private static func yelpURL(withPath path: String) -> URL? {
         if let url = URL(string: path) {
             return url
         }
@@ -59,7 +59,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpDeepLink() -> URL? {
-        return self.yelpURL(withPath: CDYelpURL.deepLink)
+        return yelpURL(withPath: CDYelpURL.deepLink)
     }
 
     ///
@@ -68,14 +68,14 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpWebLink() -> URL? {
-        return self.yelpURL(withPath: CDYelpURL.web)
+        return yelpURL(withPath: CDYelpURL.web)
     }
 
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to the search page.
     ///
     /// - parameters:
-    ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
+    ///   - term: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
     ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories.
     ///   - location: A location to filter the search results with. Specifying no location will use current location.
     ///
@@ -83,20 +83,21 @@ public extension URL {
     ///
     static func yelpSearchDeepLink(withTerm term: String?,
                                    category: CDYelpCategoryAlias?,
-                                   location: String?) -> URL? {
+                                   location: String?) -> URL?
+    {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
 
-        return self.addScheme(toPath: path,
-                              forWeb: false)
+        return addScheme(toPath: path,
+                         forWeb: false)
     }
 
     ///
     /// Initializes a URL that can be used to open the Yelp website to the search page.
     ///
     /// - parameters:
-    ///   - withTerm: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
+    ///   - term: (Optional) Search terms for the Yelp application to query. Specifying no term will search for everything. Term can also be business names such as "Starbucks".
     ///   - category: (Optional) A category to filter the search results with. Use the **CDYelpCategoryAlias** enum to get the list of supported categories.
     ///   - location: A location to filter the search results with. Specifying no location will use current location.
     ///
@@ -104,47 +105,48 @@ public extension URL {
     ///
     static func yelpSearchWebLink(withTerm term: String?,
                                   category: CDYelpCategoryAlias?,
-                                  location: String?) -> URL? {
+                                  location: String?) -> URL?
+    {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
 
-        return self.addScheme(toPath: path,
-                              forWeb: true)
+        return addScheme(toPath: path,
+                         forWeb: true)
     }
 
     ///
     /// Initializes a URL that can be used to open the Yelp application (if it is installed on a device) to a business page.
     ///
     /// - parameters:
-    ///   - forId: (**Required**) The identifier of the business for the Yelp application to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp application to query.
     ///
     /// - returns: URL?
     ///
     static func yelpBusinessDeepLink(forId id: String!) -> URL? {
-        assert((id != nil && id.count > 0), "A business id is to query the Yelp business deep link.")
+        assert(id != nil && id.count > 0, "A business id is to query the Yelp business deep link.")
 
         let path = String.businessLinkPath(forId: id)
 
-        return self.addScheme(toPath: path,
-                              forWeb: false)
+        return addScheme(toPath: path,
+                         forWeb: false)
     }
 
     ///
     /// Initializes a URL that can be used to open the Yelp website to a business page.
     ///
     /// - parameters:
-    ///   - forId: (**Required**) The identifier of the business for the Yelp application to query.
+    ///   - id: (**Required**) The identifier of the business for the Yelp application to query.
     ///
     /// - returns: URL?
     ///
     static func yelpBusinessWebLink(forId id: String!) -> URL? {
-        assert((id != nil && id.count > 0), "A business id is to query the Yelp business deep link.")
+        assert(id != nil && id.count > 0, "A business id is to query the Yelp business deep link.")
 
         let path = String.businessLinkPath(forId: id)
 
-        return self.addScheme(toPath: path,
-                              forWeb: true)
+        return addScheme(toPath: path,
+                         forWeb: true)
     }
 
     ///
@@ -153,8 +155,8 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInNearbyDeepLink() -> URL? {
-        return self.addScheme(toPath: "check_in/nearby",
-                              forWeb: false)
+        return addScheme(toPath: "check_in/nearby",
+                         forWeb: false)
     }
 
     ///
@@ -163,8 +165,8 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInsDeepLink() -> URL? {
-        return self.addScheme(toPath: "check_ins",
-                              forWeb: false)
+        return addScheme(toPath: "check_ins",
+                         forWeb: false)
     }
 
     ///
@@ -173,7 +175,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInRankingsDeepLink() -> URL? {
-        return self.addScheme(toPath: "check_in/rankings",
-                              forWeb: false)
+        return addScheme(toPath: "check_in/rankings",
+                         forWeb: false)
     }
 }

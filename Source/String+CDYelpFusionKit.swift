@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/16/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,14 @@
 //  THE SOFTWARE.
 //
 
-extension String {
+import Foundation
 
+extension String {
+    /// Generates a URL search path for Yelp with the specified search criteria.
     static func searchLinkPath(withTerm term: String?,
                                category: CDYelpCategoryAlias?,
-                               location: String?) -> String {
+                               location: String?) -> String
+    {
         var path = "search"
 
         if term != nil || category != nil || location != nil {
@@ -41,17 +44,20 @@ extension String {
         }
 
         if term != nil,
-            let category = category?.rawValue {
+           let category = category?.rawValue
+        {
             path += "&category=\(category)"
         } else if let category = category {
             path += "category=\(category)"
         }
 
         if term != nil,
-            let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
+           let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        {
             path += "&location=\(location)"
         } else if category != nil,
-            let location = location {
+                  let location = location
+        {
             path += "&location=\(location)"
         } else if let location = location {
             path += "location=\(location)"
@@ -60,6 +66,7 @@ extension String {
         return path
     }
 
+    /// Generates a URL business path for Yelp with the specified business ID.
     static func businessLinkPath(forId id: String!) -> String {
         var path = "biz/"
 

@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,13 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpError: Decodable {
-
+/// Error information from the Yelp Fusion API.
+public struct CDYelpError: Decodable, Error, Sendable {
+    /// A description of the error.
     public let description: String?
+    /// The field that caused the error, if applicable.
     public let field: String?
+    /// The error code from the API.
     public let code: String?
 
     enum CodingKeys: String, CodingKey {

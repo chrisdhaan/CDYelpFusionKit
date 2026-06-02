@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,14 @@
 
 let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
 
-struct CDYelpURL {
-    static let oAuth    = "https://api.yelp.com/"
-    static let base     = "https://api.yelp.com/v3/"
+enum CDYelpURL {
+    static let oAuth = "https://api.yelp.com/"
+    static let base = "https://api.yelp.com/v3/"
     static let deepLink = "yelp4:"
-    static let web      = "https://yelp.com/"
+    static let web = "https://yelp.com/"
 }
 
-struct CDYelpDefaults {
+enum CDYelpDefaults {
     static let accessToken = "CDYelpAccessToken"
     static let expiresIn = "CDYelpExpiresIn"
 }

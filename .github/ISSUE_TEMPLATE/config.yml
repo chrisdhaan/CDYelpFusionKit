@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage Question
+    url: https://stackoverflow.com/questions/tagged/cdyelpfusionkit
+    about: Ask usage questions on Stack Overflow.
+  - name: Yelp Fusion API Issue
+    url: https://github.com/Yelp/yelp-fusion/issues
+    about: Report Yelp Fusion API issues to the Yelp team.

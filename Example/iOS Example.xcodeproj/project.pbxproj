@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5FBF0E761EC00018004C1F6B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E731EC00018004C1F6B /* AppDelegate.swift */; };
+		5FBF0EE01EC00000004C1F6B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */; };
 		5FBF0E771EC00018004C1F6B /* CDYelpFusionKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */; };
 		5FBF0E781EC00018004C1F6B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E751EC00018004C1F6B /* ViewController.swift */; };
 		5FBF0E801EC00033004C1F6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF0E791EC00033004C1F6B /* Assets.xcassets */; };
@@ -71,10 +72,13 @@
 /* Begin PBXFileReference section */
 		5FBF0E481EBFFE8D004C1F6B /* iOS Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF0E731EC00018004C1F6B /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpFusionKitManager.swift; sourceTree = "<group>"; };
 		5FBF0E751EC00018004C1F6B /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5FBF0E791EC00033004C1F6B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		5FBF0E7F1EC00033004C1F6B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		5FBF0EE21EC00000004C1F6B /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = SOURCE_ROOT; };
+		5FBF0EE31EC00000004C1F6B /* Secrets.xcconfig.example */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig.example; sourceTree = SOURCE_ROOT; };
 		5FBF0E851EC00047004C1F6B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Resources/Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
 		5FBF0E871EC00047004C1F6B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Resources/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		5FBF0EC41EC003C2004C1F6B /* CDYelpFusionKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CDYelpFusionKit.xcodeproj; path = ../CDYelpFusionKit.xcodeproj; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0E731EC00018004C1F6B /* AppDelegate.swift */,
+				5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */,
 				5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */,
 				5FBF0E751EC00018004C1F6B /* ViewController.swift */,
 				5FBF0E8B1EC00060004C1F6B /* Resources */,
@@ -124,6 +129,8 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0E7F1EC00033004C1F6B /* Info.plist */,
+				5FBF0EE21EC00000004C1F6B /* Secrets.xcconfig */,
+				5FBF0EE31EC00000004C1F6B /* Secrets.xcconfig.example */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -263,6 +270,7 @@
 			files = (
 				5FBF0E781EC00018004C1F6B /* ViewController.swift in Sources */,
 				5FBF0E761EC00018004C1F6B /* AppDelegate.swift in Sources */,
+				5FBF0EE01EC00000004C1F6B /* SceneDelegate.swift in Sources */,
 				5FBF0E771EC00018004C1F6B /* CDYelpFusionKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -398,7 +406,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -413,6 +421,7 @@
 		};
 		5FBF0E5B1EBFFE8D004C1F6B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5FBF0EE21EC00000004C1F6B /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
@@ -425,6 +434,7 @@
 		};
 		5FBF0E5C1EBFFE8D004C1F6B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5FBF0EE21EC00000004C1F6B /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";

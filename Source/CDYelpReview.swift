@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,13 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
-public struct CDYelpReview: Decodable {
-
+public struct CDYelpReview: Decodable, Sendable {
     public let id: String?
     public let text: String?
     public let url: String?
@@ -50,15 +49,16 @@ public struct CDYelpReview: Decodable {
     }
 
     public func urlAsUrl() -> URL? {
-        if let url = self.url,
-           let asUrl = URL(string: url) {
+        if let url = url,
+           let asUrl = URL(string: url)
+        {
             return asUrl
         }
         return nil
     }
 
     public func timeCreatedAsDate() -> Date? {
-        if let timeCreated = self.timeCreated {
+        if let timeCreated = timeCreated {
             let formatter = DateFormatter()
             return formatter.date(from: timeCreated)
         }

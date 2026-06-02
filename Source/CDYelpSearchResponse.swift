@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/29/16.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,8 @@
 //  THE SOFTWARE.
 //
 
-public struct CDYelpSearchResponse {
-    public struct Business: Decodable {
-
+public struct CDYelpSearchResponse: Sendable {
+    public struct Business: Decodable, Sendable {
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessSearch]?
         public let region: CDYelpRegion?
@@ -41,8 +40,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct Phone: Decodable {
-
+    public struct Phone: Decodable, Sendable {
         public let total: Int?
         public let businesses: [CDYelpBusiness.PhoneSearch]?
         public let error: CDYelpError?
@@ -54,8 +52,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct Transaction: Decodable {
-
+    public struct Transaction: Decodable, Sendable {
         public let total: Int?
         public let businesses: [CDYelpBusiness.TransactionSearch]?
         public let error: CDYelpError?
@@ -67,8 +64,7 @@ public struct CDYelpSearchResponse {
         }
     }
 
-    public struct BusinessMatch: Decodable {
-
+    public struct BusinessMatch: Decodable, Sendable {
         public let total: Int?
         public let businesses: [CDYelpBusiness.BusinessMatch]?
         public let error: CDYelpError?

@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/7/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,13 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
-public struct CDYelpUser: Decodable {
-
+public struct CDYelpUser: Decodable, Sendable {
     public let id: String?
     public let profileUrl: String?
     public let name: String?
@@ -46,16 +45,18 @@ public struct CDYelpUser: Decodable {
     }
 
     public func profileUrlAsUrl() -> URL? {
-        if let profileUrl = self.profileUrl,
-           let asUrl = URL(string: profileUrl) {
+        if let profileUrl = profileUrl,
+           let asUrl = URL(string: profileUrl)
+        {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = self.imageUrl,
-           let asUrl = URL(string: imageUrl) {
+        if let imageUrl = imageUrl,
+           let asUrl = URL(string: imageUrl)
+        {
             return asUrl
         }
         return nil

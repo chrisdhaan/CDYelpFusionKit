@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/10/16.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,16 +25,15 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
 import Alamofire
 
 enum CDYelpRouter: URLRequestConvertible {
-
     case search(parameters: Parameters)
     case phone(parameters: Parameters)
     case transactions(type: String, parameters: Parameters)
@@ -50,47 +49,36 @@ enum CDYelpRouter: URLRequestConvertible {
 
     var method: HTTPMethod {
         switch self {
-        case .search(parameters: _),
-             .phone(parameters: _),
-             .transactions(type: _, parameters: _),
-             .business(id: _, parameters: _),
-             .matches(parameters: _),
-             .reviews(id: _, parameters: _),
-             .autocomplete(parameters: _),
-             .event(id: _, parameters: _),
-             .events(parameters: _),
-             .featuredEvent(parameters: _),
-             .allCategories(parameters: _),
-             .categoryDetails(alias: _, parameters: _):
+        case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete, .event, .events, .featuredEvent, .allCategories, .categoryDetails:
             return .get
         }
     }
 
     var path: String {
         switch self {
-        case .search(parameters: _):
+        case .search:
             return "businesses/search"
-        case .phone(parameters: _):
+        case .phone:
             return "businesses/search/phone"
-        case .transactions(let type, parameters: _):
+        case let .transactions(type, _):
             return "transactions/\(type)/search"
-        case .business(let id, parameters: _):
+        case let .business(id, _):
             return "businesses/\(id)"
-        case .matches(parameters: _):
+        case .matches:
             return "businesses/matches"
-        case .reviews(let id, parameters: _):
+        case let .reviews(id, _):
             return "businesses/\(id)/reviews"
-        case .autocomplete(parameters: _):
+        case .autocomplete:
             return "autocomplete"
-        case .event(let id, parameters: _):
+        case let .event(id, _):
             return "events/\(id)"
-        case .events(parameters: _):
+        case .events:
             return "events"
-        case .featuredEvent(parameters: _):
+        case .featuredEvent:
             return "events/featured"
-        case .allCategories(parameters: _):
+        case .allCategories:
             return "categories"
-        case .categoryDetails(let alias, parameters: _):
+        case let .categoryDetails(alias, _):
             return "categories/\(alias)"
         }
     }
@@ -102,17 +90,17 @@ enum CDYelpRouter: URLRequestConvertible {
         urlRequest.httpMethod = method.rawValue
 
         switch self {
-        case .search(let parameters),
-             .phone(let parameters),
+        case let .search(parameters),
+             let .phone(parameters),
              .transactions(type: _, let parameters),
              .business(id: _, let parameters),
-             .matches(let parameters),
+             let .matches(parameters),
              .reviews(id: _, let parameters),
-             .autocomplete(let parameters),
+             let .autocomplete(parameters),
              .event(id: _, let parameters),
-             .events(let parameters),
-             .featuredEvent(let parameters),
-             .allCategories(let parameters),
+             let .events(parameters),
+             let .featuredEvent(parameters),
+             let .allCategories(parameters),
              .categoryDetails(alias: _, let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
         }

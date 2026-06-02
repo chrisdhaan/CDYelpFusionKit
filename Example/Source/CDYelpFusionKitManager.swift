@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 5/6/17.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ final class CDYelpFusionKitManager: NSObject {
     var apiClient: CDYelpAPIClient!
 
     func configure() {
-        self.apiClient = CDYelpAPIClient(apiKey: "YOUR_API_KEY")
-        // How to authorize using your apiKey
+        let apiKey = Bundle.main.infoDictionary?["YelpAPIKey"] as? String ?? ""
+        self.apiClient = CDYelpAPIClient(apiKey: apiKey)
     }
 }

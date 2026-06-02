@@ -1,11 +1,11 @@
-// swift-tools-version:5.6
+// swift-tools-version:6.0
 //
 //  Package.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 05/07/2017.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,30 +31,38 @@ import PackageDescription
 let package = Package(
     name: "CDYelpFusionKit",
     platforms: [
-        .macOS(.v10_12),
-        .iOS(.v10),
-        .tvOS(.v10),
-        .watchOS(.v3)
+        .iOS(.v12),
+        .macOS(.v11),
+        .tvOS(.v12),
+        .watchOS(.v4),
+        .visionOS(.v1)
     ],
     products: [
         .library(
             name: "CDYelpFusionKit",
+            targets: ["CDYelpFusionKit"]),
+        .library(
+            name: "CDYelpFusionKitDynamic",
+            type: .dynamic,
             targets: ["CDYelpFusionKit"])
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.1"))
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
     ],
     targets: [
         .target(
             name: "CDYelpFusionKit",
-            dependencies: [
-                .product(name: "Alamofire", package: "Alamofire")
-            ],
+            dependencies: [.product(name: "Alamofire", package: "Alamofire")],
             path: "Source",
             exclude: ["Info.plist"],
+            resources: [.process("PrivacyInfo.xcprivacy")],
             linkerSettings: [
-                .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS]))
-            ])
+                .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS, .watchOS, .visionOS]))
+            ]),
+        .testTarget(
+            name: "CDYelpFusionKitTests",
+            dependencies: ["CDYelpFusionKit"]
+        )
     ],
-    swiftLanguageVersions: [.v5])
+    swiftLanguageModes: [.v5])

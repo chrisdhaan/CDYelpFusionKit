@@ -4,7 +4,7 @@
 //
 //  Created by Christopher de Haan on 11/29/16.
 //
-//  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
+//  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,14 @@
 //  THE SOFTWARE.
 //
 
-#if !os(OSX)
-    import UIKit
-#else
+#if os(macOS)
     import Foundation
+#else
+    import UIKit
 #endif
 
-public struct CDYelpBusiness {
-    public struct BusinessSearch: Decodable {
-
+public struct CDYelpBusiness: Sendable {
+    public struct BusinessSearch: Decodable, Sendable {
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
         public let displayPhone: String?
@@ -71,24 +70,25 @@ public struct CDYelpBusiness {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
         }
     }
 
-    public struct PhoneSearch: Decodable {
-
+    public struct PhoneSearch: Decodable, Sendable {
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -122,24 +122,25 @@ public struct CDYelpBusiness {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
         }
     }
 
-    public struct TransactionSearch: Decodable {
-
+    public struct TransactionSearch: Decodable, Sendable {
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -173,24 +174,25 @@ public struct CDYelpBusiness {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
         }
     }
 
-    public struct Detailed: Decodable {
-
+    public struct Detailed: Decodable, Sendable {
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
         public let displayPhone: String?
@@ -238,16 +240,18 @@ public struct CDYelpBusiness {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = self.imageUrl,
-               let asUrl = URL(string: imageUrl) {
+            if let imageUrl = imageUrl,
+               let asUrl = URL(string: imageUrl)
+            {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = self.url,
-               let asUrl = URL(string: url) {
+            if let url = url,
+               let asUrl = URL(string: url)
+            {
                 return asUrl
             }
             return nil
@@ -255,7 +259,7 @@ public struct CDYelpBusiness {
 
         public func photosAsUrls() -> [URL] {
             var asUrls: [URL] = []
-            if let photos = self.photos {
+            if let photos = photos {
                 for photo in photos {
                     if let url = URL(string: photo) {
                         asUrls.append(url)
@@ -266,8 +270,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct BusinessMatch: Decodable {
-
+    public struct BusinessMatch: Decodable, Sendable {
         public let id: String?
         public let alias: String?
         public let name: String?
@@ -285,8 +288,7 @@ public struct CDYelpBusiness {
         }
     }
 
-    public struct Autocomplete: Decodable {
-
+    public struct Autocomplete: Decodable, Sendable {
         public let id: String?
         public let name: String?
 
