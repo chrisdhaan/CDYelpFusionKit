@@ -35,17 +35,24 @@ import Alamofire
 
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
+    private let eventMonitors: [any CDYelpEventMonitor]
+    private let requestAdapters: [any CDYelpRequestAdapter]
     private lazy var manager: Alamofire.Session = {
-        // Get the default headers
         var headers = HTTPHeaders.default
-        // Add the Authorization header
         headers["Authorization"] = "Bearer \(self.apiKey)"
-        // Create a custom session configuration
         let configuration = URLSessionConfiguration.default
-        // Add the Authorization header
         configuration.httpAdditionalHeaders = headers.dictionary
-        // Create a session manager with the custom configuration
-        return Alamofire.Session(configuration: configuration)
+
+        let alamofireMonitor = CDYelpAlamofireEventMonitor(monitors: self.eventMonitors)
+        let interceptor: RequestInterceptor? = self.requestAdapters.isEmpty
+            ? nil
+            : Interceptor(adapters: [CDYelpAlamofireRequestAdapter(adapters: self.requestAdapters)])
+
+        return Alamofire.Session(
+            configuration: configuration,
+            interceptor: interceptor,
+            eventMonitors: [alamofireMonitor]
+        )
     }()
 
     // MARK: - Initializers
@@ -55,12 +62,20 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
+    ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
     /// - returns: Void
     ///
-    public init(apiKey: String) {
+    public init(
+        apiKey: String,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
+    ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        self.eventMonitors = eventMonitors
+        self.requestAdapters = requestAdapters
     }
 
     // MARK: - Authentication Methods
