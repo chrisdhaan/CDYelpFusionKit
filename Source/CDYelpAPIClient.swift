@@ -37,6 +37,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
     private let responseCache: CDYelpResponseCache?
     private let retryConfiguration: CDYelpRetryConfiguration
+    private let decoderConfiguration: CDYelpDecoderConfiguration
     private let eventMonitors: [any CDYelpEventMonitor]
     private let requestAdapters: [any CDYelpRequestAdapter]
     private lazy var manager: Alamofire.Session = {
@@ -90,6 +91,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
     ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
     ///   - retryConfiguration: (Optional) Configuration for automatic retry with exponential backoff. Defaults to disabled.
+    ///   - decoderConfiguration: (Optional) Configuration for JSON decoding strategies. Defaults to standard configuration.
     ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
     ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
@@ -99,11 +101,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
         apiKey: String,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
         retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
         eventMonitors: [any CDYelpEventMonitor] = [],
         requestAdapters: [any CDYelpRequestAdapter] = []
     ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        self.decoderConfiguration = decoderConfiguration
         self.retryConfiguration = retryConfiguration
         responseCache = cacheConfiguration.ttl > 0
             ? CDYelpResponseCache(configuration: cacheConfiguration)
@@ -134,9 +138,11 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     private func cachedRequest<T: Decodable>(
         _ router: CDYelpRouter,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder? = nil,
         completion: @escaping (T?) -> Void
     ) {
+        let decoder = decoder ?? decoderConfiguration.makeDecoder()
+
         guard var urlRequest = try? router.asURLRequest() else {
             completion(nil)
             return
