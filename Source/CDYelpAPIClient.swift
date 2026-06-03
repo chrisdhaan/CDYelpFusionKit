@@ -36,6 +36,7 @@ import Alamofire
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
     private let responseCache: CDYelpResponseCache?
+    private let retryConfiguration: CDYelpRetryConfiguration
     private let eventMonitors: [any CDYelpEventMonitor]
     private let requestAdapters: [any CDYelpRequestAdapter]
     private lazy var manager: Alamofire.Session = {
@@ -45,9 +46,31 @@ public class CDYelpAPIClient: @unchecked Sendable {
         configuration.httpAdditionalHeaders = headers.dictionary
 
         let alamofireMonitor = CDYelpAlamofireEventMonitor(monitors: self.eventMonitors)
-        let interceptor: RequestInterceptor? = self.requestAdapters.isEmpty
+
+        var adapters: [RequestAdapter] = []
+        if !self.requestAdapters.isEmpty {
+            adapters.append(CDYelpAlamofireRequestAdapter(adapters: self.requestAdapters))
+        }
+
+        var retriers: [RequestRetrier] = []
+        if self.retryConfiguration.retryLimit > 0 {
+            let policy = RetryPolicy(
+                retryLimit: self.retryConfiguration.retryLimit,
+                exponentialBackoffBase: 2,
+                exponentialBackoffScale: self.retryConfiguration.initialDelay,
+                retryableHTTPStatusCodes: self.retryConfiguration.retryableHTTPStatusCodes,
+                retryableURLErrorCodes: [
+                    .networkConnectionLost,
+                    .notConnectedToInternet,
+                    .timedOut,
+                ]
+            )
+            retriers.append(policy)
+        }
+
+        let interceptor: RequestInterceptor? = (adapters.isEmpty && retriers.isEmpty)
             ? nil
-            : Interceptor(adapters: [CDYelpAlamofireRequestAdapter(adapters: self.requestAdapters)])
+            : Interceptor(adapters: adapters, retriers: retriers)
 
         return Alamofire.Session(
             configuration: configuration,
@@ -64,6 +87,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
     ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
+    ///   - retryConfiguration: (Optional) Configuration for automatic retry with exponential backoff. Defaults to disabled.
     ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
     ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
@@ -72,11 +96,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
     public init(
         apiKey: String,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
         eventMonitors: [any CDYelpEventMonitor] = [],
         requestAdapters: [any CDYelpRequestAdapter] = []
     ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        self.retryConfiguration = retryConfiguration
         responseCache = cacheConfiguration.ttl > 0
             ? CDYelpResponseCache(configuration: cacheConfiguration)
             : nil
