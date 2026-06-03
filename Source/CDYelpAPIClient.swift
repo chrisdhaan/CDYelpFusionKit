@@ -35,6 +35,7 @@ import Alamofire
 
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
+    private let responseCache: CDYelpResponseCache?
     private let eventMonitors: [any CDYelpEventMonitor]
     private let requestAdapters: [any CDYelpRequestAdapter]
     private lazy var manager: Alamofire.Session = {
@@ -62,6 +63,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
     ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
     ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
@@ -69,11 +71,15 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     public init(
         apiKey: String,
+        cacheConfiguration: CDYelpCacheConfiguration = .disabled,
         eventMonitors: [any CDYelpEventMonitor] = [],
         requestAdapters: [any CDYelpRequestAdapter] = []
     ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        responseCache = cacheConfiguration.ttl > 0
+            ? CDYelpResponseCache(configuration: cacheConfiguration)
+            : nil
         self.eventMonitors = eventMonitors
         self.requestAdapters = requestAdapters
     }
@@ -87,6 +93,48 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     public func isAuthenticated() -> Bool {
         return true
+    }
+
+    // MARK: - Cache Methods
+
+    /// Removes all cached responses.
+    public func clearCache() {
+        responseCache?.removeAll()
+    }
+
+    // MARK: - Private Request Helpers
+
+    private func cachedRequest<T: Decodable>(
+        _ router: CDYelpRouter,
+        decoder: JSONDecoder = JSONDecoder(),
+        completion: @escaping (T?) -> Void
+    ) {
+        guard let urlRequest = try? router.asURLRequest() else {
+            completion(nil)
+            return
+        }
+
+        let cacheKey = CDYelpCacheKey.key(for: urlRequest)
+
+        if let cache = responseCache, let cachedData = cache.data(forKey: cacheKey) {
+            let decoded = try? decoder.decode(T.self, from: cachedData)
+            completion(decoded)
+            return
+        }
+
+        manager
+            .request(router)
+            .validate()
+            .responseData { [weak self] dataResponse in
+                switch dataResponse.result {
+                case let .success(data):
+                    self?.responseCache?.set(data: data, forKey: cacheKey)
+                    let decoded = try? decoder.decode(T.self, from: data)
+                    completion(decoded)
+                case .failure:
+                    completion(nil)
+                }
+            }
     }
 
     // MARK: - Yelp Fusion API Methods
@@ -155,17 +203,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                          openAt: openAt,
                                                          attributes: attributes)
 
-            manager
-                .request(CDYelpRouter.search(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Business, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.search(parameters: parameters), completion: completion)
         }
     }
 
@@ -184,17 +222,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
 
-            manager
-                .request(CDYelpRouter.phone(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Phone, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.phone(parameters: parameters), completion: completion)
         }
     }
 
@@ -223,18 +251,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                latitude: latitude,
                                                                longitude: longitude)
 
-            manager
-                .request(CDYelpRouter.transactions(type: type.rawValue,
-                                                   parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Transaction, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.transactions(type: type.rawValue, parameters: parameters), completion: completion)
         }
     }
 
@@ -255,18 +272,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.businessParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.business(id: id,
-                                               parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpBusinessResponse, AFError>) in
-                    switch response.result {
-                    case let .success(business):
-                        completion(business)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.business(id: id, parameters: parameters), completion: completion)
         }
     }
 
@@ -347,17 +353,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                           limit: limit,
                                                           matchThresholdType: matchThresholdType)
 
-            manager
-                .request(CDYelpRouter.matches(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.BusinessMatch, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.matches(parameters: parameters), completion: completion)
         }
     }
 
@@ -380,19 +376,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
 
-            manager
-                .request(CDYelpRouter.reviews(id: id,
-                                              parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(reviewsResponse):
-                                           completion(reviewsResponse)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.reviews(id: id, parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -422,17 +406,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                longitude: longitude,
                                                                locale: locale)
 
-            manager
-                .request(CDYelpRouter.autocomplete(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
-                    switch response.result {
-                    case let .success(autocompleteResponse):
-                        completion(autocompleteResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.autocomplete(parameters: parameters), completion: completion)
         }
     }
 
@@ -457,19 +431,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.event(id: id,
-                                            parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(event):
-                                           completion(event)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.event(id: id, parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -534,18 +496,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.events(parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventsResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(eventsResponse):
-                                           completion(eventsResponse)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.events(parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -576,18 +527,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.featuredEvent(parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(event):
-                                           completion(event)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.featuredEvent(parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -606,17 +546,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.allCategories(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
-                    switch response.result {
-                    case let .success(event):
-                        completion(event)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.allCategories(parameters: parameters), completion: completion)
         }
     }
 
@@ -637,18 +567,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.categoryDetails(alias: alias.rawValue,
-                                                      parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
-                    switch response.result {
-                    case let .success(event):
-                        completion(event)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters), completion: completion)
         }
     }
 
