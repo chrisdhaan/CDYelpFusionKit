@@ -40,11 +40,16 @@ struct CDYelpResponseCacheTests {
         #expect(cache.data(forKey: "key1") == nil)
     }
 
-    @Test func cacheKeyIsStable() throws {
-        var request = try URLRequest(url: #require(URL(string: "https://api.yelp.com/v3/businesses/search?term=coffee")))
-        request.httpMethod = "GET"
-        let key1 = CDYelpCacheKey.key(for: request)
-        let key2 = CDYelpCacheKey.key(for: request)
-        #expect(key1 == key2)
+    @Test func cacheKeyIsStableViaRouter() throws {
+        let request1 = try CDYelpRouter.allCategories(parameters: [:]).asURLRequest()
+        let request2 = try CDYelpRouter.allCategories(parameters: [:]).asURLRequest()
+        #expect(CDYelpCacheKey.key(for: request1) == CDYelpCacheKey.key(for: request2))
+    }
+
+    @Test func cacheKeyIsStableWithMultipleParameters() throws {
+        let params: [String: Any] = ["term": "coffee", "location": "San Francisco", "limit": 20]
+        let request1 = try CDYelpRouter.search(parameters: params).asURLRequest()
+        let request2 = try CDYelpRouter.search(parameters: params).asURLRequest()
+        #expect(CDYelpCacheKey.key(for: request1) == CDYelpCacheKey.key(for: request2))
     }
 }

@@ -45,7 +45,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = headers.dictionary
 
-        let alamofireMonitor = CDYelpAlamofireEventMonitor(monitors: self.eventMonitors)
+        let alamofireMonitors: [any EventMonitor] = self.eventMonitors.isEmpty
+            ? []
+            : [CDYelpAlamofireEventMonitor(monitors: self.eventMonitors)]
 
         var adapters: [RequestAdapter] = []
         if !self.requestAdapters.isEmpty {
@@ -75,7 +77,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         return Alamofire.Session(
             configuration: configuration,
             interceptor: interceptor,
-            eventMonitors: [alamofireMonitor]
+            eventMonitors: alamofireMonitors
         )
     }()
 
@@ -135,9 +137,16 @@ public class CDYelpAPIClient: @unchecked Sendable {
         decoder: JSONDecoder = JSONDecoder(),
         completion: @escaping (T?) -> Void
     ) {
-        guard let urlRequest = try? router.asURLRequest() else {
+        guard var urlRequest = try? router.asURLRequest() else {
             completion(nil)
             return
+        }
+
+        // Run adapters now so the cache key matches the URL the session will actually send.
+        for adapter in requestAdapters {
+            if let adapted = try? adapter.adapt(urlRequest) {
+                urlRequest = adapted
+            }
         }
 
         let cacheKey = CDYelpCacheKey.key(for: urlRequest)
@@ -154,9 +163,14 @@ public class CDYelpAPIClient: @unchecked Sendable {
             .responseData { [weak self] dataResponse in
                 switch dataResponse.result {
                 case let .success(data):
-                    self?.responseCache?.set(data: data, forKey: cacheKey)
-                    let decoded = try? decoder.decode(T.self, from: data)
-                    completion(decoded)
+                    // Only cache bytes that decode successfully; storing undecoded data would
+                    // poison the cache key for the entire TTL with no recovery path.
+                    if let decoded = try? decoder.decode(T.self, from: data) {
+                        self?.responseCache?.set(data: data, forKey: cacheKey)
+                        completion(decoded)
+                    } else {
+                        completion(nil)
+                    }
                 case .failure:
                     completion(nil)
                 }
