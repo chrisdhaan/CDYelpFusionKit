@@ -45,4 +45,11 @@ extension DateFormatter {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter
     }()
+
+    /// Date formatter for Yelp Special Hours date fields using ISO date-only format.
+    static let specialHours: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
 }

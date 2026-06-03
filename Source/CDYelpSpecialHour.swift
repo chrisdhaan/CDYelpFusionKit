@@ -47,10 +47,6 @@ public struct CDYelpSpecialHour: Decodable, Sendable {
     }
 
     public func dateAsDate() -> Date? {
-        if let date = date {
-            let formatter = DateFormatter()
-            return formatter.date(from: date)
-        }
-        return nil
+        date.flatMap { DateFormatter.specialHours.date(from: $0) }
     }
 }

@@ -35,8 +35,7 @@ final class CDYelpAlamofireEventMonitor: EventMonitor {
         self.monitors = monitors
     }
 
-    func requestDidResume(_ request: Request) {
-        guard let urlRequest = request.request else { return }
+    func request(_: Request, didCreateURLRequest urlRequest: URLRequest) {
         for monitor in monitors {
             monitor.requestDidStart(urlRequest: urlRequest)
         }
@@ -49,12 +48,20 @@ final class CDYelpAlamofireEventMonitor: EventMonitor {
     }
 
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
-        // Unwrap AFError so monitors receive the underlying URLError rather than an Alamofire-specific type.
+        // Map AFError cases to Foundation types so monitors don't need to import Alamofire.
+        // HTTP-level failures (4xx/5xx) are visible via the response parameter, so they pass nil.
         let publicError: Error?
-        if let afError = response.error, case let .sessionTaskFailed(underlying) = afError {
-            publicError = underlying
+        if let afError = response.error {
+            switch afError {
+            case let .sessionTaskFailed(underlying):
+                publicError = underlying
+            case let .requestAdaptationFailed(underlying):
+                publicError = underlying
+            default:
+                publicError = nil
+            }
         } else {
-            publicError = response.error
+            publicError = nil
         }
         for monitor in monitors {
             monitor.requestDidComplete(

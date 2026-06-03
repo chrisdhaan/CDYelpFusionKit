@@ -143,23 +143,23 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ) {
         let decoder = decoder ?? decoderConfiguration.makeDecoder()
 
-        guard var urlRequest = try? router.asURLRequest() else {
-            completion(nil)
-            return
-        }
-
-        // Run adapters now so the cache key matches the URL the session will actually send.
-        for adapter in requestAdapters {
-            if let adapted = try? adapter.adapt(urlRequest) {
-                urlRequest = adapted
+        // Only build the cache key when caching is enabled, skipping the redundant
+        // asURLRequest() + adapter pass on every uncached call. If any adapter throws,
+        // skip caching and let Alamofire surface the error through the normal failure path.
+        var cacheKey: String?
+        if responseCache != nil, var urlRequest = try? router.asURLRequest() {
+            do {
+                for adapter in requestAdapters {
+                    urlRequest = try adapter.adapt(urlRequest)
+                }
+                cacheKey = CDYelpCacheKey.key(for: urlRequest)
+            } catch {
+                cacheKey = nil
             }
         }
 
-        let cacheKey = CDYelpCacheKey.key(for: urlRequest)
-
-        if let cache = responseCache, let cachedData = cache.data(forKey: cacheKey) {
-            let decoded = try? decoder.decode(T.self, from: cachedData)
-            completion(decoded)
+        if let cache = responseCache, let key = cacheKey, let cachedData = cache.data(forKey: key) {
+            completion(try? decoder.decode(T.self, from: cachedData))
             return
         }
 
@@ -172,7 +172,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
                     // Only cache bytes that decode successfully; storing undecoded data would
                     // poison the cache key for the entire TTL with no recovery path.
                     if let decoded = try? decoder.decode(T.self, from: data) {
-                        self?.responseCache?.set(data: data, forKey: cacheKey)
+                        if let key = cacheKey {
+                            self?.responseCache?.set(data: data, forKey: key)
+                        }
                         completion(decoded)
                     } else {
                         completion(nil)
@@ -419,7 +421,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
         if isAuthenticated() == true {
             let parameters = Parameters.reviewsParameters(withLocale: locale)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
 
             cachedRequest(CDYelpRouter.reviews(id: id, parameters: parameters), decoder: decoder, completion: completion)
@@ -474,7 +476,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
         if isAuthenticated() == true {
             let parameters = Parameters.eventParameters(withLocale: locale)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             cachedRequest(CDYelpRouter.event(id: id, parameters: parameters), decoder: decoder, completion: completion)
@@ -539,7 +541,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                          longitude: longitude,
                                                          radius: radius,
                                                          excludedEvents: excludedEvents)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             cachedRequest(CDYelpRouter.events(parameters: parameters), decoder: decoder, completion: completion)
@@ -570,7 +572,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                 location: location,
                                                                 latitude: latitude,
                                                                 longitude: longitude)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
             cachedRequest(CDYelpRouter.featuredEvent(parameters: parameters), decoder: decoder, completion: completion)

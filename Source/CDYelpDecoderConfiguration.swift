@@ -46,7 +46,7 @@ public struct CDYelpDecoderConfiguration: @unchecked Sendable {
     public static let `default` = CDYelpDecoderConfiguration()
 
     /// Builds a configured `JSONDecoder` from this configuration.
-    func makeDecoder() -> JSONDecoder {
+    public func makeDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = keyDecodingStrategy
         decoder.dateDecodingStrategy = dateDecodingStrategy

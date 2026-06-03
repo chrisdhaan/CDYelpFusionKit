@@ -33,7 +33,8 @@ public struct CDYelpRetryConfiguration: Sendable {
     public let retryLimit: UInt
     /// Initial wait interval before the first retry. Doubles each attempt. Default: 0.5 seconds.
     public let initialDelay: TimeInterval
-    /// HTTP status codes that should trigger a retry. Default: [408, 429, 500, 502, 503, 504].
+    /// HTTP status codes that should trigger a retry. Defaults to Alamofire's standard set
+    /// ([408, 500, 502, 503, 504]) plus 429 (Too Many Requests) for Yelp rate-limit handling.
     public let retryableHTTPStatusCodes: Set<Int>
 
     public init(
