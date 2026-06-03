@@ -14,6 +14,7 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | `Resources/` | Asset catalogs (Yelp brand colors, star ratings) |
 | `Documentation/` | Usage guide, architecture, migration guide |
 | `docs/` | DocC-generated API documentation (GitHub Pages) |
+| `scripts/` | Developer scripts (e.g. `generate-docs.sh`) |
 | `CDYelpFusionKit.xcodeproj` | Xcode project |
 | `CDYelpFusionKit.podspec` | CocoaPods spec |
 | `Package.swift` | Swift Package Manager manifest |
@@ -77,14 +78,8 @@ swiftformat Source Tests --lint
 # Fix formatting
 swiftformat Source Tests
 
-# Generate DocC documentation
-swift package --disable-sandbox generate-documentation \
-  --target CDYelpFusionKit \
-  --output-path docs \
-  --transform-for-static-hosting \
-  --hosting-base-path CDYelpFusionKit
-# After generating, restore the root redirect (generation overwrites docs/index.html):
-# Replace docs/index.html with a meta-refresh redirect to /CDYelpFusionKit/documentation/cdyelpfusionkit/
+# Generate DocC documentation (restores root redirect, adds .nojekyll and 404.html)
+bash scripts/generate-docs.sh
 
 # Preview documentation locally
 swift package --disable-sandbox preview-documentation --target CDYelpFusionKit
