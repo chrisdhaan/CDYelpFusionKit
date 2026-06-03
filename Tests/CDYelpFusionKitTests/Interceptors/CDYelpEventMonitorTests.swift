@@ -45,4 +45,22 @@ struct CDYelpEventMonitorTests {
         request = try adapter.adapt(request)
         #expect(request.value(forHTTPHeaderField: "X-Custom-Header") == "test-value")
     }
+
+    @Test func spyMonitorCapturesStartedRequests() {
+        let spy = SpyMonitor()
+        guard let url = URL(string: "https://api.yelp.com") else { return }
+        spy.requestDidStart(urlRequest: URLRequest(url: url))
+        #expect(spy.startedRequests.count == 1)
+        #expect(spy.startedRequests.first?.url == url)
+    }
+
+    @Test func spyMonitorCapturesCompletedRequests() {
+        let spy = SpyMonitor()
+        guard let url = URL(string: "https://api.yelp.com") else { return }
+        let data = "{}".data(using: .utf8)
+        spy.requestDidComplete(urlRequest: URLRequest(url: url), response: nil, data: data, error: nil)
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.completedRequests.first?.urlRequest?.url == url)
+        #expect(spy.completedRequests.first?.data == data)
+    }
 }
