@@ -485,6 +485,175 @@ Task {
 
 ---
 
+## Advanced Features
+
+### Response Caching
+
+Enable in-memory response caching by passing a `CDYelpCacheConfiguration` to the client initializer. Responses are cached by canonical URL and served from cache on repeat requests within the TTL window.
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    cacheConfiguration: CDYelpCacheConfiguration(
+        ttl: 300,        // 5 minutes
+        countLimit: 100, // max 100 cached responses
+        totalCostLimit: 0 // unlimited bytes
+    )
+)
+
+// First call hits the network
+let response = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
+
+// Repeat call within TTL is served from cache — no network request
+let cached = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
+
+// Manually invalidate the entire cache
+client.clearCache()
+```
+
+Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are only stored after a successful decode, preventing poisoned cache entries from bad responses.
+
+---
+
+### Retry Strategy
+
+Configure automatic retry with exponential backoff for transient failures:
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    retryConfiguration: CDYelpRetryConfiguration(
+        retryLimit: 3,
+        initialDelay: 0.5,                    // seconds (doubles each retry)
+        retryableHTTPStatusCodes: [429, 500, 502, 503, 504]
+    )
+)
+```
+
+The default preset (`CDYelpRetryConfiguration.default`) retries 3 times starting at 0.5 s for network errors and common server-side status codes. Retrying is disabled by default (`CDYelpRetryConfiguration.disabled`).
+
+---
+
+### Event Monitoring
+
+Implement `CDYelpEventMonitor` to observe every request/response cycle without subclassing the client — useful for logging, analytics, or debugging:
+
+```swift
+final class RequestLogger: CDYelpEventMonitor {
+    func requestDidStart(urlRequest: URLRequest) {
+        print("→ \(urlRequest.httpMethod ?? "GET") \(urlRequest.url?.absoluteString ?? "")")
+    }
+
+    func requestDidComplete(urlRequest: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) {
+        let status = response?.statusCode.description ?? "no response"
+        print("← \(status) \(urlRequest?.url?.absoluteString ?? "")")
+    }
+
+    func requestWillRetry(urlRequest: URLRequest?, error: Error?) {
+        print("↩ retrying \(urlRequest?.url?.absoluteString ?? "") after \(error?.localizedDescription ?? "error")")
+    }
+}
+
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    eventMonitors: [RequestLogger()]
+)
+```
+
+Multiple monitors can be passed in the array; all receive every event.
+
+---
+
+### Request Adapters
+
+Implement `CDYelpRequestAdapter` to mutate every `URLRequest` before it is sent — useful for adding custom headers, request signing, or parameter injection:
+
+```swift
+final class CorrelationIDAdapter: CDYelpRequestAdapter {
+    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        var request = urlRequest
+        request.setValue(UUID().uuidString, forHTTPHeaderField: "X-Correlation-ID")
+        return request
+    }
+}
+
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    requestAdapters: [CorrelationIDAdapter()]
+)
+```
+
+Multiple adapters can be passed; they are applied in order.
+
+---
+
+### Custom Decoders
+
+Override the JSON decoding strategy used for all responses:
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    decoderConfiguration: CDYelpDecoderConfiguration(
+        keyDecodingStrategy: .convertFromSnakeCase
+    )
+)
+```
+
+> **Note:** `dateDecodingStrategy` is ignored for the reviews and events endpoints, which use fixed Yelp-specific date formats regardless of this setting.
+
+---
+
+### Testing Utilities
+
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` let you write unit tests against the real `CDYelpAPIClient` without making network requests.
+
+**1. Register a stub response** before creating the client, then use `CDYelpMockClientFactory` to get a client whose session routes all requests through your stub:
+
+```swift
+import CDYelpFusionKit
+import Testing
+
+struct MyFeatureTests {
+    @Test func searchReturnsResults() async throws {
+        let fixture = """
+        {"businesses": [{"id": "abc", "name": "Test Cafe"}], "total": 1}
+        """.data(using: .utf8)!
+
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeAllStubs() }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+        #expect(response.businesses?.first?.name == "Test Cafe")
+    }
+}
+```
+
+**2. Stubs are matched by URL substring.** Any request whose URL contains the registered key triggers the stub.
+
+**3. Availability.** The testing utilities are compiled under `#if DEBUG || TESTING`. They are available automatically in `DEBUG` builds and in any test target that defines `TESTING` in its Swift settings:
+
+```swift
+// In Package.swift
+.testTarget(
+    name: "MyAppTests",
+    dependencies: ["CDYelpFusionKit"],
+    swiftSettings: [.define("TESTING")]
+)
+```
+
+---
+
 ## Enums Reference
 
 ### Sort Types

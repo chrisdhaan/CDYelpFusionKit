@@ -18,15 +18,17 @@ Network stack (OS-level)
 
 CDYelpFusionKit wraps Alamofire to provide:
 - **Request routing** — `CDYelpRouter` enum implements Alamofire's `URLRequestConvertible` protocol
-- **Response decoding** — Uses Alamofire's `responseDecodable()` to automatically parse JSON into typed models
-- **Authentication** — Adds Bearer token authentication via `HTTPHeaders`
-- **Session management** — Shares a single `Alamofire.Session` for all API requests
+- **Response decoding** — Uses Alamofire's `responseData()` + manual `JSONDecoder` to parse JSON into typed models
+- **Authentication** — Adds Bearer token to every request via `HTTPHeaders` on `URLSessionConfiguration`
+- **Session management** — A single `Alamofire.Session` is created eagerly in `CDYelpAPIClient.init` via `makeSession()`
+- **Interceptors** — Alamofire's `EventMonitor` and `RequestInterceptor` extension points are bridged to the public `CDYelpEventMonitor` and `CDYelpRequestAdapter` protocols
+- **Retry** — Alamofire's `RetryPolicy` is wired into the session `Interceptor` when `CDYelpRetryConfiguration.retryLimit > 0`
 
 Alamofire itself manages:
 - HTTP connection pooling
 - SSL/TLS certificate validation
-- Request retry logic (not used by CDYelpFusionKit by default)
-- Response serialization (used for Decodable models)
+- Request retry signalling (coordinated with `CDYelpRetryConfiguration`)
+- URLSession delegate lifecycle
 
 ### URLSession
 
@@ -580,19 +582,17 @@ client.searchBusinesses(...) { [weak self] response in
 
 ### Caching
 
-CDYelpFusionKit does **not** implement response caching. Implement caching at the application level if needed:
+CDYelpFusionKit provides opt-in in-memory response caching via `CDYelpCacheConfiguration`. The cache is backed by `CDYelpResponseCache` (an `NSCache` wrapper with TTL tracking).
+
+Cache keys are built by `CDYelpCacheKey.key(for:)`, which normalises URL query parameters to a sorted canonical form so that parameter dictionary ordering does not produce cache misses.
+
+Bytes are only stored after a successful decode, preventing a bad response from poisoning the cache for the TTL window.
 
 ```swift
-var cachedSearchResults: [String: CDYelpSearchResponse] = [:]
-
-func searchOrUseCached(term: String) async throws -> CDYelpSearchResponse {
-    if let cached = cachedSearchResults[term] {
-        return cached
-    }
-    let result = try await client.searchBusinesses(byTerm: term, ...)
-    cachedSearchResults[term] = result
-    return result
-}
+let client = CDYelpAPIClient(
+    apiKey: "key",
+    cacheConfiguration: CDYelpCacheConfiguration(ttl: 300)
+)
 ```
 
 ---
@@ -619,15 +619,21 @@ All functionality available for network requests. Limited UI rendering:
 
 ## Future Architecture Changes
 
-### Potential Improvements
+### Completed in v5.0.0
 
-1. **Middleware/Interceptor Pattern** — Add request/response interceptors for logging, metrics, or request modification
-2. **Response Caching Layer** — Built-in cache with TTL support
-3. **Retry Strategy** — Configurable exponential backoff for transient failures
-4. **Custom Decoders** — Allow users to provide custom JSON decoding strategies
-5. **Testing Utilities** — Mock networking for unit tests
+Five improvements were added in v5.0.0, all additive and opt-in via `CDYelpAPIClient.init` parameters:
 
-These would be introduced in v5.0.0 without breaking the public API.
+1. **Middleware/Interceptor Pattern** — `CDYelpEventMonitor` and `CDYelpRequestAdapter` protocols; bridged to Alamofire internals via `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter`
+2. **Response Caching Layer** — `CDYelpCacheConfiguration` + internal `CDYelpResponseCache` (NSCache + TTL) + `CDYelpCacheKey`
+3. **Retry Strategy** — `CDYelpRetryConfiguration`; wires Alamofire `RetryPolicy` into the session `Interceptor`
+4. **Custom Decoders** — `CDYelpDecoderConfiguration`; injected into every `cachedRequest` call path
+5. **Testing Utilities** — `CDYelpMockURLProtocol` + `CDYelpMockClientFactory`; compiled under `#if DEBUG || TESTING`
+
+### Planned for v6.0.0
+
+- Drop Alamofire entirely; replace with a native `CDYelpURLSession` actor
+- All v5 public configuration structs and protocols survive unchanged
+- See `Documentation/IMPROVEMENTS.md` for the full v6 implementation plan
 
 ### Backward Compatibility
 
@@ -676,7 +682,18 @@ Router tests validate URL construction without network access:
 
 ### Integration Testing
 
-Integration tests (not in the repo) would use actual API calls and a test API key.
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (in `Source/Testing/`, compiled under `#if DEBUG || TESTING`) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
+
+```swift
+CDYelpMockURLProtocol.register(
+    stub: .init(data: fixtureData, statusCode: 200),
+    forURLContaining: "businesses/search"
+)
+let client = CDYelpMockClientFactory.makeClient()
+let response = try await client.searchBusinesses(...)
+```
+
+JSON fixtures live in `Tests/CDYelpFusionKitTests/Fixtures/` and are loaded via `FixtureLoader`.
 
 ---
 

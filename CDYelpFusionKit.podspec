@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CDYelpFusionKit'
-  s.version = '4.0.0'
+  s.version = '5.0.0'
   s.cocoapods_version = '>= 1.13.0'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   s.swift_versions = ['5']
 
-  s.source_files = 'Source/*.swift'
+  s.source_files = 'Source/**/*.swift'
   s.resource_bundles = { 'CDYelpFusionKit' => ['Source/PrivacyInfo.xcprivacy'] }
   s.resources = ['Resources/*.xcassets']
 
