@@ -32,6 +32,8 @@ public struct CDYelpDecoderConfiguration: @unchecked Sendable {
     /// Strategy for decoding keys. Default: `.useDefaultKeys`.
     public let keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy
     /// Strategy for decoding dates. Default: `.deferredToDate`.
+    /// - Note: This strategy is not applied to the reviews or events endpoints, which use
+    ///   fixed Yelp-specific date formats regardless of this setting.
     public let dateDecodingStrategy: JSONDecoder.DateDecodingStrategy
 
     public init(

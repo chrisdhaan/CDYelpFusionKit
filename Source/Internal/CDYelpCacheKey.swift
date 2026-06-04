@@ -29,8 +29,15 @@ import Foundation
 
 enum CDYelpCacheKey {
     static func key(for urlRequest: URLRequest) -> String {
-        let url = urlRequest.url?.absoluteString ?? ""
         let method = urlRequest.httpMethod ?? "GET"
-        return "\(method):\(url)"
+        guard let url = urlRequest.url,
+              var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else {
+            return "\(method):"
+        }
+        // Sort query items so parameter order from Dictionary iteration doesn't affect the key.
+        components.queryItems = components.queryItems?.sorted { $0.name < $1.name }
+        let canonicalURL = components.url?.absoluteString ?? url.absoluteString
+        return "\(method):\(canonicalURL)"
     }
 }

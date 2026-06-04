@@ -41,36 +41,42 @@ public class CDYelpAPIClient: @unchecked Sendable {
     private let decoderConfiguration: CDYelpDecoderConfiguration
     private let eventMonitors: [any CDYelpEventMonitor]
     private let requestAdapters: [any CDYelpRequestAdapter]
-    private lazy var manager: Alamofire.Session = {
-        var headers = HTTPHeaders.default
-        headers["Authorization"] = "Bearer \(self.apiKey)"
+    private let manager: Alamofire.Session
 
-        let configuration = self.sessionConfiguration
-        configuration.httpAdditionalHeaders = headers.dictionary
+    private static func makeSession(
+        apiKey: String,
+        sessionConfiguration: URLSessionConfiguration,
+        retryConfiguration: CDYelpRetryConfiguration,
+        eventMonitors: [any CDYelpEventMonitor],
+        requestAdapters: [any CDYelpRequestAdapter]
+    ) -> Alamofire.Session {
+        var headers = HTTPHeaders.default
+        headers["Authorization"] = "Bearer \(apiKey)"
+        sessionConfiguration.httpAdditionalHeaders = headers.dictionary
 
         let rootQueue = DispatchQueue(label: "org.cdyelp.session.rootQueue")
         let delegateQueue = OperationQueue()
         delegateQueue.underlyingQueue = rootQueue
 
-        let urlSession = URLSession(configuration: configuration, delegate: nil, delegateQueue: delegateQueue)
         let delegate = Alamofire.SessionDelegate()
+        let urlSession = URLSession(configuration: sessionConfiguration, delegate: delegate, delegateQueue: delegateQueue)
 
-        let alamofireMonitors: [any EventMonitor] = self.eventMonitors.isEmpty
+        let alamofireMonitors: [any EventMonitor] = eventMonitors.isEmpty
             ? []
-            : [CDYelpAlamofireEventMonitor(monitors: self.eventMonitors)]
+            : [CDYelpAlamofireEventMonitor(monitors: eventMonitors)]
 
         var adapters: [RequestAdapter] = []
-        if !self.requestAdapters.isEmpty {
-            adapters.append(CDYelpAlamofireRequestAdapter(adapters: self.requestAdapters))
+        if !requestAdapters.isEmpty {
+            adapters.append(CDYelpAlamofireRequestAdapter(adapters: requestAdapters))
         }
 
         var retriers: [RequestRetrier] = []
-        if self.retryConfiguration.retryLimit > 0 {
+        if retryConfiguration.retryLimit > 0 {
             let policy = RetryPolicy(
-                retryLimit: self.retryConfiguration.retryLimit,
+                retryLimit: retryConfiguration.retryLimit,
                 exponentialBackoffBase: 2,
-                exponentialBackoffScale: self.retryConfiguration.initialDelay,
-                retryableHTTPStatusCodes: self.retryConfiguration.retryableHTTPStatusCodes,
+                exponentialBackoffScale: retryConfiguration.initialDelay,
+                retryableHTTPStatusCodes: retryConfiguration.retryableHTTPStatusCodes,
                 retryableURLErrorCodes: [
                     .networkConnectionLost,
                     .notConnectedToInternet,
@@ -91,7 +97,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
             interceptor: interceptor,
             eventMonitors: alamofireMonitors
         )
-    }()
+    }
 
     // MARK: - Initializers
 
@@ -146,6 +152,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
             : nil
         self.eventMonitors = eventMonitors
         self.requestAdapters = requestAdapters
+        manager = Self.makeSession(
+            apiKey: apiKey,
+            sessionConfiguration: sessionConfiguration,
+            retryConfiguration: retryConfiguration,
+            eventMonitors: eventMonitors,
+            requestAdapters: requestAdapters
+        )
     }
 
     // MARK: - Authentication Methods

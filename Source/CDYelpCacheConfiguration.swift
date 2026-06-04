@@ -43,5 +43,6 @@ public struct CDYelpCacheConfiguration: Sendable {
     }
 
     /// Caching disabled — the default when no configuration is provided.
+    /// A `ttl` of 0 prevents the cache from being created, so `countLimit` and `totalCostLimit` have no effect.
     public static let disabled = CDYelpCacheConfiguration(ttl: 0, countLimit: 0, totalCostLimit: 0)
 }
