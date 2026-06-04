@@ -35,6 +35,7 @@ import Alamofire
 
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
+    private let sessionConfiguration: URLSessionConfiguration
     private let responseCache: CDYelpResponseCache?
     private let retryConfiguration: CDYelpRetryConfiguration
     private let decoderConfiguration: CDYelpDecoderConfiguration
@@ -43,8 +44,16 @@ public class CDYelpAPIClient: @unchecked Sendable {
     private lazy var manager: Alamofire.Session = {
         var headers = HTTPHeaders.default
         headers["Authorization"] = "Bearer \(self.apiKey)"
-        let configuration = URLSessionConfiguration.default
+
+        let configuration = self.sessionConfiguration
         configuration.httpAdditionalHeaders = headers.dictionary
+
+        let rootQueue = DispatchQueue(label: "org.cdyelp.session.rootQueue")
+        let delegateQueue = OperationQueue()
+        delegateQueue.underlyingQueue = rootQueue
+
+        let urlSession = URLSession(configuration: configuration, delegate: nil, delegateQueue: delegateQueue)
+        let delegate = Alamofire.SessionDelegate()
 
         let alamofireMonitors: [any EventMonitor] = self.eventMonitors.isEmpty
             ? []
@@ -76,7 +85,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
             : Interceptor(adapters: adapters, retriers: retriers)
 
         return Alamofire.Session(
-            configuration: configuration,
+            session: urlSession,
+            delegate: delegate,
+            rootQueue: rootQueue,
             interceptor: interceptor,
             eventMonitors: alamofireMonitors
         )
@@ -97,8 +108,28 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - returns: Void
     ///
-    public init(
+    public convenience init(
         apiKey: String,
+        cacheConfiguration: CDYelpCacheConfiguration = .disabled,
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
+    ) {
+        self.init(
+            apiKey: apiKey,
+            sessionConfiguration: URLSessionConfiguration.default,
+            cacheConfiguration: cacheConfiguration,
+            retryConfiguration: retryConfiguration,
+            decoderConfiguration: decoderConfiguration,
+            eventMonitors: eventMonitors,
+            requestAdapters: requestAdapters
+        )
+    }
+
+    init(
+        apiKey: String,
+        sessionConfiguration: URLSessionConfiguration,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
         retryConfiguration: CDYelpRetryConfiguration = .disabled,
         decoderConfiguration: CDYelpDecoderConfiguration = .default,
@@ -107,6 +138,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        self.sessionConfiguration = sessionConfiguration
         self.decoderConfiguration = decoderConfiguration
         self.retryConfiguration = retryConfiguration
         responseCache = cacheConfiguration.ttl > 0

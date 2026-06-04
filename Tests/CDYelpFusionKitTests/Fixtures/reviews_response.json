@@ -1,0 +1,19 @@
+{
+  "total": 1,
+  "possible_languages": ["en"],
+  "reviews": [
+    {
+      "id": "xAG4O7l-t1ubbwVAlaPNNA",
+      "url": "https://www.yelp.com/biz/gary-danko-san-francisco?hrid=xAG4O7l-t1ubbwVAlaPNNA",
+      "text": "Went back again to this place since the last time I was here in 2020.",
+      "rating": 5,
+      "time_created": "2020-11-18 22:30:48",
+      "user": {
+        "id": "U4INQZOPSKyl0bHR4YRVYA",
+        "profile_url": "https://www.yelp.com/user_details?userid=U4INQZOPSKyl0bHR4YRVYA",
+        "image_url": "https://s3-media3.fl.yelpcdn.com/photo/iwoAD12zkONZxJ94ChAaMg/o.jpg",
+        "name": "Liz A."
+      }
+    }
+  ]
+}

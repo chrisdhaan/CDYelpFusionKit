@@ -62,7 +62,13 @@ let package = Package(
             ]),
         .testTarget(
             name: "CDYelpFusionKitTests",
-            dependencies: ["CDYelpFusionKit"]
+            dependencies: ["CDYelpFusionKit"],
+            resources: [
+                .copy("Fixtures")
+            ],
+            swiftSettings: [
+                .define("TESTING")
+            ]
         )
     ],
     swiftLanguageModes: [.v5])
