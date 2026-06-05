@@ -641,14 +641,13 @@ struct MyFeatureTests {
 
 **2. Stubs are matched by URL substring.** Any request whose URL contains the registered key triggers the stub.
 
-**3. Availability.** The testing utilities are compiled under `#if DEBUG || TESTING`. They are available automatically in `DEBUG` builds and in any test target that defines `TESTING` in its Swift settings:
+**3. Availability.** The testing utilities are part of the `CDYelpFusionKitTesting` product, which is a separate library target. Add it as a dependency only in your test targets:
 
 ```swift
 // In Package.swift
 .testTarget(
     name: "MyAppTests",
-    dependencies: ["CDYelpFusionKit"],
-    swiftSettings: [.define("TESTING")]
+    dependencies: ["CDYelpFusionKit", "CDYelpFusionKitTesting"]
 )
 ```
 
