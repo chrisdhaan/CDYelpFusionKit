@@ -19,11 +19,11 @@ struct CDYelpMockURLProtocolTests {
         #expect(CDYelpMockURLProtocol.canInit(with: request) == true)
     }
 
-    @Test func canInitReturnsFalseWhenURLDoesNotMatchAnyStub() {
+    @Test func canInitReturnsFalseWhenURLDoesNotMatchAnyStub() throws {
         CDYelpMockURLProtocol.register(stub: .init(data: Data(), statusCode: 200), forURLContaining: kTestKey)
         defer { CDYelpMockURLProtocol.removeStub(forURLContaining: kTestKey) }
 
-        let other = URLRequest(url: URL(string: "https://mock.yelp.test/completely-unrelated/path")!)
+        let other = try URLRequest(url: #require(URL(string: "https://mock.yelp.test/completely-unrelated/path")))
         #expect(CDYelpMockURLProtocol.canInit(with: other) == false)
     }
 

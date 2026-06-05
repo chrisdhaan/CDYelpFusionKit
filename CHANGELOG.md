@@ -5,7 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
-- [5.0.0](#500---2026-06-03)
+- [5.0.0](#500---2026-06-05)
 - [4.0.0](#400---2026-06-02)
 - [3.2.0](#320---2022-08-02)
 - [3.1.0](#310---2022-06-13)
@@ -24,7 +24,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [5.0.0] - 2026-06-03
+## [5.0.0] - 2026-06-05
 
 ### Added
 
