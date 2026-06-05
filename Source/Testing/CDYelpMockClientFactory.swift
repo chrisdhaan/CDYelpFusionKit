@@ -1,4 +1,6 @@
-import CDYelpFusionKit
+#if SWIFT_PACKAGE
+    import CDYelpFusionKit
+#endif
 import Foundation
 
 /// Creates CDYelpAPIClient instances configured for testing with CDYelpMockURLProtocol.
