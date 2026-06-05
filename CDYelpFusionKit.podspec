@@ -21,8 +21,13 @@ Pod::Spec.new do |s|
   s.swift_versions = ['5']
 
   s.source_files = 'Source/**/*.swift'
+  s.exclude_files = 'Source/Testing/**/*.swift'
   s.resource_bundles = { 'CDYelpFusionKit' => ['Source/PrivacyInfo.xcprivacy'] }
   s.resources = ['Resources/*.xcassets']
 
   s.dependency 'Alamofire', '~> 5.9'
+
+  s.subspec 'Testing' do |t|
+    t.source_files = 'Source/Testing/**/*.swift'
+  end
 end

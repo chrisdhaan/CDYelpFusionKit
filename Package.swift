@@ -44,7 +44,10 @@ let package = Package(
         .library(
             name: "CDYelpFusionKitDynamic",
             type: .dynamic,
-            targets: ["CDYelpFusionKit"])
+            targets: ["CDYelpFusionKit"]),
+        .library(
+            name: "CDYelpFusionKitTesting",
+            targets: ["CDYelpFusionKitTesting"])
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
@@ -55,19 +58,20 @@ let package = Package(
             name: "CDYelpFusionKit",
             dependencies: [.product(name: "Alamofire", package: "Alamofire")],
             path: "Source",
-            exclude: ["Info.plist"],
+            exclude: ["Info.plist", "Testing"],
             resources: [.process("PrivacyInfo.xcprivacy")],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS, .watchOS, .visionOS]))
             ]),
+        .target(
+            name: "CDYelpFusionKitTesting",
+            dependencies: ["CDYelpFusionKit"],
+            path: "Source/Testing"),
         .testTarget(
             name: "CDYelpFusionKitTests",
-            dependencies: ["CDYelpFusionKit"],
+            dependencies: ["CDYelpFusionKit", "CDYelpFusionKitTesting"],
             resources: [
                 .copy("Fixtures")
-            ],
-            swiftSettings: [
-                .define("TESTING")
             ]
         )
     ],

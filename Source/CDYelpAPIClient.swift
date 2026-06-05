@@ -133,7 +133,8 @@ public class CDYelpAPIClient: @unchecked Sendable {
         )
     }
 
-    init(
+    /// Internal initializer for testing — allows injection of a custom URLSessionConfiguration.
+    public init(
         apiKey: String,
         sessionConfiguration: URLSessionConfiguration,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,

@@ -1,4 +1,5 @@
 @testable import CDYelpFusionKit
+import CDYelpFusionKitTesting
 import Foundation
 import Testing
 
