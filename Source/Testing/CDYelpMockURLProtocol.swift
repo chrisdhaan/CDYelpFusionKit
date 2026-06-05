@@ -25,6 +25,13 @@ public final class CDYelpMockURLProtocol: URLProtocol {
         lock.unlock()
     }
 
+    /// Remove the stub registered for a specific URL key.
+    public static func removeStub(forURLContaining urlContains: String) {
+        lock.lock()
+        stubs.removeValue(forKey: urlContains)
+        lock.unlock()
+    }
+
     /// Remove all registered stubs.
     public static func removeAllStubs() {
         lock.lock()

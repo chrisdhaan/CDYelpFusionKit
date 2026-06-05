@@ -11,7 +11,7 @@ struct CDYelpAPIClientTests {
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "businesses/search"
         )
-        defer { CDYelpMockURLProtocol.removeAllStubs() }
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
 
         let client = CDYelpMockClientFactory.makeClient()
         let response = try await client.searchBusinesses(
@@ -30,7 +30,7 @@ struct CDYelpAPIClientTests {
             stub: .init(data: Data(), statusCode: 404),
             forURLContaining: "businesses/search"
         )
-        defer { CDYelpMockURLProtocol.removeAllStubs() }
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
 
         let client = CDYelpMockClientFactory.makeClient()
         await #expect(throws: Error.self) {
@@ -64,7 +64,7 @@ struct CDYelpAPIClientTests {
         )
 
         // Remove the stub — any real network call would now fail
-        CDYelpMockURLProtocol.removeAllStubs()
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search")
 
         let second = try await client.searchBusinesses(
             byTerm: "coffee", location: "SF",
@@ -83,7 +83,7 @@ struct CDYelpAPIClientTests {
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "businesses/search"
         )
-        defer { CDYelpMockURLProtocol.removeAllStubs() }
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
 
         let spy = LocalSpyMonitor()
         let client = CDYelpMockClientFactory.makeClient(eventMonitors: [spy])
