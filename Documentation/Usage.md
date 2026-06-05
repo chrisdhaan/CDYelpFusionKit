@@ -549,8 +549,8 @@ final class RequestLogger: CDYelpEventMonitor {
         print("← \(status) \(urlRequest?.url?.absoluteString ?? "")")
     }
 
-    func requestWillRetry(urlRequest: URLRequest?, error: Error?) {
-        print("↩ retrying \(urlRequest?.url?.absoluteString ?? "") after \(error?.localizedDescription ?? "error")")
+    func requestWillRetry(urlRequest: URLRequest?, retryCount: Int) {
+        print("↩ retrying \(urlRequest?.url?.absoluteString ?? "") (attempt \(retryCount))")
     }
 }
 
