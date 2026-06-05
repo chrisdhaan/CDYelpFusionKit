@@ -37,7 +37,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - `CDYelpMockClientFactory` factory for creating `CDYelpAPIClient` instances backed by `CDYelpMockURLProtocol`
 - `clearCache()` method on `CDYelpAPIClient` for programmatic cache invalidation
 - `Source/Internal/` subdirectory containing Alamofire bridge types (`CDYelpAlamofireEventMonitor`, `CDYelpAlamofireRequestAdapter`) and cache internals (`CDYelpResponseCache`, `CDYelpCacheKey`)
-- `Source/Testing/` subdirectory containing `CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (compiled under `#if DEBUG || TESTING`)
+- `Source/Testing/` subdirectory containing `CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (available in the `CDYelpFusionKitTesting` product)
 - JSON test fixtures for business search, business detail, and reviews responses
 - 4 new integration tests in `CDYelpAPIClientTests` covering decode, error handling, cache end-to-end, and event monitor bridge
 
@@ -45,7 +45,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 - `CDYelpAPIClient.init` accepts five new opt-in parameters: `cacheConfiguration`, `retryConfiguration`, `decoderConfiguration`, `eventMonitors`, `requestAdapters` — all have sensible defaults so existing `CDYelpAPIClient(apiKey:)` call sites are unaffected
 - `Alamofire.Session` is now created eagerly in `init` via a static `makeSession` helper (previously a `lazy var`) to honour the `@unchecked Sendable` thread-safety contract
-- `Package.swift` test target includes `Fixtures` resource bundle and `TESTING` Swift define
+- `Package.swift` test target includes `Fixtures` resource bundle
 - `.swiftlint.yml` disables `trailing_comma` rule (conflicts with SwiftFormat's `trailingCommas` rule)
 
 ### Fixed
