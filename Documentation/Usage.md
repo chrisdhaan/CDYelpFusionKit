@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "4.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
 ]
 ```
 
@@ -30,7 +30,7 @@ Then add it to your target's dependencies:
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 4.0'
+pod 'CDYelpFusionKit', '~> 5.0'
 ```
 
 Then run `pod install`.
