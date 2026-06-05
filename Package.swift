@@ -58,7 +58,7 @@ let package = Package(
             name: "CDYelpFusionKit",
             dependencies: [.product(name: "Alamofire", package: "Alamofire")],
             path: "Source",
-            exclude: ["Info.plist", "Testing"],
+            exclude: ["Info.plist", "Info-tvOS.plist", "Testing"],
             resources: [.process("PrivacyInfo.xcprivacy")],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS, .watchOS, .visionOS]))

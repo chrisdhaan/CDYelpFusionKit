@@ -253,10 +253,10 @@
 		5F4315DC2FD2782000FAC621 /* CDYelpEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpEventMonitor.swift; sourceTree = "<group>"; };
 		5F4315DD2FD2782000FAC621 /* CDYelpRequestAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpRequestAdapter.swift; sourceTree = "<group>"; };
 		5F4315DE2FD2782000FAC621 /* CDYelpRetryConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpRetryConfiguration.swift; sourceTree = "<group>"; };
-		5F4315F82FD2783D00FAC621 /* CDYelpAlamofireEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpAlamofireEventMonitor.swift; sourceTree = "<group>"; };
-		5F4315F92FD2783D00FAC621 /* CDYelpAlamofireRequestAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpAlamofireRequestAdapter.swift; sourceTree = "<group>"; };
-		5F4315FA2FD2783D00FAC621 /* CDYelpCacheKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpCacheKey.swift; sourceTree = "<group>"; };
-		5F4315FB2FD2783D00FAC621 /* CDYelpResponseCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpResponseCache.swift; sourceTree = "<group>"; };
+		5F4315F82FD2783D00FAC621 /* CDYelpAlamofireEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internal/CDYelpAlamofireEventMonitor.swift; sourceTree = "<group>"; };
+		5F4315F92FD2783D00FAC621 /* CDYelpAlamofireRequestAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internal/CDYelpAlamofireRequestAdapter.swift; sourceTree = "<group>"; };
+		5F4315FA2FD2783D00FAC621 /* CDYelpCacheKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internal/CDYelpCacheKey.swift; sourceTree = "<group>"; };
+		5F4315FB2FD2783D00FAC621 /* CDYelpResponseCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internal/CDYelpResponseCache.swift; sourceTree = "<group>"; };
 		5F4316152FD278D800FAC621 /* CDYelpFusionKitTesting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKitTesting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F43161F2FD2793500FAC621 /* CDYelpMockClientFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpMockClientFactory.swift; sourceTree = "<group>"; };
 		5F4316202FD2793500FAC621 /* CDYelpMockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpMockURLProtocol.swift; sourceTree = "<group>"; };
