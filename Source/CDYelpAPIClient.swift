@@ -321,7 +321,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     }
 
     ///
-    /// This endpoint returns a list of businesses which support certain transactions. At this time, this endpoint does not return businesses without any reviews. Currently, this endpoint only supports food delivery in the US.
+    /// This endpoint returns a list of businesses which support certain transactions. At this time, this endpoint does not return businesses without any reviews. This endpoint supports food delivery, pickup, and restaurant reservations. Delivery and pickup are only supported in the US.
     ///
     /// - parameters:
     ///   - type: (**Required**) A transaction type for the Yelp Fusion API to query.

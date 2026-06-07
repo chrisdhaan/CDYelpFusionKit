@@ -1727,10 +1727,12 @@ public enum CDYelpStarsSize: String, Sendable {
 }
 
 ///
-/// A list of the transaction types the Yelp Fusion API supports. Currently, only food delivery is supported and it is only supported in the U.S.
+/// A list of the transaction types the Yelp Fusion API supports.
 ///
 public enum CDYelpTransactionType: String, Sendable {
     case foodDelivery = "delivery"
+    case pickup
+    case restaurantReservation = "restaurant_reservation"
 }
 
 // swiftlint:enable file_length
