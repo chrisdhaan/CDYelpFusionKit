@@ -37,9 +37,14 @@ A comprehensive Swift wrapper for the Yelp Fusion REST API with full support for
 - Complete Yelp Fusion API coverage (search, business details, reviews, events, categories, autocomplete)
 - Async/await support (iOS 13+, macOS 10.15+, tvOS 13+, watchOS 6+)
 - Traditional completion handler API for backward compatibility
+- Event monitoring and request adapters for logging, metrics, and header injection
+- Built-in response caching with configurable TTL
+- Automatic retry with exponential backoff
+- Customizable JSON decoding strategies
+- Mock networking utilities for unit testing (`CDYelpMockURLProtocol`, `CDYelpMockClientFactory`)
 - Full Swift concurrency support with `@unchecked Sendable` conformance
 - Privacy manifest for App Store compliance
-- Comprehensive unit test suite (Swift Testing framework)
+- Comprehensive unit test suite (Swift Testing framework, 128 tests)
 - Multi-platform support (iOS, macOS, tvOS, watchOS, visionOS)
 
 ## Quick Start
@@ -92,7 +97,7 @@ Add CDYelpFusionKit to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "4.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
 ]
 ```
 
@@ -103,7 +108,7 @@ Or in Xcode: **File → Add Packages** and enter the repository URL.
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 4.0'
+pod 'CDYelpFusionKit', '~> 5.0'
 ```
 
 Then run `pod install`.

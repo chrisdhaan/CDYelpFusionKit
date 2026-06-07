@@ -58,10 +58,6 @@ public struct CDYelpReview: Decodable, Sendable {
     }
 
     public func timeCreatedAsDate() -> Date? {
-        if let timeCreated = timeCreated {
-            let formatter = DateFormatter()
-            return formatter.date(from: timeCreated)
-        }
-        return nil
+        timeCreated.flatMap { DateFormatter.reviews.date(from: $0) }
     }
 }

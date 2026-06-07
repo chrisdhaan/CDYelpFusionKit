@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [5.0.0](#500---2026-06-07)
 - [4.0.0](#400---2026-06-02)
 - [3.2.0](#320---2022-08-02)
 - [3.1.0](#310---2022-06-13)
@@ -20,6 +21,37 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [5.0.0] - 2026-06-07
+
+### Added
+
+- `CDYelpEventMonitor` protocol for observing request/response lifecycle events (requestDidStart, requestDidComplete, requestWillRetry)
+- `CDYelpRequestAdapter` protocol for mutating `URLRequest` before dispatch (e.g. header injection, signing)
+- `CDYelpCacheConfiguration` struct for opt-in in-memory response caching with configurable TTL, count limit, and cost limit
+- `CDYelpRetryConfiguration` struct for automatic retry with exponential backoff and configurable retryable HTTP status codes
+- `CDYelpDecoderConfiguration` struct for customizing `JSONDecoder` key decoding and date decoding strategies
+- `CDYelpMockURLProtocol` URLProtocol subclass for intercepting and stubbing network requests in tests
+- `CDYelpMockClientFactory` factory for creating `CDYelpAPIClient` instances backed by `CDYelpMockURLProtocol`
+- `clearCache()` method on `CDYelpAPIClient` for programmatic cache invalidation
+- `Source/Internal/` subdirectory containing Alamofire bridge types (`CDYelpAlamofireEventMonitor`, `CDYelpAlamofireRequestAdapter`) and cache internals (`CDYelpResponseCache`, `CDYelpCacheKey`)
+- `Source/Testing/` subdirectory containing `CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (available in the `CDYelpFusionKitTesting` product)
+- JSON test fixtures for business search, business detail, and reviews responses
+- 4 new integration tests in `CDYelpAPIClientTests` covering decode, error handling, cache end-to-end, and event monitor bridge
+
+### Updated
+
+- `CDYelpAPIClient.init` accepts five new opt-in parameters: `cacheConfiguration`, `retryConfiguration`, `decoderConfiguration`, `eventMonitors`, `requestAdapters` — all have sensible defaults so existing `CDYelpAPIClient(apiKey:)` call sites are unaffected
+- `Alamofire.Session` is now created eagerly in `init` via a static `makeSession` helper (previously a `lazy var`) to honour the `@unchecked Sendable` thread-safety contract
+- `Package.swift` test target includes `Fixtures` resource bundle
+- `.swiftlint.yml` disables `trailing_comma` rule (conflicts with SwiftFormat's `trailingCommas` rule)
+
+### Fixed
+
+- `CDYelpReview.timeCreatedAsDate()` now uses the correct `"yyyy-MM-dd HH:mm:ss"` format (was always returning nil)
+- `CDYelpSpecialHour.dateAsDate()` now uses the correct `"yyyy-MM-dd"` format (was always returning nil)
 
 ---
 

@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "4.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
 ]
 ```
 
@@ -30,7 +30,7 @@ Then add it to your target's dependencies:
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 4.0'
+pod 'CDYelpFusionKit', '~> 5.0'
 ```
 
 Then run `pod install`.
@@ -138,8 +138,9 @@ client.searchBusinesses(byPhoneNumber: "+14157492060") { response in
 Search for businesses that support specific transactions (delivery, pickup, reservations):
 
 ```swift
-client.searchBusinesses(
-    byType: "delivery",
+client.searchTransactions(
+    byType: .foodDelivery,
+    location: nil,
     latitude: 37.7749,
     longitude: -122.4194
 ) { response in
@@ -154,7 +155,7 @@ Get detailed information about a specific business:
 
 ```swift
 client.fetchBusiness(
-    byId: "gary-danko-san-francisco",
+    forId: "gary-danko-san-francisco",
     locale: .english_unitedStates
 ) { response in
     guard let business = response?.business else {
@@ -171,11 +172,11 @@ client.fetchBusiness(
 Find a business by matching provided details (name, address, phone):
 
 ```swift
-client.fetchBusinesses(
-    byMatchType: .default,
+client.searchBusinesses(
     name: "Gary Danko",
     addressOne: "800 North Point Street",
     addressTwo: nil,
+    addressThree: nil,
     city: "San Francisco",
     state: "CA",
     country: "US",
@@ -185,9 +186,9 @@ client.fetchBusinesses(
     zipCode: nil,
     yelpBusinessId: nil,
     limit: 1,
-    threshold: .normal
+    matchThresholdType: .normal
 ) { response in
-    guard let business = response?.business else {
+    guard let business = response?.businesses?.first else {
         print("No matching business found")
         return
     }
@@ -216,7 +217,7 @@ client.fetchReviews(
 Get autocomplete suggestions for business searches:
 
 ```swift
-client.fetchAutocompleteResults(
+client.autocompleteBusinesses(
     byText: "coff",
     latitude: 37.7749,
     longitude: -122.4194,
@@ -247,16 +248,17 @@ client.searchEvents(
     byLocale: .english_unitedStates,
     offset: nil,
     limit: 10,
-    sortBy: .popularity,
+    sortBy: .descending,
     sortOn: .timeStart,
-    categories: [.music, .foodAndDrink],
     startDate: nil,
     endDate: nil,
+    categories: [.music, .foodAndDrink],
     isFree: nil,
     location: "San Francisco",
     latitude: nil,
     longitude: nil,
-    radius: nil
+    radius: nil,
+    excludedEvents: nil
 ) { response in
     guard let events = response?.events else { return }
     for event in events {
@@ -271,7 +273,7 @@ Get detailed information about a specific event:
 
 ```swift
 client.fetchEvent(
-    byId: "san-francisco-yelp-elite-week",
+    forId: "san-francisco-yelp-elite-week",
     locale: .english_unitedStates
 ) { response in
     guard let event = response?.event else { return }
@@ -286,7 +288,7 @@ Get the featured event for a location:
 
 ```swift
 client.fetchFeaturedEvent(
-    byLocale: .english_unitedStates,
+    forLocale: .english_unitedStates,
     location: "San Francisco",
     latitude: nil,
     longitude: nil
@@ -305,7 +307,7 @@ client.fetchFeaturedEvent(
 Get all available Yelp business categories:
 
 ```swift
-client.fetchAllCategories(locale: .english_unitedStates) { response in
+client.fetchCategories(forLocale: .english_unitedStates) { response in
     guard let categories = response?.categories else { return }
     for category in categories {
         print("\(category.title ?? "Unknown") (\(category.alias ?? ""))")
@@ -318,9 +320,9 @@ client.fetchAllCategories(locale: .english_unitedStates) { response in
 Get details for a specific category:
 
 ```swift
-client.fetchCategoryDetails(
-    byAlias: "restaurants",
-    locale: .english_unitedStates
+client.fetchCategory(
+    forAlias: .restaurants,
+    andLocale: .english_unitedStates
 ) { response in
     guard let category = response?.category else { return }
     print("Category: \(category.title ?? "Unknown")")
@@ -481,6 +483,174 @@ Task {
         print("Search unavailable: \(error.localizedDescription)")
     }
 }
+```
+
+---
+
+## Advanced Features
+
+### Response Caching
+
+Enable in-memory response caching by passing a `CDYelpCacheConfiguration` to the client initializer. Responses are cached by canonical URL and served from cache on repeat requests within the TTL window.
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    cacheConfiguration: CDYelpCacheConfiguration(
+        ttl: 300,        // 5 minutes
+        countLimit: 100, // max 100 cached responses
+        totalCostLimit: 0 // unlimited bytes
+    )
+)
+
+// First call hits the network
+let response = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
+
+// Repeat call within TTL is served from cache — no network request
+let cached = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
+
+// Manually invalidate the entire cache
+client.clearCache()
+```
+
+Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are only stored after a successful decode, preventing poisoned cache entries from bad responses.
+
+---
+
+### Retry Strategy
+
+Configure automatic retry with exponential backoff for transient failures:
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    retryConfiguration: CDYelpRetryConfiguration(
+        retryLimit: 3,
+        initialDelay: 0.5,                    // seconds (doubles each retry)
+        retryableHTTPStatusCodes: [429, 500, 502, 503, 504]
+    )
+)
+```
+
+The default preset (`CDYelpRetryConfiguration.default`) retries 3 times starting at 0.5 s for network errors and common server-side status codes. Retrying is disabled by default (`CDYelpRetryConfiguration.disabled`).
+
+---
+
+### Event Monitoring
+
+Implement `CDYelpEventMonitor` to observe every request/response cycle without subclassing the client — useful for logging, analytics, or debugging:
+
+```swift
+final class RequestLogger: CDYelpEventMonitor {
+    func requestDidStart(urlRequest: URLRequest) {
+        print("→ \(urlRequest.httpMethod ?? "GET") \(urlRequest.url?.absoluteString ?? "")")
+    }
+
+    func requestDidComplete(urlRequest: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) {
+        let status = response?.statusCode.description ?? "no response"
+        print("← \(status) \(urlRequest?.url?.absoluteString ?? "")")
+    }
+
+    func requestWillRetry(urlRequest: URLRequest?, retryCount: Int) {
+        print("↩ retrying \(urlRequest?.url?.absoluteString ?? "") (attempt \(retryCount))")
+    }
+}
+
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    eventMonitors: [RequestLogger()]
+)
+```
+
+Multiple monitors can be passed in the array; all receive every event.
+
+---
+
+### Request Adapters
+
+Implement `CDYelpRequestAdapter` to mutate every `URLRequest` before it is sent — useful for adding custom headers, request signing, or parameter injection:
+
+```swift
+final class CorrelationIDAdapter: CDYelpRequestAdapter {
+    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        var request = urlRequest
+        request.setValue(UUID().uuidString, forHTTPHeaderField: "X-Correlation-ID")
+        return request
+    }
+}
+
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    requestAdapters: [CorrelationIDAdapter()]
+)
+```
+
+Multiple adapters can be passed; they are applied in order.
+
+---
+
+### Custom Decoders
+
+Override the JSON decoding strategy used for all responses:
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    decoderConfiguration: CDYelpDecoderConfiguration(
+        keyDecodingStrategy: .convertFromSnakeCase
+    )
+)
+```
+
+> **Note:** `dateDecodingStrategy` is ignored for the reviews and events endpoints, which use fixed Yelp-specific date formats regardless of this setting.
+
+---
+
+### Testing Utilities
+
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` let you write unit tests against the real `CDYelpAPIClient` without making network requests.
+
+**1. Register a stub response** before creating the client, then use `CDYelpMockClientFactory` to get a client whose session routes all requests through your stub:
+
+```swift
+import CDYelpFusionKit
+import Testing
+
+struct MyFeatureTests {
+    @Test func searchReturnsResults() async throws {
+        let fixture = """
+        {"businesses": [{"id": "abc", "name": "Test Cafe"}], "total": 1}
+        """.data(using: .utf8)!
+
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeAllStubs() }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+        #expect(response.businesses?.first?.name == "Test Cafe")
+    }
+}
+```
+
+**2. Stubs are matched by URL substring.** Any request whose URL contains the registered key triggers the stub.
+
+**3. Availability.** The testing utilities are part of the `CDYelpFusionKitTesting` product, which is a separate library target. Add it as a dependency only in your test targets:
+
+```swift
+// In Package.swift
+.testTarget(
+    name: "MyAppTests",
+    dependencies: ["CDYelpFusionKit", "CDYelpFusionKitTesting"]
+)
 ```
 
 ---

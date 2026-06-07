@@ -35,18 +35,69 @@ import Alamofire
 
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
-    private lazy var manager: Alamofire.Session = {
-        // Get the default headers
+    private let sessionConfiguration: URLSessionConfiguration
+    private let responseCache: CDYelpResponseCache?
+    private let retryConfiguration: CDYelpRetryConfiguration
+    private let decoderConfiguration: CDYelpDecoderConfiguration
+    private let eventMonitors: [any CDYelpEventMonitor]
+    private let requestAdapters: [any CDYelpRequestAdapter]
+    private let manager: Alamofire.Session
+
+    private static func makeSession(
+        apiKey: String,
+        sessionConfiguration: URLSessionConfiguration,
+        retryConfiguration: CDYelpRetryConfiguration,
+        eventMonitors: [any CDYelpEventMonitor],
+        requestAdapters: [any CDYelpRequestAdapter]
+    ) -> Alamofire.Session {
         var headers = HTTPHeaders.default
-        // Add the Authorization header
-        headers["Authorization"] = "Bearer \(self.apiKey)"
-        // Create a custom session configuration
-        let configuration = URLSessionConfiguration.default
-        // Add the Authorization header
-        configuration.httpAdditionalHeaders = headers.dictionary
-        // Create a session manager with the custom configuration
-        return Alamofire.Session(configuration: configuration)
-    }()
+        headers["Authorization"] = "Bearer \(apiKey)"
+        sessionConfiguration.httpAdditionalHeaders = headers.dictionary
+
+        let rootQueue = DispatchQueue(label: "org.cdyelp.session.rootQueue")
+        let delegateQueue = OperationQueue()
+        delegateQueue.underlyingQueue = rootQueue
+
+        let delegate = Alamofire.SessionDelegate()
+        let urlSession = URLSession(configuration: sessionConfiguration, delegate: delegate, delegateQueue: delegateQueue)
+
+        let alamofireMonitors: [any EventMonitor] = eventMonitors.isEmpty
+            ? []
+            : [CDYelpAlamofireEventMonitor(monitors: eventMonitors)]
+
+        var adapters: [RequestAdapter] = []
+        if !requestAdapters.isEmpty {
+            adapters.append(CDYelpAlamofireRequestAdapter(adapters: requestAdapters))
+        }
+
+        var retriers: [RequestRetrier] = []
+        if retryConfiguration.retryLimit > 0 {
+            let policy = RetryPolicy(
+                retryLimit: retryConfiguration.retryLimit,
+                exponentialBackoffBase: 2,
+                exponentialBackoffScale: retryConfiguration.initialDelay,
+                retryableHTTPStatusCodes: retryConfiguration.retryableHTTPStatusCodes,
+                retryableURLErrorCodes: [
+                    .networkConnectionLost,
+                    .notConnectedToInternet,
+                    .timedOut,
+                ]
+            )
+            retriers.append(policy)
+        }
+
+        let interceptor: RequestInterceptor? = (adapters.isEmpty && retriers.isEmpty)
+            ? nil
+            : Interceptor(adapters: adapters, retriers: retriers)
+
+        return Alamofire.Session(
+            session: urlSession,
+            delegate: delegate,
+            rootQueue: rootQueue,
+            interceptor: interceptor,
+            eventMonitors: alamofireMonitors
+        )
+    }
 
     // MARK: - Initializers
 
@@ -55,12 +106,60 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
+    ///   - retryConfiguration: (Optional) Configuration for automatic retry with exponential backoff. Defaults to disabled.
+    ///   - decoderConfiguration: (Optional) Configuration for JSON decoding strategies. Defaults to standard configuration.
+    ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
+    ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
     /// - returns: Void
     ///
-    public init(apiKey: String) {
+    public convenience init(
+        apiKey: String,
+        cacheConfiguration: CDYelpCacheConfiguration = .disabled,
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
+    ) {
+        self.init(
+            apiKey: apiKey,
+            sessionConfiguration: URLSessionConfiguration.default,
+            cacheConfiguration: cacheConfiguration,
+            retryConfiguration: retryConfiguration,
+            decoderConfiguration: decoderConfiguration,
+            eventMonitors: eventMonitors,
+            requestAdapters: requestAdapters
+        )
+    }
+
+    /// Internal initializer for testing — allows injection of a custom URLSessionConfiguration.
+    public init(
+        apiKey: String,
+        sessionConfiguration: URLSessionConfiguration,
+        cacheConfiguration: CDYelpCacheConfiguration = .disabled,
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
+    ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
+        self.sessionConfiguration = sessionConfiguration
+        self.decoderConfiguration = decoderConfiguration
+        self.retryConfiguration = retryConfiguration
+        responseCache = cacheConfiguration.ttl > 0
+            ? CDYelpResponseCache(configuration: cacheConfiguration)
+            : nil
+        self.eventMonitors = eventMonitors
+        self.requestAdapters = requestAdapters
+        manager = Self.makeSession(
+            apiKey: apiKey,
+            sessionConfiguration: sessionConfiguration,
+            retryConfiguration: retryConfiguration,
+            eventMonitors: eventMonitors,
+            requestAdapters: requestAdapters
+        )
     }
 
     // MARK: - Authentication Methods
@@ -72,6 +171,64 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     public func isAuthenticated() -> Bool {
         return true
+    }
+
+    // MARK: - Cache Methods
+
+    /// Removes all cached responses.
+    public func clearCache() {
+        responseCache?.removeAll()
+    }
+
+    // MARK: - Private Request Helpers
+
+    private func cachedRequest<T: Decodable>(
+        _ router: CDYelpRouter,
+        decoder: JSONDecoder? = nil,
+        completion: @escaping (T?) -> Void
+    ) {
+        let decoder = decoder ?? decoderConfiguration.makeDecoder()
+
+        // Only build the cache key when caching is enabled, skipping the redundant
+        // asURLRequest() + adapter pass on every uncached call. If any adapter throws,
+        // skip caching and let Alamofire surface the error through the normal failure path.
+        var cacheKey: String?
+        if responseCache != nil, var urlRequest = try? router.asURLRequest() {
+            do {
+                for adapter in requestAdapters {
+                    urlRequest = try adapter.adapt(urlRequest)
+                }
+                cacheKey = CDYelpCacheKey.key(for: urlRequest)
+            } catch {
+                cacheKey = nil
+            }
+        }
+
+        if let cache = responseCache, let key = cacheKey, let cachedData = cache.data(forKey: key) {
+            completion(try? decoder.decode(T.self, from: cachedData))
+            return
+        }
+
+        manager
+            .request(router)
+            .validate()
+            .responseData { [weak self] dataResponse in
+                switch dataResponse.result {
+                case let .success(data):
+                    // Only cache bytes that decode successfully; storing undecoded data would
+                    // poison the cache key for the entire TTL with no recovery path.
+                    if let decoded = try? decoder.decode(T.self, from: data) {
+                        if let key = cacheKey {
+                            self?.responseCache?.set(data: data, forKey: key)
+                        }
+                        completion(decoded)
+                    } else {
+                        completion(nil)
+                    }
+                case .failure:
+                    completion(nil)
+                }
+            }
     }
 
     // MARK: - Yelp Fusion API Methods
@@ -140,17 +297,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                          openAt: openAt,
                                                          attributes: attributes)
 
-            manager
-                .request(CDYelpRouter.search(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Business, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.search(parameters: parameters), completion: completion)
         }
     }
 
@@ -169,17 +316,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
 
-            manager
-                .request(CDYelpRouter.phone(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Phone, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.phone(parameters: parameters), completion: completion)
         }
     }
 
@@ -208,18 +345,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                latitude: latitude,
                                                                longitude: longitude)
 
-            manager
-                .request(CDYelpRouter.transactions(type: type.rawValue,
-                                                   parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.Transaction, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.transactions(type: type.rawValue, parameters: parameters), completion: completion)
         }
     }
 
@@ -240,18 +366,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.businessParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.business(id: id,
-                                               parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpBusinessResponse, AFError>) in
-                    switch response.result {
-                    case let .success(business):
-                        completion(business)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.business(id: id, parameters: parameters), completion: completion)
         }
     }
 
@@ -332,17 +447,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                           limit: limit,
                                                           matchThresholdType: matchThresholdType)
 
-            manager
-                .request(CDYelpRouter.matches(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpSearchResponse.BusinessMatch, AFError>) in
-                    switch response.result {
-                    case let .success(searchResponse):
-                        completion(searchResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.matches(parameters: parameters), completion: completion)
         }
     }
 
@@ -362,22 +467,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
         if isAuthenticated() == true {
             let parameters = Parameters.reviewsParameters(withLocale: locale)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
 
-            manager
-                .request(CDYelpRouter.reviews(id: id,
-                                              parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpReviewsResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(reviewsResponse):
-                                           completion(reviewsResponse)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.reviews(id: id, parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -407,17 +500,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                longitude: longitude,
                                                                locale: locale)
 
-            manager
-                .request(CDYelpRouter.autocomplete(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpAutoCompleteResponse, AFError>) in
-                    switch response.result {
-                    case let .success(autocompleteResponse):
-                        completion(autocompleteResponse)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.autocomplete(parameters: parameters), completion: completion)
         }
     }
 
@@ -439,22 +522,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
         if isAuthenticated() == true {
             let parameters = Parameters.eventParameters(withLocale: locale)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.event(id: id,
-                                            parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(event):
-                                           completion(event)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.event(id: id, parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -516,21 +587,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                          longitude: longitude,
                                                          radius: radius,
                                                          excludedEvents: excludedEvents)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.events(parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventsResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(eventsResponse):
-                                           completion(eventsResponse)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.events(parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -558,21 +618,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                                 location: location,
                                                                 latitude: latitude,
                                                                 longitude: longitude)
-            let decoder = JSONDecoder()
+            let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
 
-            manager
-                .request(CDYelpRouter.featuredEvent(parameters: parameters))
-                .validate()
-                .responseDecodable(decoder: decoder,
-                                   completionHandler: { (response: DataResponse<CDYelpEventResponse, AFError>) in
-                                       switch response.result {
-                                       case let .success(event):
-                                           completion(event)
-                                       case .failure:
-                                           completion(nil)
-                                       }
-                                   })
+            cachedRequest(CDYelpRouter.featuredEvent(parameters: parameters), decoder: decoder, completion: completion)
         }
     }
 
@@ -591,17 +640,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.allCategories(parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpCategoriesResponse, AFError>) in
-                    switch response.result {
-                    case let .success(event):
-                        completion(event)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.allCategories(parameters: parameters), completion: completion)
         }
     }
 
@@ -622,18 +661,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.categoriesParameters(withLocale: locale)
 
-            manager
-                .request(CDYelpRouter.categoryDetails(alias: alias.rawValue,
-                                                      parameters: parameters))
-                .validate()
-                .responseDecodable { (response: DataResponse<CDYelpCategoryResponse, AFError>) in
-                    switch response.result {
-                    case let .success(event):
-                        completion(event)
-                    case .failure:
-                        completion(nil)
-                    }
-                }
+            cachedRequest(CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters), completion: completion)
         }
     }
 

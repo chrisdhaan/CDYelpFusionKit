@@ -28,13 +28,7 @@
 let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
 
 enum CDYelpURL {
-    static let oAuth = "https://api.yelp.com/"
     static let base = "https://api.yelp.com/v3/"
     static let deepLink = "yelp4:"
     static let web = "https://yelp.com/"
-}
-
-enum CDYelpDefaults {
-    static let accessToken = "CDYelpAccessToken"
-    static let expiresIn = "CDYelpExpiresIn"
 }
