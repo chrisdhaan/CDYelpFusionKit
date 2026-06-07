@@ -40,6 +40,18 @@ public enum CDYelpAttributeFilter: String, Sendable {
     case genderNeutralRestrooms = "gender_neutral_restrooms"
     case openToAll = "open_to_all"
     case wheelchairAccessible = "wheelchair_accessible"
+    // Parking
+    case parkingGarage = "parking_garage"
+    case parkingLot = "parking_lot"
+    case parkingStreet = "parking_street"
+    case parkingValet = "parking_valet"
+    case parkingBike = "parking_bike"
+    case parkingValidated = "parking_validated"
+    // Dietary
+    case likedByVegetarians = "liked_by_vegetarians"
+    case veganOfferings = "vegan_offerings"
+    case glutenFreeOfferings = "gluten_free_offerings"
+    case outdoorSeating = "outdoor_seating"
 }
 
 // swiftlint:disable type_body_length
