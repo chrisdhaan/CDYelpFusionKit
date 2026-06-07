@@ -29,7 +29,7 @@
 import Foundation
 import Testing
 
-struct CDYelpReviewTests {
+@Suite(.serialized) struct CDYelpReviewTests {
     @Test func reviewDecodesFromJSON() throws {
         let json = """
         {
@@ -111,5 +111,40 @@ struct CDYelpReviewTests {
         """.data(using: .utf8)!
         let review = try JSONDecoder().decode(CDYelpReview.self, from: json)
         #expect(review.text?.count == 1000)
+    }
+
+    @Test func decodesLanguageField() throws {
+        let json = """
+        {
+          "id": "abc123",
+          "text": "Great place!",
+          "url": "https://www.yelp.com/biz/foo",
+          "rating": 5,
+          "time_created": "2020-11-18 22:30:48",
+          "language": "en",
+          "user": null
+        }
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        let review = try decoder.decode(CDYelpReview.self, from: json)
+        #expect(review.language == "en")
+    }
+
+    @Test func languageIsNilWhenAbsent() throws {
+        let json = """
+        {
+          "id": "abc123",
+          "text": "Great place!",
+          "url": "https://www.yelp.com/biz/foo",
+          "rating": 5,
+          "time_created": "2020-11-18 22:30:48",
+          "user": null
+        }
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        let review = try decoder.decode(CDYelpReview.self, from: json)
+        #expect(review.language == nil)
     }
 }

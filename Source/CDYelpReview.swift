@@ -38,6 +38,7 @@ public struct CDYelpReview: Decodable, Sendable {
     public let rating: Int?
     public let timeCreated: String?
     public let user: CDYelpUser?
+    public let language: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -46,6 +47,7 @@ public struct CDYelpReview: Decodable, Sendable {
         case rating
         case timeCreated = "time_created"
         case user
+        case language
     }
 
     public func urlAsUrl() -> URL? {
