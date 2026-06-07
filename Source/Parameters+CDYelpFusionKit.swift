@@ -174,13 +174,19 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func businessParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+    static func businessParameters(withLocale locale: CDYelpLocale?,
+                                   devicePlatform: String?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
 
         if let locale = locale,
            locale.rawValue != ""
         {
             parameters["locale"] = locale.rawValue
+        }
+        if let devicePlatform = devicePlatform {
+            parameters["device_platform"] = devicePlatform
         }
 
         return parameters

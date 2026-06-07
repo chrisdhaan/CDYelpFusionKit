@@ -375,12 +375,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     public func fetchBusiness(forId id: String!,
                               locale: CDYelpLocale?,
+                              devicePlatform: String? = nil,
                               completion: @escaping (CDYelpBusinessResponse?) -> Void)
     {
         assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API business endpoint.")
 
         if isAuthenticated() == true {
-            let parameters = Parameters.businessParameters(withLocale: locale)
+            let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
 
             cachedRequest(CDYelpRouter.business(id: id, parameters: parameters), completion: completion)
         }
@@ -817,11 +818,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     public func fetchBusiness(forId id: String!,
-                              locale: CDYelpLocale?) async throws -> CDYelpBusinessResponse
+                              locale: CDYelpLocale?,
+                              devicePlatform: String? = nil) async throws -> CDYelpBusinessResponse
     {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchBusiness(forId: id,
-                               locale: locale)
+                               locale: locale,
+                               devicePlatform: devicePlatform)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
