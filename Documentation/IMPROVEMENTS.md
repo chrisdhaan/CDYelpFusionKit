@@ -725,7 +725,7 @@ Find the async `searchTransactions(byType:...)` overload. Add the same 3 `= nil`
 
 ---
 
-### Schema Update 9: Yelp AI Chat — New Endpoint
+### ✅ Schema Update 9: Yelp AI Chat — New Endpoint
 
 **Goal:** Implement `POST /ai/chat/v2`. This is a POST endpoint with a JSON body (unlike all existing GET endpoints) that supports natural language queries about local businesses with optional multi-turn conversation via `chat_id`.
 

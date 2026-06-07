@@ -716,6 +716,41 @@ public class CDYelpAPIClient: @unchecked Sendable {
         }
     }
 
+    ///
+    /// Fetches AI chat response from the Yelp AI Chat endpoint.
+    ///
+    /// - parameters:
+    ///   - query: (Required) A natural language query about local businesses. Maximum length is 1000 characters.
+    ///   - chatId: (Optional) The ID of an existing chat to continue a multi-turn conversation.
+    ///   - latitude: (Optional) The latitude of the user's location.
+    ///   - longitude: (Optional) The longitude of the user's location.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchAIChat(query: String,
+                            chatId: String? = nil,
+                            latitude: Double? = nil,
+                            longitude: Double? = nil,
+                            completion: @escaping (CDYelpAIChatResponse?) -> Void)
+    {
+        precondition(!query.isEmpty, "A query is required.")
+        precondition(query.count <= 1000, "Query must be 1000 characters or fewer.")
+        guard isAuthenticated() else { return }
+
+        let userContext: CDYelpAIChatRequest.UserContext? = (latitude != nil && longitude != nil)
+            ? .init(latitude: latitude!, longitude: longitude!)
+            : nil
+        let request = CDYelpAIChatRequest(query: query, chatId: chatId, userContext: userContext)
+
+        manager
+            .request(CDYelpRouter.aiChat(request: request))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpAIChatResponse, AFError>) in
+                switch response.result {
+                case let .success(chatResponse): completion(chatResponse)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1047,6 +1082,29 @@ public class CDYelpAPIClient: @unchecked Sendable {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchCategory(forAlias: alias,
                                andLocale: locale)
+            { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchAIChat(query: String,
+                            chatId: String? = nil,
+                            latitude: Double? = nil,
+                            longitude: Double? = nil)
+        async throws -> CDYelpAIChatResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchAIChat(query: query,
+                             chatId: chatId,
+                             latitude: latitude,
+                             longitude: longitude)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
