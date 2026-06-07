@@ -1005,7 +1005,7 @@ public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
 
 ---
 
-### Schema Update 11: Service Offerings — New Endpoint (🔒 special permissions required)
+### ✅ Schema Update 11: Service Offerings — New Endpoint (🔒 special permissions required)
 
 **Goal:** Implement `GET /v3/businesses/{id}/service_offerings`. Requires special permissions but should be available to callers who have them.
 

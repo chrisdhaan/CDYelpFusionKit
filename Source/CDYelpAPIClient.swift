@@ -784,6 +784,32 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches service offerings for a business.
+    ///
+    /// - parameters:
+    ///   - id: (Required) The business ID.
+    ///   - locale: (Optional) The desired language for the response.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchServiceOfferings(forBusinessId id: String,
+                                      locale: CDYelpLocale? = nil,
+                                      completion: @escaping (CDYelpServiceOfferingsResponse?) -> Void)
+    {
+        precondition(!id.isEmpty, "A business ID is required.")
+        guard isAuthenticated() else { return }
+
+        let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: nil)
+        manager
+            .request(CDYelpRouter.serviceOfferings(id: id, parameters: parameters))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpServiceOfferingsResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1158,6 +1184,24 @@ public class CDYelpAPIClient: @unchecked Sendable {
             self.fetchEngagementMetrics(forBusinessIds: businessIds,
                                         dateRangeStart: dateRangeStart,
                                         dateRangeEnd: dateRangeEnd)
+            { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchServiceOfferings(forBusinessId id: String,
+                                      locale: CDYelpLocale? = nil)
+        async throws -> CDYelpServiceOfferingsResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchServiceOfferings(forBusinessId: id,
+                                       locale: locale)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
