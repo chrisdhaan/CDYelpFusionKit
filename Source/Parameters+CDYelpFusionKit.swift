@@ -155,20 +155,25 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 
     static func transactionsParameters(withLocation location: String?,
                                        latitude: Double?,
-                                       longitude: Double?) -> Parameters
+                                       longitude: Double?,
+                                       term: String?,
+                                       categories: [CDYelpCategoryAlias]?,
+                                       priceTiers: [CDYelpPriceTier]?)
+        -> Parameters
     {
         var parameters: Parameters = [:]
 
-        if let location = location,
-           location != ""
-        {
+        if let location = location, location != "" {
             parameters["location"] = location
         }
-        if let latitude = latitude {
-            parameters["latitude"] = latitude
+        if let latitude = latitude { parameters["latitude"] = latitude }
+        if let longitude = longitude { parameters["longitude"] = longitude }
+        if let term = term, term != "" { parameters["term"] = term }
+        if let categories = categories, !categories.isEmpty {
+            parameters["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
-        if let longitude = longitude {
-            parameters["longitude"] = longitude
+        if let priceTiers = priceTiers, !priceTiers.isEmpty {
+            parameters["price"] = priceTiers.map { $0.rawValue }.joined(separator: ",")
         }
 
         return parameters

@@ -350,6 +350,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                    location: String?,
                                    latitude: Double?,
                                    longitude: Double?,
+                                   term: String? = nil,
+                                   categories: [CDYelpCategoryAlias]? = nil,
+                                   priceTiers: [CDYelpPriceTier]? = nil,
                                    completion: @escaping (CDYelpSearchResponse.Transaction?) -> Void)
     {
         assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
@@ -359,7 +362,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
         if isAuthenticated() == true {
             let parameters = Parameters.transactionsParameters(withLocation: location,
                                                                latitude: latitude,
-                                                               longitude: longitude)
+                                                               longitude: longitude,
+                                                               term: term,
+                                                               categories: categories,
+                                                               priceTiers: priceTiers)
 
             cachedRequest(CDYelpRouter.transactions(type: type.rawValue, parameters: parameters), completion: completion)
         }
@@ -795,13 +801,19 @@ public class CDYelpAPIClient: @unchecked Sendable {
     public func searchTransactions(byType type: CDYelpTransactionType!,
                                    location: String?,
                                    latitude: Double?,
-                                   longitude: Double?) async throws -> CDYelpSearchResponse.Transaction
+                                   longitude: Double?,
+                                   term: String? = nil,
+                                   categories: [CDYelpCategoryAlias]? = nil,
+                                   priceTiers: [CDYelpPriceTier]? = nil) async throws -> CDYelpSearchResponse.Transaction
     {
         try await withCheckedThrowingContinuation { continuation in
             self.searchTransactions(byType: type,
                                     location: location,
                                     latitude: latitude,
-                                    longitude: longitude)
+                                    longitude: longitude,
+                                    term: term,
+                                    categories: categories,
+                                    priceTiers: priceTiers)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
