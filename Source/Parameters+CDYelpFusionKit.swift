@@ -34,6 +34,7 @@
 import Alamofire
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
+    // swiftlint:disable:next function_parameter_count function_body_length
     static func searchParameters(withTerm term: String?,
                                  location: String?,
                                  latitude: Double?,
@@ -47,7 +48,13 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
-                                 attributes: [CDYelpAttributeFilter]?) -> Parameters
+                                 attributes: [CDYelpAttributeFilter]?,
+                                 devicePlatform: String?,
+                                 reservationDate: String?,
+                                 reservationTime: String?,
+                                 reservationCovers: Int?,
+                                 matchesPartySize: Bool?,
+                                 jobAlias: String?) -> Parameters
     {
         var parameters: Parameters = [:]
 
@@ -111,6 +118,24 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             }
             let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
             parameters["attributes"] = parametersString
+        }
+        if let devicePlatform = devicePlatform {
+            parameters["device_platform"] = devicePlatform
+        }
+        if let reservationDate = reservationDate {
+            parameters["reservation_date"] = reservationDate
+        }
+        if let reservationTime = reservationTime {
+            parameters["reservation_time"] = reservationTime
+        }
+        if let reservationCovers = reservationCovers {
+            parameters["reservation_covers"] = reservationCovers
+        }
+        if let matchesPartySize = matchesPartySize {
+            parameters["matches_party_size_param"] = matchesPartySize
+        }
+        if let jobAlias = jobAlias {
+            parameters["job_alias"] = jobAlias
         }
 
         return parameters

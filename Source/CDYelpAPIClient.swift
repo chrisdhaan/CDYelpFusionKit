@@ -33,6 +33,7 @@
 
 import Alamofire
 
+// swiftlint:disable:next type_body_length
 public class CDYelpAPIClient: @unchecked Sendable {
     private let apiKey: String
     private let sessionConfiguration: URLSessionConfiguration
@@ -270,6 +271,12 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                  openNow: Bool?,
                                  openAt: Int?,
                                  attributes: [CDYelpAttributeFilter]?,
+                                 devicePlatform: String? = nil,
+                                 reservationDate: String? = nil,
+                                 reservationTime: String? = nil,
+                                 reservationCovers: Int? = nil,
+                                 matchesPartySize: Bool? = nil,
+                                 jobAlias: String? = nil,
                                  completion: @escaping (CDYelpSearchResponse.Business?) -> Void)
     {
         assert((latitude != nil && longitude != nil) ||
@@ -295,7 +302,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                                          priceTiers: priceTiers,
                                                          openNow: openNow,
                                                          openAt: openAt,
-                                                         attributes: attributes)
+                                                         attributes: attributes,
+                                                         devicePlatform: devicePlatform,
+                                                         reservationDate: reservationDate,
+                                                         reservationTime: reservationTime,
+                                                         reservationCovers: reservationCovers,
+                                                         matchesPartySize: matchesPartySize,
+                                                         jobAlias: jobAlias)
 
             cachedRequest(CDYelpRouter.search(parameters: parameters), completion: completion)
         }
@@ -709,7 +722,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                  priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
-                                 attributes: [CDYelpAttributeFilter]?) async throws -> CDYelpSearchResponse.Business
+                                 attributes: [CDYelpAttributeFilter]?,
+                                 devicePlatform: String? = nil,
+                                 reservationDate: String? = nil,
+                                 reservationTime: String? = nil,
+                                 reservationCovers: Int? = nil,
+                                 matchesPartySize: Bool? = nil,
+                                 jobAlias: String? = nil) async throws -> CDYelpSearchResponse.Business
     {
         try await withCheckedThrowingContinuation { continuation in
             self.searchBusinesses(byTerm: term,
@@ -725,7 +744,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                   priceTiers: priceTiers,
                                   openNow: openNow,
                                   openAt: openAt,
-                                  attributes: attributes)
+                                  attributes: attributes,
+                                  devicePlatform: devicePlatform,
+                                  reservationDate: reservationDate,
+                                  reservationTime: reservationTime,
+                                  reservationCovers: reservationCovers,
+                                  matchesPartySize: matchesPartySize,
+                                  jobAlias: jobAlias)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
