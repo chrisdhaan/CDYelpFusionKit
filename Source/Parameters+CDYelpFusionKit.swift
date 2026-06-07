@@ -456,4 +456,16 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 
         return parameters
     }
+
+    static func engagementParameters(withBusinessIds businessIds: [String],
+                                     dateRangeStart: String?,
+                                     dateRangeEnd: String?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["business_ids"] = businessIds.joined(separator: ",")
+        if let start = dateRangeStart { parameters["date_range_start"] = start }
+        if let end = dateRangeEnd { parameters["date_range_end"] = end }
+        return parameters
+    }
 }

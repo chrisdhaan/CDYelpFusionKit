@@ -751,6 +751,39 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches engagement metrics for a list of businesses.
+    ///
+    /// - parameters:
+    ///   - businessIds: (Required) A list of business IDs (1–20 required).
+    ///   - dateRangeStart: (Optional) The start date for the metric date range.
+    ///   - dateRangeEnd: (Optional) The end date for the metric date range.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
+                                       dateRangeStart: String? = nil,
+                                       dateRangeEnd: String? = nil,
+                                       completion: @escaping (CDYelpEngagementResponse?) -> Void)
+    {
+        precondition(!businessIds.isEmpty && businessIds.count <= 20,
+                     "Between 1 and 20 business IDs are required.")
+        guard isAuthenticated() else { return }
+
+        let parameters = Parameters.engagementParameters(
+            withBusinessIds: businessIds,
+            dateRangeStart: dateRangeStart,
+            dateRangeEnd: dateRangeEnd
+        )
+        manager
+            .request(CDYelpRouter.engagement(parameters: parameters))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpEngagementResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1105,6 +1138,26 @@ public class CDYelpAPIClient: @unchecked Sendable {
                              chatId: chatId,
                              latitude: latitude,
                              longitude: longitude)
+            { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
+                                       dateRangeStart: String? = nil,
+                                       dateRangeEnd: String? = nil)
+        async throws -> CDYelpEngagementResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchEngagementMetrics(forBusinessIds: businessIds,
+                                        dateRangeStart: dateRangeStart,
+                                        dateRangeEnd: dateRangeEnd)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))

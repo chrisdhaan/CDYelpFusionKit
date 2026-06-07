@@ -885,7 +885,7 @@ public func fetchAIChat(query: String,
 
 ---
 
-### Schema Update 10: Engagement Metrics — New Endpoint (🔒 special permissions required)
+### ✅ Schema Update 10: Engagement Metrics — New Endpoint (🔒 special permissions required)
 
 **Goal:** Implement `GET /v3/businesses/engagement`. This endpoint requires special permissions on the API key but the library should expose the method so callers with access can use it.
 
