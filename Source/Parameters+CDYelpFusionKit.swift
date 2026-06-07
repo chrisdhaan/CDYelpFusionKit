@@ -468,4 +468,16 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let end = dateRangeEnd { parameters["date_range_end"] = end }
         return parameters
     }
+
+    static func businessInsightsParameters(withBusinessIds businessIds: [String],
+                                           dateRangeStart: String,
+                                           dateRangeEnd: String)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["business_ids"] = businessIds.joined(separator: ",")
+        parameters["date_range_start"] = dateRangeStart
+        parameters["date_range_end"] = dateRangeEnd
+        return parameters
+    }
 }

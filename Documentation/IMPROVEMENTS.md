@@ -1103,7 +1103,7 @@ public func fetchServiceOfferings(forBusinessId id: String,
 
 ---
 
-### Schema Update 12: Business Insights — New Endpoint (🔒 special permissions required)
+### ✅ Schema Update 12: Business Insights — New Endpoint (🔒 special permissions required)
 
 **Goal:** Implement `GET /v3/businesses/insights`. Requires Yelp Insights API access.
 

@@ -810,6 +810,41 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches business insights for the provided business IDs.
+    ///
+    /// - parameters:
+    ///   - businessIds: (Required) The business IDs for which to fetch insights. Must be between 1 and 20.
+    ///   - dateRangeStart: (Required) Start date for the insights (format: YYYYMM).
+    ///   - dateRangeEnd: (Required) End date for the insights (format: YYYYMM).
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchBusinessInsights(forBusinessIds businessIds: [String],
+                                      dateRangeStart: String,
+                                      dateRangeEnd: String,
+                                      completion: @escaping (CDYelpBusinessInsightsResponse?) -> Void)
+    {
+        precondition(!businessIds.isEmpty && businessIds.count <= 20,
+                     "Between 1 and 20 business IDs are required.")
+        precondition(!dateRangeStart.isEmpty && !dateRangeEnd.isEmpty,
+                     "dateRangeStart and dateRangeEnd are required (format: YYYYMM).")
+        guard isAuthenticated() else { return }
+
+        let parameters = Parameters.businessInsightsParameters(
+            withBusinessIds: businessIds,
+            dateRangeStart: dateRangeStart,
+            dateRangeEnd: dateRangeEnd
+        )
+        manager
+            .request(CDYelpRouter.businessInsights(parameters: parameters))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpBusinessInsightsResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1202,6 +1237,26 @@ public class CDYelpAPIClient: @unchecked Sendable {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchServiceOfferings(forBusinessId: id,
                                        locale: locale)
+            { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchBusinessInsights(forBusinessIds businessIds: [String],
+                                      dateRangeStart: String,
+                                      dateRangeEnd: String)
+        async throws -> CDYelpBusinessInsightsResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchBusinessInsights(forBusinessIds: businessIds,
+                                       dateRangeStart: dateRangeStart,
+                                       dateRangeEnd: dateRangeEnd)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
