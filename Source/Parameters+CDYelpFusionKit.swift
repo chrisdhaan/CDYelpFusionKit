@@ -141,11 +141,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
+    static func phoneParameters(withPhoneNumber phoneNumber: String!,
+                                locale: CDYelpLocale?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
-
         parameters["phone"] = phoneNumber
-
+        if let locale = locale, locale.rawValue != "" {
+            parameters["locale"] = locale.rawValue
+        }
         return parameters
     }
 

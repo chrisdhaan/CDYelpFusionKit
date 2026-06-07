@@ -319,15 +319,18 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - phoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
+    ///   - locale: (Optional) The interface locale; this determines the language for the results to return.
     ///   - completion: A completion block in which the Yelp Fusion API phone search endpoint response can be parsed.
     ///
     public func searchBusinesses(byPhoneNumber phoneNumber: String!,
+                                 locale: CDYelpLocale? = nil,
                                  completion: @escaping (CDYelpSearchResponse.Phone?) -> Void)
     {
         assert(phoneNumber != nil && phoneNumber.count > 0, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
 
         if isAuthenticated() == true {
-            let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber)
+            let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber,
+                                                        locale: locale)
 
             cachedRequest(CDYelpRouter.phone(parameters: parameters), completion: completion)
         }
@@ -766,9 +769,14 @@ public class CDYelpAPIClient: @unchecked Sendable {
     }
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchBusinesses(byPhoneNumber phoneNumber: String!) async throws -> CDYelpSearchResponse.Phone {
+    public func searchBusinesses(byPhoneNumber phoneNumber: String!,
+                                 locale: CDYelpLocale? = nil)
+        async throws -> CDYelpSearchResponse.Phone
+    {
         try await withCheckedThrowingContinuation { continuation in
-            self.searchBusinesses(byPhoneNumber: phoneNumber) { response in
+            self.searchBusinesses(byPhoneNumber: phoneNumber,
+                                  locale: locale)
+            { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
                     return

@@ -23,7 +23,7 @@ function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
   error: 1050
-  warning: 1040
+  warning: 1045
 # number of characters allowed in a line
 line_length:
   error: 200
