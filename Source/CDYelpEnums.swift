@@ -1653,6 +1653,15 @@ public enum CDYelpEventSortOnType: String, Sendable {
 }
 
 ///
+/// A list of the review sort types the Yelp Fusion API supports.
+///
+public enum CDYelpReviewSortType: String, Sendable {
+    case yelpSort = "yelp_sort"
+    case rating
+    case timeCreated = "time_created"
+}
+
+///
 /// A list of locales the Yelp Fusion API supports. The locale code is in the format of {language code}_{country code}.
 ///
 public enum CDYelpLocale: String, Sendable {

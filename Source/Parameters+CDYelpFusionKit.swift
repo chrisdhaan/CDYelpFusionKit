@@ -238,15 +238,19 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+    static func reviewsParameters(withLocale locale: CDYelpLocale?,
+                                  offset: Int?,
+                                  limit: Int?,
+                                  sortBy: CDYelpReviewSortType?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
-
-        if let locale = locale,
-           locale.rawValue != ""
-        {
+        if let locale = locale, locale.rawValue != "" {
             parameters["locale"] = locale.rawValue
         }
-
+        if let offset = offset { parameters["offset"] = offset }
+        if let limit = limit { parameters["limit"] = limit }
+        if let sortBy = sortBy { parameters["sort_by"] = sortBy.rawValue }
         return parameters
     }
 

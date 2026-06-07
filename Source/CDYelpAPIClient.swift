@@ -457,16 +457,32 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - id: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - locale: (Optional) The interface locale; this determines the language for the reviews to return.
+    ///   - offset: (Optional) A number the list of returned reviews should be offset by. **The maximum value is 1000**.
+    ///   - limit: (Optional) The number of reviews to return. **The maximum value is 50**.
+    ///   - sortBy: (Optional) The sort order for reviews. Defaults to `.yelpSort`.
     ///   - completion: A completion block in which the Yelp Fusion API reviews endpoint response can be parsed.
     ///
     public func fetchReviews(forBusinessId id: String!,
                              locale: CDYelpLocale?,
+                             offset: Int? = nil,
+                             limit: Int? = nil,
+                             sortBy: CDYelpReviewSortType? = nil,
                              completion: @escaping (CDYelpReviewsResponse?) -> Void)
     {
         assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API reviews endpoint.")
 
+        if let offset = offset {
+            assert(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.")
+        }
+        if let limit = limit {
+            assert(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.")
+        }
+
         if isAuthenticated() == true {
-            let parameters = Parameters.reviewsParameters(withLocale: locale)
+            let parameters = Parameters.reviewsParameters(withLocale: locale,
+                                                          offset: offset,
+                                                          limit: limit,
+                                                          sortBy: sortBy)
             let decoder = decoderConfiguration.makeDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
 
@@ -830,11 +846,17 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     public func fetchReviews(forBusinessId id: String!,
-                             locale: CDYelpLocale?) async throws -> CDYelpReviewsResponse
+                             locale: CDYelpLocale?,
+                             offset: Int? = nil,
+                             limit: Int? = nil,
+                             sortBy: CDYelpReviewSortType? = nil) async throws -> CDYelpReviewsResponse
     {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchReviews(forBusinessId: id,
-                              locale: locale)
+                              locale: locale,
+                              offset: offset,
+                              limit: limit,
+                              sortBy: sortBy)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
