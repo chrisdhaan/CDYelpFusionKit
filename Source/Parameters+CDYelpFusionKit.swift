@@ -492,4 +492,20 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let devicePlatform = devicePlatform { parameters["device_platform"] = devicePlatform }
         return parameters
     }
+
+    static func openingsParameters(covers: Int,
+                                   date: String,
+                                   time: String,
+                                   getCoversRange: Bool?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["covers"] = covers
+        parameters["date"] = date
+        parameters["time"] = time
+        if let getCoversRange = getCoversRange {
+            parameters["get_covers_range"] = getCoversRange
+        }
+        return parameters
+    }
 }

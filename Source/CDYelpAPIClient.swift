@@ -908,6 +908,46 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches available reservation openings for a business.
+    ///
+    /// - parameters:
+    ///   - id: (Required) The business ID.
+    ///   - covers: (Required) Party size (1–10).
+    ///   - date: (Required) The desired date (format: YYYY-MM-DD).
+    ///   - time: (Required) The desired time (format: HH:MM).
+    ///   - getCoversRange: (Optional) Whether to include covers range information.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchOpenings(forBusinessId id: String,
+                              covers: Int,
+                              date: String,
+                              time: String,
+                              getCoversRange: Bool? = nil,
+                              completion: @escaping (CDYelpOpeningsResponse?) -> Void)
+    {
+        precondition(!id.isEmpty, "A business ID is required.")
+        precondition(covers >= 1 && covers <= 10, "covers must be between 1 and 10.")
+        precondition(!date.isEmpty, "A date is required (format: YYYY-MM-DD).")
+        precondition(!time.isEmpty, "A time is required (format: HH:MM).")
+        guard isAuthenticated() else { return }
+
+        let parameters = Parameters.openingsParameters(
+            covers: covers,
+            date: date,
+            time: time,
+            getCoversRange: getCoversRange
+        )
+        manager
+            .request(CDYelpRouter.openings(businessId: id, parameters: parameters))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpOpeningsResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1359,6 +1399,30 @@ public class CDYelpAPIClient: @unchecked Sendable {
     {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchJobs(forQuery: query, locale: locale) { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchOpenings(forBusinessId id: String,
+                              covers: Int,
+                              date: String,
+                              time: String,
+                              getCoversRange: Bool? = nil)
+        async throws -> CDYelpOpeningsResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchOpenings(forBusinessId: id,
+                               covers: covers,
+                               date: date,
+                               time: time,
+                               getCoversRange: getCoversRange)
+            { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
                     return

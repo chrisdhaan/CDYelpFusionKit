@@ -1461,7 +1461,7 @@ public func fetchJobs(forQuery query: String,
 
 ---
 
-### Schema Update 15: Reservations — New Endpoint
+### ✅ Schema Update 15: Reservations — New Endpoint
 
 **Goal:** Implement `GET /v3/bookings/{id}/openings`. Returns available reservation time slots for a business for a given date and party size. The API returns times across 4 days — the day before, the requested day, and 2 days after.
 

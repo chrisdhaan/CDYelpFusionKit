@@ -52,12 +52,13 @@ enum CDYelpRouter: URLRequestConvertible {
     case businessInsights(parameters: Parameters)
     case reviewHighlights(id: String, parameters: Parameters)
     case jobs(query: String, locale: String?)
+    case openings(businessId: String, parameters: Parameters)
 
     var method: HTTPMethod {
         switch self {
         case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete, .event, .events,
              .featuredEvent, .allCategories, .categoryDetails, .engagement, .serviceOfferings, .businessInsights,
-             .reviewHighlights:
+             .reviewHighlights, .openings:
             return .get
         case .aiChat, .jobs:
             return .post
@@ -102,6 +103,8 @@ enum CDYelpRouter: URLRequestConvertible {
             return "businesses/\(id)/review_highlights"
         case .jobs:
             return "jobs"
+        case let .openings(businessId, _):
+            return "bookings/\(businessId)/openings"
         }
     }
 
@@ -142,7 +145,8 @@ enum CDYelpRouter: URLRequestConvertible {
              let .engagement(parameters),
              .serviceOfferings(id: _, let parameters),
              let .businessInsights(parameters),
-             .reviewHighlights(id: _, let parameters):
+             .reviewHighlights(id: _, let parameters),
+             .openings(businessId: _, let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
         case .aiChat, .jobs:
             break
