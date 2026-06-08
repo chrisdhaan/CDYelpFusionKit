@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [5.1.0](#510---2026-06-14)
 - [5.0.0](#500---2026-06-07)
 - [4.0.0](#400---2026-06-02)
 - [3.2.0](#320---2022-08-02)
@@ -21,6 +22,35 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [5.1.0] - 2026-06-14
+
+### Added
+
+- `CDYelpTransactionType.pickup` and `CDYelpTransactionType.restaurantReservation` enum cases
+- 10 new `CDYelpAttributeFilter` values: parking filters (`parkingGarage`, `parkingLot`, `parkingStreet`, `parkingValet`, `parkingBike`, `parkingValidated`) and dietary filters (`likedByVegetarians`, `veganOfferings`, `glutenFreeOfferings`, `outdoorSeating`)
+- `CDYelpReviewSortType` enum with `yelpSort`, `rating`, and `timeCreated` cases
+- `language: String?` field on `CDYelpReview`
+- `fetchAIChat(query:chatId:latitude:longitude:requestContext:completion:)` — new `POST /ai/chat/v2` endpoint with multi-turn conversation support via `CDYelpAIChatRequest` / `CDYelpAIChatResponse`
+- `fetchEngagementMetrics(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` — new `GET /v3/businesses/engagement` endpoint via `CDYelpEngagementResponse`
+- `fetchServiceOfferings(forBusinessId:locale:completion:)` — new `GET /v3/businesses/{id}/service_offerings` endpoint via `CDYelpServiceOfferingsResponse`
+- `fetchBusinessInsights(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` — new `GET /v3/businesses/insights` endpoint via `CDYelpBusinessInsightsResponse`
+- `fetchReviewHighlights(forBusinessId:count:locale:devicePlatform:completion:)` — new `GET /v3/businesses/{id}/review_highlights` endpoint via `CDYelpReviewHighlightsResponse`
+- `fetchJobs(forQuery:locale:completion:)` — new `POST /v3/jobs` home services endpoint via `CDYelpJobsResponse`
+- `fetchOpenings(forBusinessId:covers:date:time:getCoversRange:completion:)` — new `GET /v3/bookings/{id}/openings` reservations endpoint via `CDYelpOpeningsResponse`
+- Async/await overloads for all 7 new endpoints
+- 48 new unit tests covering new router cases and response model decoding (193 total, up from 145)
+
+### Updated
+
+- `searchBusinesses(byTerm:...)` — added `devicePlatform`, `reservationDate`, `reservationTime`, `reservationCovers`, `matchesPartySize`, `jobAlias` parameters
+- `searchBusinesses(byPhoneNumber:...)` — added `locale` parameter
+- `fetchBusiness(forId:...)` — added `devicePlatform` parameter
+- `searchTransactions(byType:...)` — added `term`, `categories`, `priceTiers` parameters
+- `fetchReviews(forBusinessId:...)` — added `offset`, `limit`, `sortBy` parameters
+- `.swiftlint.yml` file length thresholds raised to accommodate growth in `CDYelpAPIClient.swift`
 
 ---
 
