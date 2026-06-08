@@ -724,11 +724,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - chatId: (Optional) The ID of an existing chat to continue a multi-turn conversation.
     ///   - latitude: (Optional) The latitude of the user's location.
     ///   - longitude: (Optional) The longitude of the user's location.
+    ///   - requestContext: (Optional) Additional key-value context for the request.
     ///   - completion: (Required) A callback for handling the returned response.
     public func fetchAIChat(query: String,
                             chatId: String? = nil,
                             latitude: Double? = nil,
                             longitude: Double? = nil,
+                            requestContext: [String: String]? = nil,
                             completion: @escaping (CDYelpAIChatResponse?) -> Void)
     {
         precondition(!query.isEmpty, "A query is required.")
@@ -738,7 +740,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
         let userContext: CDYelpAIChatRequest.UserContext? = (latitude != nil && longitude != nil)
             ? .init(latitude: latitude!, longitude: longitude!)
             : nil
-        let request = CDYelpAIChatRequest(query: query, chatId: chatId, userContext: userContext)
+        let request = CDYelpAIChatRequest(query: query,
+                                          chatId: chatId,
+                                          userContext: userContext,
+                                          requestContext: requestContext)
 
         manager
             .request(CDYelpRouter.aiChat(request: request))
@@ -1290,18 +1295,19 @@ public class CDYelpAPIClient: @unchecked Sendable {
     }
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     public func fetchAIChat(query: String,
                             chatId: String? = nil,
                             latitude: Double? = nil,
-                            longitude: Double? = nil)
+                            longitude: Double? = nil,
+                            requestContext: [String: String]? = nil)
         async throws -> CDYelpAIChatResponse
     {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchAIChat(query: query,
                              chatId: chatId,
                              latitude: latitude,
-                             longitude: longitude)
+                             longitude: longitude,
+                             requestContext: requestContext)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))

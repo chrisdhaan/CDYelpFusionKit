@@ -109,17 +109,20 @@ enum CDYelpRouter: URLRequestConvertible {
     }
 
     func asURLRequest() throws -> URLRequest {
-        let url = try CDYelpURL.base.asURL()
-
-        var urlRequest = URLRequest(url: url.appendingPathComponent(path))
-        urlRequest.httpMethod = method.rawValue
-
-        // Handle POST + JSON body cases before URL-encoding switch
+        // aiChat lives at /ai/chat/v2, not under the /v3/ base
         if case let .aiChat(request) = self {
+            let url = try "https://api.yelp.com/ai/chat/v2".asURL()
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = HTTPMethod.post.rawValue
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = try JSONEncoder().encode(request)
             return urlRequest
         }
+
+        let url = try CDYelpURL.base.asURL()
+
+        var urlRequest = URLRequest(url: url.appendingPathComponent(path))
+        urlRequest.httpMethod = method.rawValue
 
         if case let .jobs(query, locale) = self {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
