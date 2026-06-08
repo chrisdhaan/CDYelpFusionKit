@@ -1225,7 +1225,7 @@ public func fetchBusinessInsights(forBusinessIds businessIds: [String],
 
 ---
 
-### Schema Update 13: Review Highlights — New Endpoint (🔒 Premium Plan required)
+### ✅ Schema Update 13: Review Highlights — New Endpoint (🔒 Premium Plan required)
 
 **Goal:** Implement `GET /v3/businesses/{id}/review_highlights`. Requires Premium Plan access.
 

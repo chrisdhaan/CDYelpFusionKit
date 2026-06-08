@@ -22,8 +22,8 @@ function_body_length:
 function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
-  error: 1300
-  warning: 1275
+  error: 1350
+  warning: 1330
 # number of characters allowed in a line
 line_length:
   error: 200

@@ -845,6 +845,43 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches review highlights for a business.
+    ///
+    /// - parameters:
+    ///   - id: (Required) The business ID.
+    ///   - count: (Optional) Number of highlights to return (1–5).
+    ///   - locale: (Optional) The desired language for the response.
+    ///   - devicePlatform: (Optional) The device platform for the request.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchReviewHighlights(forBusinessId id: String,
+                                      count: Int? = nil,
+                                      locale: CDYelpLocale? = nil,
+                                      devicePlatform: String? = nil,
+                                      completion: @escaping (CDYelpReviewHighlightsResponse?) -> Void)
+    {
+        precondition(!id.isEmpty, "A business ID is required.")
+        if let count = count {
+            precondition(count >= 1 && count <= 5, "count must be between 1 and 5.")
+        }
+        guard isAuthenticated() else { return }
+
+        let parameters = Parameters.reviewHighlightsParameters(
+            count: count,
+            locale: locale,
+            devicePlatform: devicePlatform
+        )
+        manager
+            .request(CDYelpRouter.reviewHighlights(id: id, parameters: parameters))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpReviewHighlightsResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1257,6 +1294,28 @@ public class CDYelpAPIClient: @unchecked Sendable {
             self.fetchBusinessInsights(forBusinessIds: businessIds,
                                        dateRangeStart: dateRangeStart,
                                        dateRangeEnd: dateRangeEnd)
+            { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchReviewHighlights(forBusinessId id: String,
+                                      count: Int? = nil,
+                                      locale: CDYelpLocale? = nil,
+                                      devicePlatform: String? = nil)
+        async throws -> CDYelpReviewHighlightsResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchReviewHighlights(forBusinessId: id,
+                                       count: count,
+                                       locale: locale,
+                                       devicePlatform: devicePlatform)
             { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))

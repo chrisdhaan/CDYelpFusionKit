@@ -480,4 +480,16 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         parameters["date_range_end"] = dateRangeEnd
         return parameters
     }
+
+    static func reviewHighlightsParameters(count: Int?,
+                                           locale: CDYelpLocale?,
+                                           devicePlatform: String?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        if let count = count { parameters["count"] = count }
+        if let locale = locale, locale.rawValue != "" { parameters["locale"] = locale.rawValue }
+        if let devicePlatform = devicePlatform { parameters["device_platform"] = devicePlatform }
+        return parameters
+    }
 }
