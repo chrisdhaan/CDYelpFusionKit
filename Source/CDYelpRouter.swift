@@ -51,6 +51,7 @@ enum CDYelpRouter: URLRequestConvertible {
     case serviceOfferings(id: String, parameters: Parameters)
     case businessInsights(parameters: Parameters)
     case reviewHighlights(id: String, parameters: Parameters)
+    case jobs(query: String, locale: String?)
 
     var method: HTTPMethod {
         switch self {
@@ -58,7 +59,7 @@ enum CDYelpRouter: URLRequestConvertible {
              .featuredEvent, .allCategories, .categoryDetails, .engagement, .serviceOfferings, .businessInsights,
              .reviewHighlights:
             return .get
-        case .aiChat:
+        case .aiChat, .jobs:
             return .post
         }
     }
@@ -99,6 +100,8 @@ enum CDYelpRouter: URLRequestConvertible {
             return "businesses/insights"
         case let .reviewHighlights(id, _):
             return "businesses/\(id)/review_highlights"
+        case .jobs:
+            return "jobs"
         }
     }
 
@@ -112,6 +115,14 @@ enum CDYelpRouter: URLRequestConvertible {
         if case let .aiChat(request) = self {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = try JSONEncoder().encode(request)
+            return urlRequest
+        }
+
+        if case let .jobs(query, locale) = self {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            var body: [String: String] = ["query": query]
+            if let locale = locale { body["locale"] = locale }
+            urlRequest.httpBody = try JSONEncoder().encode(body)
             return urlRequest
         }
 
@@ -133,7 +144,7 @@ enum CDYelpRouter: URLRequestConvertible {
              let .businessInsights(parameters),
              .reviewHighlights(id: _, let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
-        case .aiChat:
+        case .aiChat, .jobs:
             break
         }
 

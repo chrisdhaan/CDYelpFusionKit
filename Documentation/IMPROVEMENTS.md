@@ -1354,7 +1354,7 @@ public func fetchReviewHighlights(forBusinessId id: String,
 
 ---
 
-### Schema Update 14: Home Services — New Endpoint
+### ✅ Schema Update 14: Home Services — New Endpoint
 
 **Goal:** Implement `POST /v3/jobs`. POST with a JSON body (same pattern as Yelp AI Chat, Schema Update 9).
 

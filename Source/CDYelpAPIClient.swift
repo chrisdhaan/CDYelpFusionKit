@@ -882,6 +882,32 @@ public class CDYelpAPIClient: @unchecked Sendable {
             }
     }
 
+    ///
+    /// Fetches home services (jobs) for the provided query.
+    ///
+    /// - parameters:
+    ///   - query: (Required) The search query (1–1000 characters).
+    ///   - locale: (Optional) The desired language for the response.
+    ///   - completion: (Required) A callback for handling the returned response.
+    public func fetchJobs(forQuery query: String,
+                          locale: CDYelpLocale? = nil,
+                          completion: @escaping (CDYelpJobsResponse?) -> Void)
+    {
+        precondition(!query.isEmpty && query.count <= 1000,
+                     "A query of 1–1000 characters is required.")
+        guard isAuthenticated() else { return }
+
+        manager
+            .request(CDYelpRouter.jobs(query: query, locale: locale?.rawValue))
+            .validate()
+            .responseDecodable { (response: DataResponse<CDYelpJobsResponse, AFError>) in
+                switch response.result {
+                case let .success(result): completion(result)
+                case .failure: completion(nil)
+                }
+            }
+    }
+
     // MARK: - Async/Await Overloads
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -1317,6 +1343,22 @@ public class CDYelpAPIClient: @unchecked Sendable {
                                        locale: locale,
                                        devicePlatform: devicePlatform)
             { response in
+                guard let response = response else {
+                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
+                    return
+                }
+                continuation.resume(returning: response)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public func fetchJobs(forQuery query: String,
+                          locale: CDYelpLocale? = nil)
+        async throws -> CDYelpJobsResponse
+    {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchJobs(forQuery: query, locale: locale) { response in
                 guard let response = response else {
                     continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
                     return
