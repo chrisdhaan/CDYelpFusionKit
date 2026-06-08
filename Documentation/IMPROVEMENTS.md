@@ -75,14 +75,14 @@ import Testing
 
 #### Completion Checklist
 
-- [ ] Add `.pickup` and `.restaurantReservation` to `CDYelpTransactionType` in `Source/CDYelpEnums.swift`
-- [ ] Update doc comment on `CDYelpTransactionType`
-- [ ] Update description in `searchTransactions` doc comment in `Source/CDYelpAPIClient.swift`
-- [ ] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpTransactionTypeTests.swift`
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Add `.pickup` and `.restaurantReservation` to `CDYelpTransactionType` in `Source/CDYelpEnums.swift`
+- [x] Update doc comment on `CDYelpTransactionType`
+- [x] Update description in `searchTransactions` doc comment in `Source/CDYelpAPIClient.swift`
+- [x] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpTransactionTypeTests.swift`
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -165,12 +165,12 @@ import Testing
 
 #### Completion Checklist
 
-- [ ] Add parking and dietary cases to `CDYelpAttributeFilter` in `Source/CDYelpEnums.swift`
-- [ ] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpAttributeFilterTests.swift`
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Add parking and dietary cases to `CDYelpAttributeFilter` in `Source/CDYelpEnums.swift`
+- [x] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpAttributeFilterTests.swift`
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -296,15 +296,15 @@ import Testing
 
 #### Completion Checklist
 
-- [ ] Add `CDYelpReviewSortType` enum to `Source/CDYelpEnums.swift`
-- [ ] Update `reviewsParameters` in `Source/Parameters+CDYelpFusionKit.swift` to accept `limit` and `sortBy`
-- [ ] Update completion-handler `fetchReviews` signature and body in `Source/CDYelpAPIClient.swift` (add `offset`, `limit`, `sortBy`)
-- [ ] Update async `fetchReviews` signature and body in `Source/CDYelpAPIClient.swift` (add `offset`, `limit`, `sortBy`)
-- [ ] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpReviewSortTypeTests.swift`
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Add `CDYelpReviewSortType` enum to `Source/CDYelpEnums.swift`
+- [x] Update `reviewsParameters` in `Source/Parameters+CDYelpFusionKit.swift` to accept `limit` and `sortBy`
+- [x] Update completion-handler `fetchReviews` signature and body in `Source/CDYelpAPIClient.swift` (add `offset`, `limit`, `sortBy`)
+- [x] Update async `fetchReviews` signature and body in `Source/CDYelpAPIClient.swift` (add `offset`, `limit`, `sortBy`)
+- [x] Create `Tests/CDYelpFusionKitTests/Enums/CDYelpReviewSortTypeTests.swift`
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -429,13 +429,13 @@ import Testing
 
 #### Completion Checklist
 
-- [ ] Add `language: String?` property and `CodingKey` to `CDYelpReview` in `Source/CDYelpReview.swift`
-- [ ] Add `"language": "en"` to the review object in `Tests/CDYelpFusionKitTests/Fixtures/reviews_response.json`
-- [ ] Create `Tests/CDYelpFusionKitTests/Model/CDYelpReviewTests.swift`
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Add `language: String?` property and `CodingKey` to `CDYelpReview` in `Source/CDYelpReview.swift`
+- [x] Add `"language": "en"` to the review object in `Tests/CDYelpFusionKitTests/Fixtures/reviews_response.json`
+- [x] Create `Tests/CDYelpFusionKitTests/Model/CDYelpReviewTests.swift`
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -527,14 +527,14 @@ Find the async `searchBusinesses(byTerm:...)` overload in the `// MARK: - Async/
 
 #### Completion Checklist
 
-- [ ] Add 6 new trailing parameters to `searchParameters` in `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Append 6 new parameter blocks to the `searchParameters` body (after the `attributes` block)
-- [ ] Add 6 `= nil`-defaulted parameters to the completion-handler `searchBusinesses(byTerm:...)` in `Source/CDYelpAPIClient.swift` and pass them through to `searchParameters`
-- [ ] Add the same 6 parameters to the async `searchBusinesses(byTerm:...)` overload and forward them
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Add 6 new trailing parameters to `searchParameters` in `Source/Parameters+CDYelpFusionKit.swift`
+- [x] Append 6 new parameter blocks to the `searchParameters` body (after the `attributes` block)
+- [x] Add 6 `= nil`-defaulted parameters to the completion-handler `searchBusinesses(byTerm:...)` in `Source/CDYelpAPIClient.swift` and pass them through to `searchParameters`
+- [x] Add the same 6 parameters to the async `searchBusinesses(byTerm:...)` overload and forward them
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -580,13 +580,13 @@ Find the async `searchBusinesses(byPhoneNumber:)` overload. Add `locale: CDYelpL
 
 #### Completion Checklist
 
-- [ ] Update `phoneParameters(withPhoneNumber:)` in `Source/Parameters+CDYelpFusionKit.swift` to accept and forward `locale: CDYelpLocale?`
-- [ ] Add `locale: CDYelpLocale? = nil` to the completion-handler `searchBusinesses(byPhoneNumber:completion:)` in `Source/CDYelpAPIClient.swift` and pass to `phoneParameters`
-- [ ] Add `locale: CDYelpLocale? = nil` to the async `searchBusinesses(byPhoneNumber:)` overload and forward
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Update `phoneParameters(withPhoneNumber:)` in `Source/Parameters+CDYelpFusionKit.swift` to accept and forward `locale: CDYelpLocale?`
+- [x] Add `locale: CDYelpLocale? = nil` to the completion-handler `searchBusinesses(byPhoneNumber:completion:)` in `Source/CDYelpAPIClient.swift` and pass to `phoneParameters`
+- [x] Add `locale: CDYelpLocale? = nil` to the async `searchBusinesses(byPhoneNumber:)` overload and forward
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -638,13 +638,13 @@ Find the async `fetchBusiness(forId:locale:)` overload. Add `devicePlatform: Str
 
 #### Completion Checklist
 
-- [ ] Update `businessParameters(withLocale:)` in `Source/Parameters+CDYelpFusionKit.swift` to accept `devicePlatform: String?`
-- [ ] Add `devicePlatform: String? = nil` to the completion-handler `fetchBusiness(forId:locale:completion:)` in `Source/CDYelpAPIClient.swift` and pass to `businessParameters(withLocale:devicePlatform:)`
-- [ ] Add `devicePlatform: String? = nil` to the async `fetchBusiness(forId:locale:)` overload and forward
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Update `businessParameters(withLocale:)` in `Source/Parameters+CDYelpFusionKit.swift` to accept `devicePlatform: String?`
+- [x] Add `devicePlatform: String? = nil` to the completion-handler `fetchBusiness(forId:locale:completion:)` in `Source/CDYelpAPIClient.swift` and pass to `businessParameters(withLocale:devicePlatform:)`
+- [x] Add `devicePlatform: String? = nil` to the async `fetchBusiness(forId:locale:)` overload and forward
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -715,13 +715,13 @@ Find the async `searchTransactions(byType:...)` overload. Add the same 3 `= nil`
 
 #### Completion Checklist
 
-- [ ] Replace `transactionsParameters` in `Source/Parameters+CDYelpFusionKit.swift` with the new 6-parameter version
-- [ ] Add `term: String? = nil`, `categories: [CDYelpCategoryAlias]? = nil`, `priceTiers: [CDYelpPriceTier]? = nil` to the completion-handler `searchTransactions(byType:...)` in `Source/CDYelpAPIClient.swift` and pass through
-- [ ] Add the same 3 parameters to the async `searchTransactions(byType:...)` overload and forward
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Replace `transactionsParameters` in `Source/Parameters+CDYelpFusionKit.swift` with the new 6-parameter version
+- [x] Add `term: String? = nil`, `categories: [CDYelpCategoryAlias]? = nil`, `priceTiers: [CDYelpPriceTier]? = nil` to the completion-handler `searchTransactions(byType:...)` in `Source/CDYelpAPIClient.swift` and pass through
+- [x] Add the same 3 parameters to the async `searchTransactions(byType:...)` overload and forward
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -872,16 +872,16 @@ public func fetchAIChat(query: String,
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpAIChatRequest.swift`
-- [ ] Create `Source/CDYelpAIChatResponse.swift`
-- [ ] Add `case aiChat(request: CDYelpAIChatRequest)` to `CDYelpRouter` with `.post` method and `"ai/chat/v2"` path
-- [ ] Add JSON body branch in `CDYelpRouter.asURLRequest()` before the URL-encoding switch
-- [ ] Add callback `fetchAIChat(query:chatId:latitude:longitude:completion:)` to `CDYelpAPIClient`
-- [ ] Add async `fetchAIChat(query:chatId:latitude:longitude:)` overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpAIChatRequest.swift`
+- [x] Create `Source/CDYelpAIChatResponse.swift`
+- [x] Add `case aiChat(request: CDYelpAIChatRequest)` to `CDYelpRouter` with `.post` method and `"ai/chat/v2"` path
+- [x] Add JSON body branch in `CDYelpRouter.asURLRequest()` before the URL-encoding switch
+- [x] Add callback `fetchAIChat(query:chatId:latitude:longitude:completion:)` to `CDYelpAPIClient`
+- [x] Add async `fetchAIChat(query:chatId:latitude:longitude:)` overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -993,15 +993,15 @@ public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpEngagementResponse.swift`
-- [ ] Add `case engagement(parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/engagement"` path
-- [ ] Add `engagementParameters(withBusinessIds:dateRangeStart:dateRangeEnd:)` to `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Add callback `fetchEngagementMetrics(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` to `CDYelpAPIClient` with `precondition` that `businessIds.count` is 1–20
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpEngagementResponse.swift`
+- [x] Add `case engagement(parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/engagement"` path
+- [x] Add `engagementParameters(withBusinessIds:dateRangeStart:dateRangeEnd:)` to `Source/Parameters+CDYelpFusionKit.swift`
+- [x] Add callback `fetchEngagementMetrics(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` to `CDYelpAPIClient` with `precondition` that `businessIds.count` is 1–20
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1092,14 +1092,14 @@ public func fetchServiceOfferings(forBusinessId id: String,
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpServiceOfferingsResponse.swift`
-- [ ] Add `case serviceOfferings(id: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/\(id)/service_offerings"` path
-- [ ] Add callback `fetchServiceOfferings(forBusinessId:locale:completion:)` to `CDYelpAPIClient`
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpServiceOfferingsResponse.swift`
+- [x] Add `case serviceOfferings(id: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/\(id)/service_offerings"` path
+- [x] Add callback `fetchServiceOfferings(forBusinessId:locale:completion:)` to `CDYelpAPIClient`
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1213,15 +1213,15 @@ public func fetchBusinessInsights(forBusinessIds businessIds: [String],
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpBusinessInsightsResponse.swift`
-- [ ] Add `case businessInsights(parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/insights"` path
-- [ ] Add `businessInsightsParameters(withBusinessIds:dateRangeStart:dateRangeEnd:)` to `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Add callback `fetchBusinessInsights(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` to `CDYelpAPIClient` with `precondition` that `businessIds.count` is 1–20 and both date strings are non-empty
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpBusinessInsightsResponse.swift`
+- [x] Add `case businessInsights(parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/insights"` path
+- [x] Add `businessInsightsParameters(withBusinessIds:dateRangeStart:dateRangeEnd:)` to `Source/Parameters+CDYelpFusionKit.swift`
+- [x] Add callback `fetchBusinessInsights(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)` to `CDYelpAPIClient` with `precondition` that `businessIds.count` is 1–20 and both date strings are non-empty
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1342,15 +1342,15 @@ public func fetchReviewHighlights(forBusinessId id: String,
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpReviewHighlightsResponse.swift`
-- [ ] Add `case reviewHighlights(id: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/\(id)/review_highlights"` path
-- [ ] Add `reviewHighlightsParameters(count:locale:devicePlatform:)` to `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Add callback `fetchReviewHighlights(forBusinessId:count:locale:devicePlatform:completion:)` to `CDYelpAPIClient` with a `precondition` that `count` is 1–5
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpReviewHighlightsResponse.swift`
+- [x] Add `case reviewHighlights(id: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"businesses/\(id)/review_highlights"` path
+- [x] Add `reviewHighlightsParameters(count:locale:devicePlatform:)` to `Source/Parameters+CDYelpFusionKit.swift`
+- [x] Add callback `fetchReviewHighlights(forBusinessId:count:locale:devicePlatform:completion:)` to `CDYelpAPIClient` with a `precondition` that `count` is 1–5
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1449,15 +1449,15 @@ public func fetchJobs(forQuery query: String,
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpJobsResponse.swift`
-- [ ] Add `case jobs(query: String, locale: String?)` to `CDYelpRouter` with `.post` method and `"jobs"` path
-- [ ] Add JSON body branch in `CDYelpRouter.asURLRequest()` for the `jobs` case (before the URL-encoding switch)
-- [ ] Add callback `fetchJobs(forQuery:locale:completion:)` to `CDYelpAPIClient` with `precondition` that query is 1–1000 characters
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpJobsResponse.swift`
+- [x] Add `case jobs(query: String, locale: String?)` to `CDYelpRouter` with `.post` method and `"jobs"` path
+- [x] Add JSON body branch in `CDYelpRouter.asURLRequest()` for the `jobs` case (before the URL-encoding switch)
+- [x] Add callback `fetchJobs(forQuery:locale:completion:)` to `CDYelpAPIClient` with `precondition` that query is 1–1000 characters
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1604,15 +1604,15 @@ public func fetchOpenings(forBusinessId id: String,
 
 #### Completion Checklist
 
-- [ ] Create `Source/CDYelpOpeningsResponse.swift` (4 structs: `CDYelpOpeningsResponse`, `CDYelpReservationDay`, `CDYelpReservationTime`, `CDYelpCoversRange`)
-- [ ] Add `case openings(businessId: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"bookings/\(businessId)/openings"` path
-- [ ] Add `openingsParameters(covers:date:time:getCoversRange:)` to `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Add callback `fetchOpenings(forBusinessId:covers:date:time:getCoversRange:completion:)` to `CDYelpAPIClient` with `precondition` checks for non-empty `id`, `date`, `time`, and `covers` in 1–10
-- [ ] Add async overload
-- [ ] Run `swift build` — must succeed
-- [ ] Run `swift test` — must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
+- [x] Create `Source/CDYelpOpeningsResponse.swift` (4 structs: `CDYelpOpeningsResponse`, `CDYelpReservationDay`, `CDYelpReservationTime`, `CDYelpCoversRange`)
+- [x] Add `case openings(businessId: String, parameters: Parameters)` to `CDYelpRouter` with `.get` method and `"bookings/\(businessId)/openings"` path
+- [x] Add `openingsParameters(covers:date:time:getCoversRange:)` to `Source/Parameters+CDYelpFusionKit.swift`
+- [x] Add callback `fetchOpenings(forBusinessId:covers:date:time:getCoversRange:completion:)` to `CDYelpAPIClient` with `precondition` checks for non-empty `id`, `date`, `time`, and `covers` in 1–10
+- [x] Add async overload
+- [x] Run `swift build` — must succeed
+- [x] Run `swift test` — must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
 
 ---
 
@@ -1962,21 +1962,21 @@ The router tests are the one group that needs updating: they test `CDYelpRouter.
 
 ### v6 Completion Checklist
 
-- [ ] Raise deployment targets in `Package.swift` and `CDYelpFusionKit.podspec`
-- [ ] Create `Source/CDYelpNetworkError.swift`
-- [ ] Create `Source/Internal/CDYelpURLSession.swift`
-- [ ] Create `Source/Internal/CDYelpNativeRouter.swift`
-- [ ] Update `Source/CDYelpAPIClient.swift` — remove Alamofire, use `CDYelpURLSession`
-- [ ] Update `Source/Parameters+CDYelpFusionKit.swift` — remove `import Alamofire`, replace `Parameters`
-- [ ] Delete `Source/CDYelpRouter.swift`
-- [ ] Delete `Source/Internal/CDYelpAlamofireEventMonitor.swift`
-- [ ] Delete `Source/Internal/CDYelpAlamofireRequestAdapter.swift`
-- [ ] Update `Package.swift` — remove Alamofire dependency
-- [ ] Update `CDYelpFusionKit.podspec` — remove Alamofire dependency
-- [ ] Update router tests to use `CDYelpNativeRouter.asURLRequest(apiKey:)`
-- [ ] Update any test or source file that references `AFError` to use `CDYelpNetworkError`
-- [ ] Run `swift build` — must succeed with zero Alamofire imports
-- [ ] Run `swift test` — all v5 behavioral tests must pass unchanged
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
-- [ ] Run `bundle exec pod lib lint --allow-warnings`
+- [x] Raise deployment targets in `Package.swift` and `CDYelpFusionKit.podspec`
+- [x] Create `Source/CDYelpNetworkError.swift`
+- [x] Create `Source/Internal/CDYelpURLSession.swift`
+- [x] Create `Source/Internal/CDYelpNativeRouter.swift`
+- [x] Update `Source/CDYelpAPIClient.swift` — remove Alamofire, use `CDYelpURLSession`
+- [x] Update `Source/Parameters+CDYelpFusionKit.swift` — remove `import Alamofire`, replace `Parameters`
+- [x] Delete `Source/CDYelpRouter.swift`
+- [x] Delete `Source/Internal/CDYelpAlamofireEventMonitor.swift`
+- [x] Delete `Source/Internal/CDYelpAlamofireRequestAdapter.swift`
+- [x] Update `Package.swift` — remove Alamofire dependency
+- [x] Update `CDYelpFusionKit.podspec` — remove Alamofire dependency
+- [x] Update router tests to use `CDYelpNativeRouter.asURLRequest(apiKey:)`
+- [x] Update any test or source file that references `AFError` to use `CDYelpNetworkError`
+- [x] Run `swift build` — must succeed with zero Alamofire imports
+- [x] Run `swift test` — all v5 behavioral tests must pass unchanged
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
+- [x] Run `bundle exec pod lib lint --allow-warnings`

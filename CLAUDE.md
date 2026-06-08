@@ -8,7 +8,7 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 
 | Path | Description |
 |------|-------------|
-| `Source/` | Framework source (40 Swift files) |
+| `Source/` | Framework source (55 Swift files) |
 | `Tests/` | Unit tests (Swift Testing) |
 | `Example/` | iOS example app |
 | `Resources/` | Asset catalogs (Yelp brand colors, star ratings) |
