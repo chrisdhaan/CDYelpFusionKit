@@ -238,7 +238,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     /// Searches for businesses based on the provided search criteria.
     ///
-    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(forId:locale:completion:)`` for detailed information or ``fetchReviews(forBusinessId:locale:completion:)`` for reviews.
+    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(forId:locale:devicePlatform:completion:)`` for detailed information or ``fetchReviews(forBusinessId:locale:offset:limit:sortBy:completion:)`` for reviews.
     ///
     /// - Parameters:
     ///   - term: A search term (e.g. "food", "restaurants"). If not provided, all data is searched.
@@ -255,6 +255,12 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - openNow: Filter to open businesses only.
     ///   - openAt: Unix timestamp to filter businesses open at specific time.
     ///   - attributes: Additional filters using ``CDYelpAttributeFilter``.
+    ///   - devicePlatform: (Optional) The device platform for the request.
+    ///   - reservationDate: (Optional) The date for reservation filtering (format: YYYY-MM-DD).
+    ///   - reservationTime: (Optional) The time for reservation filtering (format: HH:MM).
+    ///   - reservationCovers: (Optional) The party size for reservation filtering.
+    ///   - matchesPartySize: (Optional) Whether to filter for businesses that match the party size.
+    ///   - jobAlias: (Optional) The job alias for job-related filtering.
     ///   - completion: Callback with ``CDYelpSearchResponse`` Business results.
     ///
     public func searchBusinesses(byTerm term: String?,
@@ -344,6 +350,9 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - latitude: (**Required when location isn't provided**) The latitude of the location you want delivery from.
     ///   - longitude: (**Required when location isn't provided**) The longitude of the location you want delivery from.
     ///   - location: (**Required when latitude and longitude aren't provided**) The address of the location you want delivery from.
+    ///   - term: (Optional) A search term to filter transaction results.
+    ///   - categories: (Optional) Category filters using ``CDYelpCategoryAlias``.
+    ///   - priceTiers: (Optional) Price filters using ``CDYelpPriceTier``.
     ///   - completion: A completion block in which the Yelp Fusion API transactions endpoint response can be parsed.
     ///
     public func searchTransactions(byType type: CDYelpTransactionType!,
@@ -377,6 +386,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - id: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - locale: (Optional) The interface locale; this determines the language of the business information returned.
+    ///   - devicePlatform: (Optional) The device platform for the request.
     ///   - completion: A completion block in which the Yelp Fusion API business endpoint response can be parsed.
     ///
     public func fetchBusiness(forId id: String!,
