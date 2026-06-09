@@ -48,7 +48,7 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | Job | Runner | Purpose |
 |-----|--------|---------|
 | iOS | macos-26 (×4), macos-15 | Build iOS scheme |
-| macOS | macos-26 (×5), macos-15 (×5) | Build macOS scheme |
+| macOS | macos-26 (×6), macos-15 (×5) | Build macOS scheme |
 | tvOS | macos-26 (×4), macos-15 | Build tvOS scheme |
 | watchOS | macos-26 (×4), macos-15 | Build watchOS scheme |
 | visionOS | macos-26 (×4) | Build visionOS scheme |
@@ -59,6 +59,16 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | SwiftFormat | macos-15 | `swiftformat Source Tests --lint` |
 | DocC Build | macos-15 | Verify documentation compiles |
 | CodeQL | macos-15 | Security scanning |
+
+### Debugging CI Destination Failures
+
+When an `xcodebuild` destination specifier fails (simulator not found, no matching device), check the runner's installed simulators at:
+
+**https://github.com/actions/runner-images** → `images/macos/macos-26-arm64-Readme.md` → "Installed Simulators" table
+
+The **OS** column in that table gives the exact version string required for the `OS=` parameter in xcodebuild destination specifiers. Key gotchas:
+
+- **iOS/visionOS point releases**: the iOS 26.4 and visionOS 26.4 simulators have OS `26.4.1` (not `26.4`) — tvOS and watchOS 26.4 stay at `26.4`
 
 ## Build Commands
 
