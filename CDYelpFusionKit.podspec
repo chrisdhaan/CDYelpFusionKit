@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CDYelpFusionKit'
-  s.version = '5.0.0'
+  s.version = '5.1.0'
   s.cocoapods_version = '>= 1.13.0'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'

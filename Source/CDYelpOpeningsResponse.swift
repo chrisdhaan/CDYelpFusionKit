@@ -1,8 +1,8 @@
 //
-//  CDYelpReview.swift
+//  CDYelpOpeningsResponse.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 6/7/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,41 +25,41 @@
 //  THE SOFTWARE.
 //
 
-#if os(macOS)
-    import Foundation
-#else
-    import UIKit
-#endif
+import Foundation
 
-public struct CDYelpReview: Decodable, Sendable {
-    public let id: String?
-    public let text: String?
-    public let url: String?
-    public let rating: Int?
-    public let timeCreated: String?
-    public let user: CDYelpUser?
-    public let language: String?
+public struct CDYelpOpeningsResponse: Decodable, Sendable {
+    public let reservationTimes: [CDYelpReservationDay]?
+    public let coversRange: CDYelpCoversRange?
+    public let error: CDYelpError?
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case text
-        case url
-        case rating
-        case timeCreated = "time_created"
-        case user
-        case language
+        case reservationTimes = "reservation_times"
+        case coversRange = "covers_range"
+        case error
     }
+}
 
-    public func urlAsUrl() -> URL? {
-        if let url = url,
-           let asUrl = URL(string: url)
-        {
-            return asUrl
-        }
-        return nil
+public struct CDYelpReservationDay: Decodable, Sendable {
+    public let date: String?
+    public let times: [CDYelpReservationTime]?
+}
+
+public struct CDYelpReservationTime: Decodable, Sendable {
+    public let time: String?
+    public let creditCardRequired: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case time
+        case creditCardRequired = "credit_card_required"
     }
+}
 
-    public func timeCreatedAsDate() -> Date? {
-        timeCreated.flatMap { DateFormatter.reviews.date(from: $0) }
+public struct CDYelpCoversRange: Decodable, Sendable {
+    public let minPartySize: Int?
+    public let maxPartySize: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case minPartySize = "min_party_size"
+        case maxPartySize = "max_party_size"
     }
 }

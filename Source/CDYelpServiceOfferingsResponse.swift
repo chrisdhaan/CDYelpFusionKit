@@ -1,8 +1,8 @@
 //
-//  CDYelpReview.swift
+//  CDYelpServiceOfferingsResponse.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 6/7/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,41 +25,21 @@
 //  THE SOFTWARE.
 //
 
-#if os(macOS)
-    import Foundation
-#else
-    import UIKit
-#endif
+import Foundation
 
-public struct CDYelpReview: Decodable, Sendable {
-    public let id: String?
-    public let text: String?
-    public let url: String?
-    public let rating: Int?
-    public let timeCreated: String?
-    public let user: CDYelpUser?
-    public let language: String?
+public struct CDYelpServiceOfferingsResponse: Decodable, Sendable {
+    public let serviceOfferings: [CDYelpServiceOffering]?
+    public let error: CDYelpError?
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case text
-        case url
-        case rating
-        case timeCreated = "time_created"
-        case user
-        case language
+        case serviceOfferings = "service_offerings"
+        case error
     }
+}
 
-    public func urlAsUrl() -> URL? {
-        if let url = url,
-           let asUrl = URL(string: url)
-        {
-            return asUrl
-        }
-        return nil
-    }
-
-    public func timeCreatedAsDate() -> Date? {
-        timeCreated.flatMap { DateFormatter.reviews.date(from: $0) }
-    }
+public struct CDYelpServiceOffering: Decodable, Sendable {
+    public let id: String?
+    public let name: String?
+    public let description: String?
+    public let url: String?
 }

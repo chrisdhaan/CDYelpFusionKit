@@ -1,8 +1,8 @@
 //
-//  CDYelpReview.swift
+//  CDYelpAIChatRequest.swift
 //  CDYelpFusionKit
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 6/7/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,41 +25,39 @@
 //  THE SOFTWARE.
 //
 
-#if os(macOS)
-    import Foundation
-#else
-    import UIKit
-#endif
+import Foundation
 
-public struct CDYelpReview: Decodable, Sendable {
-    public let id: String?
-    public let text: String?
-    public let url: String?
-    public let rating: Int?
-    public let timeCreated: String?
-    public let user: CDYelpUser?
-    public let language: String?
+public struct CDYelpAIChatRequest: Encodable, Sendable {
+    public let query: String
+    public let chatId: String?
+    public let userContext: UserContext?
+    public let requestContext: [String: String]?
+
+    public struct UserContext: Encodable, Sendable {
+        public let latitude: Double
+        public let longitude: Double
+
+        public init(latitude: Double, longitude: Double) {
+            self.latitude = latitude
+            self.longitude = longitude
+        }
+    }
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case text
-        case url
-        case rating
-        case timeCreated = "time_created"
-        case user
-        case language
+        case query
+        case chatId = "chat_id"
+        case userContext = "user_context"
+        case requestContext = "request_context"
     }
 
-    public func urlAsUrl() -> URL? {
-        if let url = url,
-           let asUrl = URL(string: url)
-        {
-            return asUrl
-        }
-        return nil
-    }
-
-    public func timeCreatedAsDate() -> Date? {
-        timeCreated.flatMap { DateFormatter.reviews.date(from: $0) }
+    public init(query: String,
+                chatId: String? = nil,
+                userContext: UserContext? = nil,
+                requestContext: [String: String]? = nil)
+    {
+        self.query = query
+        self.chatId = chatId
+        self.userContext = userContext
+        self.requestContext = requestContext
     }
 }

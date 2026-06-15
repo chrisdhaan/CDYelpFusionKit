@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.1.0"))
 ]
 ```
 
@@ -30,7 +30,7 @@ Then add it to your target's dependencies:
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 5.0'
+pod 'CDYelpFusionKit', '~> 5.1'
 ```
 
 Then run `pod install`.
@@ -231,6 +231,147 @@ client.autocompleteBusinesses(
     }
     if let businesses = response?.businesses {
         print("Businesses: \(businesses.map { $0.name ?? "" })")
+    }
+}
+```
+
+### Yelp AI Chat
+
+Query Yelp's AI for natural language business recommendations:
+
+```swift
+client.fetchAIChat(
+    query: "Best tacos near me with outdoor seating",
+    chatId: nil,
+    latitude: 37.7749,
+    longitude: -122.4194
+) { response in
+    print(response?.response ?? "No response")
+    if let businesses = response?.businesses {
+        print("Suggested businesses: \(businesses.map { $0.name ?? "" })")
+    }
+}
+```
+
+Continue a multi-turn conversation by passing back the `chatId`:
+
+```swift
+Task {
+    do {
+        let first = try await client.fetchAIChat(query: "Best pizza in SF")
+        let second = try await client.fetchAIChat(
+            query: "Which of those has outdoor seating?",
+            chatId: first.chatId
+        )
+        print(second.response ?? "")
+    } catch {
+        print("Error: \(error)")
+    }
+}
+```
+
+### Fetch Engagement Metrics
+
+Get engagement metrics for one or more businesses (requires special API key permissions):
+
+```swift
+client.fetchEngagementMetrics(
+    forBusinessIds: ["gary-danko-san-francisco", "flour-water-san-francisco"],
+    dateRangeStart: "2026-01-01",
+    dateRangeEnd: "2026-06-01"
+) { response in
+    guard let data = response?.data else { return }
+    for entry in data {
+        print("\(entry.businessId ?? ""): \(entry.metrics ?? [:])")
+    }
+}
+```
+
+### Fetch Service Offerings
+
+Get the service offerings available for a business:
+
+```swift
+client.fetchServiceOfferings(
+    forBusinessId: "gary-danko-san-francisco",
+    locale: .english_unitedStates
+) { response in
+    guard let offerings = response?.serviceOfferings else { return }
+    for offering in offerings {
+        print("\(offering.name ?? "Unknown"): \(offering.description ?? "")")
+    }
+}
+```
+
+### Fetch Business Insights
+
+Get performance insights for one or more businesses (requires Yelp Insights API access):
+
+```swift
+client.fetchBusinessInsights(
+    forBusinessIds: ["gary-danko-san-francisco"],
+    dateRangeStart: "202601",
+    dateRangeEnd: "202606"
+) { response in
+    guard let insights = response?.insights else { return }
+    for insight in insights {
+        print("\(insight.businessId ?? ""): \(insight.metrics ?? [:])")
+    }
+}
+```
+
+### Fetch Review Highlights
+
+Get curated review highlights for a business (requires Premium Plan):
+
+```swift
+client.fetchReviewHighlights(
+    forBusinessId: "gary-danko-san-francisco",
+    count: 3,
+    locale: .english_unitedStates
+) { response in
+    guard let highlights = response?.highlights else { return }
+    for highlight in highlights {
+        print("\(highlight.rating ?? 0) stars: \(highlight.text ?? "")")
+    }
+}
+```
+
+### Fetch Home Services Jobs
+
+Search for home service professionals by describing the need:
+
+```swift
+client.fetchJobs(
+    forQuery: "I need a licensed plumber to fix a burst pipe",
+    locale: nil
+) { response in
+    guard let jobs = response?.jobs else { return }
+    for job in jobs {
+        print("\(job.name ?? "Unknown") (\(job.alias ?? ""))")
+    }
+}
+```
+
+### Fetch Reservation Openings
+
+Check available reservation times for a restaurant:
+
+```swift
+client.fetchOpenings(
+    forBusinessId: "gary-danko-san-francisco",
+    covers: 2,
+    date: "2026-06-20",
+    time: "19:00",
+    getCoversRange: true
+) { response in
+    guard let days = response?.reservationTimes else { return }
+    for day in days {
+        let times = day.times?.map { $0.time ?? "" } ?? []
+        print("\(day.date ?? ""): \(times.joined(separator: ", "))")
+    }
+    if let range = response?.coversRange {
+        print("Accepts \(range.minPartySize ?? 0)–\(range.maxPartySize ?? 0) guests")
     }
 }
 ```

@@ -138,7 +138,80 @@ struct CDYelpRouterTests {
         #expect(request.url?.path.contains("categories/\(alias)") == true)
     }
 
+    @Test func aiChatRouterProducesPostRequest() throws {
+        let chatRequest = CDYelpAIChatRequest(query: "Best tacos near me")
+        let router = CDYelpRouter.aiChat(request: chatRequest)
+        let request = try router.asURLRequest()
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.scheme == "https")
+        #expect(request.url?.host == "api.yelp.com")
+        #expect(request.url?.path == "/ai/chat/v2")
+    }
+
+    @Test func aiChatRouterDoesNotUseV3BasePath() throws {
+        let chatRequest = CDYelpAIChatRequest(query: "sushi")
+        let router = CDYelpRouter.aiChat(request: chatRequest)
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("/v3/") == false)
+    }
+
+    @Test func aiChatRouterEncodesBody() throws {
+        let chatRequest = CDYelpAIChatRequest(query: "Best pizza", chatId: "abc123")
+        let router = CDYelpRouter.aiChat(request: chatRequest)
+        let request = try router.asURLRequest()
+        #expect(request.httpBody != nil)
+        #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
+    }
+
+    @Test func engagementRouterProducesCorrectPath() throws {
+        let router = CDYelpRouter.engagement(parameters: ["business_ids": "abc,def"])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("businesses/engagement") == true)
+        #expect(request.httpMethod == "GET")
+    }
+
+    @Test func serviceOfferingsRouterInterpolatesId() throws {
+        let businessId = "gary-danko-sf"
+        let router = CDYelpRouter.serviceOfferings(id: businessId, parameters: [:])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("businesses/\(businessId)/service_offerings") == true)
+        #expect(request.httpMethod == "GET")
+    }
+
+    @Test func businessInsightsRouterProducesCorrectPath() throws {
+        let router = CDYelpRouter.businessInsights(parameters: ["business_ids": "abc"])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("businesses/insights") == true)
+        #expect(request.httpMethod == "GET")
+    }
+
+    @Test func reviewHighlightsRouterInterpolatesId() throws {
+        let businessId = "the-house-sf"
+        let router = CDYelpRouter.reviewHighlights(id: businessId, parameters: [:])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("businesses/\(businessId)/review_highlights") == true)
+        #expect(request.httpMethod == "GET")
+    }
+
+    @Test func jobsRouterProducesPostRequest() throws {
+        let router = CDYelpRouter.jobs(query: "plumber", locale: nil)
+        let request = try router.asURLRequest()
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path.contains("jobs") == true)
+        #expect(request.httpBody != nil)
+        #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
+    }
+
+    @Test func openingsRouterInterpolatesBusinessId() throws {
+        let businessId = "trattoria-contadina-sf"
+        let router = CDYelpRouter.openings(businessId: businessId, parameters: [:])
+        let request = try router.asURLRequest()
+        #expect(request.url?.path.contains("bookings/\(businessId)/openings") == true)
+        #expect(request.httpMethod == "GET")
+    }
+
     @Test func allRoutersUseHttpsScheme() throws {
+        let chatRequest = CDYelpAIChatRequest(query: "test")
         let routers: [CDYelpRouter] = [
             .search(parameters: [:]),
             .phone(parameters: [:]),
@@ -152,6 +225,13 @@ struct CDYelpRouterTests {
             .featuredEvent(parameters: [:]),
             .allCategories(parameters: [:]),
             .categoryDetails(alias: "test", parameters: [:]),
+            .aiChat(request: chatRequest),
+            .engagement(parameters: [:]),
+            .serviceOfferings(id: "test", parameters: [:]),
+            .businessInsights(parameters: [:]),
+            .reviewHighlights(id: "test", parameters: [:]),
+            .jobs(query: "plumber", locale: nil),
+            .openings(businessId: "test", parameters: [:]),
         ]
 
         for router in routers {
@@ -160,7 +240,7 @@ struct CDYelpRouterTests {
         }
     }
 
-    @Test func allRoutersUseGetMethod() throws {
+    @Test func allGetRoutersUseGetMethod() throws {
         let routers: [CDYelpRouter] = [
             .search(parameters: [:]),
             .phone(parameters: [:]),
@@ -174,11 +254,29 @@ struct CDYelpRouterTests {
             .featuredEvent(parameters: [:]),
             .allCategories(parameters: [:]),
             .categoryDetails(alias: "test", parameters: [:]),
+            .engagement(parameters: [:]),
+            .serviceOfferings(id: "test", parameters: [:]),
+            .businessInsights(parameters: [:]),
+            .reviewHighlights(id: "test", parameters: [:]),
+            .openings(businessId: "test", parameters: [:]),
         ]
 
         for router in routers {
             let request = try router.asURLRequest()
             #expect(request.httpMethod == "GET")
+        }
+    }
+
+    @Test func postRoutersUsePostMethod() throws {
+        let chatRequest = CDYelpAIChatRequest(query: "test")
+        let routers: [CDYelpRouter] = [
+            .aiChat(request: chatRequest),
+            .jobs(query: "plumber", locale: nil),
+        ]
+
+        for router in routers {
+            let request = try router.asURLRequest()
+            #expect(request.httpMethod == "POST")
         }
     }
 

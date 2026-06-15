@@ -34,6 +34,7 @@
 import Alamofire
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
+    // swiftlint:disable:next function_parameter_count function_body_length
     static func searchParameters(withTerm term: String?,
                                  location: String?,
                                  latitude: Double?,
@@ -47,7 +48,13 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                  priceTiers: [CDYelpPriceTier]?,
                                  openNow: Bool?,
                                  openAt: Int?,
-                                 attributes: [CDYelpAttributeFilter]?) -> Parameters
+                                 attributes: [CDYelpAttributeFilter]?,
+                                 devicePlatform: String?,
+                                 reservationDate: String?,
+                                 reservationTime: String?,
+                                 reservationCovers: Int?,
+                                 matchesPartySize: Bool?,
+                                 jobAlias: String?) -> Parameters
     {
         var parameters: Parameters = [:]
 
@@ -112,46 +119,79 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
             parameters["attributes"] = parametersString
         }
+        if let devicePlatform = devicePlatform {
+            parameters["device_platform"] = devicePlatform
+        }
+        if let reservationDate = reservationDate {
+            parameters["reservation_date"] = reservationDate
+        }
+        if let reservationTime = reservationTime {
+            parameters["reservation_time"] = reservationTime
+        }
+        if let reservationCovers = reservationCovers {
+            parameters["reservation_covers"] = reservationCovers
+        }
+        if let matchesPartySize = matchesPartySize {
+            parameters["matches_party_size_param"] = matchesPartySize
+        }
+        if let jobAlias = jobAlias {
+            parameters["job_alias"] = jobAlias
+        }
 
         return parameters
     }
 
-    static func phoneParameters(withPhoneNumber phoneNumber: String!) -> Parameters {
+    static func phoneParameters(withPhoneNumber phoneNumber: String!,
+                                locale: CDYelpLocale?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
-
         parameters["phone"] = phoneNumber
-
+        if let locale = locale, locale.rawValue != "" {
+            parameters["locale"] = locale.rawValue
+        }
         return parameters
     }
 
     static func transactionsParameters(withLocation location: String?,
                                        latitude: Double?,
-                                       longitude: Double?) -> Parameters
+                                       longitude: Double?,
+                                       term: String?,
+                                       categories: [CDYelpCategoryAlias]?,
+                                       priceTiers: [CDYelpPriceTier]?)
+        -> Parameters
     {
         var parameters: Parameters = [:]
 
-        if let location = location,
-           location != ""
-        {
+        if let location = location, location != "" {
             parameters["location"] = location
         }
-        if let latitude = latitude {
-            parameters["latitude"] = latitude
+        if let latitude = latitude { parameters["latitude"] = latitude }
+        if let longitude = longitude { parameters["longitude"] = longitude }
+        if let term = term, term != "" { parameters["term"] = term }
+        if let categories = categories, !categories.isEmpty {
+            parameters["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
-        if let longitude = longitude {
-            parameters["longitude"] = longitude
+        if let priceTiers = priceTiers, !priceTiers.isEmpty {
+            parameters["price"] = priceTiers.map { $0.rawValue }.joined(separator: ",")
         }
 
         return parameters
     }
 
-    static func businessParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+    static func businessParameters(withLocale locale: CDYelpLocale?,
+                                   devicePlatform: String?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
 
         if let locale = locale,
            locale.rawValue != ""
         {
             parameters["locale"] = locale.rawValue
+        }
+        if let devicePlatform = devicePlatform {
+            parameters["device_platform"] = devicePlatform
         }
 
         return parameters
@@ -238,15 +278,19 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func reviewsParameters(withLocale locale: CDYelpLocale?) -> Parameters {
+    static func reviewsParameters(withLocale locale: CDYelpLocale?,
+                                  offset: Int?,
+                                  limit: Int?,
+                                  sortBy: CDYelpReviewSortType?)
+        -> Parameters
+    {
         var parameters: Parameters = [:]
-
-        if let locale = locale,
-           locale.rawValue != ""
-        {
+        if let locale = locale, locale.rawValue != "" {
             parameters["locale"] = locale.rawValue
         }
-
+        if let offset = offset { parameters["offset"] = offset }
+        if let limit = limit { parameters["limit"] = limit }
+        if let sortBy = sortBy { parameters["sort_by"] = sortBy.rawValue }
         return parameters
     }
 
@@ -410,6 +454,58 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             parameters["locale"] = locale.rawValue
         }
 
+        return parameters
+    }
+
+    static func engagementParameters(withBusinessIds businessIds: [String],
+                                     dateRangeStart: String?,
+                                     dateRangeEnd: String?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["business_ids"] = businessIds.joined(separator: ",")
+        if let start = dateRangeStart { parameters["date_range_start"] = start }
+        if let end = dateRangeEnd { parameters["date_range_end"] = end }
+        return parameters
+    }
+
+    static func businessInsightsParameters(withBusinessIds businessIds: [String],
+                                           dateRangeStart: String,
+                                           dateRangeEnd: String)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["business_ids"] = businessIds.joined(separator: ",")
+        parameters["date_range_start"] = dateRangeStart
+        parameters["date_range_end"] = dateRangeEnd
+        return parameters
+    }
+
+    static func reviewHighlightsParameters(count: Int?,
+                                           locale: CDYelpLocale?,
+                                           devicePlatform: String?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        if let count = count { parameters["count"] = count }
+        if let locale = locale, locale.rawValue != "" { parameters["locale"] = locale.rawValue }
+        if let devicePlatform = devicePlatform { parameters["device_platform"] = devicePlatform }
+        return parameters
+    }
+
+    static func openingsParameters(covers: Int,
+                                   date: String,
+                                   time: String,
+                                   getCoversRange: Bool?)
+        -> Parameters
+    {
+        var parameters: Parameters = [:]
+        parameters["covers"] = covers
+        parameters["date"] = date
+        parameters["time"] = time
+        if let getCoversRange = getCoversRange {
+            parameters["get_covers_range"] = getCoversRange
+        }
         return parameters
     }
 }

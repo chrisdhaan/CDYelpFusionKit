@@ -46,11 +46,22 @@ enum CDYelpRouter: URLRequestConvertible {
     case featuredEvent(parameters: Parameters)
     case allCategories(parameters: Parameters)
     case categoryDetails(alias: String, parameters: Parameters)
+    case aiChat(request: CDYelpAIChatRequest)
+    case engagement(parameters: Parameters)
+    case serviceOfferings(id: String, parameters: Parameters)
+    case businessInsights(parameters: Parameters)
+    case reviewHighlights(id: String, parameters: Parameters)
+    case jobs(query: String, locale: String?)
+    case openings(businessId: String, parameters: Parameters)
 
     var method: HTTPMethod {
         switch self {
-        case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete, .event, .events, .featuredEvent, .allCategories, .categoryDetails:
+        case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete, .event, .events,
+             .featuredEvent, .allCategories, .categoryDetails, .engagement, .serviceOfferings, .businessInsights,
+             .reviewHighlights, .openings:
             return .get
+        case .aiChat, .jobs:
+            return .post
         }
     }
 
@@ -80,14 +91,46 @@ enum CDYelpRouter: URLRequestConvertible {
             return "categories"
         case let .categoryDetails(alias, _):
             return "categories/\(alias)"
+        case .aiChat:
+            return "ai/chat/v2"
+        case .engagement:
+            return "businesses/engagement"
+        case let .serviceOfferings(id, _):
+            return "businesses/\(id)/service_offerings"
+        case .businessInsights:
+            return "businesses/insights"
+        case let .reviewHighlights(id, _):
+            return "businesses/\(id)/review_highlights"
+        case .jobs:
+            return "jobs"
+        case let .openings(businessId, _):
+            return "bookings/\(businessId)/openings"
         }
     }
 
     func asURLRequest() throws -> URLRequest {
+        // aiChat lives at /ai/chat/v2, not under the /v3/ base
+        if case let .aiChat(request) = self {
+            let url = try "https://api.yelp.com/ai/chat/v2".asURL()
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = HTTPMethod.post.rawValue
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = try JSONEncoder().encode(request)
+            return urlRequest
+        }
+
         let url = try CDYelpURL.base.asURL()
 
         var urlRequest = URLRequest(url: url.appendingPathComponent(path))
         urlRequest.httpMethod = method.rawValue
+
+        if case let .jobs(query, locale) = self {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            var body: [String: String] = ["query": query]
+            if let locale = locale { body["locale"] = locale }
+            urlRequest.httpBody = try JSONEncoder().encode(body)
+            return urlRequest
+        }
 
         switch self {
         case let .search(parameters),
@@ -101,8 +144,15 @@ enum CDYelpRouter: URLRequestConvertible {
              let .events(parameters),
              let .featuredEvent(parameters),
              let .allCategories(parameters),
-             .categoryDetails(alias: _, let parameters):
+             .categoryDetails(alias: _, let parameters),
+             let .engagement(parameters),
+             .serviceOfferings(id: _, let parameters),
+             let .businessInsights(parameters),
+             .reviewHighlights(id: _, let parameters),
+             .openings(businessId: _, let parameters):
             urlRequest = try URLEncoding.default.encode(urlRequest, with: parameters)
+        case .aiChat, .jobs:
+            break
         }
 
         return urlRequest
