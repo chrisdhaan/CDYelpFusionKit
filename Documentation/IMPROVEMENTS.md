@@ -200,7 +200,7 @@ actor CDYelpURLSession {
 
 ---
 
-### Step 4 — Create `Source/Internal/CDYelpNativeRouter.swift`
+### ✅ Step 4 — Create `Source/Internal/CDYelpNativeRouter.swift`
 
 Create this file from scratch. It replaces `CDYelpRouter.swift`. It builds `URLRequest` using `URLComponents` / `URLQueryItem` with no Alamofire dependency, and adds the `Authorization` header (which in v5 was injected by Alamofire via `sessionConfiguration.httpAdditionalHeaders`).
 
@@ -620,10 +620,10 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Retry calls `requestWillRetry` monitor callback before sleeping
 
 #### Step 4 — New file: `Source/Internal/CDYelpNativeRouter.swift`
-- [ ] Create enum with all 19 cases (17 GET + 2 POST)
-- [ ] `path` covers all 19 cases
-- [ ] `asURLRequest(apiKey:)` handles aiChat (hardcoded URL, no `/v3/`), jobs (POST+JSON under `/v3/`), and all GET cases (URLComponents + query items)
-- [ ] Authorization header (`Bearer \(apiKey)`) added in `asURLRequest(apiKey:)` for all cases
+- [x] Create enum with all 19 cases (17 GET + 2 POST)
+- [x] `path` covers all 19 cases
+- [x] `asURLRequest(apiKey:)` handles aiChat (hardcoded URL, no `/v3/`), jobs (POST+JSON under `/v3/`), and all GET cases (URLComponents + query items)
+- [x] Authorization header (`Bearer \(apiKey)`) added in `asURLRequest(apiKey:)` for all cases
 
 #### Step 5 — Modify `Source/Parameters+CDYelpFusionKit.swift`
 - [ ] Remove `import Alamofire`
