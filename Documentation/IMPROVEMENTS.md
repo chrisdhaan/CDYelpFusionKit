@@ -562,7 +562,7 @@ No changes to `CDYelpMockURLProtocol.swift` either.
 
 ---
 
-### Step 9 — Update router tests
+### ✅ Step 9 — Update router tests
 
 The existing router tests in `Tests/CDYelpFusionKitTests/Router/CDYelpRouterTests.swift` call `CDYelpRouter.X.asURLRequest()`. In v6, update every call site:
 
@@ -654,9 +654,9 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Confirm `CDYelpMockURLProtocol.swift` compiles unchanged
 
 #### Step 9 — Update router tests
-- [ ] Replace all `CDYelpRouter.X.asURLRequest()` calls with `try CDYelpNativeRouter.X.asURLRequest(apiKey: "test-key")`
-- [ ] Remove any `import Alamofire` from test files
-- [ ] Replace any `AFError` references with `CDYelpNetworkError`
+- [x] Replace all `CDYelpRouter.X.asURLRequest()` calls with `try CDYelpNativeRouter.X.asURLRequest(apiKey: "test-key")`
+- [x] Remove any `import Alamofire` from test files
+- [x] Replace any `AFError` references with `CDYelpNetworkError`
 
 #### Step 10 — CI matrix
 - [ ] Remove simulator destinations below iOS 15 / macOS 12 / tvOS 15 / watchOS 8 from `.github/workflows/ci.yml`
