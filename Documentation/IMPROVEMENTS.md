@@ -343,7 +343,7 @@ enum CDYelpNativeRouter {
 
 ---
 
-### Step 5 — Modify `Source/Parameters+CDYelpFusionKit.swift`
+### ✅ Step 5 — Modify `Source/Parameters+CDYelpFusionKit.swift`
 
 At the top of the file, **remove**:
 
@@ -626,8 +626,8 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Authorization header (`Bearer \(apiKey)`) added in `asURLRequest(apiKey:)` for all cases
 
 #### Step 5 — Modify `Source/Parameters+CDYelpFusionKit.swift`
-- [ ] Remove `import Alamofire`
-- [ ] Add `typealias Parameters = [String: Any]`
+- [x] Remove `import Alamofire`
+- [x] Add `typealias Parameters = [String: Any]`
 
 #### Step 6 — Rewrite `Source/CDYelpAPIClient.swift`
 - [ ] Remove `import Alamofire`
