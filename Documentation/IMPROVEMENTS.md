@@ -554,7 +554,7 @@ Use `git rm` to remove all three:
 
 ---
 
-### Step 8 — `Source/Testing/CDYelpMockClientFactory.swift` — no changes needed
+### ✅ Step 8 — `Source/Testing/CDYelpMockClientFactory.swift` — no changes needed
 
 `CDYelpMockClientFactory.makeClient(apiKey:cacheConfiguration:eventMonitors:)` calls the testing `init(apiKey:sessionConfiguration:...)`. That signature is preserved exactly in v6. The `CDYelpMockURLProtocol` intercepts the native `URLSession` — this continues to work because `CDYelpURLSession` wraps a plain `URLSession` and the protocol class is registered on the `URLSessionConfiguration` before the session is created.
 
@@ -650,8 +650,8 @@ visionOS 1.0 already satisfies its minimum.
 - [x] `git rm Source/Internal/CDYelpAlamofireRequestAdapter.swift`
 
 #### Step 8 — Testing infrastructure (no changes)
-- [ ] Confirm `CDYelpMockClientFactory.swift` compiles unchanged
-- [ ] Confirm `CDYelpMockURLProtocol.swift` compiles unchanged
+- [x] Confirm `CDYelpMockClientFactory.swift` compiles unchanged
+- [x] Confirm `CDYelpMockURLProtocol.swift` compiles unchanged
 
 #### Step 9 — Update router tests
 - [ ] Replace all `CDYelpRouter.X.asURLRequest()` calls with `try CDYelpNativeRouter.X.asURLRequest(apiKey: "test-key")`
