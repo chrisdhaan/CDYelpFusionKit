@@ -361,7 +361,7 @@ No other changes to this file are needed.
 
 ---
 
-### Step 6 — Rewrite `Source/CDYelpAPIClient.swift`
+### ✅ Step 6 — Rewrite `Source/CDYelpAPIClient.swift`
 
 This is the largest change. The rewrite follows these rules:
 - Remove `import Alamofire`
@@ -630,19 +630,19 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Add `typealias Parameters = [String: Any]`
 
 #### Step 6 — Rewrite `Source/CDYelpAPIClient.swift`
-- [ ] Remove `import Alamofire`
-- [ ] Change class declaration to `public final class CDYelpAPIClient: Sendable`
-- [ ] Delete `makeSession` static func
-- [ ] Delete stored properties: `sessionConfiguration`, `manager`, `eventMonitors`, `requestAdapters`
-- [ ] Add stored property `private let urlSession: CDYelpURLSession`
-- [ ] Rewrite `convenience init` and testing `init` (testing `init` signature unchanged)
-- [ ] Delete `isAuthenticated()` method
-- [ ] Rewrite `clearCache()` and `cancelAllPendingAPIRequests()` to delegate to actor
-- [ ] Delete `cachedRequest<T>` private helper
-- [ ] Delete all completion-handler overloads
-- [ ] Replace all async overloads: remove `@available`, remove `withCheckedThrowingContinuation`, call `urlSession.perform(_:)` directly
-- [ ] Pass custom `decoder` to `urlSession.perform(_:decoder:)` for `fetchReviews`, `fetchEvent`, `searchEvents`, `fetchFeaturedEvent`
-- [ ] Preserve `requestContext` parameter on `fetchAIChat`
+- [x] Remove `import Alamofire`
+- [x] Change class declaration to `public final class CDYelpAPIClient: Sendable`
+- [x] Delete `makeSession` static func
+- [x] Delete stored properties: `sessionConfiguration`, `manager`, `eventMonitors`, `requestAdapters`
+- [x] Add stored property `private let urlSession: CDYelpURLSession`
+- [x] Rewrite `convenience init` and testing `init` (testing `init` signature unchanged)
+- [x] Delete `isAuthenticated()` method
+- [x] Rewrite `clearCache()` and `cancelAllPendingAPIRequests()` to delegate to actor
+- [x] Delete `cachedRequest<T>` private helper
+- [x] Delete all completion-handler overloads
+- [x] Replace all async overloads: remove `@available`, remove `withCheckedThrowingContinuation`, call `urlSession.perform(_:)` directly
+- [x] Pass custom `decoder` to `urlSession.perform(_:decoder:)` for `fetchReviews`, `fetchEvent`, `searchEvents`, `fetchFeaturedEvent`
+- [x] Preserve `requestContext` parameter on `fetchAIChat`
 
 #### Step 7 — Delete files
 - [ ] `git rm Source/CDYelpRouter.swift`
