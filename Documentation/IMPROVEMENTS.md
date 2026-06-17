@@ -544,7 +544,7 @@ public func fetchAIChat(
 
 ---
 
-### Step 7 — Delete these files
+### ✅ Step 7 — Delete these files
 
 Use `git rm` to remove all three:
 
@@ -645,9 +645,9 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Preserve `requestContext` parameter on `fetchAIChat`
 
 #### Step 7 — Delete files
-- [ ] `git rm Source/CDYelpRouter.swift`
-- [ ] `git rm Source/Internal/CDYelpAlamofireEventMonitor.swift`
-- [ ] `git rm Source/Internal/CDYelpAlamofireRequestAdapter.swift`
+- [x] `git rm Source/CDYelpRouter.swift`
+- [x] `git rm Source/Internal/CDYelpAlamofireEventMonitor.swift`
+- [x] `git rm Source/Internal/CDYelpAlamofireRequestAdapter.swift`
 
 #### Step 8 — Testing infrastructure (no changes)
 - [ ] Confirm `CDYelpMockClientFactory.swift` compiles unchanged
