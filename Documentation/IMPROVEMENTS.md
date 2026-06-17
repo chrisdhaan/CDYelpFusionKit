@@ -78,7 +78,7 @@ public enum CDYelpNetworkError: Error, Sendable {
 
 ---
 
-### Step 3 — Create `Source/Internal/CDYelpURLSession.swift`
+### ✅ Step 3 — Create `Source/Internal/CDYelpURLSession.swift`
 
 Create this file from scratch. It is an internal actor that owns the `URLSession` and implements the full request/response cycle (adapters → cache check → network → retry → cache write → decode). It replaces the Alamofire `Session` and the `cachedRequest` helper that currently lives in `CDYelpAPIClient`.
 
@@ -616,8 +616,8 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Create file with `CDYelpNetworkError` enum (4 cases: `invalidRequest`, `httpError`, `decodingFailed`, `networkFailure`)
 
 #### Step 3 — New file: `Source/Internal/CDYelpURLSession.swift`
-- [ ] Create actor with `perform<T>(_:decoder:attempt:)`, `cancelAllTasks()`, `clearCache()`
-- [ ] Retry calls `requestWillRetry` monitor callback before sleeping
+- [x] Create actor with `perform<T>(_:decoder:attempt:)`, `cancelAllTasks()`, `clearCache()`
+- [x] Retry calls `requestWillRetry` monitor callback before sleeping
 
 #### Step 4 — New file: `Source/Internal/CDYelpNativeRouter.swift`
 - [ ] Create enum with all 19 cases (17 GET + 2 POST)
