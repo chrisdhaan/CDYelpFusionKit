@@ -61,7 +61,7 @@ c.dependency 'Alamofire', '~> 5.9'
 
 ---
 
-### Step 2 — Create `Source/CDYelpNetworkError.swift`
+### ✅ Step 2 — Create `Source/CDYelpNetworkError.swift`
 
 Create this file from scratch:
 
@@ -613,7 +613,7 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Remove `c.dependency 'Alamofire', '~> 5.9'` from podspec
 
 #### Step 2 — New file: `Source/CDYelpNetworkError.swift`
-- [ ] Create file with `CDYelpNetworkError` enum (4 cases: `invalidRequest`, `httpError`, `decodingFailed`, `networkFailure`)
+- [x] Create file with `CDYelpNetworkError` enum (4 cases: `invalidRequest`, `httpError`, `decodingFailed`, `networkFailure`)
 
 #### Step 3 — New file: `Source/Internal/CDYelpURLSession.swift`
 - [ ] Create actor with `perform<T>(_:decoder:attempt:)`, `cancelAllTasks()`, `clearCache()`
