@@ -578,7 +578,7 @@ Also: any `import Alamofire` at the top of test files must be removed. Any `AFEr
 
 ---
 
-### Step 10 — CI matrix: remove old simulator versions
+### ✅ Step 10 — CI matrix: remove old simulator versions
 
 In `.github/workflows/ci.yml`, remove any simulator destination entries that only support OS versions below the new minimums:
 - iOS below 15
@@ -659,7 +659,7 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Replace any `AFError` references with `CDYelpNetworkError`
 
 #### Step 10 — CI matrix
-- [ ] Remove simulator destinations below iOS 15 / macOS 12 / tvOS 15 / watchOS 8 from `.github/workflows/ci.yml`
+- [x] Remove simulator destinations below iOS 15 / macOS 12 / tvOS 15 / watchOS 8 from `.github/workflows/ci.yml`
 
 #### Final verification
 - [ ] Run `swift build` — must succeed with zero Alamofire imports remaining
