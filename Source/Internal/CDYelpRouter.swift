@@ -1,6 +1,6 @@
 import Foundation
 
-enum CDYelpNativeRouter {
+enum CDYelpRouter {
     // GET endpoints
     case search(parameters: [String: Any])
     case phone(parameters: [String: Any])
@@ -99,9 +99,9 @@ enum CDYelpNativeRouter {
         guard var components = URLComponents(string: CDYelpURL.base + path) else {
             throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
         }
-        let params = queryParameters
-        if !params.isEmpty {
-            components.queryItems = params.map {
+        let queryParams = queryParameters
+        if !queryParams.isEmpty {
+            components.queryItems = queryParams.map {
                 URLQueryItem(name: $0.key, value: String(describing: $0.value))
             }
         }
@@ -117,14 +117,14 @@ enum CDYelpNativeRouter {
 
     private var queryParameters: [String: Any] {
         switch self {
-        case let .search(p), let .phone(p), let .matches(p),
-             let .autocomplete(p), let .events(p), let .featuredEvent(p),
-             let .allCategories(p), let .engagement(p), let .businessInsights(p):
-            return p
-        case .transactions(_, let p), .business(_, let p), .reviews(_, let p),
-             .event(_, let p), .categoryDetails(_, let p), .serviceOfferings(_, let p),
-             .reviewHighlights(_, let p), .openings(_, let p):
-            return p
+        case let .search(params), let .phone(params), let .matches(params),
+             let .autocomplete(params), let .events(params), let .featuredEvent(params),
+             let .allCategories(params), let .engagement(params), let .businessInsights(params):
+            return params
+        case let .transactions(_, params), let .business(_, params), let .reviews(_, params),
+             let .event(_, params), let .categoryDetails(_, params), let .serviceOfferings(_, params),
+             let .reviewHighlights(_, params), let .openings(_, params):
+            return params
         case .aiChat, .jobs:
             return [:]
         }

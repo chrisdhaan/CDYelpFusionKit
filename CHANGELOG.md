@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [6.0.0](#600---2026-06-23)
 - [5.1.0](#510---2026-06-15)
 - [5.0.0](#500---2026-06-07)
 - [4.0.0](#400---2026-06-02)
@@ -22,6 +23,29 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [6.0.0] - 2026-06-23
+
+### Added
+
+- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidURL`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:)`, `.decodingFailed(underlying:)`
+- `CDYelpURLSession` — internal Swift actor managing the URLSession-based networking pipeline: adapter chain, cache, network dispatch, retry, and decode
+
+### Updated
+
+- **Alamofire removed** — CDYelpFusionKit is now dependency-free, using Apple's URLSession directly
+- All 19 `CDYelpAPIClient` methods are now `async throws` only; completion-handler overloads removed
+- Minimum deployment targets raised: iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0 (visionOS 1.0 unchanged)
+- `CDYelpRouter` internal routing enum renamed from `CDYelpNativeRouter` for continuity with v5 naming; `asURLRequest()` now requires an explicit `apiKey:` parameter
+- `CDYelpRetryConfiguration` default retry codes updated to `[408, 429, 500, 502, 503, 504]`
+
+### Removed
+
+- Completion-handler API — all `CDYelpAPIClient` methods previously had `completion:` variants; replaced by `async throws` exclusively
+- `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter` internal Alamofire bridge types
+- Alamofire SPM and CocoaPods dependency
 
 ---
 

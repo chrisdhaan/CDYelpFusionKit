@@ -113,6 +113,11 @@ public final class CDYelpAPIClient: Sendable {
         Task { await urlSession.cancelAllTasks() }
     }
 
+    /// Returns `true` if the client has a valid (non-empty) API key configured.
+    public func isAuthenticated() -> Bool {
+        !apiKey.isEmpty
+    }
+
     // MARK: - Yelp Fusion API Methods
 
     // MARK: - Business Endpoints
@@ -193,7 +198,7 @@ public final class CDYelpAPIClient: Sendable {
             matchesPartySize: matchesPartySize,
             jobAlias: jobAlias
         )
-        let request = try CDYelpNativeRouter.search(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.search(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -210,7 +215,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpSearchResponse.Phone {
         assert(phoneNumber != nil && phoneNumber.count > 0, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
         let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber, locale: locale)
-        let request = try CDYelpNativeRouter.phone(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.phone(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -248,7 +253,7 @@ public final class CDYelpAPIClient: Sendable {
             categories: categories,
             priceTiers: priceTiers
         )
-        let request = try CDYelpNativeRouter.transactions(type: type.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.transactions(type: type.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -267,7 +272,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpBusinessResponse {
         assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API business endpoint.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
-        let request = try CDYelpNativeRouter.business(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.business(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -346,7 +351,7 @@ public final class CDYelpAPIClient: Sendable {
             limit: limit,
             matchThresholdType: matchThresholdType
         )
-        let request = try CDYelpNativeRouter.matches(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.matches(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -371,7 +376,7 @@ public final class CDYelpAPIClient: Sendable {
         if let offset { assert(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
         if let limit { assert(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
-        let request = try CDYelpNativeRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
         return try await urlSession.perform(request, decoder: decoder)
@@ -397,7 +402,7 @@ public final class CDYelpAPIClient: Sendable {
             "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint."
         )
         let parameters = Parameters.autocompleteParameters(withText: text, latitude: latitude, longitude: longitude, locale: locale)
-        let request = try CDYelpNativeRouter.autocomplete(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.autocomplete(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -416,7 +421,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpEventResponse {
         assert(id != nil && id.count > 0, "An event id is required to query the Yelp Fusion API event endpoint.")
         let parameters = Parameters.eventParameters(withLocale: locale)
-        let request = try CDYelpNativeRouter.event(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.event(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
         return try await urlSession.perform(request, decoder: decoder)
@@ -475,7 +480,7 @@ public final class CDYelpAPIClient: Sendable {
             radius: radius,
             excludedEvents: excludedEvents
         )
-        let request = try CDYelpNativeRouter.events(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.events(parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
         return try await urlSession.perform(request, decoder: decoder)
@@ -506,7 +511,7 @@ public final class CDYelpAPIClient: Sendable {
             latitude: latitude,
             longitude: longitude
         )
-        let request = try CDYelpNativeRouter.featuredEvent(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.featuredEvent(parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
         return try await urlSession.perform(request, decoder: decoder)
@@ -522,7 +527,7 @@ public final class CDYelpAPIClient: Sendable {
     ///
     public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
         let parameters = Parameters.categoriesParameters(withLocale: locale)
-        let request = try CDYelpNativeRouter.allCategories(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.allCategories(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -539,7 +544,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpCategoryResponse {
         assert(alias != nil && alias.rawValue.count > 0, "A category alias is required to query the Yelp Fusion API category details endpoint.")
         let parameters = Parameters.categoriesParameters(withLocale: locale)
-        let request = try CDYelpNativeRouter.categoryDetails(alias: alias.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -571,7 +576,7 @@ public final class CDYelpAPIClient: Sendable {
             userContext: userContext,
             requestContext: requestContext
         )
-        let urlRequest = try CDYelpNativeRouter.aiChat(request: chatRequest).asURLRequest(apiKey: apiKey)
+        let urlRequest = try CDYelpRouter.aiChat(request: chatRequest).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(urlRequest)
     }
 
@@ -594,7 +599,7 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        let request = try CDYelpNativeRouter.engagement(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.engagement(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -611,7 +616,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpServiceOfferingsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: nil)
-        let request = try CDYelpNativeRouter.serviceOfferings(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.serviceOfferings(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -635,7 +640,7 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        let request = try CDYelpNativeRouter.businessInsights(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.businessInsights(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -657,7 +662,7 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!id.isEmpty, "A business ID is required.")
         if let count { precondition(count >= 1 && count <= 5, "count must be between 1 and 5.") }
         let parameters = Parameters.reviewHighlightsParameters(count: count, locale: locale, devicePlatform: devicePlatform)
-        let request = try CDYelpNativeRouter.reviewHighlights(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.reviewHighlights(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -673,7 +678,7 @@ public final class CDYelpAPIClient: Sendable {
         locale: CDYelpLocale? = nil
     ) async throws -> CDYelpJobsResponse {
         precondition(!query.isEmpty && query.count <= 1000, "A query of 1–1000 characters is required.")
-        let request = try CDYelpNativeRouter.jobs(query: query, locale: locale?.rawValue).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.jobs(query: query, locale: locale?.rawValue).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 
@@ -699,7 +704,7 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!date.isEmpty, "A date is required (format: YYYY-MM-DD).")
         precondition(!time.isEmpty, "A time is required (format: HH:MM).")
         let parameters = Parameters.openingsParameters(covers: covers, date: date, time: time, getCoversRange: getCoversRange)
-        let request = try CDYelpNativeRouter.openings(businessId: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let request = try CDYelpRouter.openings(businessId: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
     }
 }

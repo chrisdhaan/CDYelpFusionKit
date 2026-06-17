@@ -601,20 +601,10 @@ case lead(id: String)
 The existing client must carry an OAuth access token (not just the API key) for this call. Add a second initializer or a separate method to pass the token:
 
 ```swift
-public func fetchLead(forId id: String,
-                      completion: @escaping (CDYelpLeadResponse?) -> Void) {
+public func fetchLead(forId id: String) async throws -> CDYelpLeadResponse {
     precondition(!id.isEmpty, "A lead ID is required.")
-    guard isAuthenticated() else { return }
-
-    manager
-        .request(CDYelpRouter.lead(id: id))
-        .validate()
-        .responseDecodable { (response: DataResponse<CDYelpLeadResponse, AFError>) in
-            switch response.result {
-            case let .success(r): completion(r)
-            case .failure: completion(nil)
-            }
-        }
+    let request = try CDYelpRouter.lead(id: id).asURLRequest(apiKey: apiKey)
+    return try await urlSession.perform(request)
 }
 ```
 
@@ -686,21 +676,11 @@ case let .addToWebhookAllowList(businessIds):
 **Step 3 — `Source/CDYelpAPIClient.swift`**
 
 ```swift
-public func addBusinessesToWebhookAllowList(_ businessIds: [String],
-                                             completion: @escaping (CDYelpWebhookAllowListResponse?) -> Void) {
+public func addBusinessesToWebhookAllowList(_ businessIds: [String]) async throws -> CDYelpWebhookAllowListResponse {
     precondition(!businessIds.isEmpty && businessIds.count <= 100,
                  "Between 1 and 100 business IDs are required.")
-    guard isAuthenticated() else { return }
-
-    manager
-        .request(CDYelpRouter.addToWebhookAllowList(businessIds: businessIds))
-        .validate()
-        .responseDecodable { (response: DataResponse<CDYelpWebhookAllowListResponse, AFError>) in
-            switch response.result {
-            case let .success(r): completion(r)
-            case .failure: completion(nil)
-            }
-        }
+    let request = try CDYelpRouter.addToWebhookAllowList(businessIds: businessIds).asURLRequest(apiKey: apiKey)
+    return try await urlSession.perform(request)
 }
 ```
 

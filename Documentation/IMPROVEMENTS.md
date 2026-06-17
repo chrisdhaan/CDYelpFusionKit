@@ -662,8 +662,8 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Remove simulator destinations below iOS 15 / macOS 12 / tvOS 15 / watchOS 8 from `.github/workflows/ci.yml`
 
 #### Final verification
-- [ ] Run `swift build` — must succeed with zero Alamofire imports remaining
-- [ ] Run `swift test` — all tests must pass
-- [ ] Run `swiftlint lint --strict` — no violations
-- [ ] Run `swiftformat Source Tests --lint` — no violations
-- [ ] Run `pod trunk push CDYelpFusionKit.podspec` — lint must pass
+- [x] Run `swift build` — must succeed with zero Alamofire imports remaining
+- [x] Run `swift test` — all tests must pass
+- [x] Run `swiftlint lint --strict` — no violations
+- [x] Run `swiftformat Source Tests --lint` — no violations
+- [x] Run `pod trunk push CDYelpFusionKit.podspec` — lint must pass

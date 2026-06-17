@@ -2,7 +2,7 @@
 
 ## Overview
 
-CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It provides typed request/response models and an `Alamofire`-backed HTTP client.
+CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It provides typed request/response models and a dependency-free URLSession-backed HTTP client.
 
 ## Repository Layout
 
@@ -25,10 +25,10 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 
 | Platform | Minimum |
 |----------|---------|
-| iOS | 12.0 |
-| macOS | 11.0 |
-| tvOS | 12.0 |
-| watchOS | 4.0 |
+| iOS | 15.0 |
+| macOS | 12.0 |
+| tvOS | 15.0 |
+| watchOS | 8.0 |
 | visionOS | 1.0 |
 
 ## Key Source Files
@@ -36,7 +36,7 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | File | Role |
 |------|------|
 | `CDYelpAPIClient.swift` | Public API client class; all Yelp Fusion endpoints |
-| `CDYelpRouter.swift` | Alamofire URLRequestConvertible enum for routing |
+| `CDYelpRouter.swift` | Internal URL routing enum; `asURLRequest(apiKey:)` builds `URLRequest` |
 | `CDYelpEnums.swift` | All public enum types (categories, locales, filters) |
 | `Parameters+CDYelpFusionKit.swift` | Request parameter building |
 | `CDYelpBusiness.swift` | Business model and nested response types |

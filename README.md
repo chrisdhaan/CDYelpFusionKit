@@ -35,13 +35,13 @@ A comprehensive Swift wrapper for the Yelp Fusion REST API with full support for
 ## Features
 
 - Complete Yelp Fusion API coverage (search, business details, reviews, events, categories, autocomplete, AI chat, engagement metrics, service offerings, business insights, review highlights, home services, reservations)
-- Async/await support (iOS 13+, macOS 10.15+, tvOS 13+, watchOS 6+)
-- Traditional completion handler API for backward compatibility
+- Async/await API on all supported platforms (no completion handlers)
 - Event monitoring and request adapters for logging, metrics, and header injection
 - Built-in response caching with configurable TTL
 - Automatic retry with exponential backoff
 - Customizable JSON decoding strategies
 - Mock networking utilities for unit testing (`CDYelpMockURLProtocol`, `CDYelpMockClientFactory`)
+- Dependency-free — uses Apple's URLSession directly (no Alamofire)
 - Full Swift concurrency support with `@unchecked Sendable` conformance
 - Privacy manifest for App Store compliance
 - Comprehensive unit test suite (Swift Testing framework, 193 tests)
@@ -83,10 +83,10 @@ Task {
 
 | Platform | Minimum Version |
 |----------|-----------------|
-| iOS | 12.0 |
-| macOS | 11.0 |
-| tvOS | 12.0 |
-| watchOS | 4.0 |
+| iOS | 15.0 |
+| macOS | 12.0 |
+| tvOS | 15.0 |
+| watchOS | 8.0 |
 | visionOS | 1.0 |
 
 ## Installation
@@ -97,7 +97,7 @@ Add CDYelpFusionKit to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.1.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "6.0.0"))
 ]
 ```
 
@@ -108,7 +108,7 @@ Or in Xcode: **File → Add Packages** and enter the repository URL.
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 5.1'
+pod 'CDYelpFusionKit', '~> 6.0'
 ```
 
 Then run `pod install`.
@@ -117,7 +117,7 @@ Then run `pod install`.
 
 - **[Usage Guide](Documentation/Usage.md)** — Complete API reference with examples for all endpoints
 - **[Architecture](Documentation/ARCHITECTURE.md)** — Technical design and implementation details
-- **[Migration Guide](Documentation/CDYelpFusionKit%204.0%20Migration%20Guide.md)** — Upgrade from v3.x to v4.0
+- **[Migration Guide](Documentation/CDYelpFusionKit%206.0%20Migration%20Guide.md)** — Upgrade from v5.x to v6.0
 - **[API Documentation](https://chrisdhaan.github.io/CDYelpFusionKit/)** — Generated DocC reference
 
 ## Author

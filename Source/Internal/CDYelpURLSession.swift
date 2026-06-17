@@ -40,7 +40,9 @@ actor CDYelpURLSession {
             return try dec.decode(T.self, from: cached)
         }
 
-        monitors.forEach { $0.requestDidStart(urlRequest: request) }
+        for monitor in monitors {
+            monitor.requestDidStart(urlRequest: request)
+        }
 
         let data: Data
         let httpResponse: HTTPURLResponse?
@@ -49,27 +51,31 @@ actor CDYelpURLSession {
             data = responseData
             httpResponse = response as? HTTPURLResponse
         } catch {
-            monitors.forEach {
-                $0.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
             }
             let networkError = CDYelpNetworkError.networkFailure(underlying: error)
             if shouldRetry(statusCode: nil, attempt: attempt) {
-                monitors.forEach { $0.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1)) }
+                for monitor in monitors {
+                    monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
+                }
                 try await Task.sleep(nanoseconds: backoffNanoseconds(attempt: attempt))
                 return try await perform(urlRequest, decoder: decoder, attempt: attempt + 1)
             }
             throw networkError
         }
 
-        monitors.forEach {
-            $0.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
+        for monitor in monitors {
+            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
         }
 
         let statusCode = httpResponse?.statusCode ?? 0
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
             if shouldRetry(statusCode: statusCode, attempt: attempt) {
-                monitors.forEach { $0.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1)) }
+                for monitor in monitors {
+                    monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
+                }
                 try await Task.sleep(nanoseconds: backoffNanoseconds(attempt: attempt))
                 return try await perform(urlRequest, decoder: decoder, attempt: attempt + 1)
             }
@@ -88,9 +94,15 @@ actor CDYelpURLSession {
 
     func cancelAllTasks() {
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            dataTasks.forEach { $0.cancel() }
-            uploadTasks.forEach { $0.cancel() }
-            downloadTasks.forEach { $0.cancel() }
+            for task in dataTasks {
+                task.cancel()
+            }
+            for task in uploadTasks {
+                task.cancel()
+            }
+            for task in downloadTasks {
+                task.cancel()
+            }
         }
     }
 

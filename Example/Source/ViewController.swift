@@ -233,127 +233,158 @@ extension ViewController: UITableViewDelegate {
                     }
                 }
             case 2:
-                CDYelpFusionKitManager.shared.apiClient.searchTransactions(byType: .foodDelivery,
-                                                                           location: "San Francisco",
-                                                                           latitude: nil,
-                                                                           longitude: nil) { (response) in
-                    if let response = response,
-                       let businesses = response.businesses,
-                       businesses.count > 0 {
-                        print(businesses)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.searchTransactions(byType: .foodDelivery,
+                                                                                                             location: "San Francisco",
+                                                                                                             latitude: nil,
+                                                                                                             longitude: nil)
+                        if let businesses = response.businesses, businesses.count > 0 {
+                            print(businesses)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 3:
-                CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
-                                                                      locale: nil) { (response) in
-                    if let response = response,
-                       let business = response.business {
-                        print(business)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
+                                                                                                       locale: nil)
+                        if let business = response.business {
+                            print(business)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 4:
-                CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Gary Danko",
-                                                                         addressOne: "800 N Point St",
-                                                                         addressTwo: nil,
-                                                                         addressThree: nil,
-                                                                         city: "San Francisco",
-                                                                         state: "CA",
-                                                                         country: "US",
-                                                                         latitude: nil,
-                                                                         longitude: nil,
-                                                                         phone: nil,
-                                                                         zipCode: nil,
-                                                                         yelpBusinessId: nil,
-                                                                         limit: 5,
-                                                                         matchThresholdType: .normal) { (response) in
-                    if let response = response,
-                       let businesses = response.businesses,
-                       businesses.count > 0 {
-                        print(businesses)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Gary Danko",
+                                                                                                          addressOne: "800 N Point St",
+                                                                                                          addressTwo: nil,
+                                                                                                          addressThree: nil,
+                                                                                                          city: "San Francisco",
+                                                                                                          state: "CA",
+                                                                                                          country: "US",
+                                                                                                          latitude: nil,
+                                                                                                          longitude: nil,
+                                                                                                          phone: nil,
+                                                                                                          zipCode: nil,
+                                                                                                          yelpBusinessId: nil,
+                                                                                                          limit: 5,
+                                                                                                          matchThresholdType: .normal)
+                        if let businesses = response.businesses, businesses.count > 0 {
+                            print(businesses)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 5:
-                CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                     locale: nil) { (response) in
-                    if let response = response,
-                       let reviews = response.reviews,
-                       reviews.count > 0 {
-                        print(reviews)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
+                                                                                                      locale: nil)
+                        if let reviews = response.reviews, reviews.count > 0 {
+                            print(reviews)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 6:
-                CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Delivery",
-                                                                               latitude: 37.786572,
-                                                                               longitude: -122.415192,
-                                                                               locale: nil) { (response) in
-                    if let response = response {
-                        if let businesses = response.businesses,
-                           businesses.count > 0 {
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Delivery",
+                                                                                                                latitude: 37.786572,
+                                                                                                                longitude: -122.415192,
+                                                                                                                locale: nil)
+                        if let businesses = response.businesses, businesses.count > 0 {
                             print(businesses)
                         }
-                        if let categories = response.categories,
-                           categories.count > 0 {
+                        if let categories = response.categories, categories.count > 0 {
                             print(categories)
                         }
-                        if let terms = response.terms,
-                           terms.count > 0 {
+                        if let terms = response.terms, terms.count > 0 {
                             print(terms)
                         }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 7:
-                CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-elite-week-renew-and-rejuvenate-with-redmint",
-                                                                   locale: nil) { (response) in
-                    if let response = response,
-                       let event = response.event {
-                        print(event)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-elite-week-renew-and-rejuvenate-with-redmint",
+                                                                                                    locale: nil)
+                        if let event = response.event {
+                            print(event)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 8:
-                CDYelpFusionKitManager.shared.apiClient.searchEvents(byLocale: nil,
-                                                                     offset: nil,
-                                                                     limit: 5,
-                                                                     sortBy: .descending,
-                                                                     sortOn: .popularity,
-                                                                     startDate: nil,
-                                                                     endDate: nil,
-                                                                     categories: [.music, .foodAndDrink],
-                                                                     isFree: false,
-                                                                     location: nil,
-                                                                     latitude: 37.786572,
-                                                                     longitude: -122.415192,
-                                                                     radius: 10000,
-                                                                     excludedEvents: nil) { (response) in
-                    if let response = response,
-                       let events = response.events,
-                       events.count > 0 {
-                        print(events)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.searchEvents(byLocale: nil,
+                                                                                                      offset: nil,
+                                                                                                      limit: 5,
+                                                                                                      sortBy: .descending,
+                                                                                                      sortOn: .popularity,
+                                                                                                      startDate: nil,
+                                                                                                      endDate: nil,
+                                                                                                      categories: [.music, .foodAndDrink],
+                                                                                                      isFree: false,
+                                                                                                      location: nil,
+                                                                                                      latitude: 37.786572,
+                                                                                                      longitude: -122.415192,
+                                                                                                      radius: 10000,
+                                                                                                      excludedEvents: nil)
+                        if let events = response.events, events.count > 0 {
+                            print(events)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 9:
-                CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
-                                                                           location: nil,
-                                                                           latitude: 37.786572,
-                                                                           longitude: -122.415192) { (response) in
-                    if let response = response,
-                       let event = response.event {
-                        print(event)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
+                                                                                                            location: nil,
+                                                                                                            latitude: 37.786572,
+                                                                                                            longitude: -122.415192)
+                        if let event = response.event {
+                            print(event)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 10:
-                CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil) { (response) in
-
-                    if let response = response,
-                        let categories = response.categories {
-                        print(categories)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil)
+                        if let categories = response.categories {
+                            print(categories)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             case 11:
-                CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
-                                                                      andLocale: nil) { (response) in
-                    if let response = response,
-                       let category = response.category {
-                        print(category)
+                Task {
+                    do {
+                        let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
+                                                                                                       andLocale: nil)
+                        if let category = response.category {
+                            print(category)
+                        }
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             default:
