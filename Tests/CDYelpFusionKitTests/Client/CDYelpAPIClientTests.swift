@@ -50,6 +50,7 @@ struct CDYelpAPIClientTests {
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "businesses/search"
         )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
 
         let client = CDYelpMockClientFactory.makeClient(
             cacheConfiguration: CDYelpCacheConfiguration(ttl: 300)
@@ -106,6 +107,7 @@ struct CDYelpAPIClientTests {
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "ai/chat"
         )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "ai/chat") }
 
         let client = CDYelpMockClientFactory.makeClient(
             cacheConfiguration: CDYelpCacheConfiguration(ttl: 300)
@@ -192,7 +194,7 @@ private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
         lock.unlock()
     }
 
-    func requestWillRetry(urlRequest: URLRequest?, retryCount: Int) {
+    func requestWillRetry(urlRequest _: URLRequest?, retryCount _: Int) {
         lock.lock()
         _retryEventCount += 1
         lock.unlock()

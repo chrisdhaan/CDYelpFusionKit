@@ -112,12 +112,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let attributes = attributes,
            attributes.count > 0
         {
-            var attributesString = ""
-            for attribute in attributes {
-                attributesString += attribute.rawValue + ","
-            }
-            let parametersString = String(attributesString[..<attributesString.index(before: attributesString.endIndex)])
-            parameters["attributes"] = parametersString
+            parameters["attributes"] = attributes.map { $0.rawValue }.joined(separator: ",")
         }
         if let devicePlatform = devicePlatform {
             parameters["device_platform"] = devicePlatform
@@ -210,7 +205,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
                                   zipCode: String?,
                                   yelpBusinessId: String?,
                                   limit: Int?,
-                                  matchThresholdType: CDYelpBusinessMatchThresholdType!) -> Parameters
+                                  matchThresholdType: CDYelpBusinessMatchThresholdType) -> Parameters
     {
         var parameters: Parameters = [:]
 
@@ -348,20 +343,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             parameters["sort_on"] = sortOn.rawValue
         }
         if let startDate = startDate {
-            parameters["start_date"] = startDate.timeIntervalSince1970
+            parameters["start_date"] = Int(startDate.timeIntervalSince1970)
         }
         if let endDate = endDate {
-            parameters["end_date"] = endDate.timeIntervalSince1970
+            parameters["end_date"] = Int(endDate.timeIntervalSince1970)
         }
         if let categories = categories,
            categories.count > 0
         {
-            var categoriesString = ""
-            for category in categories {
-                categoriesString += category.rawValue + ","
-            }
-            let parametersString = String(categoriesString[..<categoriesString.index(before: categoriesString.endIndex)])
-            parameters["categories"] = parametersString
+            parameters["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
         if let isFree = isFree {
             parameters["is_free"] = isFree
@@ -381,14 +371,9 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
             parameters["radius"] = radius
         }
         if let excludedEvents = excludedEvents,
-           excludedEvents.count > 0
+           !excludedEvents.isEmpty
         {
-            var excludedEventsString = ""
-            for excludedEvent in excludedEvents {
-                excludedEventsString += excludedEvent + ","
-            }
-            let parametersString = String(excludedEventsString[..<excludedEventsString.index(before: excludedEventsString.endIndex)])
-            parameters["excluded_events"] = parametersString
+            parameters["excluded_events"] = excludedEvents.joined(separator: ",")
         }
 
         return parameters

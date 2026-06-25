@@ -50,7 +50,7 @@ final class CDYelpResponseCache: @unchecked Sendable {
     func set(data: Data, forKey key: String) {
         guard ttl > 0 else { return }
         let entry = CDYelpCacheEntry(data: data, expiresAt: Date().addingTimeInterval(ttl))
-        cache.setObject(entry, forKey: key as NSString)
+        cache.setObject(entry, forKey: key as NSString, cost: data.count)
     }
 
     func data(forKey key: String) -> Data? {

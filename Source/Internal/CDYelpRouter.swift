@@ -67,15 +67,16 @@ enum CDYelpRouter {
     }
 
     func asURLRequest(apiKey: String) throws -> URLRequest {
-        // aiChat: hardcoded URL outside /v3/ base
+        // aiChat: outside /v3/ base — uses rootBase + path so .path is the single source of truth
         if case let .aiChat(request) = self {
-            guard let url = URL(string: "https://api.yelp.com/ai/chat/v2") else {
+            guard let url = URL(string: CDYelpURL.rootBase + path) else {
                 throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
             }
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             urlRequest.httpBody = try JSONEncoder().encode(request)
             return urlRequest
         }
@@ -89,6 +90,7 @@ enum CDYelpRouter {
             urlRequest.httpMethod = "POST"
             urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             var body: [String: String] = ["query": query]
             if let locale { body["locale"] = locale }
             urlRequest.httpBody = try JSONEncoder().encode(body)

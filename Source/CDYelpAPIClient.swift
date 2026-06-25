@@ -369,7 +369,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpReviewsResponse {
         precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API reviews endpoint.")
         if let offset { precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
-        if let limit { precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
+        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be between 1 and 50.") }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
         let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
@@ -559,6 +559,10 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpAIChatResponse {
         precondition(!query.isEmpty, "A query is required.")
         precondition(query.count <= 1000, "Query must be 1000 characters or fewer.")
+        precondition(
+            (latitude == nil) == (longitude == nil),
+            "latitude and longitude must be provided together or not at all."
+        )
         let userContext: CDYelpAIChatRequest.UserContext?
         if let latitude, let longitude {
             userContext = .init(latitude: latitude, longitude: longitude)

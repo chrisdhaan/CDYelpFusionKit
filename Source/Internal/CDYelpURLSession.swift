@@ -35,7 +35,11 @@ actor CDYelpURLSession {
                 request = try adapter.adapt(request)
             }
         } catch {
-            throw CDYelpNetworkError.invalidRequest(underlying: error)
+            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
+            }
+            throw networkError
         }
 
         let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
@@ -73,7 +77,11 @@ actor CDYelpURLSession {
             monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
         }
 
-        let statusCode = httpResponse?.statusCode ?? 0
+        guard let httpResponse else {
+            throw CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
+        }
+
+        let statusCode = httpResponse.statusCode
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
             if shouldRetry(statusCode: statusCode, error: nil, attempt: attempt) {
@@ -98,6 +106,9 @@ actor CDYelpURLSession {
         }
     }
 
+    /// Cancellation is delivered asynchronously by URLSession; the function returns before
+    /// tasks are cancelled. In-flight requests sleeping during retry backoff may fire one
+    /// additional attempt before the cancellation takes effect.
     nonisolated func cancelAllTasks() {
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             for task in dataTasks {
@@ -130,6 +141,6 @@ actor CDYelpURLSession {
     private func backoffNanoseconds(attempt: UInt) -> UInt64 {
         let maxDelay: TimeInterval = 300
         let delay = min(retryConfig.initialDelay * pow(2.0, Double(attempt)), maxDelay)
-        return UInt64(delay * 1_000_000_000)
+        return UInt64(max(0, delay) * 1_000_000_000)
     }
 }

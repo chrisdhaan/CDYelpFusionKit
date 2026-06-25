@@ -29,6 +29,7 @@ let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
 
 enum CDYelpURL {
     static let base = "https://api.yelp.com/v3/"
+    static let rootBase = "https://api.yelp.com/"
     static let deepLink = "yelp4:"
     static let web = "https://yelp.com/"
 }
