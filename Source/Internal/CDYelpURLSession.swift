@@ -30,12 +30,16 @@ actor CDYelpURLSession {
         attempt: UInt = 0
     ) async throws -> T {
         var request = urlRequest
-        for adapter in adapters {
-            request = try adapter.adapt(request)
+        do {
+            for adapter in adapters {
+                request = try adapter.adapt(request)
+            }
+        } catch {
+            throw CDYelpNetworkError.invalidRequest(underlying: error)
         }
 
-        let cacheKey = CDYelpCacheKey.key(for: request)
-        if let cache, let cached = cache.data(forKey: cacheKey) {
+        let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
+        if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
             let dec = decoder ?? makeDecoder()
             return try dec.decode(T.self, from: cached)
         }
@@ -55,7 +59,7 @@ actor CDYelpURLSession {
                 monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
             }
             let networkError = CDYelpNetworkError.networkFailure(underlying: error)
-            if shouldRetry(statusCode: nil, attempt: attempt) {
+            if shouldRetry(statusCode: nil, error: error, attempt: attempt) {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
@@ -72,7 +76,7 @@ actor CDYelpURLSession {
         let statusCode = httpResponse?.statusCode ?? 0
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
-            if shouldRetry(statusCode: statusCode, attempt: attempt) {
+            if shouldRetry(statusCode: statusCode, error: nil, attempt: attempt) {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
@@ -82,7 +86,9 @@ actor CDYelpURLSession {
             throw error
         }
 
-        cache?.set(data: data, forKey: cacheKey)
+        if let cacheKey {
+            cache?.set(data: data, forKey: cacheKey)
+        }
 
         let dec = decoder ?? makeDecoder()
         do {
@@ -92,7 +98,7 @@ actor CDYelpURLSession {
         }
     }
 
-    func cancelAllTasks() {
+    nonisolated func cancelAllTasks() {
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             for task in dataTasks {
                 task.cancel()
@@ -110,16 +116,20 @@ actor CDYelpURLSession {
         cache?.removeAll()
     }
 
-    private func shouldRetry(statusCode: Int?, attempt: UInt) -> Bool {
+    private func shouldRetry(statusCode: Int?, error: Error?, attempt: UInt) -> Bool {
         guard attempt < retryConfig.retryLimit else { return false }
         if let code = statusCode {
             return retryConfig.retryableHTTPStatusCodes.contains(code)
         }
-        return true
+        if let urlError = error as? URLError {
+            return retryConfig.retryableURLErrorCodes.contains(urlError.code)
+        }
+        return false
     }
 
     private func backoffNanoseconds(attempt: UInt) -> UInt64 {
-        let delay = retryConfig.initialDelay * pow(2.0, Double(attempt))
+        let maxDelay: TimeInterval = 300
+        let delay = min(retryConfig.initialDelay * pow(2.0, Double(attempt)), maxDelay)
         return UInt64(delay * 1_000_000_000)
     }
 }

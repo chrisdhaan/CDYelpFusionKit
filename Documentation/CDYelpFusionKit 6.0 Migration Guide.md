@@ -41,7 +41,7 @@ v5.x async methods threw `AFError` (from Alamofire). v6.0 throws `CDYelpNetworkE
 
 ```swift
 public enum CDYelpNetworkError: Error {
-    case invalidURL
+    case invalidRequest(underlying: Error)
     case networkFailure(underlying: Error)
     case httpError(statusCode: Int, data: Data)
     case decodingFailed(underlying: Error)
@@ -70,8 +70,8 @@ public enum CDYelpNetworkError: Error {
         print("Network error: \(underlying.localizedDescription)")
     case .decodingFailed(let underlying):
         print("Decoding error: \(underlying)")
-    case .invalidURL:
-        print("Invalid URL")
+    case .invalidRequest(let underlying):
+        print("Invalid request: \(underlying)")
     }
 }
 ```

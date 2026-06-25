@@ -27,14 +27,18 @@
 
 import Foundation
 
-struct CDYelpCacheEntry {
+final class CDYelpCacheEntry {
     let data: Data
     let expiresAt: Date
+    init(data: Data, expiresAt: Date) {
+        self.data = data
+        self.expiresAt = expiresAt
+    }
 }
 
 final class CDYelpResponseCache: @unchecked Sendable {
     // NSCache is thread-safe for all individual operations; no external lock is needed.
-    private let cache = NSCache<NSString, AnyObject>()
+    private let cache = NSCache<NSString, CDYelpCacheEntry>()
     private let ttl: TimeInterval
 
     init(configuration: CDYelpCacheConfiguration) {
@@ -46,11 +50,11 @@ final class CDYelpResponseCache: @unchecked Sendable {
     func set(data: Data, forKey key: String) {
         guard ttl > 0 else { return }
         let entry = CDYelpCacheEntry(data: data, expiresAt: Date().addingTimeInterval(ttl))
-        cache.setObject(entry as AnyObject, forKey: key as NSString)
+        cache.setObject(entry, forKey: key as NSString)
     }
 
     func data(forKey key: String) -> Data? {
-        guard let entry = cache.object(forKey: key as NSString) as? CDYelpCacheEntry else { return nil }
+        guard let entry = cache.object(forKey: key as NSString) else { return nil }
         guard entry.expiresAt > Date() else {
             cache.removeObject(forKey: key as NSString)
             return nil

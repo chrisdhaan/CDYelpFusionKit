@@ -101,6 +101,7 @@ enum CDYelpRouter {
         }
         let queryParams = queryParameters
         if !queryParams.isEmpty {
+            // All parameter values are String, Int, Double, or Bool — String(describing:) is correct for each.
             components.queryItems = queryParams.map {
                 URLQueryItem(name: $0.key, value: String(describing: $0.value))
             }

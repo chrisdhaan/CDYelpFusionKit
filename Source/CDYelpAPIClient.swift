@@ -33,8 +33,6 @@
 
 public final class CDYelpAPIClient: Sendable {
     private let apiKey: String
-    private let responseCache: CDYelpResponseCache?
-    private let retryConfiguration: CDYelpRetryConfiguration
     private let decoderConfiguration: CDYelpDecoderConfiguration
     private let urlSession: CDYelpURLSession
 
@@ -72,8 +70,7 @@ public final class CDYelpAPIClient: Sendable {
         )
     }
 
-    /// Internal initializer for testing — allows injection of a custom URLSessionConfiguration.
-    public init(
+    package init(
         apiKey: String,
         sessionConfiguration: URLSessionConfiguration,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
@@ -85,14 +82,13 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
         self.decoderConfiguration = decoderConfiguration
-        self.retryConfiguration = retryConfiguration
-        responseCache = cacheConfiguration.ttl > 0
+        let cache = cacheConfiguration.ttl > 0
             ? CDYelpResponseCache(configuration: cacheConfiguration)
             : nil
         urlSession = CDYelpURLSession(
             session: URLSession(configuration: sessionConfiguration),
             makeDecoder: { decoderConfiguration.makeDecoder() },
-            cache: responseCache,
+            cache: cache,
             monitors: eventMonitors,
             adapters: requestAdapters,
             retryConfig: retryConfiguration
@@ -102,15 +98,15 @@ public final class CDYelpAPIClient: Sendable {
     // MARK: - Cache Methods
 
     /// Removes all cached responses.
-    public func clearCache() {
-        Task { await urlSession.clearCache() }
+    public func clearCache() async {
+        await urlSession.clearCache()
     }
 
     // MARK: - Request Methods
 
     /// Cancels any in progress or pending API requests.
     public func cancelAllPendingAPIRequests() {
-        Task { await urlSession.cancelAllTasks() }
+        urlSession.cancelAllTasks()
     }
 
     /// Returns `true` if the client has a valid (non-empty) API key configured.
@@ -170,12 +166,12 @@ public final class CDYelpAPIClient: Sendable {
         matchesPartySize: Bool? = nil,
         jobAlias: String? = nil
     ) async throws -> CDYelpSearchResponse.Business {
-        assert(
+        precondition(
             (latitude != nil && longitude != nil) || location != nil,
             "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint."
         )
-        if let radius { assert(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.") }
-        if let limit { assert(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.") }
+        if let radius { precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.") }
+        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.") }
         let parameters = Parameters.searchParameters(
             withTerm: term,
             location: location,
@@ -210,10 +206,10 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The interface locale; this determines the language for the results to return.
     ///
     public func searchBusinesses(
-        byPhoneNumber phoneNumber: String!,
+        byPhoneNumber phoneNumber: String,
         locale: CDYelpLocale? = nil
     ) async throws -> CDYelpSearchResponse.Phone {
-        assert(phoneNumber != nil && phoneNumber.count > 0, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
+        precondition(!phoneNumber.isEmpty, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
         let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber, locale: locale)
         let request = try CDYelpRouter.phone(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
@@ -232,7 +228,7 @@ public final class CDYelpAPIClient: Sendable {
     ///   - priceTiers: (Optional) Price filters using ``CDYelpPriceTier``.
     ///
     public func searchTransactions(
-        byType type: CDYelpTransactionType!,
+        byType type: CDYelpTransactionType,
         location: String?,
         latitude: Double?,
         longitude: Double?,
@@ -240,8 +236,7 @@ public final class CDYelpAPIClient: Sendable {
         categories: [CDYelpCategoryAlias]? = nil,
         priceTiers: [CDYelpPriceTier]? = nil
     ) async throws -> CDYelpSearchResponse.Transaction {
-        assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
-        assert(
+        precondition(
             (latitude != nil && longitude != nil) || location != nil,
             "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint."
         )
@@ -266,11 +261,11 @@ public final class CDYelpAPIClient: Sendable {
     ///   - devicePlatform: (Optional) The device platform for the request.
     ///
     public func fetchBusiness(
-        forId id: String!,
+        forId id: String,
         locale: CDYelpLocale?,
         devicePlatform: String? = nil
     ) async throws -> CDYelpBusinessResponse {
-        assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API business endpoint.")
+        precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API business endpoint.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
         let request = try CDYelpRouter.business(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
@@ -296,45 +291,45 @@ public final class CDYelpAPIClient: Sendable {
     ///   - matchThresholdType: (**Required**) Specifies whether a match quality threshold should be applied to the matched businesses. Use the **CDYelpBusinessMatchThresholdType** enum to get the list of supported thresholds.
     ///
     public func searchBusinesses(
-        name: String!,
-        addressOne: String!,
+        name: String,
+        addressOne: String,
         addressTwo: String?,
         addressThree: String?,
-        city: String!,
-        state: String!,
-        country: String!,
+        city: String,
+        state: String,
+        country: String,
         latitude: Double?,
         longitude: Double?,
         phone: String?,
         zipCode: String?,
         yelpBusinessId: String?,
         limit: Int?,
-        matchThresholdType: CDYelpBusinessMatchThresholdType!
+        matchThresholdType: CDYelpBusinessMatchThresholdType
     ) async throws -> CDYelpSearchResponse.BusinessMatch {
-        assert(name != nil && name.count > 0 && name.count <= 64, "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(addressOne != nil && addressOne.count > 0 && addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
-        if let addressTwo = addressTwo {
-            assert(addressTwo.count > 0 && addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+        precondition(!name.isEmpty && name.count <= 64, "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!addressOne.isEmpty && addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+        if let addressTwo {
+            precondition(!addressTwo.isEmpty && addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        if let addressThree = addressThree {
-            assert(addressThree.count > 0 && addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+        if let addressThree {
+            precondition(!addressThree.isEmpty && addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        assert(city != nil && city.count > 0 && city.count <= 64, "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(state != nil && state.count > 0 && state.count <= 3, "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(country != nil && country.count > 0 && country.count <= 2, "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
-        if let latitude = latitude {
-            assert(latitude >= -90.0 && latitude <= 90.0, "latitude must be between -90 and +90 to query the Yelp Fustion API business match endpoint")
+        precondition(!city.isEmpty && city.count <= 64, "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!state.isEmpty && state.count <= 3, "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!country.isEmpty && country.count <= 2, "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
+        if let latitude {
+            precondition(latitude >= -90.0 && latitude <= 90.0, "latitude must be between -90 and +90 to query the Yelp Fusion API business match endpoint.")
         }
-        if let longitude = longitude {
-            assert(longitude >= -180.0 && longitude <= 180.0, "longitude must be between -180 and +180 to query the Yelp Fustion API business match endpoint")
+        if let longitude {
+            precondition(longitude >= -180.0 && longitude <= 180.0, "longitude must be between -180 and +180 to query the Yelp Fusion API business match endpoint.")
         }
-        if let phone = phone {
-            assert(phone.count > 0 && phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
+        if let phone {
+            precondition(!phone.isEmpty && phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
         }
-        if let limit = limit {
-            assert(limit > 0 && limit <= 10, "The limit must be between 1 and 10 to query the Yelp Fusion API business match endpoint.")
+        if let limit {
+            precondition(limit > 0 && limit <= 10, "The limit must be between 1 and 10 to query the Yelp Fusion API business match endpoint.")
         }
-        assert(matchThresholdType != nil && matchThresholdType.rawValue.count > 0, "A match threshold type is required to query the Yelp Fusion API business match endpoint")
+        precondition(!matchThresholdType.rawValue.isEmpty, "A match threshold type is required to query the Yelp Fusion API business match endpoint.")
         let parameters = Parameters.matchesParameters(
             withName: name,
             addressOne: addressOne,
@@ -366,15 +361,15 @@ public final class CDYelpAPIClient: Sendable {
     ///   - sortBy: (Optional) The sort order for reviews. Defaults to `.yelpSort`.
     ///
     public func fetchReviews(
-        forBusinessId id: String!,
+        forBusinessId id: String,
         locale: CDYelpLocale?,
         offset: Int? = nil,
         limit: Int? = nil,
         sortBy: CDYelpReviewSortType? = nil
     ) async throws -> CDYelpReviewsResponse {
-        assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API reviews endpoint.")
-        if let offset { assert(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
-        if let limit { assert(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
+        precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API reviews endpoint.")
+        if let offset { precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
+        if let limit { precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
         let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
@@ -392,15 +387,12 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
     ///
     public func autocompleteBusinesses(
-        byText text: String!,
-        latitude: Double!,
-        longitude: Double!,
+        byText text: String,
+        latitude: Double,
+        longitude: Double,
         locale: CDYelpLocale?
     ) async throws -> CDYelpAutoCompleteResponse {
-        assert(
-            (text != nil && text.count > 0) && latitude != nil && longitude != nil,
-            "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint."
-        )
+        precondition(!text.isEmpty, "A search term is required to query the Yelp Fusion API autocomplete endpoint.")
         let parameters = Parameters.autocompleteParameters(withText: text, latitude: latitude, longitude: longitude, locale: locale)
         let request = try CDYelpRouter.autocomplete(parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
@@ -416,10 +408,10 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The locale to return the event information in.
     ///
     public func fetchEvent(
-        forId id: String!,
+        forId id: String,
         locale: CDYelpLocale?
     ) async throws -> CDYelpEventResponse {
-        assert(id != nil && id.count > 0, "An event id is required to query the Yelp Fusion API event endpoint.")
+        precondition(!id.isEmpty, "An event id is required to query the Yelp Fusion API event endpoint.")
         let parameters = Parameters.eventParameters(withLocale: locale)
         let request = try CDYelpRouter.event(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
@@ -462,8 +454,8 @@ public final class CDYelpAPIClient: Sendable {
         radius: Int?,
         excludedEvents: [String]?
     ) async throws -> CDYelpEventsResponse {
-        if let limit { assert(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.") }
-        if let radius { assert(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.") }
+        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.") }
+        if let radius { precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.") }
         let parameters = Parameters.eventsParameters(
             withLocale: locale,
             offset: offset,
@@ -501,7 +493,7 @@ public final class CDYelpAPIClient: Sendable {
         latitude: Double?,
         longitude: Double?
     ) async throws -> CDYelpEventResponse {
-        assert(
+        precondition(
             (latitude != nil && longitude != nil) || location != nil,
             "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint."
         )
@@ -539,10 +531,10 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The locale to return the category information in.
     ///
     public func fetchCategory(
-        forAlias alias: CDYelpCategoryAlias!,
+        forAlias alias: CDYelpCategoryAlias,
         andLocale locale: CDYelpLocale?
     ) async throws -> CDYelpCategoryResponse {
-        assert(alias != nil && alias.rawValue.count > 0, "A category alias is required to query the Yelp Fusion API category details endpoint.")
+        precondition(!alias.rawValue.isEmpty, "A category alias is required to query the Yelp Fusion API category details endpoint.")
         let parameters = Parameters.categoriesParameters(withLocale: locale)
         let request = try CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
         return try await urlSession.perform(request)
@@ -567,9 +559,12 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpAIChatResponse {
         precondition(!query.isEmpty, "A query is required.")
         precondition(query.count <= 1000, "Query must be 1000 characters or fewer.")
-        let userContext: CDYelpAIChatRequest.UserContext? = (latitude != nil && longitude != nil)
-            ? .init(latitude: latitude!, longitude: longitude!)
-            : nil
+        let userContext: CDYelpAIChatRequest.UserContext?
+        if let latitude, let longitude {
+            userContext = .init(latitude: latitude, longitude: longitude)
+        } else {
+            userContext = nil
+        }
         let chatRequest = CDYelpAIChatRequest(
             query: query,
             chatId: chatId,

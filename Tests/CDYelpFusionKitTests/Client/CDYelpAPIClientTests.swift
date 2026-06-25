@@ -97,11 +97,82 @@ struct CDYelpAPIClientTests {
 
         #expect(!spy.startedURLs.isEmpty)
     }
+
+    @Test func postEndpointResponseIsNotCached() async throws {
+        let fixture = """
+        {"response":"Test AI response"}
+        """.data(using: .utf8)!
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "ai/chat"
+        )
+
+        let client = CDYelpMockClientFactory.makeClient(
+            cacheConfiguration: CDYelpCacheConfiguration(ttl: 300)
+        )
+        _ = try await client.fetchAIChat(query: "best tacos")
+
+        // Remove the stub — a cached POST response would succeed; a network call would fail.
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "ai/chat")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchAIChat(query: "best tacos")
+        }
+    }
+
+    @Test func http500TriggersRetryUpToLimit() async throws {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.retryEventCount == 2)
+    }
+
+    @Test func non500StatusCodeDoesNotTriggerRetry() async throws {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 3, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.retryEventCount == 0)
+    }
 }
 
 private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
     private let lock = NSLock()
     private var _startedURLs: [URL] = []
+    private var _retryEventCount: Int = 0
 
     var startedURLs: [URL] {
         lock.lock()
@@ -109,9 +180,21 @@ private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
         return _startedURLs
     }
 
+    var retryEventCount: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return _retryEventCount
+    }
+
     func requestDidStart(urlRequest: URLRequest) {
         lock.lock()
         if let url = urlRequest.url { _startedURLs.append(url) }
+        lock.unlock()
+    }
+
+    func requestWillRetry(urlRequest: URLRequest?, retryCount: Int) {
+        lock.lock()
+        _retryEventCount += 1
         lock.unlock()
     }
 }

@@ -36,15 +36,19 @@ public struct CDYelpRetryConfiguration: Sendable {
     /// HTTP status codes that should trigger a retry. Defaults to [408, 429, 500, 502, 503, 504]
     /// (408: timeout, 429: Yelp rate-limit, 5xx: server errors).
     public let retryableHTTPStatusCodes: Set<Int>
+    /// URLError codes that should trigger a retry. Defaults to transient connectivity errors.
+    public let retryableURLErrorCodes: Set<URLError.Code>
 
     public init(
         retryLimit: UInt = 3,
         initialDelay: TimeInterval = 0.5,
-        retryableHTTPStatusCodes: Set<Int> = [408, 429, 500, 502, 503, 504]
+        retryableHTTPStatusCodes: Set<Int> = [408, 429, 500, 502, 503, 504],
+        retryableURLErrorCodes: Set<URLError.Code> = [.networkConnectionLost, .notConnectedToInternet, .timedOut]
     ) {
         self.retryLimit = retryLimit
         self.initialDelay = initialDelay
         self.retryableHTTPStatusCodes = retryableHTTPStatusCodes
+        self.retryableURLErrorCodes = retryableURLErrorCodes
     }
 
     /// Retry disabled — the default when no configuration is provided.

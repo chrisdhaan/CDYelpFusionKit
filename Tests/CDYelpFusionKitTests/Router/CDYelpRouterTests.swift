@@ -325,4 +325,11 @@ struct CDYelpRouterTests {
         let path = request.url?.path ?? ""
         #expect(!path.contains("?"))
     }
+
+    @Test func authorizationHeaderContainsBearerToken() throws {
+        let apiKey = "test-bearer-key"
+        let router = CDYelpRouter.search(parameters: ["location": "San Francisco"])
+        let request = try router.asURLRequest(apiKey: apiKey)
+        #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer \(apiKey)")
+    }
 }

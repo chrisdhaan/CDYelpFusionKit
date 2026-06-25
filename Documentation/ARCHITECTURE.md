@@ -194,7 +194,7 @@ Four-case native Swift error type thrown by all async API methods:
 
 | Case | Meaning |
 |------|---------|
-| `.invalidURL` | URL could not be constructed from the given parameters |
+| `.invalidRequest(underlying:)` | URL could not be constructed from the given parameters |
 | `.networkFailure(underlying:)` | URLSession threw an error (no connectivity, timeout, etc.) |
 | `.httpError(statusCode:data:)` | Server returned a non-2xx status code |
 | `.decodingFailed(underlying:)` | `JSONDecoder` failed to parse the response body |
@@ -401,8 +401,8 @@ Task {
         let response = try await client.searchBusinesses(...)
     } catch let error as CDYelpNetworkError {
         switch error {
-        case .invalidURL:
-            // Bad parameters
+        case .invalidRequest(let underlying):
+            // Bad parameters: underlying contains the construction error
         case .networkFailure(let underlying):
             // No connectivity, timeout, etc.
         case .httpError(let statusCode, let data):
@@ -422,7 +422,7 @@ Errors surface directly from `async throws` — there is no `nil`-on-error patte
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| `.invalidURL` | Search parameters contain invalid characters | Validate input strings |
+| `.invalidRequest(underlying:)` | Search parameters contain invalid characters | Validate input strings |
 | `.httpError(statusCode: 401, _)` | Invalid API key | Check key in Yelp Developer Console |
 | `.httpError(statusCode: 429, _)` | Rate limit exceeded | Enable `CDYelpRetryConfiguration` |
 | `.httpError(statusCode: 404, _)` | Business or event ID not found | Verify the ID exists |

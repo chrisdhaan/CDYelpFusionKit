@@ -9,7 +9,9 @@ public enum CDYelpMockClientFactory {
     public static func makeClient(
         apiKey: String = "test-api-key",
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
-        eventMonitors: [any CDYelpEventMonitor] = []
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
     ) -> CDYelpAPIClient {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [CDYelpMockURLProtocol.self]
@@ -17,7 +19,9 @@ public enum CDYelpMockClientFactory {
             apiKey: apiKey,
             sessionConfiguration: configuration,
             cacheConfiguration: cacheConfiguration,
-            eventMonitors: eventMonitors
+            retryConfiguration: retryConfiguration,
+            eventMonitors: eventMonitors,
+            requestAdapters: requestAdapters
         )
     }
 }

@@ -30,7 +30,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidURL`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:)`, `.decodingFailed(underlying:)`
+- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidRequest(underlying:)`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:)`, `.decodingFailed(underlying:)`
 - `CDYelpURLSession` — internal Swift actor managing the URLSession-based networking pipeline: adapter chain, cache, network dispatch, retry, and decode
 
 ### Updated

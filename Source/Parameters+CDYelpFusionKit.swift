@@ -141,7 +141,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func phoneParameters(withPhoneNumber phoneNumber: String!,
+    static func phoneParameters(withPhoneNumber phoneNumber: String,
                                 locale: CDYelpLocale?)
         -> Parameters
     {
@@ -197,13 +197,13 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func matchesParameters(withName name: String!,
+    static func matchesParameters(withName name: String,
                                   addressOne: String?,
                                   addressTwo: String?,
                                   addressThree: String?,
-                                  city: String!,
-                                  state: String!,
-                                  country: String!,
+                                  city: String,
+                                  state: String,
+                                  country: String,
                                   latitude: Double?,
                                   longitude: Double?,
                                   phone: String?,
@@ -214,11 +214,7 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     {
         var parameters: Parameters = [:]
 
-        if let name = name,
-           name != ""
-        {
-            parameters["name"] = name
-        }
+        if !name.isEmpty { parameters["name"] = name }
         if let addressOne = addressOne,
            addressOne != ""
         {
@@ -234,21 +230,9 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         {
             parameters["address3"] = addressThree
         }
-        if let city = city,
-           city != ""
-        {
-            parameters["city"] = city
-        }
-        if let state = state,
-           state != ""
-        {
-            parameters["state"] = state
-        }
-        if let country = country,
-           country != ""
-        {
-            parameters["country"] = country
-        }
+        if !city.isEmpty { parameters["city"] = city }
+        if !state.isEmpty { parameters["state"] = state }
+        if !country.isEmpty { parameters["country"] = country }
         if let latitude = latitude {
             parameters["latitude"] = latitude
         }
@@ -294,24 +278,16 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         return parameters
     }
 
-    static func autocompleteParameters(withText text: String!,
-                                       latitude: Double!,
-                                       longitude: Double!,
+    static func autocompleteParameters(withText text: String,
+                                       latitude: Double,
+                                       longitude: Double,
                                        locale: CDYelpLocale?) -> Parameters
     {
         var parameters: Parameters = [:]
 
-        if let text = text,
-           text != ""
-        {
-            parameters["text"] = text
-        }
-        if let latitude = latitude {
-            parameters["latitude"] = latitude
-        }
-        if let longitude = longitude {
-            parameters["longitude"] = longitude
-        }
+        if !text.isEmpty { parameters["text"] = text }
+        parameters["latitude"] = latitude
+        parameters["longitude"] = longitude
         if let locale = locale,
            locale.rawValue != ""
         {

@@ -611,7 +611,7 @@ API methods throw `CDYelpNetworkError` when requests fail.
 
 ```swift
 public enum CDYelpNetworkError: Error {
-    case invalidURL
+    case invalidRequest(underlying: Error)
     case networkFailure(underlying: Error)
     case httpError(statusCode: Int, data: Data)
     case decodingFailed(underlying: Error)
@@ -627,8 +627,8 @@ Task {
         // Use response
     } catch let error as CDYelpNetworkError {
         switch error {
-        case .invalidURL:
-            print("Invalid URL — check search parameters")
+        case .invalidRequest(let underlying):
+            print("Invalid request — check search parameters: \(underlying)")
         case .networkFailure(let underlying):
             print("Network failure: \(underlying.localizedDescription)")
         case .httpError(let statusCode, _):
@@ -1013,7 +1013,7 @@ visionOS support is available on Apple Vision Pro:
 
 ### Network Errors
 
-**`CDYelpNetworkError.invalidURL`**
+**`CDYelpNetworkError.invalidRequest(underlying:)`**
 - Check that search parameters are valid (e.g., location is not empty)
 
 **`CDYelpNetworkError.httpError(statusCode: 401, _)`**
