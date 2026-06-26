@@ -51,12 +51,7 @@ actor CDYelpURLSession {
 
         let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
         if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
-            let dec = decoder ?? makeDecoder()
-            do {
-                return try dec.decode(T.self, from: cached)
-            } catch {
-                throw CDYelpNetworkError.decodingFailed(underlying: error)
-            }
+            return try decodeWrapping(cached, decoder: decoder)
         }
 
         for monitor in monitors {
@@ -114,9 +109,12 @@ actor CDYelpURLSession {
             cache?.set(data: data, forKey: cacheKey)
         }
 
-        let dec = decoder ?? makeDecoder()
+        return try decodeWrapping(data, decoder: decoder)
+    }
+
+    private func decodeWrapping<T: Decodable>(_ data: Data, decoder: JSONDecoder?) throws -> T {
         do {
-            return try dec.decode(T.self, from: data)
+            return try (decoder ?? makeDecoder()).decode(T.self, from: data)
         } catch {
             throw CDYelpNetworkError.decodingFailed(underlying: error)
         }

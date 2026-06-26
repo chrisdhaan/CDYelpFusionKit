@@ -332,4 +332,14 @@ struct CDYelpRouterTests {
         let request = try router.asURLRequest(apiKey: apiKey)
         #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer \(apiKey)")
     }
+
+    @Test func phoneNumberPlusSignIsPercentEncoded() throws {
+        // + in query strings is decoded as a space by most servers (application/x-www-form-urlencoded
+        // convention). E.164 numbers start with + so this must be encoded as %2B.
+        let router = CDYelpRouter.phone(parameters: ["phone": "+14157492060"])
+        let request = try router.asURLRequest(apiKey: "test-key")
+        let urlString = request.url?.absoluteString ?? ""
+        #expect(urlString.contains("%2B14157492060"))
+        #expect(!urlString.contains("phone=+14157492060"))
+    }
 }
