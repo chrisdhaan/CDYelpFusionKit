@@ -26,8 +26,15 @@ actor CDYelpURLSession {
 
     func perform<T: Decodable>(
         _ urlRequest: URLRequest,
-        decoder: JSONDecoder? = nil,
-        attempt: UInt = 0
+        decoder: JSONDecoder? = nil
+    ) async throws -> T {
+        try await perform(urlRequest, decoder: decoder, attempt: 0)
+    }
+
+    private func perform<T: Decodable>(
+        _ urlRequest: URLRequest,
+        decoder: JSONDecoder?,
+        attempt: UInt
     ) async throws -> T {
         var request = urlRequest
         do {
@@ -45,7 +52,11 @@ actor CDYelpURLSession {
         let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
         if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
             let dec = decoder ?? makeDecoder()
-            return try dec.decode(T.self, from: cached)
+            do {
+                return try dec.decode(T.self, from: cached)
+            } catch {
+                throw CDYelpNetworkError.decodingFailed(underlying: error)
+            }
         }
 
         for monitor in monitors {
@@ -73,12 +84,17 @@ actor CDYelpURLSession {
             throw networkError
         }
 
-        for monitor in monitors {
-            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
+        // Guard before notifying monitors so non-HTTP responses don't produce a false success signal.
+        guard let httpResponse else {
+            let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: nil, data: data, error: error)
+            }
+            throw error
         }
 
-        guard let httpResponse else {
-            throw CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
+        for monitor in monitors {
+            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
         }
 
         let statusCode = httpResponse.statusCode

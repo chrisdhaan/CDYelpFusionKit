@@ -67,8 +67,9 @@ enum CDYelpRouter {
     }
 
     func asURLRequest(apiKey: String) throws -> URLRequest {
-        // aiChat: outside /v3/ base — uses rootBase + path so .path is the single source of truth
-        if case let .aiChat(request) = self {
+        switch self {
+        case let .aiChat(request):
+            // aiChat: outside /v3/ base — uses rootBase + path so .path is the single source of truth
             guard let url = URL(string: CDYelpURL.rootBase + path) else {
                 throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
             }
@@ -77,12 +78,15 @@ enum CDYelpRouter {
             urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-            urlRequest.httpBody = try JSONEncoder().encode(request)
+            do {
+                urlRequest.httpBody = try JSONEncoder().encode(request)
+            } catch {
+                throw CDYelpNetworkError.invalidRequest(underlying: error)
+            }
             return urlRequest
-        }
 
-        // jobs: POST + JSON body under /v3/ base
-        if case let .jobs(query, locale) = self {
+        case let .jobs(query, locale):
+            // jobs: POST + JSON body under /v3/ base
             guard let url = URL(string: CDYelpURL.base + path) else {
                 throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
             }
@@ -93,29 +97,39 @@ enum CDYelpRouter {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             var body: [String: String] = ["query": query]
             if let locale { body["locale"] = locale }
-            urlRequest.httpBody = try JSONEncoder().encode(body)
+            do {
+                urlRequest.httpBody = try JSONEncoder().encode(body)
+            } catch {
+                throw CDYelpNetworkError.invalidRequest(underlying: error)
+            }
+            return urlRequest
+
+        default:
+            // All other cases: GET + URL query parameters
+            guard var components = URLComponents(string: CDYelpURL.base + path) else {
+                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+            }
+            let queryParams = queryParameters
+            if !queryParams.isEmpty {
+                // All parameter values are String, Int, Double, or Bool — String(describing:) is correct for each.
+                components.queryItems = queryParams.map {
+                    URLQueryItem(name: $0.key, value: String(describing: $0.value))
+                }
+                // URLComponents allows + per RFC 3986, but servers decode it as a space
+                // (application/x-www-form-urlencoded convention); force-encode it as %2B.
+                if let query = components.percentEncodedQuery {
+                    components.percentEncodedQuery = query.replacingOccurrences(of: "+", with: "%2B")
+                }
+            }
+            guard let url = components.url else {
+                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+            }
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "GET"
+            urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             return urlRequest
         }
-
-        // All other cases: GET + URL query parameters
-        guard var components = URLComponents(string: CDYelpURL.base + path) else {
-            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-        }
-        let queryParams = queryParameters
-        if !queryParams.isEmpty {
-            // All parameter values are String, Int, Double, or Bool — String(describing:) is correct for each.
-            components.queryItems = queryParams.map {
-                URLQueryItem(name: $0.key, value: String(describing: $0.value))
-            }
-        }
-        guard let url = components.url else {
-            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-        }
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        return urlRequest
     }
 
     private var queryParameters: [String: Any] {
