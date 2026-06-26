@@ -49,8 +49,6 @@ public final class CDYelpAPIClient: Sendable {
     ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
     ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
-    /// - returns: Void
-    ///
     public convenience init(
         apiKey: String,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
@@ -104,12 +102,16 @@ public final class CDYelpAPIClient: Sendable {
 
     // MARK: - Request Methods
 
-    /// Cancels any in progress or pending API requests.
+    /// Cancels any in progress or pending API requests. Cancellation is delivered asynchronously
+    /// — this method returns before tasks are actually cancelled. Requests sleeping during a retry
+    /// backoff may complete one additional attempt before cancellation takes effect.
     public func cancelAllPendingAPIRequests() {
         urlSession.cancelAllTasks()
     }
 
-    /// Returns `true` if the client has a valid (non-empty) API key configured.
+    /// Returns `true` if the client has a valid (non-empty) API key configured. This is always
+    /// `true` for any successfully initialized client since `init` enforces a non-empty key via
+    /// `precondition`. Provided for external code that needs to confirm initialization before calls.
     public func isAuthenticated() -> Bool {
         !apiKey.isEmpty
     }
@@ -143,6 +145,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - reservationCovers: (Optional) The party size for reservation filtering.
     ///   - matchesPartySize: (Optional) Whether to filter for businesses that match the party size.
     ///   - jobAlias: (Optional) The job alias for job-related filtering.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func searchBusinesses(
         byTerm term: String?,
@@ -205,6 +209,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - phoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
     ///   - locale: (Optional) The interface locale; this determines the language for the results to return.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func searchBusinesses(
         byPhoneNumber phoneNumber: String,
         locale: CDYelpLocale? = nil
@@ -226,6 +232,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - term: (Optional) A search term to filter transaction results.
     ///   - categories: (Optional) Category filters using ``CDYelpCategoryAlias``.
     ///   - priceTiers: (Optional) Price filters using ``CDYelpPriceTier``.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func searchTransactions(
         byType type: CDYelpTransactionType,
@@ -260,6 +268,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The interface locale; this determines the language of the business information returned.
     ///   - devicePlatform: (Optional) The device platform for the request.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchBusiness(
         forId id: String,
         locale: CDYelpLocale?,
@@ -289,6 +299,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - yelpBusinessId: (Optional) Unique Yelp identifier of the business if available. Used as a hint when finding a matching business.
     ///   - limit: (Optional)
     ///   - matchThresholdType: (**Required**) Specifies whether a match quality threshold should be applied to the matched businesses. Use the **CDYelpBusinessMatchThresholdType** enum to get the list of supported thresholds.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func searchBusinesses(
         name: String,
@@ -360,6 +372,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - limit: (Optional) The number of reviews to return. **The maximum value is 50**.
     ///   - sortBy: (Optional) The sort order for reviews. Defaults to `.yelpSort`.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchReviews(
         forBusinessId id: String,
         locale: CDYelpLocale?,
@@ -386,6 +400,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - longitude: (**Required**) The longitude of the location to look for business autocomplete suggestions.
     ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func autocompleteBusinesses(
         byText text: String,
         latitude: Double,
@@ -406,6 +422,8 @@ public final class CDYelpAPIClient: Sendable {
     /// - parameters:
     ///   - id: (**Required**) The identifier of the event for the Yelp Fusion API to query.
     ///   - locale: (Optional) The locale to return the event information in.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchEvent(
         forId id: String,
@@ -437,6 +455,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
     ///   - categories: (Optional) The categories for the Yelp Fusion API to filter events by.
     ///   - excludedEvents: (Optional) A list of event ids. Events associated with these event ids in this list will not show up in the response.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func searchEvents(
         byLocale locale: CDYelpLocale?,
@@ -483,9 +503,11 @@ public final class CDYelpAPIClient: Sendable {
     ///
     /// - parameters:
     ///   - locale: (Optional) The locale to return the event information in.
-    ///   - location: (**Required**) Can be (Optional) if either latitude or longitude is provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
-    ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
-    ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
+    ///   - location: Required unless latitude and longitude are both provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
+    ///   - latitude: Required unless location is provided. Must be accompanied by longitude.
+    ///   - longitude: Required unless location is provided. Must be accompanied by latitude.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchFeaturedEvent(
         forLocale locale: CDYelpLocale?,
@@ -517,6 +539,8 @@ public final class CDYelpAPIClient: Sendable {
     /// - parameters:
     ///   - locale: (Optional) The locale to return the category information in.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
         let parameters = Parameters.categoriesParameters(withLocale: locale)
         let request = try CDYelpRouter.allCategories(parameters: parameters).asURLRequest(apiKey: apiKey)
@@ -529,6 +553,8 @@ public final class CDYelpAPIClient: Sendable {
     /// - parameters:
     ///   - alias: (**Required**) The alias to return category details for. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases.
     ///   - locale: (Optional) The locale to return the category information in.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchCategory(
         forAlias alias: CDYelpCategoryAlias,
@@ -549,6 +575,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - latitude: (Optional) The latitude of the user's location.
     ///   - longitude: (Optional) The longitude of the user's location.
     ///   - requestContext: (Optional) Additional key-value context for the request.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchAIChat(
         query: String,
@@ -587,6 +615,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - dateRangeStart: (Optional) The start date for the metric date range.
     ///   - dateRangeEnd: (Optional) The end date for the metric date range.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchEngagementMetrics(
         forBusinessIds businessIds: [String],
         dateRangeStart: String? = nil,
@@ -609,6 +639,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - id: (Required) The business ID.
     ///   - locale: (Optional) The desired language for the response.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchServiceOfferings(
         forBusinessId id: String,
         locale: CDYelpLocale? = nil
@@ -626,6 +658,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - businessIds: (Required) The business IDs for which to fetch insights. Must be between 1 and 20.
     ///   - dateRangeStart: (Required) Start date for the insights (format: YYYYMM).
     ///   - dateRangeEnd: (Required) End date for the insights (format: YYYYMM).
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchBusinessInsights(
         forBusinessIds businessIds: [String],
@@ -652,6 +686,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - locale: (Optional) The desired language for the response.
     ///   - devicePlatform: (Optional) The device platform for the request.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchReviewHighlights(
         forBusinessId id: String,
         count: Int? = nil,
@@ -672,6 +708,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - query: (Required) The search query (1–1000 characters).
     ///   - locale: (Optional) The desired language for the response.
     ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
     public func fetchJobs(
         forQuery query: String,
         locale: CDYelpLocale? = nil
@@ -690,6 +728,8 @@ public final class CDYelpAPIClient: Sendable {
     ///   - date: (Required) The desired date (format: YYYY-MM-DD).
     ///   - time: (Required) The desired time (format: HH:MM).
     ///   - getCoversRange: (Optional) Whether to include covers range information.
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
     ///
     public func fetchOpenings(
         forBusinessId id: String,
