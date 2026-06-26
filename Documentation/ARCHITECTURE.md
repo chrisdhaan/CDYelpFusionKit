@@ -66,7 +66,11 @@ The router's `asURLRequest(apiKey:)` method constructs a `URLRequest`:
 ```swift
 // Inside CDYelpRouter.asURLRequest(apiKey:)
 var urlComponents = URLComponents(string: baseURL + path)
-urlComponents?.queryItems = sortedQueryItems(from: parameters)
+urlComponents?.queryItems = queryParams.map {
+    URLQueryItem(name: $0.key, value: String(describing: $0.value))
+}
+// Cache keys use a sorted canonical form via CDYelpCacheKey.key(for:);
+// the URL itself is not sorted.
 
 var request = URLRequest(url: urlComponents!.url!)
 request.httpMethod = "GET"
@@ -167,7 +171,7 @@ public final class CDYelpAPIClient: Sendable {
         apiKey: String,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
         retryConfiguration: CDYelpRetryConfiguration = .disabled,
-        decoderConfiguration: CDYelpDecoderConfiguration = CDYelpDecoderConfiguration(),
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
         eventMonitors: [any CDYelpEventMonitor] = [],
         requestAdapters: [any CDYelpRequestAdapter] = []
     )
@@ -178,7 +182,7 @@ public final class CDYelpAPIClient: Sendable {
 
 `actor CDYelpURLSession`
 
-Internal Swift actor that owns the `URLSession` and orchestrates the full pipeline: adapter chain → cache → network → retry → decode. Being an actor ensures all internal mutable state (data tasks list, cache) is protected from concurrent access without additional locks.
+Internal Swift actor that owns the `URLSession` and orchestrates the full pipeline: adapter chain → cache → network → retry → decode. Being an actor ensures its mutable state (the `CDYelpResponseCache` instance) is protected from concurrent access without additional locks. Task cancellation is delegated to `URLSession.getTasksWithCompletionHandler` — no separate task list is maintained.
 
 ### CDYelpRouter
 

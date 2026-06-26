@@ -42,9 +42,9 @@ A comprehensive Swift wrapper for the Yelp Fusion REST API with full support for
 - Customizable JSON decoding strategies
 - Mock networking utilities for unit testing (`CDYelpMockURLProtocol`, `CDYelpMockClientFactory`)
 - Dependency-free — uses Apple's URLSession directly (no Alamofire)
-- Full Swift concurrency support with `@unchecked Sendable` conformance
+- Full Swift concurrency support — `CDYelpAPIClient` is `Sendable`; dependency-free URLSession actor eliminates unsafe shared mutable state
 - Privacy manifest for App Store compliance
-- Comprehensive unit test suite (Swift Testing framework, 193 tests)
+- Comprehensive unit test suite (Swift Testing framework, 198 tests)
 - Multi-platform support (iOS, macOS, tvOS, watchOS, visionOS)
 
 ## Quick Start

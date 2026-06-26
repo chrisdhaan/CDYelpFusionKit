@@ -685,10 +685,10 @@ let response = try await client.searchBusinesses(byTerm: "coffee", location: "SF
 let cached = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
 
 // Manually invalidate the entire cache
-client.clearCache()
+await client.clearCache()
 ```
 
-Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are only stored after a successful decode, preventing poisoned cache entries from bad responses.
+Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are stored on any successful 2xx response before decoding. If decoding subsequently fails, the raw bytes remain cached for the TTL window — callers should account for this when diagnosing persistent decode failures.
 
 ---
 
@@ -872,7 +872,7 @@ Supported locales for API responses:
 Filter by supported transaction types:
 - `.foodDelivery` — delivery
 - `.pickup` — pickup
-- `.reservation` — restaurant_reservation
+- `.restaurantReservation` — restaurant_reservation
 
 ### Business Match Threshold
 
