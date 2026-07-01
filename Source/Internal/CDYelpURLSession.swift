@@ -7,6 +7,7 @@ actor CDYelpURLSession {
     private let monitors: [any CDYelpEventMonitor]
     private let adapters: [any CDYelpRequestAdapter]
     private let retryConfig: CDYelpRetryConfiguration
+    private var retrySleepTasks: [UUID: Task<Void, Error>] = [:]
 
     init(
         session: URLSession,
@@ -36,26 +37,58 @@ actor CDYelpURLSession {
         decoder: JSONDecoder?,
         attempt: UInt
     ) async throws -> T {
+        // Run adapters only on the first attempt. On retry, urlRequest is already the adapted
+        // request passed from the previous attempt, so the adapter chain runs exactly once
+        // per logical API call regardless of how many retry attempts occur.
         var request = urlRequest
-        do {
-            for adapter in adapters {
-                request = try adapter.adapt(request)
+        if attempt == 0 {
+            let authHeader = urlRequest.value(forHTTPHeaderField: "Authorization")
+            do {
+                for adapter in adapters {
+                    request = try adapter.adapt(request)
+                }
+            } catch {
+                let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+                for monitor in monitors {
+                    monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
+                }
+                throw networkError
             }
-        } catch {
-            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
+            // Re-inject auth after adapters run.
+            if let authHeader {
+                request.setValue(authHeader, forHTTPHeaderField: "Authorization")
             }
-            throw networkError
         }
 
         let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
         if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
-            return try decodeWrapping(cached, decoder: decoder)
+            // Fire lifecycle callbacks so monitors have visibility into cache-served responses.
+            // requestDidStart fires only on attempt 0 so monitors count one logical request.
+            if attempt == 0 {
+                for monitor in monitors {
+                    monitor.requestDidStart(urlRequest: request)
+                }
+            }
+            let decoded: T
+            do {
+                decoded = try decodeWrapping(cached, decoder: decoder)
+            } catch {
+                for monitor in monitors {
+                    monitor.requestDidComplete(urlRequest: request, response: nil, data: cached, error: error)
+                }
+                throw error
+            }
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: nil, data: cached, error: nil)
+            }
+            return decoded
         }
 
-        for monitor in monitors {
-            monitor.requestDidStart(urlRequest: request)
+        // requestDidStart fires once per logical request (attempt 0 only).
+        if attempt == 0 {
+            for monitor in monitors {
+                monitor.requestDidStart(urlRequest: request)
+            }
         }
 
         let data: Data
@@ -65,16 +98,16 @@ actor CDYelpURLSession {
             data = responseData
             httpResponse = response as? HTTPURLResponse
         } catch {
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
-            }
             let networkError = CDYelpNetworkError.networkFailure(underlying: error)
             if shouldRetry(statusCode: nil, error: error, attempt: attempt) {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
-                try await Task.sleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-                return try await perform(urlRequest, decoder: decoder, attempt: attempt + 1)
+                try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                return try await perform(request, decoder: decoder, attempt: attempt + 1)
+            }
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
             }
             throw networkError
         }
@@ -88,10 +121,6 @@ actor CDYelpURLSession {
             throw error
         }
 
-        for monitor in monitors {
-            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
-        }
-
         let statusCode = httpResponse.statusCode
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
@@ -99,17 +128,32 @@ actor CDYelpURLSession {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
-                try await Task.sleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-                return try await perform(urlRequest, decoder: decoder, attempt: attempt + 1)
+                try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                return try await perform(request, decoder: decoder, attempt: attempt + 1)
+            }
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
             }
             throw error
         }
 
+        for monitor in monitors {
+            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
+        }
+
+        let decoded: T = try decodeWrapping(data, decoder: decoder)
         if let cacheKey {
             cache?.set(data: data, forKey: cacheKey)
         }
+        return decoded
+    }
 
-        return try decodeWrapping(data, decoder: decoder)
+    private func trackedSleep(nanoseconds: UInt64) async throws {
+        let id = UUID()
+        let task = Task<Void, Error> { try await Task.sleep(nanoseconds: nanoseconds) }
+        retrySleepTasks[id] = task
+        defer { retrySleepTasks.removeValue(forKey: id) }
+        try await task.value
     }
 
     private func decodeWrapping<T: Decodable>(_ data: Data, decoder: JSONDecoder?) throws -> T {
@@ -120,9 +164,10 @@ actor CDYelpURLSession {
         }
     }
 
-    /// Cancellation is delivered asynchronously by URLSession; the function returns before
-    /// tasks are cancelled. In-flight requests sleeping during retry backoff may fire one
-    /// additional attempt before the cancellation takes effect.
+    /// Cancels in-progress URLSession tasks and any Tasks sleeping during retry backoff.
+    /// Cancellation is delivered asynchronously — this method returns before tasks are actually
+    /// cancelled. Sleeping retry Tasks are cancelled via a separately-dispatched actor task and
+    /// will wake as soon as the actor processes the cancellation request.
     nonisolated func cancelAllTasks() {
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             for task in dataTasks {
@@ -135,9 +180,17 @@ actor CDYelpURLSession {
                 task.cancel()
             }
         }
+        Task { await self.cancelAllRetrySleepTasks() }
     }
 
-    func clearCache() {
+    private func cancelAllRetrySleepTasks() {
+        for task in retrySleepTasks.values {
+            task.cancel()
+        }
+        retrySleepTasks.removeAll()
+    }
+
+    nonisolated func clearCache() {
         cache?.removeAll()
     }
 

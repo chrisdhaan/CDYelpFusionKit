@@ -94,19 +94,21 @@ struct CDYelpAPIClientTests {
         }
     }
 
-    @Test func cachedMalformedResponseThrowsDecodingFailed() async {
-        // Cache write happens before decode (CDYelpURLSession stores the raw bytes on any 2xx).
-        // A 200 with un-decodable JSON writes to cache, then throws .decodingFailed.
-        // The second call reads from cache and must also throw .decodingFailed — not a raw DecodingError.
-        // "total" is Int? — providing a string causes a type-mismatch DecodingError
+    @Test func malformedResponseDoesNotPoisonCache() async throws {
+        // A 200 with un-decodable JSON must throw .decodingFailed without caching the bad bytes.
+        // If the cache were written before the decode (the bug this tests for), replacing the stub
+        // with valid data would not help — the second call would still decode the cached garbage.
         let malformedData = Data(#"{"total":"not-an-int"}"#.utf8)
+        let validData = try FixtureLoader.data(named: "search_response.json")
         CDYelpMockURLProtocol.register(
             stub: .init(data: malformedData, statusCode: 200),
             forURLContaining: "businesses/search"
         )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
         let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
 
-        // First call — network path, data is cached before decode fails
+        // First call — malformed 200 must throw .decodingFailed; bad bytes must NOT be cached
         do {
             _ = try await client.searchBusinesses(
                 byTerm: "coffee", location: "SF",
@@ -115,29 +117,29 @@ struct CDYelpAPIClientTests {
                 sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
                 attributes: nil
             )
+            Issue.record("Expected CDYelpNetworkError.decodingFailed to be thrown")
+            return
         } catch CDYelpNetworkError.decodingFailed {
-            // Expected — continue to test cache path
+            // Expected — continue to verify the cache was not poisoned
         } catch {
             Issue.record("First call threw unexpected error: \(error)")
             return
         }
-        CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search")
 
-        // Second call — served from cache; must still wrap in .decodingFailed (not raw DecodingError)
-        do {
-            _ = try await client.searchBusinesses(
-                byTerm: "coffee", location: "SF",
-                latitude: nil, longitude: nil, radius: nil,
-                categories: nil, locale: nil, limit: nil, offset: nil,
-                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
-                attributes: nil
-            )
-            Issue.record("Expected CDYelpNetworkError.decodingFailed from cache path")
-        } catch CDYelpNetworkError.decodingFailed {
-            // Correct — cache-hit decode errors are wrapped consistently
-        } catch {
-            Issue.record("Cache path threw unexpected error type: \(error)")
-        }
+        // Replace stub with valid data. If the cache were poisoned, this second call would
+        // serve the cached garbage and throw again instead of succeeding.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: validData, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        let response = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+        #expect(response.businesses?.isEmpty == false)
     }
 
     @Test func adapterFailureThrowsInvalidRequestError() async {
@@ -371,6 +373,181 @@ struct CDYelpAPIClientTests {
         }
         #expect(spy.retryEventCount == 0)
     }
+
+    @Test func eventMonitorReceivesErrorOnHttpFailure() async {
+        // requestDidComplete must carry the HTTP error, not nil, for non-2xx responses.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(eventMonitors: [spy])
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        let completed = spy.completedRequests
+        #expect(completed.count == 1)
+        #expect(completed.first?.error != nil)
+    }
+
+    @Test func http500RetriesDoNotFireSpuriousCompleteEvents() async {
+        // With retryLimit:2 and a persistent 500, requestDidComplete must fire exactly once
+        // (on the terminal failure), not once per attempt.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.retryEventCount == 2)
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.completedRequests.first?.error != nil)
+    }
+
+    @Test func requestAdapterRunsOncePerLogicalCallWithRetry() async throws {
+        // With retryLimit: 1, a retried 500 causes two network attempts but the adapter
+        // must execute only once — on the first attempt.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let counter = AdapterCallCounter()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 1, initialDelay: 0),
+            requestAdapters: [counter]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(counter.callCount == 1)
+    }
+
+    @Test func eventMonitorFiresOncePerLogicalRequestWithRetry() async throws {
+        // A request that retries must produce exactly one requestDidStart and one
+        // requestDidComplete — not one per attempt.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.startedURLs.count == 1)
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.retryEventCount == 2)
+    }
+
+    @Test func eventMonitorReceivesCacheHitCallbacks() async throws {
+        // Monitors must see requestDidStart + requestDidComplete for cache-served responses,
+        // not just for network calls.
+        let fixture = try FixtureLoader.data(named: "search_response.json")
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            cacheConfiguration: CDYelpCacheConfiguration(ttl: 300),
+            eventMonitors: [spy]
+        )
+
+        // First call — network path, warms the cache
+        _ = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+
+        // Remove stub so any network call would fail; second call must come from cache
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search")
+
+        _ = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+
+        #expect(spy.startedURLs.count == 2)
+        #expect(spy.completedRequests.count == 2)
+        #expect(spy.completedRequests.allSatisfy { $0.error == nil })
+    }
+
+    @Test func requestAdapterCannotStripAuthorizationHeader() async throws {
+        // An adapter that does a wholesale header replacement (allHTTPHeaderFields = [...])
+        // strips the Authorization header it received. The framework must re-inject auth
+        // after adapters run so the Bearer token always reaches the network.
+        let fixture = try FixtureLoader.data(named: "search_response.json")
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let captor = RequestCapturingMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            eventMonitors: [captor],
+            requestAdapters: [HeaderStrippingAdapter()]
+        )
+        _ = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+
+        // requestDidStart receives the final post-adapter request; auth must be present.
+        #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
+    }
 }
 
 // MARK: - Test Helpers
@@ -423,9 +600,40 @@ private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
     }
 }
 
+private final class AdapterCallCounter: CDYelpRequestAdapter, @unchecked Sendable {
+    private let lock = NSLock()
+    private var _callCount = 0
+    var callCount: Int { lock.withLock { _callCount } }
+    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        lock.withLock { _callCount += 1 }
+        return urlRequest
+    }
+}
+
 private final class ThrowingAdapter: CDYelpRequestAdapter, @unchecked Sendable {
     struct AdapterError: Error {}
     func adapt(_: URLRequest) throws -> URLRequest {
         throw AdapterError()
+    }
+}
+
+private final class HeaderStrippingAdapter: CDYelpRequestAdapter, @unchecked Sendable {
+    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        var req = urlRequest
+        req.allHTTPHeaderFields = ["X-Custom": "value"]
+        return req
+    }
+}
+
+private final class RequestCapturingMonitor: CDYelpEventMonitor, @unchecked Sendable {
+    private let lock = NSLock()
+    private var _capturedRequest: URLRequest?
+
+    var capturedRequest: URLRequest? {
+        lock.withLock { _capturedRequest }
+    }
+
+    func requestDidStart(urlRequest: URLRequest) {
+        lock.withLock { _capturedRequest = urlRequest }
     }
 }

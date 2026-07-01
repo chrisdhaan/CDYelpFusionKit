@@ -111,9 +111,9 @@ enum CDYelpRouter {
             }
             let queryParams = queryParameters
             if !queryParams.isEmpty {
-                // All parameter values are String, Int, Double, or Bool — String(describing:) is correct for each.
                 components.queryItems = queryParams.map {
-                    URLQueryItem(name: $0.key, value: String(describing: $0.value))
+                    let value = ($0.value as? Bool).map { $0 ? "1" : "0" } ?? String(describing: $0.value)
+                    return URLQueryItem(name: $0.key, value: value)
                 }
                 // URLComponents allows + per RFC 3986, but servers decode it as a space
                 // (application/x-www-form-urlencoded convention); force-encode it as %2B.

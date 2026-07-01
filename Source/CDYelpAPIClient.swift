@@ -96,15 +96,14 @@ public final class CDYelpAPIClient: Sendable {
     // MARK: - Cache Methods
 
     /// Removes all cached responses.
-    public func clearCache() async {
-        await urlSession.clearCache()
+    public func clearCache() {
+        urlSession.clearCache()
     }
 
     // MARK: - Request Methods
 
     /// Cancels any in progress or pending API requests. Cancellation is delivered asynchronously
-    /// — this method returns before tasks are actually cancelled. Requests sleeping during a retry
-    /// backoff may complete one additional attempt before cancellation takes effect.
+    /// — this method returns before tasks are actually cancelled.
     public func cancelAllPendingAPIRequests() {
         urlSession.cancelAllTasks()
     }
@@ -383,7 +382,7 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpReviewsResponse {
         precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API reviews endpoint.")
         if let offset { precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
-        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be between 1 and 50.") }
+        if let limit { precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
         let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
