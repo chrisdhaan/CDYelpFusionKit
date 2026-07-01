@@ -49,18 +49,23 @@ actor CDYelpURLSession {
                 }
             } catch {
                 let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+                // Fire start before complete so the monitor lifecycle is always paired.
+                for monitor in monitors {
+                    monitor.requestDidStart(urlRequest: request)
+                }
                 for monitor in monitors {
                     monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
                 }
                 throw networkError
             }
-            // Re-inject auth after adapters run.
-            if let authHeader {
+            // Re-inject auth only if an adapter inadvertently removed it entirely; an adapter
+            // that sets a different value (e.g. token rotation) keeps its replacement.
+            if let authHeader, request.value(forHTTPHeaderField: "Authorization") == nil {
                 request.setValue(authHeader, forHTTPHeaderField: "Authorization")
             }
         }
 
-        let cacheKey: String? = request.httpMethod == "GET" ? CDYelpCacheKey.key(for: request) : nil
+        let cacheKey: String? = (request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
         if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
             // Fire lifecycle callbacks so monitors have visibility into cache-served responses.
             // requestDidStart fires only on attempt 0 so monitors count one logical request.
@@ -73,6 +78,8 @@ actor CDYelpURLSession {
             do {
                 decoded = try decodeWrapping(cached, decoder: decoder)
             } catch {
+                // Evict the undecodable entry so the next request falls through to the network.
+                cache.remove(forKey: cacheKey)
                 for monitor in monitors {
                     monitor.requestDidComplete(urlRequest: request, response: nil, data: cached, error: error)
                 }
@@ -103,7 +110,14 @@ actor CDYelpURLSession {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
-                try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                do {
+                    try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                } catch {
+                    for monitor in monitors {
+                        monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
+                    }
+                    throw error
+                }
                 return try await perform(request, decoder: decoder, attempt: attempt + 1)
             }
             for monitor in monitors {
@@ -128,7 +142,14 @@ actor CDYelpURLSession {
                 for monitor in monitors {
                     monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
                 }
-                try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                do {
+                    try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+                } catch {
+                    for monitor in monitors {
+                        monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
+                    }
+                    throw error
+                }
                 return try await perform(request, decoder: decoder, attempt: attempt + 1)
             }
             for monitor in monitors {
@@ -137,11 +158,18 @@ actor CDYelpURLSession {
             throw error
         }
 
+        let decoded: T
+        do {
+            decoded = try decodeWrapping(data, decoder: decoder)
+        } catch {
+            for monitor in monitors {
+                monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
+            }
+            throw error
+        }
         for monitor in monitors {
             monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
         }
-
-        let decoded: T = try decodeWrapping(data, decoder: decoder)
         if let cacheKey {
             cache?.set(data: data, forKey: cacheKey)
         }
@@ -152,7 +180,10 @@ actor CDYelpURLSession {
         let id = UUID()
         let task = Task<Void, Error> { try await Task.sleep(nanoseconds: nanoseconds) }
         retrySleepTasks[id] = task
-        defer { retrySleepTasks.removeValue(forKey: id) }
+        defer {
+            task.cancel()
+            retrySleepTasks.removeValue(forKey: id)
+        }
         try await task.value
     }
 

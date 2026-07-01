@@ -10,6 +10,7 @@ public enum CDYelpMockClientFactory {
         apiKey: String = "test-api-key",
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
         retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
         eventMonitors: [any CDYelpEventMonitor] = [],
         requestAdapters: [any CDYelpRequestAdapter] = []
     ) -> CDYelpAPIClient {
@@ -20,6 +21,7 @@ public enum CDYelpMockClientFactory {
             sessionConfiguration: configuration,
             cacheConfiguration: cacheConfiguration,
             retryConfiguration: retryConfiguration,
+            decoderConfiguration: decoderConfiguration,
             eventMonitors: eventMonitors,
             requestAdapters: requestAdapters
         )

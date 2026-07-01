@@ -55,10 +55,7 @@ final class CDYelpResponseCache: @unchecked Sendable {
 
     func data(forKey key: String) -> Data? {
         guard let entry = cache.object(forKey: key as NSString) else { return nil }
-        guard entry.expiresAt > Date() else {
-            cache.removeObject(forKey: key as NSString)
-            return nil
-        }
+        guard entry.expiresAt > Date() else { return nil }
         return entry.data
     }
 

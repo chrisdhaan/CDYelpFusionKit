@@ -521,10 +521,10 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.allSatisfy { $0.error == nil })
     }
 
-    @Test func requestAdapterCannotStripAuthorizationHeader() async throws {
+    @Test func adapterThatRemovesAuthHeaderGetsAuthRestored() async throws {
         // An adapter that does a wholesale header replacement (allHTTPHeaderFields = [...])
-        // strips the Authorization header it received. The framework must re-inject auth
-        // after adapters run so the Bearer token always reaches the network.
+        // inadvertently removes the Authorization header. The framework must detect this and
+        // re-inject auth so the Bearer token always reaches the network.
         let fixture = try FixtureLoader.data(named: "search_response.json")
         CDYelpMockURLProtocol.register(
             stub: .init(data: fixture, statusCode: 200),
@@ -545,8 +545,81 @@ struct CDYelpAPIClientTests {
             attributes: nil
         )
 
-        // requestDidStart receives the final post-adapter request; auth must be present.
         #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
+    }
+
+    @Test func adapterThatReplacesAuthHeaderKeepsItsValue() async throws {
+        // An adapter that performs token rotation sets a new Authorization value.
+        // The framework must preserve the adapter's value, not overwrite it with the init-time key.
+        let fixture = try FixtureLoader.data(named: "search_response.json")
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let captor = RequestCapturingMonitor()
+        let rotatedToken = "Bearer rotated-token-xyz"
+        let client = CDYelpMockClientFactory.makeClient(
+            eventMonitors: [captor],
+            requestAdapters: [TokenRotationAdapter(token: rotatedToken)]
+        )
+        _ = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+
+        #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Authorization") == rotatedToken)
+    }
+
+    @Test func monitorReceivesErrorOnDecodingFailureAfter200() async {
+        // A 200 response with malformed JSON must deliver error: decodingFailed to monitors,
+        // not nil — the success signal must not fire before decoding succeeds.
+        let malformedData = Data(#"{"total":"not-an-int"}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: malformedData, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(eventMonitors: [spy])
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.completedRequests.first?.error != nil)
+    }
+
+    @Test func monitorLifecycleIsCompleteOnAdapterFailure() async {
+        // An adapter failure must produce a paired requestDidStart + requestDidComplete;
+        // monitors that track in-flight request counts must not diverge.
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            eventMonitors: [spy],
+            requestAdapters: [ThrowingAdapter()]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.startedURLs.count == 1)
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.completedRequests.first?.error != nil)
     }
 }
 
@@ -603,7 +676,10 @@ private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
 private final class AdapterCallCounter: CDYelpRequestAdapter, @unchecked Sendable {
     private let lock = NSLock()
     private var _callCount = 0
-    var callCount: Int { lock.withLock { _callCount } }
+    var callCount: Int {
+        lock.withLock { _callCount }
+    }
+
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
         lock.withLock { _callCount += 1 }
         return urlRequest
@@ -621,6 +697,19 @@ private final class HeaderStrippingAdapter: CDYelpRequestAdapter, @unchecked Sen
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
         var req = urlRequest
         req.allHTTPHeaderFields = ["X-Custom": "value"]
+        return req
+    }
+}
+
+private final class TokenRotationAdapter: CDYelpRequestAdapter, @unchecked Sendable {
+    private let token: String
+    init(token: String) {
+        self.token = token
+    }
+
+    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        var req = urlRequest
+        req.setValue(token, forHTTPHeaderField: "Authorization")
         return req
     }
 }

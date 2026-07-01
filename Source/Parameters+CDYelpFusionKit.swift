@@ -34,7 +34,7 @@
 typealias Parameters = [String: Any]
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
-    // swiftlint:disable:next function_parameter_count function_body_length
+    // swiftlint:disable:next function_parameter_count
     static func searchParameters(withTerm term: String?,
                                  location: String?,
                                  latitude: Double?,
