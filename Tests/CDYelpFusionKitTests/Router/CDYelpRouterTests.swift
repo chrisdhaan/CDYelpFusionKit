@@ -342,4 +342,35 @@ struct CDYelpRouterTests {
         #expect(urlString.contains("%2B14157492060"))
         #expect(!urlString.contains("phone=+14157492060"))
     }
+
+    @Test func idContainingQueryDelimiterIsPercentEncodedNotInjected() throws {
+        // A raw "?" in a path-embedded id must not be reinterpreted as the start of a query
+        // string when `path` is concatenated with the base URL and re-parsed by URLComponents.
+        // `URL.path` auto-decodes percent-encoding, so assert on the raw encoded representation
+        // and on `.query` being empty rather than on the (correctly decoded) `.path` string.
+        let maliciousId = "abc?evil=1"
+        let router = CDYelpRouter.business(id: maliciousId, parameters: [:])
+        let request = try router.asURLRequest(apiKey: "test-key")
+        #expect(request.url?.query == nil)
+        #expect(request.url?.absoluteString.contains("abc%3Fevil%3D1") == true)
+        #expect(request.url?.path == "/v3/businesses/abc?evil=1")
+    }
+
+    @Test func idContainingFragmentDelimiterIsPercentEncoded() throws {
+        let maliciousId = "abc#fragment"
+        let router = CDYelpRouter.reviews(id: maliciousId, parameters: [:])
+        let request = try router.asURLRequest(apiKey: "test-key")
+        #expect(request.url?.fragment == nil)
+        #expect(request.url?.absoluteString.contains("abc%23fragment") == true)
+    }
+
+    @Test func booleanQueryParameterEncodesNumerically() throws {
+        // Matches the Yelp Fusion API convention (and the encoding this library has always sent,
+        // previously via Alamofire's default URLEncoding, whose boolEncoding is .numeric).
+        let router = CDYelpRouter.search(parameters: ["open_now": true])
+        let request = try router.asURLRequest(apiKey: "test-key")
+        let urlString = request.url?.absoluteString ?? ""
+        #expect(urlString.contains("open_now=1"))
+        #expect(!urlString.contains("open_now=true"))
+    }
 }

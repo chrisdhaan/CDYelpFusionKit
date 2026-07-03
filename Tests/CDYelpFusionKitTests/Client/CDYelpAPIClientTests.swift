@@ -426,6 +426,26 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.first?.error != nil)
     }
 
+    @Test func postEndpointDoesNotRetryOnRetryableStatusCode() async throws {
+        // POST endpoints (aiChat, jobs) must never be automatically retried: retrying a POST
+        // whose response was lost to a transient error risks the server processing it twice.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "jobs"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "jobs") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 3, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchJobs(forQuery: "plumber")
+        }
+        #expect(spy.retryEventCount == 0)
+    }
+
     @Test func requestAdapterRunsOncePerLogicalCallWithRetry() async throws {
         // With retryLimit: 1, a retried 500 causes two network attempts but the adapter
         // must execute only once — on the first attempt.
