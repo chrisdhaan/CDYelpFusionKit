@@ -50,12 +50,8 @@ actor CDYelpURLSession {
             } catch {
                 let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
                 // Fire start before complete so the monitor lifecycle is always paired.
-                for monitor in monitors {
-                    monitor.requestDidStart(urlRequest: request)
-                }
-                for monitor in monitors {
-                    monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
-                }
+                notifyStart(request)
+                notifyComplete(request, response: nil, data: nil, error: networkError)
                 throw networkError
             }
             // Re-inject auth only if an adapter inadvertently removed it entirely; an adapter
@@ -66,36 +62,26 @@ actor CDYelpURLSession {
         }
 
         let cacheKey: String? = (request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
-        if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
-            // Fire lifecycle callbacks so monitors have visibility into cache-served responses.
-            // requestDidStart fires only on attempt 0 so monitors count one logical request.
-            if attempt == 0 {
-                for monitor in monitors {
-                    monitor.requestDidStart(urlRequest: request)
-                }
-            }
+        // Cache is only ever consulted on the first attempt — a retry means the caller's retry
+        // policy asked for a fresh network attempt, not an opportunistic cache hit.
+        if attempt == 0, let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
+            notifyStart(request)
             let decoded: T
             do {
                 decoded = try decodeWrapping(cached, decoder: decoder)
             } catch {
                 // Evict the undecodable entry so the next request falls through to the network.
                 cache.remove(forKey: cacheKey)
-                for monitor in monitors {
-                    monitor.requestDidComplete(urlRequest: request, response: nil, data: cached, error: error)
-                }
+                notifyComplete(request, response: nil, data: cached, error: error)
                 throw error
             }
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: nil, data: cached, error: nil)
-            }
+            notifyComplete(request, response: nil, data: cached, error: nil)
             return decoded
         }
 
         // requestDidStart fires once per logical request (attempt 0 only).
         if attempt == 0 {
-            for monitor in monitors {
-                monitor.requestDidStart(urlRequest: request)
-            }
+            notifyStart(request)
         }
 
         let data: Data
@@ -106,74 +92,81 @@ actor CDYelpURLSession {
             httpResponse = response as? HTTPURLResponse
         } catch {
             let networkError = CDYelpNetworkError.networkFailure(underlying: error)
-            if shouldRetry(statusCode: nil, error: error, attempt: attempt) {
-                for monitor in monitors {
-                    monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
-                }
-                do {
-                    try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-                } catch {
-                    for monitor in monitors {
-                        monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: error)
-                    }
-                    throw error
-                }
-                return try await perform(request, decoder: decoder, attempt: attempt + 1)
-            }
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: nil, data: nil, error: networkError)
-            }
-            throw networkError
+            return try await retryOrThrow(
+                networkError, request: request, decoder: decoder, attempt: attempt, response: nil, data: nil
+            )
         }
 
         // Guard before notifying monitors so non-HTTP responses don't produce a false success signal.
         guard let httpResponse else {
             let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: nil, data: data, error: error)
-            }
+            notifyComplete(request, response: nil, data: data, error: error)
             throw error
         }
 
         let statusCode = httpResponse.statusCode
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
-            if shouldRetry(statusCode: statusCode, error: nil, attempt: attempt) {
-                for monitor in monitors {
-                    monitor.requestWillRetry(urlRequest: request, retryCount: Int(attempt + 1))
-                }
-                do {
-                    try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-                } catch {
-                    for monitor in monitors {
-                        monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
-                    }
-                    throw error
-                }
-                return try await perform(request, decoder: decoder, attempt: attempt + 1)
-            }
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
-            }
-            throw error
+            return try await retryOrThrow(
+                error, request: request, decoder: decoder, attempt: attempt, response: httpResponse, data: data
+            )
         }
 
         let decoded: T
         do {
             decoded = try decodeWrapping(data, decoder: decoder)
         } catch {
-            for monitor in monitors {
-                monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: error)
-            }
+            notifyComplete(request, response: httpResponse, data: data, error: error)
             throw error
         }
-        for monitor in monitors {
-            monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
-        }
+        notifyComplete(request, response: httpResponse, data: data, error: nil)
         if let cacheKey {
             cache?.set(data: data, forKey: cacheKey)
         }
         return decoded
+    }
+
+    /// Shared retry-or-throw path for both the transport-error and HTTP-status-error cases:
+    /// decides whether to retry, notifies monitors, sleeps for backoff, then recurses into
+    /// `perform`, or notifies monitors of the terminal failure and rethrows.
+    private func retryOrThrow<T: Decodable>(
+        _ error: CDYelpNetworkError,
+        request: URLRequest,
+        decoder: JSONDecoder?,
+        attempt: UInt,
+        response: HTTPURLResponse?,
+        data: Data?
+    ) async throws -> T {
+        guard shouldRetry(error, httpMethod: request.httpMethod, attempt: attempt) else {
+            notifyComplete(request, response: response, data: data, error: error)
+            throw error
+        }
+        notifyRetry(request, retryCount: Int(attempt + 1))
+        do {
+            try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+        } catch {
+            notifyComplete(request, response: response, data: data, error: error)
+            throw error
+        }
+        return try await perform(request, decoder: decoder, attempt: attempt + 1)
+    }
+
+    private func notifyStart(_ request: URLRequest) {
+        for monitor in monitors {
+            monitor.requestDidStart(urlRequest: request)
+        }
+    }
+
+    private func notifyComplete(_ request: URLRequest, response: HTTPURLResponse?, data: Data?, error: Error?) {
+        for monitor in monitors {
+            monitor.requestDidComplete(urlRequest: request, response: response, data: data, error: error)
+        }
+    }
+
+    private func notifyRetry(_ request: URLRequest, retryCount: Int) {
+        for monitor in monitors {
+            monitor.requestWillRetry(urlRequest: request, retryCount: retryCount)
+        }
     }
 
     private func trackedSleep(nanoseconds: UInt64) async throws {
@@ -184,7 +177,13 @@ actor CDYelpURLSession {
             task.cancel()
             retrySleepTasks.removeValue(forKey: id)
         }
-        try await task.value
+        do {
+            try await task.value
+        } catch {
+            // Wrap so cancellation during backoff still honors the documented
+            // "Throws: CDYelpNetworkError" contract on every public API method.
+            throw CDYelpNetworkError.networkFailure(underlying: error)
+        }
     }
 
     private func decodeWrapping<T: Decodable>(_ data: Data, decoder: JSONDecoder?) throws -> T {
@@ -196,22 +195,19 @@ actor CDYelpURLSession {
     }
 
     /// Cancels in-progress URLSession tasks and any Tasks sleeping during retry backoff.
-    /// Cancellation is delivered asynchronously — this method returns before tasks are actually
-    /// cancelled. Sleeping retry Tasks are cancelled via a separately-dispatched actor task and
-    /// will wake as soon as the actor processes the cancellation request.
-    nonisolated func cancelAllTasks() {
-        session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            for task in dataTasks {
-                task.cancel()
-            }
-            for task in uploadTasks {
-                task.cancel()
-            }
-            for task in downloadTasks {
-                task.cancel()
-            }
+    /// Awaits both, so cancellation is guaranteed to be in effect by the time this returns.
+    func cancelAllTasks() async {
+        let (dataTasks, uploadTasks, downloadTasks) = await session.tasks
+        for task in dataTasks {
+            task.cancel()
         }
-        Task { await self.cancelAllRetrySleepTasks() }
+        for task in uploadTasks {
+            task.cancel()
+        }
+        for task in downloadTasks {
+            task.cancel()
+        }
+        cancelAllRetrySleepTasks()
     }
 
     private func cancelAllRetrySleepTasks() {
@@ -225,15 +221,22 @@ actor CDYelpURLSession {
         cache?.removeAll()
     }
 
-    private func shouldRetry(statusCode: Int?, error: Error?, attempt: UInt) -> Bool {
+    /// HTTP methods safe to automatically resend without risking a duplicate side effect,
+    /// matching the set Alamofire's `RetryPolicy` retried by default (notably excluding POST).
+    private static let idempotentHTTPMethods: Set<String> = ["DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE"]
+
+    private func shouldRetry(_ error: CDYelpNetworkError, httpMethod: String?, attempt: UInt) -> Bool {
         guard attempt < retryConfig.retryLimit else { return false }
-        if let code = statusCode {
-            return retryConfig.retryableHTTPStatusCodes.contains(code)
-        }
-        if let urlError = error as? URLError {
+        guard let httpMethod, Self.idempotentHTTPMethods.contains(httpMethod.uppercased()) else { return false }
+        switch error {
+        case let .httpError(statusCode, _):
+            return retryConfig.retryableHTTPStatusCodes.contains(statusCode)
+        case let .networkFailure(underlying):
+            guard let urlError = underlying as? URLError else { return false }
             return retryConfig.retryableURLErrorCodes.contains(urlError.code)
+        default:
+            return false
         }
-        return false
     }
 
     private func backoffNanoseconds(attempt: UInt) -> UInt64 {

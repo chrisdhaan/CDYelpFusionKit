@@ -36,7 +36,6 @@ struct CDYelpRetryConfigurationTests {
 
     @Test func clientAcceptsRetryConfiguration() {
         let retry = CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0.25)
-        let client = CDYelpAPIClient(apiKey: "fake-key-for-test", retryConfiguration: retry)
-        #expect(client.isAuthenticated())
+        _ = CDYelpAPIClient(apiKey: "fake-key-for-test", retryConfiguration: retry)
     }
 }

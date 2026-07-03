@@ -40,12 +40,14 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - Minimum deployment targets raised: iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0 (visionOS 1.0 unchanged)
 - `CDYelpRouter` internal routing enum renamed from `CDYelpNativeRouter` for continuity with v5 naming; `asURLRequest()` now requires an explicit `apiKey:` parameter
 - `CDYelpRetryConfiguration` default retry codes updated to `[408, 429, 500, 502, 503, 504]`
+- `cancelAllPendingAPIRequests()` is now `async` — it suspends until in-flight tasks and retry backoff sleeps are actually cancelled, instead of returning before cancellation takes effect
 
 ### Removed
 
 - Completion-handler API — all `CDYelpAPIClient` methods previously had `completion:` variants; replaced by `async throws` exclusively
 - `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter` internal Alamofire bridge types
 - Alamofire SPM and CocoaPods dependency
+- `isAuthenticated()` method — `init` already enforces a non-empty `apiKey` via `precondition`, so the check could never return `false`
 
 ---
 

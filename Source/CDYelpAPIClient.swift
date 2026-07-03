@@ -68,7 +68,21 @@ public final class CDYelpAPIClient: Sendable {
         )
     }
 
-    package init(
+    ///
+    /// Initializes a new CDYelpAPIClient object with a custom URLSessionConfiguration. This
+    /// overload exists primarily so ``CDYelpMockClientFactory`` can inject a configuration whose
+    /// `protocolClasses` route requests through ``CDYelpMockURLProtocol`` for testing.
+    ///
+    /// - parameters:
+    ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - sessionConfiguration: (**Required**) The `URLSessionConfiguration` used to construct the underlying `URLSession`.
+    ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
+    ///   - retryConfiguration: (Optional) Configuration for automatic retry with exponential backoff. Defaults to disabled.
+    ///   - decoderConfiguration: (Optional) Configuration for JSON decoding strategies. Defaults to standard configuration.
+    ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
+    ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
+    ///
+    public init(
         apiKey: String,
         sessionConfiguration: URLSessionConfiguration,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
@@ -102,17 +116,10 @@ public final class CDYelpAPIClient: Sendable {
 
     // MARK: - Request Methods
 
-    /// Cancels any in progress or pending API requests. Cancellation is delivered asynchronously
-    /// — this method returns before tasks are actually cancelled.
-    public func cancelAllPendingAPIRequests() {
-        urlSession.cancelAllTasks()
-    }
-
-    /// Returns `true` if the client has a valid (non-empty) API key configured. This is always
-    /// `true` for any successfully initialized client since `init` enforces a non-empty key via
-    /// `precondition`. Provided for external code that needs to confirm initialization before calls.
-    public func isAuthenticated() -> Bool {
-        !apiKey.isEmpty
+    /// Cancels any in progress or pending API requests. Suspends until cancellation has been
+    /// applied to all in-flight tasks and retry backoff sleeps.
+    public func cancelAllPendingAPIRequests() async {
+        await urlSession.cancelAllTasks()
     }
 
     // MARK: - Yelp Fusion API Methods

@@ -126,8 +126,12 @@ extension ViewController: UITableViewDelegate {
                    didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
-            handleAPIEndpointSelection(at: indexPath.row)
+            Task {
+                // Await full cancellation before starting the new request so it can't be
+                // swept up by the in-flight cancellation of the previous selection.
+                await CDYelpFusionKitManager.shared.apiClient.cancelAllPendingAPIRequests()
+                handleAPIEndpointSelection(at: indexPath.row)
+            }
         case 1:
             handleDeepLinkSelection(at: indexPath.row)
         case 2:

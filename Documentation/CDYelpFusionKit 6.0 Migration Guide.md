@@ -102,6 +102,28 @@ If your app targets a platform version below these minimums, you must raise your
 
 ---
 
+### 5. `isAuthenticated()` method removed
+
+`init` already enforces a non-empty `apiKey` via `precondition`, so `isAuthenticated()` could never return `false` for a successfully constructed client. The method is removed as dead API surface — remove any call sites; a successfully constructed `CDYelpAPIClient` is always authenticated.
+
+---
+
+### 6. `cancelAllPendingAPIRequests()` is now `async`
+
+Cancellation now suspends until it has actually been applied to in-flight tasks and retry backoff sleeps, instead of returning immediately and delivering cancellation on a later run loop turn.
+
+**Before (v5.x):**
+```swift
+client.cancelAllPendingAPIRequests()
+```
+
+**After (v6.0):**
+```swift
+await client.cancelAllPendingAPIRequests()
+```
+
+---
+
 ## What Did Not Change
 
 The following public API surface is **identical** in v6.0 — no call-site changes needed beyond the completion handler conversion:
@@ -109,8 +131,7 @@ The following public API surface is **identical** in v6.0 — no call-site chang
 - All `CDYelpAPIClient.init` parameters (`apiKey:`, `cacheConfiguration:`, `retryConfiguration:`, `decoderConfiguration:`, `eventMonitors:`, `requestAdapters:`)
 - `CDYelpCacheConfiguration`, `CDYelpRetryConfiguration`, `CDYelpDecoderConfiguration`
 - `CDYelpEventMonitor` and `CDYelpRequestAdapter` protocols
-- `clearCache()` and `cancelAllPendingAPIRequests()` methods
-- `isAuthenticated()` method
+- `clearCache()` method
 - All response model types (`CDYelpSearchResponse`, `CDYelpBusiness`, `CDYelpEvent`, etc.)
 - All enum types (`CDYelpLocale`, `CDYelpBusinessSortType`, `CDYelpPriceTier`, etc.)
 - `CDYelpMockURLProtocol` and `CDYelpMockClientFactory` testing utilities
@@ -121,6 +142,8 @@ The following public API surface is **identical** in v6.0 — no call-site chang
 
 - [ ] **Convert all completion-handler calls** to `async throws` — search for `.searchBusinesses(`, `.fetchBusiness(`, etc. with `completion:` or trailing closure syntax
 - [ ] **Update error handling** — replace `AFError` catch blocks with `CDYelpNetworkError`
+- [ ] **Add `await` to `cancelAllPendingAPIRequests()` call sites** — now `async`
+- [ ] **Remove `isAuthenticated()` call sites** — the method is removed; a constructed client is always authenticated
 - [ ] **Remove `import Alamofire`** from files where it was only used for `AFError`
 - [ ] **Raise deployment targets** if any of your targets are below iOS 15 / macOS 12 / tvOS 15 / watchOS 8
 - [ ] **Remove Alamofire dependency** from `Package.swift` or `Podfile` if no longer needed by your own code

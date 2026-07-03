@@ -30,17 +30,17 @@ enum CDYelpRouter {
         case .phone:
             return "businesses/search/phone"
         case let .transactions(type, _):
-            return "transactions/\(type)/search"
+            return "transactions/\(Self.percentEncodedPathSegment(type))/search"
         case let .business(id, _):
-            return "businesses/\(id)"
+            return "businesses/\(Self.percentEncodedPathSegment(id))"
         case .matches:
             return "businesses/matches"
         case let .reviews(id, _):
-            return "businesses/\(id)/reviews"
+            return "businesses/\(Self.percentEncodedPathSegment(id))/reviews"
         case .autocomplete:
             return "autocomplete"
         case let .event(id, _):
-            return "events/\(id)"
+            return "events/\(Self.percentEncodedPathSegment(id))"
         case .events:
             return "events"
         case .featuredEvent:
@@ -48,22 +48,30 @@ enum CDYelpRouter {
         case .allCategories:
             return "categories"
         case let .categoryDetails(alias, _):
-            return "categories/\(alias)"
+            return "categories/\(Self.percentEncodedPathSegment(alias))"
         case .engagement:
             return "businesses/engagement"
         case let .serviceOfferings(id, _):
-            return "businesses/\(id)/service_offerings"
+            return "businesses/\(Self.percentEncodedPathSegment(id))/service_offerings"
         case .businessInsights:
             return "businesses/insights"
         case let .reviewHighlights(id, _):
-            return "businesses/\(id)/review_highlights"
+            return "businesses/\(Self.percentEncodedPathSegment(id))/review_highlights"
         case let .openings(businessId, _):
-            return "bookings/\(businessId)/openings"
+            return "bookings/\(Self.percentEncodedPathSegment(businessId))/openings"
         case .aiChat:
             return "ai/chat/v2"
         case .jobs:
             return "jobs"
         }
+    }
+
+    /// Percent-encodes a single path segment so identifiers containing reserved URL characters
+    /// (`?`, `#`, `/`, etc.) can't be reinterpreted as path/query delimiters when `path` is later
+    /// concatenated with the base URL and re-parsed by `URLComponents(string:)`.
+    private static func percentEncodedPathSegment(_ raw: String) -> String {
+        let unreserved = CharacterSet(charactersIn: "-._~").union(.alphanumerics)
+        return raw.addingPercentEncoding(withAllowedCharacters: unreserved) ?? raw
     }
 
     func asURLRequest(apiKey: String) throws -> URLRequest {
@@ -112,7 +120,10 @@ enum CDYelpRouter {
             let queryParams = queryParameters
             if !queryParams.isEmpty {
                 components.queryItems = queryParams.map {
-                    let value = ($0.value as? Bool).map { $0 ? "true" : "false" } ?? String(describing: $0.value)
+                    // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
+                    // encoding this library has always sent (previously via Alamofire's
+                    // default URLEncoding, whose boolEncoding is .numeric).
+                    let value = ($0.value as? Bool).map { $0 ? "1" : "0" } ?? String(describing: $0.value)
                     return URLQueryItem(name: $0.key, value: value)
                 }
                 // URLComponents allows + per RFC 3986, but servers decode it as a space
