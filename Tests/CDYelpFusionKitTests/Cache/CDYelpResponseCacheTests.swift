@@ -66,20 +66,39 @@ struct CDYelpResponseCacheTests {
         #expect(cache.data(forKey: "key2") == data)
     }
 
-    @Test func expiredEntryDoesNotEvictConcurrentlyWrittenFreshEntry() {
-        // Verifies that reading an expired entry returns nil without removing a freshly-written
-        // replacement — the TOCTOU window in the old read-check-delete sequence is gone.
-        let config = CDYelpCacheConfiguration(ttl: 60, countLimit: 10)
+    @Test func expiredEntryDoesNotEvictConcurrentlyWrittenFreshEntry() async throws {
+        // Regression test for the TOCTOU fix: the old read-check-delete sequence called
+        // cache.removeObject(forKey:) whenever it found an expired entry. If a concurrent
+        // writer replaced that same key in the gap between the expiry check and the
+        // removeObject call, the fresh entry it just wrote would be deleted out from under
+        // it. The fix removed the removeObject call entirely, so an expired read is now a
+        // pure miss that never touches the cache. Rather than racing real threads against a
+        // nanosecond-wide window (unreliable in a unit test), attach an NSCacheDelegate and
+        // assert directly that reading an expired entry triggers zero evictions.
+        let config = CDYelpCacheConfiguration(ttl: 0.05, countLimit: 10)
         let cache = CDYelpResponseCache(configuration: config)
+        let recorder = EvictionRecorder()
 
-        // Write an entry, then immediately set it with a fresh TTL to simulate a concurrent write.
-        let original = "original".data(using: .utf8)!
-        let replacement = "replacement".data(using: .utf8)!
+        try cache.set(data: #require("stale".data(using: .utf8)), forKey: "key1")
+        try await Task.sleep(nanoseconds: 100_000_000)
 
-        cache.set(data: original, forKey: "key1")
-        cache.set(data: replacement, forKey: "key1")
+        // Attach the delegate only after priming the entry, so the setup write above isn't recorded.
+        cache.cache.delegate = recorder
 
-        // Both operations use the same key; the second write must win.
-        #expect(cache.data(forKey: "key1") == replacement)
+        #expect(cache.data(forKey: "key1") == nil)
+        #expect(recorder.evictionCount == 0)
+
+        // Detach the delegate before `cache` goes out of scope: NSCache invokes its delegate
+        // for any objects still present when it deallocates, and by then `recorder` may already
+        // be gone, which crashes rather than no-oping.
+        cache.cache.delegate = nil
+    }
+}
+
+private final class EvictionRecorder: NSObject, NSCacheDelegate {
+    private(set) var evictionCount = 0
+
+    func cache(_: NSCache<AnyObject, AnyObject>, willEvictObject _: Any) {
+        evictionCount += 1
     }
 }

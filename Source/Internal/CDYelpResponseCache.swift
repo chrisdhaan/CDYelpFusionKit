@@ -38,7 +38,8 @@ final class CDYelpCacheEntry {
 
 final class CDYelpResponseCache: @unchecked Sendable {
     // NSCache is thread-safe for all individual operations; no external lock is needed.
-    private let cache = NSCache<NSString, CDYelpCacheEntry>()
+    // Internal (not private) so tests can attach an NSCacheDelegate to verify eviction behavior.
+    let cache = NSCache<NSString, CDYelpCacheEntry>()
     private let ttl: TimeInterval
 
     init(configuration: CDYelpCacheConfiguration) {
