@@ -641,6 +641,85 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.count == 1)
         #expect(spy.completedRequests.first?.error != nil)
     }
+
+    @Test func cancelAllPendingAPIRequestsCompletesWithNoInFlightRequests() async {
+        // Smoke test: previously zero coverage existed for this method at all. Calling it with
+        // nothing in flight must simply return, not hang or crash.
+        let client = CDYelpMockClientFactory.makeClient()
+        await client.cancelAllPendingAPIRequests()
+    }
+
+    @Test func cancelAllPendingAPIRequestsInterruptsRetryBackoff() async throws {
+        // cancelAllPendingAPIRequests() must cut short an in-flight retry-backoff sleep rather
+        // than letting it run to completion — verified by asserting the call fails well before
+        // the configured initialDelay would otherwise elapse.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 3, initialDelay: 10)
+        )
+
+        let task = Task {
+            try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+
+        // Give the first attempt time to fail and enter the retry-backoff sleep.
+        try await Task.sleep(nanoseconds: 100_000_000)
+        let start = Date()
+        await client.cancelAllPendingAPIRequests()
+
+        await #expect(throws: CDYelpNetworkError.self) {
+            _ = try await task.value
+        }
+        #expect(Date().timeIntervalSince(start) < 2)
+    }
+
+    @Test func ambientTaskCancellationInterruptsRetryBackoff() async throws {
+        // Regression test: trackedSleep used to run the backoff sleep in a detached Task whose
+        // cancellation state was disconnected from the caller's ambient Task, so cancelling the
+        // Task that invoked an API method had no effect on an in-flight retry-backoff sleep.
+        // Cancelling the wrapping Task directly (the idiomatic Swift concurrency pattern, as
+        // opposed to calling cancelAllPendingAPIRequests()) must also interrupt the backoff.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 500),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 3, initialDelay: 10)
+        )
+
+        let task = Task {
+            try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+
+        // Give the first attempt time to fail and enter the retry-backoff sleep.
+        try await Task.sleep(nanoseconds: 100_000_000)
+        let start = Date()
+        task.cancel()
+
+        await #expect(throws: (any Error).self) {
+            _ = try await task.value
+        }
+        #expect(Date().timeIntervalSince(start) < 2)
+    }
 }
 
 // MARK: - Test Helpers

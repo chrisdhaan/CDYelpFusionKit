@@ -178,7 +178,15 @@ actor CDYelpURLSession {
             retrySleepTasks.removeValue(forKey: id)
         }
         do {
-            try await task.value
+            // withTaskCancellationHandler forwards cancellation of the caller's ambient Task
+            // (e.g. `Task { try await client.searchBusinesses(...) }.cancel()`) into the
+            // detached sleep task, which otherwise wouldn't observe it — an unstructured
+            // Task's cancellation state isn't linked to the task that created it.
+            try await withTaskCancellationHandler {
+                try await task.value
+            } onCancel: {
+                task.cancel()
+            }
         } catch {
             // Wrap so cancellation during backoff still honors the documented
             // "Throws: CDYelpNetworkError" contract on every public API method.
