@@ -324,6 +324,65 @@ struct CDYelpAPIClientTests {
         #expect(spy.retryEventCount == 2)
     }
 
+    @Test func transportErrorTriggersRetryAndSurfacesAsNetworkFailure() async {
+        // A raw transport-level failure (not an HTTP status code) must be wrapped in
+        // CDYelpNetworkError.networkFailure and, when its URLError code is retryable
+        // (.timedOut is in the default retryableURLErrorCodes set), must retry like an
+        // HTTP-status failure does.
+        CDYelpMockURLProtocol.register(
+            stub: .init(transportError: .timedOut),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        do {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.networkFailure to be thrown")
+        } catch CDYelpNetworkError.networkFailure {
+            // Correct — transport failures are wrapped in .networkFailure
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.networkFailure but threw \(error)")
+        }
+        #expect(spy.retryEventCount == 2)
+    }
+
+    @Test func transportErrorWithNonRetryableCodeDoesNotRetry() async {
+        // A transport failure whose URLError code isn't in retryableURLErrorCodes (the default
+        // set is [.networkConnectionLost, .notConnectedToInternet, .timedOut]) must not retry.
+        CDYelpMockURLProtocol.register(
+            stub: .init(transportError: .cannotFindHost),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 3, initialDelay: 0),
+            eventMonitors: [spy]
+        )
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(spy.retryEventCount == 0)
+    }
+
     @Test func http500FinalThrowIsSpecificHttpError() async {
         CDYelpMockURLProtocol.register(
             stub: .init(data: Data(), statusCode: 500),
