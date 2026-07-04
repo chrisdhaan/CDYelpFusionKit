@@ -67,7 +67,11 @@ actor CDYelpURLSession {
             restoreHeaderIfStripped("Content-Type", originalValue: contentTypeHeader, in: &request)
         }
 
-        let cacheKey: String? = (cacheable && request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
+        // .uppercased() matches the normalization shouldRetry uses for idempotentHTTPMethods.
+        // URLRequest.httpMethod's own setter already uppercases on assignment (confirmed: even
+        // an adapter that assigns "get" ends up with "GET"), so this is defense-in-depth rather
+        // than a fix for a reachable bug — kept for consistency between the two checks.
+        let cacheKey: String? = (cacheable && request.httpMethod?.uppercased() == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
         // Cache is only ever consulted on the first attempt — a retry means the caller's retry
         // policy asked for a fresh network attempt, not an opportunistic cache hit.
         if attempt == 0, let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
