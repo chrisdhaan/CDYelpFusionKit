@@ -30,51 +30,37 @@ actor CDYelpURLSession {
         decoder: JSONDecoder? = nil,
         cacheable: Bool = true
     ) async throws -> T {
-        try await perform(urlRequest, decoder: decoder, cacheable: cacheable, attempt: 0)
-    }
-
-    private func perform<T: Decodable>(
-        _ urlRequest: URLRequest,
-        decoder: JSONDecoder?,
-        cacheable: Bool,
-        attempt: UInt
-    ) async throws -> T {
-        // Run adapters only on the first attempt. On retry, urlRequest is already the adapted
-        // request passed from the previous attempt, so the adapter chain runs exactly once
-        // per logical API call regardless of how many retry attempts occur.
+        // One-time setup, run exactly once per logical API call regardless of how many retry
+        // attempts occur below: the adapter chain, header restoration, and cache lookup.
         var request = urlRequest
-        if attempt == 0 {
-            let authHeader = urlRequest.value(forHTTPHeaderField: "Authorization")
-            let acceptHeader = urlRequest.value(forHTTPHeaderField: "Accept")
-            let contentTypeHeader = urlRequest.value(forHTTPHeaderField: "Content-Type")
-            do {
-                for adapter in adapters {
-                    request = try adapter.adapt(request)
-                }
-            } catch {
-                let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
-                // Fire start before complete so the monitor lifecycle is always paired.
-                notifyStart(request)
-                notifyComplete(request, response: nil, data: nil, error: networkError)
-                throw networkError
+        let authHeader = urlRequest.value(forHTTPHeaderField: "Authorization")
+        let acceptHeader = urlRequest.value(forHTTPHeaderField: "Accept")
+        let contentTypeHeader = urlRequest.value(forHTTPHeaderField: "Content-Type")
+        do {
+            for adapter in adapters {
+                request = try adapter.adapt(request)
             }
-            // Re-inject a framework-set header only if an adapter inadvertently removed it
-            // entirely; an adapter that sets a different value (e.g. token rotation) keeps its
-            // replacement. Content-Type is only ever set on POST requests to begin with, so
-            // contentTypeHeader is nil (and this is a no-op) for every GET request.
-            restoreHeaderIfStripped("Authorization", originalValue: authHeader, in: &request)
-            restoreHeaderIfStripped("Accept", originalValue: acceptHeader, in: &request)
-            restoreHeaderIfStripped("Content-Type", originalValue: contentTypeHeader, in: &request)
+        } catch {
+            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+            // Fire start before complete so the monitor lifecycle is always paired.
+            notifyStart(request)
+            notifyComplete(request, response: nil, data: nil, error: networkError)
+            throw networkError
         }
+        // Re-inject a framework-set header only if an adapter inadvertently removed it
+        // entirely; an adapter that sets a different value (e.g. token rotation) keeps its
+        // replacement. Content-Type is only ever set on POST requests to begin with, so
+        // contentTypeHeader is nil (and this is a no-op) for every GET request.
+        restoreHeaderIfStripped("Authorization", originalValue: authHeader, in: &request)
+        restoreHeaderIfStripped("Accept", originalValue: acceptHeader, in: &request)
+        restoreHeaderIfStripped("Content-Type", originalValue: contentTypeHeader, in: &request)
 
         // .uppercased() matches the normalization shouldRetry uses for idempotentHTTPMethods.
         // URLRequest.httpMethod's own setter already uppercases on assignment (confirmed: even
         // an adapter that assigns "get" ends up with "GET"), so this is defense-in-depth rather
         // than a fix for a reachable bug — kept for consistency between the two checks.
         let cacheKey: String? = (cacheable && request.httpMethod?.uppercased() == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
-        // Cache is only ever consulted on the first attempt — a retry means the caller's retry
-        // policy asked for a fresh network attempt, not an opportunistic cache hit.
-        if attempt == 0, let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
+        if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
             let decoded: T? = try? decodeWrapping(cached, decoder: decoder)
             if let decoded {
                 notifyStart(request)
@@ -88,65 +74,65 @@ actor CDYelpURLSession {
             cache.remove(forKey: cacheKey)
         }
 
-        // requestDidStart fires once per logical request (attempt 0 only).
-        if attempt == 0 {
-            notifyStart(request)
-        }
+        // requestDidStart fires once per logical request, regardless of retry count.
+        notifyStart(request)
 
-        let data: Data
-        let httpResponse: HTTPURLResponse?
-        do {
-            let (responseData, response) = try await session.data(for: request)
-            data = responseData
-            httpResponse = response as? HTTPURLResponse
-        } catch {
-            let networkError = CDYelpNetworkError.networkFailure(underlying: error)
-            return try await retryOrThrow(
-                networkError, request: request, decoder: decoder, cacheable: cacheable, attempt: attempt, response: nil, data: nil
-            )
-        }
+        var attempt: UInt = 0
+        while true {
+            let data: Data
+            let httpResponse: HTTPURLResponse?
+            do {
+                let (responseData, response) = try await session.data(for: request)
+                data = responseData
+                httpResponse = response as? HTTPURLResponse
+            } catch {
+                let networkError = CDYelpNetworkError.networkFailure(underlying: error)
+                try await retryOrThrow(networkError, request: request, attempt: attempt, response: nil, data: nil)
+                attempt += 1
+                continue
+            }
 
-        // Guard before notifying monitors so non-HTTP responses don't produce a false success signal.
-        guard let httpResponse else {
-            let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
-            notifyComplete(request, response: nil, data: data, error: error)
-            throw error
-        }
+            // Guard before notifying monitors so non-HTTP responses don't produce a false success signal.
+            guard let httpResponse else {
+                let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
+                notifyComplete(request, response: nil, data: data, error: error)
+                throw error
+            }
 
-        let statusCode = httpResponse.statusCode
-        guard (200 ..< 300).contains(statusCode) else {
-            let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
-            return try await retryOrThrow(
-                error, request: request, decoder: decoder, cacheable: cacheable, attempt: attempt, response: httpResponse, data: data
-            )
-        }
+            let statusCode = httpResponse.statusCode
+            guard (200 ..< 300).contains(statusCode) else {
+                let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
+                try await retryOrThrow(error, request: request, attempt: attempt, response: httpResponse, data: data)
+                attempt += 1
+                continue
+            }
 
-        let decoded: T
-        do {
-            decoded = try decodeWrapping(data, decoder: decoder)
-        } catch {
-            notifyComplete(request, response: httpResponse, data: data, error: error)
-            throw error
+            let decoded: T
+            do {
+                decoded = try decodeWrapping(data, decoder: decoder)
+            } catch {
+                notifyComplete(request, response: httpResponse, data: data, error: error)
+                throw error
+            }
+            notifyComplete(request, response: httpResponse, data: data, error: nil)
+            if let cacheKey {
+                cache?.set(data: data, forKey: cacheKey)
+            }
+            return decoded
         }
-        notifyComplete(request, response: httpResponse, data: data, error: nil)
-        if let cacheKey {
-            cache?.set(data: data, forKey: cacheKey)
-        }
-        return decoded
     }
 
     /// Shared retry-or-throw path for both the transport-error and HTTP-status-error cases:
-    /// decides whether to retry, notifies monitors, sleeps for backoff, then recurses into
-    /// `perform`, or notifies monitors of the terminal failure and rethrows.
-    private func retryOrThrow<T: Decodable>(
+    /// returns (having slept for backoff and notified monitors) if the caller should retry, or
+    /// notifies monitors of the terminal failure and throws `error` (or a cancellation error
+    /// from the backoff sleep itself) if it shouldn't.
+    private func retryOrThrow(
         _ error: CDYelpNetworkError,
         request: URLRequest,
-        decoder: JSONDecoder?,
-        cacheable: Bool,
         attempt: UInt,
         response: HTTPURLResponse?,
         data: Data?
-    ) async throws -> T {
+    ) async throws {
         guard shouldRetry(error, httpMethod: request.httpMethod, attempt: attempt) else {
             notifyComplete(request, response: response, data: data, error: error)
             throw error
@@ -158,7 +144,6 @@ actor CDYelpURLSession {
             notifyComplete(request, response: response, data: data, error: error)
             throw error
         }
-        return try await perform(request, decoder: decoder, cacheable: cacheable, attempt: attempt + 1)
     }
 
     private func restoreHeaderIfStripped(_ header: String, originalValue: String?, in request: inout URLRequest) {

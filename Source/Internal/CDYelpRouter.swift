@@ -159,7 +159,7 @@ enum CDYelpRouter {
     }
 
     /// Thrown when a Double query parameter is NaN or infinite and has no valid wire representation.
-    struct NonFiniteQueryValueError: LocalizedError, Sendable {
+    struct NonFiniteQueryValueError: LocalizedError {
         let parameterName: String
         var errorDescription: String? {
             "Query parameter '\(parameterName)' is not a finite number (NaN or infinite) and cannot be sent to the Yelp Fusion API."
