@@ -27,14 +27,16 @@ actor CDYelpURLSession {
 
     func perform<T: Decodable>(
         _ urlRequest: URLRequest,
-        decoder: JSONDecoder? = nil
+        decoder: JSONDecoder? = nil,
+        cacheable: Bool = true
     ) async throws -> T {
-        try await perform(urlRequest, decoder: decoder, attempt: 0)
+        try await perform(urlRequest, decoder: decoder, cacheable: cacheable, attempt: 0)
     }
 
     private func perform<T: Decodable>(
         _ urlRequest: URLRequest,
         decoder: JSONDecoder?,
+        cacheable: Bool,
         attempt: UInt
     ) async throws -> T {
         // Run adapters only on the first attempt. On retry, urlRequest is already the adapted
@@ -61,7 +63,7 @@ actor CDYelpURLSession {
             }
         }
 
-        let cacheKey: String? = (request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
+        let cacheKey: String? = (cacheable && request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
         // Cache is only ever consulted on the first attempt — a retry means the caller's retry
         // policy asked for a fresh network attempt, not an opportunistic cache hit.
         if attempt == 0, let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
@@ -93,7 +95,7 @@ actor CDYelpURLSession {
         } catch {
             let networkError = CDYelpNetworkError.networkFailure(underlying: error)
             return try await retryOrThrow(
-                networkError, request: request, decoder: decoder, attempt: attempt, response: nil, data: nil
+                networkError, request: request, decoder: decoder, cacheable: cacheable, attempt: attempt, response: nil, data: nil
             )
         }
 
@@ -108,7 +110,7 @@ actor CDYelpURLSession {
         guard (200 ..< 300).contains(statusCode) else {
             let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
             return try await retryOrThrow(
-                error, request: request, decoder: decoder, attempt: attempt, response: httpResponse, data: data
+                error, request: request, decoder: decoder, cacheable: cacheable, attempt: attempt, response: httpResponse, data: data
             )
         }
 
@@ -133,6 +135,7 @@ actor CDYelpURLSession {
         _ error: CDYelpNetworkError,
         request: URLRequest,
         decoder: JSONDecoder?,
+        cacheable: Bool,
         attempt: UInt,
         response: HTTPURLResponse?,
         data: Data?
@@ -148,7 +151,7 @@ actor CDYelpURLSession {
             notifyComplete(request, response: response, data: data, error: error)
             throw error
         }
-        return try await perform(request, decoder: decoder, attempt: attempt + 1)
+        return try await perform(request, decoder: decoder, cacheable: cacheable, attempt: attempt + 1)
     }
 
     private func notifyStart(_ request: URLRequest) {

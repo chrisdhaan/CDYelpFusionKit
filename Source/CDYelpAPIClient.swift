@@ -635,7 +635,9 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeEnd: dateRangeEnd
         )
         let request = try CDYelpRouter.engagement(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        // Engagement metrics are near-real-time analytics and were never cached prior to v6 —
+        // preserve that behavior explicitly rather than inheriting the shared GET-cache default.
+        return try await urlSession.perform(request, cacheable: false)
     }
 
     ///
@@ -654,7 +656,9 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!id.isEmpty, "A business ID is required.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: nil)
         let request = try CDYelpRouter.serviceOfferings(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        // Service offerings can change frequently and were never cached prior to v6 — preserve
+        // that behavior explicitly rather than inheriting the shared GET-cache default.
+        return try await urlSession.perform(request, cacheable: false)
     }
 
     ///
@@ -680,7 +684,9 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeEnd: dateRangeEnd
         )
         let request = try CDYelpRouter.businessInsights(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        // Business insights are analytics data and were never cached prior to v6 — preserve
+        // that behavior explicitly rather than inheriting the shared GET-cache default.
+        return try await urlSession.perform(request, cacheable: false)
     }
 
     ///
@@ -704,7 +710,9 @@ public final class CDYelpAPIClient: Sendable {
         if let count { precondition(count >= 1 && count <= 5, "count must be between 1 and 5.") }
         let parameters = Parameters.reviewHighlightsParameters(count: count, locale: locale, devicePlatform: devicePlatform)
         let request = try CDYelpRouter.reviewHighlights(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        // Review highlights were never cached prior to v6 — preserve that behavior explicitly
+        // rather than inheriting the shared GET-cache default.
+        return try await urlSession.perform(request, cacheable: false)
     }
 
     ///
@@ -750,6 +758,8 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!time.isEmpty, "A time is required (format: HH:MM).")
         let parameters = Parameters.openingsParameters(covers: covers, date: date, time: time, getCoversRange: getCoversRange)
         let request = try CDYelpRouter.openings(businessId: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        // Reservation openings are real-time availability and were never cached prior to v6 —
+        // preserve that behavior explicitly rather than inheriting the shared GET-cache default.
+        return try await urlSession.perform(request, cacheable: false)
     }
 }

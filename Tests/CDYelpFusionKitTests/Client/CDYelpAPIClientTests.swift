@@ -541,6 +541,32 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.allSatisfy { $0.error == nil })
     }
 
+    @Test func fetchOpeningsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
+        // Regression test: the unified caching pipeline caches any GET request whenever a cache
+        // is configured, but fetchOpenings (real-time reservation availability) — along with
+        // fetchEngagementMetrics, fetchServiceOfferings, fetchBusinessInsights, and
+        // fetchReviewHighlights — was never cached in the pre-v6 Alamofire client and must not
+        // silently become cache-eligible now. If it were cached, the second call below (after the
+        // stub is removed) would succeed with the stale cached response instead of failing.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "openings"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "openings") }
+
+        let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
+
+        // First call — network path, would also warm the cache if openings were cacheable.
+        _ = try await client.fetchOpenings(forBusinessId: "gary-danko-san-francisco", covers: 2, date: "2026-08-01", time: "19:00")
+
+        // Remove the stub so any network call fails; a cached response would let this succeed anyway.
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "openings")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchOpenings(forBusinessId: "gary-danko-san-francisco", covers: 2, date: "2026-08-01", time: "19:00")
+        }
+    }
+
     @Test func adapterThatRemovesAuthHeaderGetsAuthRestored() async throws {
         // An adapter that does a wholesale header replacement (allHTTPHeaderFields = [...])
         // inadvertently removes the Authorization header. The framework must detect this and
