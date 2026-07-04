@@ -45,6 +45,8 @@ actor CDYelpURLSession {
         var request = urlRequest
         if attempt == 0 {
             let authHeader = urlRequest.value(forHTTPHeaderField: "Authorization")
+            let acceptHeader = urlRequest.value(forHTTPHeaderField: "Accept")
+            let contentTypeHeader = urlRequest.value(forHTTPHeaderField: "Content-Type")
             do {
                 for adapter in adapters {
                     request = try adapter.adapt(request)
@@ -56,11 +58,13 @@ actor CDYelpURLSession {
                 notifyComplete(request, response: nil, data: nil, error: networkError)
                 throw networkError
             }
-            // Re-inject auth only if an adapter inadvertently removed it entirely; an adapter
-            // that sets a different value (e.g. token rotation) keeps its replacement.
-            if let authHeader, request.value(forHTTPHeaderField: "Authorization") == nil {
-                request.setValue(authHeader, forHTTPHeaderField: "Authorization")
-            }
+            // Re-inject a framework-set header only if an adapter inadvertently removed it
+            // entirely; an adapter that sets a different value (e.g. token rotation) keeps its
+            // replacement. Content-Type is only ever set on POST requests to begin with, so
+            // contentTypeHeader is nil (and this is a no-op) for every GET request.
+            restoreHeaderIfStripped("Authorization", originalValue: authHeader, in: &request)
+            restoreHeaderIfStripped("Accept", originalValue: acceptHeader, in: &request)
+            restoreHeaderIfStripped("Content-Type", originalValue: contentTypeHeader, in: &request)
         }
 
         let cacheKey: String? = (cacheable && request.httpMethod == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
@@ -152,6 +156,11 @@ actor CDYelpURLSession {
             throw error
         }
         return try await perform(request, decoder: decoder, cacheable: cacheable, attempt: attempt + 1)
+    }
+
+    private func restoreHeaderIfStripped(_ header: String, originalValue: String?, in request: inout URLRequest) {
+        guard let originalValue, request.value(forHTTPHeaderField: header) == nil else { return }
+        request.setValue(originalValue, forHTTPHeaderField: header)
     }
 
     private func notifyStart(_ request: URLRequest) {

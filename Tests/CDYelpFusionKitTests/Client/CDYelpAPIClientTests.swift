@@ -594,6 +594,52 @@ struct CDYelpAPIClientTests {
         #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
     }
 
+    @Test func adapterThatStripsHeadersGetsAcceptRestoredOnGetRequest() async throws {
+        // The same wholesale header replacement that strips Authorization also strips Accept.
+        // The framework must restore Accept, not just Authorization, on GET requests.
+        let fixture = try FixtureLoader.data(named: "search_response.json")
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let captor = RequestCapturingMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            eventMonitors: [captor],
+            requestAdapters: [HeaderStrippingAdapter()]
+        )
+        _ = try await client.searchBusinesses(
+            byTerm: "coffee", location: "SF",
+            latitude: nil, longitude: nil, radius: nil,
+            categories: nil, locale: nil, limit: nil, offset: nil,
+            sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+            attributes: nil
+        )
+
+        #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Accept") == "application/json")
+    }
+
+    @Test func adapterThatStripsHeadersGetsAcceptAndContentTypeRestoredOnPostRequest() async throws {
+        // The same wholesale header replacement on a POST endpoint (jobs) must restore both
+        // Accept and Content-Type, not just Authorization.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "jobs"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "jobs") }
+
+        let captor = RequestCapturingMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            eventMonitors: [captor],
+            requestAdapters: [HeaderStrippingAdapter()]
+        )
+        _ = try await client.fetchJobs(forQuery: "plumber")
+
+        #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Accept") == "application/json")
+        #expect(captor.capturedRequest?.value(forHTTPHeaderField: "Content-Type") == "application/json")
+    }
+
     @Test func adapterThatReplacesAuthHeaderKeepsItsValue() async throws {
         // An adapter that performs token rotation sets a new Authorization value.
         // The framework must preserve the adapter's value, not overwrite it with the init-time key.
