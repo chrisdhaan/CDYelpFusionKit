@@ -383,6 +383,43 @@ struct CDYelpAPIClientTests {
         #expect(spy.retryEventCount == 0)
     }
 
+    @Test func cancelledTransportErrorNeverRetriesEvenIfConfiguredAsRetryable() async {
+        // cancelAllTasks()/cancelAllPendingAPIRequests() cancel in-flight URLSessionDataTasks,
+        // which surfaces as URLError(.cancelled). If a caller's retryConfiguration opted into
+        // treating .cancelled as retryable, that must not resurrect a request the caller asked
+        // to terminate — .cancelled must never be retried regardless of retryableURLErrorCodes.
+        CDYelpMockURLProtocol.register(
+            stub: .init(transportError: .cancelled),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(
+                retryLimit: 3,
+                initialDelay: 0,
+                retryableURLErrorCodes: [.cancelled, .networkConnectionLost, .notConnectedToInternet, .timedOut]
+            ),
+            eventMonitors: [spy]
+        )
+        do {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.networkFailure to be thrown")
+        } catch CDYelpNetworkError.networkFailure {
+            // Correct
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.networkFailure but threw \(error)")
+        }
+        #expect(spy.retryEventCount == 0)
+    }
+
     @Test func http500FinalThrowIsSpecificHttpError() async {
         CDYelpMockURLProtocol.register(
             stub: .init(data: Data(), statusCode: 500),

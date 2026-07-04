@@ -253,6 +253,10 @@ actor CDYelpURLSession {
             return retryConfig.retryableHTTPStatusCodes.contains(statusCode)
         case let .networkFailure(underlying):
             guard let urlError = underlying as? URLError else { return false }
+            // .cancelled must never be retried, even if a caller's retryableURLErrorCodes
+            // includes it — cancelAllTasks()/cancelAllPendingAPIRequests() must reliably
+            // terminate an in-flight request rather than have it silently resent.
+            guard urlError.code != .cancelled else { return false }
             return retryConfig.retryableURLErrorCodes.contains(urlError.code)
         default:
             return false
