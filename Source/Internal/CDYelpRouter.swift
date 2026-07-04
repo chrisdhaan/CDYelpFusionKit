@@ -120,10 +120,20 @@ enum CDYelpRouter {
             let queryParams = queryParameters
             if !queryParams.isEmpty {
                 components.queryItems = queryParams.map {
-                    // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
-                    // encoding this library has always sent (previously via Alamofire's
-                    // default URLEncoding, whose boolEncoding is .numeric).
-                    let value = ($0.value as? Bool).map { $0 ? "1" : "0" } ?? String(describing: $0.value)
+                    let value: String
+                    if let boolValue = $0.value as? Bool {
+                        // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
+                        // encoding this library has always sent (previously via Alamofire's
+                        // default URLEncoding, whose boolEncoding is .numeric).
+                        value = boolValue ? "1" : "0"
+                    } else if let doubleValue = $0.value as? Double {
+                        // String(describing:) renders small magnitudes (e.g. latitude/longitude
+                        // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
+                        // don't parse as a coordinate. Always use fixed-point decimal notation.
+                        value = String(format: "%.8f", doubleValue)
+                    } else {
+                        value = String(describing: $0.value)
+                    }
                     return URLQueryItem(name: $0.key, value: value)
                 }
                 // URLComponents allows + per RFC 3986, but servers decode it as a space

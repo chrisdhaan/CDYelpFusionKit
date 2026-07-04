@@ -373,4 +373,17 @@ struct CDYelpRouterTests {
         #expect(urlString.contains("open_now=1"))
         #expect(!urlString.contains("open_now=true"))
     }
+
+    @Test func smallMagnitudeDoubleQueryParameterEncodesAsDecimalNotAScientific() throws {
+        // String(describing:) renders Doubles under ~0.0001 in scientific notation (e.g.
+        // "1e-05"), which is not a coordinate value the Yelp Fusion API can parse. Coordinates
+        // within roughly 11 meters of the equator or prime meridian must still encode decimally.
+        let router = CDYelpRouter.search(parameters: ["latitude": 0.00001, "longitude": -0.00005])
+        let request = try router.asURLRequest(apiKey: "test-key")
+        let urlString = request.url?.absoluteString ?? ""
+        #expect(!urlString.contains("e-05"))
+        #expect(!urlString.contains("e+"))
+        #expect(urlString.contains("latitude=0.00001000"))
+        #expect(urlString.contains("longitude=-0.00005000"))
+    }
 }
