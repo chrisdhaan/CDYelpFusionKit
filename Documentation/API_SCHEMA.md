@@ -71,7 +71,7 @@ This document maps every endpoint in the [Yelp Fusion REST API](https://docs.dev
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_search  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/search`  
-**Swift method:** `CDYelpAPIClient.searchBusinesses(byTerm:location:latitude:longitude:radius:categories:locale:limit:offset:sortBy:priceTiers:openNow:openAt:attributes:devicePlatform:reservationDate:reservationTime:reservationCovers:matchesPartySize:jobAlias:completion:)`  
+**Swift method:** `CDYelpAPIClient.searchBusinesses(byTerm:location:latitude:longitude:radius:categories:locale:limit:offset:sortBy:priceTiers:openNow:openAt:attributes:devicePlatform:reservationDate:reservationTime:reservationCovers:matchesPartySize:jobAlias:)`  
 **Response type:** `CDYelpSearchResponse.Business`
 
 #### Request parameters
@@ -108,7 +108,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_phone_search  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/search/phone`  
-**Swift method:** `CDYelpAPIClient.searchBusinesses(byPhoneNumber:locale:completion:)`  
+**Swift method:** `CDYelpAPIClient.searchBusinesses(byPhoneNumber:locale:)`  
 **Response type:** `CDYelpSearchResponse.Phone`
 
 #### Request parameters
@@ -127,7 +127,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_match  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/matches`  
-**Swift method:** `CDYelpAPIClient.searchBusinesses(name:addressOne:addressTwo:addressThree:city:state:country:latitude:longitude:phone:zipCode:yelpBusinessId:limit:matchThresholdType:completion:)`  
+**Swift method:** `CDYelpAPIClient.searchBusinesses(name:addressOne:addressTwo:addressThree:city:state:country:latitude:longitude:phone:zipCode:yelpBusinessId:limit:matchThresholdType:)`  
 **Response type:** `CDYelpSearchResponse.BusinessMatch`
 
 #### Request parameters
@@ -158,7 +158,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_info  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/{business_id_or_alias}`  
-**Swift method:** `CDYelpAPIClient.fetchBusiness(forId:locale:devicePlatform:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchBusiness(forId:locale:devicePlatform:)`  
 **Response type:** `CDYelpBusinessResponse` (wraps `CDYelpBusiness.Detailed`)
 
 #### Request parameters
@@ -178,7 +178,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_transaction_search  
 **HTTP method:** `GET`  
 **Path:** `/v3/transactions/{transaction_type}/search`  
-**Swift method:** `CDYelpAPIClient.searchTransactions(byType:location:latitude:longitude:term:categories:priceTiers:completion:)`  
+**Swift method:** `CDYelpAPIClient.searchTransactions(byType:location:latitude:longitude:term:categories:priceTiers:)`  
 **Response type:** `CDYelpSearchResponse.Transaction`
 
 #### Request parameters
@@ -203,7 +203,7 @@ Schema is correct. No changes needed.
 **HTTP method:** `POST`  
 **Path:** `/ai/chat/v2`  
 **Base URL:** `https://api.yelp.com` (no `/v3/` prefix)  
-**Swift method:** `CDYelpAPIClient.fetchAIChat(query:chatId:latitude:longitude:requestContext:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchAIChat(query:chatId:latitude:longitude:requestContext:)`  
 **Request type:** `CDYelpAIChatRequest`  
 **Response type:** `CDYelpAIChatResponse`
 
@@ -234,7 +234,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_get_businesses_engagement  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/engagement`  
-**Swift method:** `CDYelpAPIClient.fetchEngagementMetrics(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchEngagementMetrics(forBusinessIds:dateRangeStart:dateRangeEnd:)`  
 **Response type:** `CDYelpEngagementResponse`
 
 #### Request parameters
@@ -246,8 +246,6 @@ Schema is correct. No changes needed.
 | `date_range_end` | date | No | ✅ | End of date range |
 
 Schema is correct. No changes needed.
-}
-```
 
 ---
 
@@ -256,7 +254,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_service_offerings  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/{business_id_or_alias}/service_offerings`  
-**Swift method:** `CDYelpAPIClient.fetchServiceOfferings(forBusinessId:locale:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchServiceOfferings(forBusinessId:locale:)`  
 **Response type:** `CDYelpServiceOfferingsResponse`
 
 #### Request parameters
@@ -275,7 +273,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_businesses_insights  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/insights`  
-**Swift method:** `CDYelpAPIClient.fetchBusinessInsights(forBusinessIds:dateRangeStart:dateRangeEnd:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchBusinessInsights(forBusinessIds:dateRangeStart:dateRangeEnd:)`  
 **Response type:** `CDYelpBusinessInsightsResponse`
 
 #### Request parameters
@@ -299,7 +297,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_reviews  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/{business_id_or_alias}/reviews`  
-**Swift method:** `CDYelpAPIClient.fetchReviews(forBusinessId:locale:offset:limit:sortBy:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchReviews(forBusinessId:locale:offset:limit:sortBy:)`  
 **Response type:** `CDYelpReviewsResponse`
 
 #### Request parameters
@@ -321,7 +319,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_business_review_highlights  
 **HTTP method:** `GET`  
 **Path:** `/v3/businesses/{business_id_or_alias}/review_highlights`  
-**Swift method:** `CDYelpAPIClient.fetchReviewHighlights(forBusinessId:count:locale:devicePlatform:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchReviewHighlights(forBusinessId:count:locale:devicePlatform:)`  
 **Response type:** `CDYelpReviewHighlightsResponse`
 
 #### Request parameters
@@ -346,7 +344,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_events_search  
 **HTTP method:** `GET`  
 **Path:** `/v3/events`  
-**Swift method:** `CDYelpAPIClient.searchEvents(byLocale:offset:limit:sortBy:sortOn:startDate:endDate:categories:isFree:location:latitude:longitude:radius:excludedEvents:completion:)`  
+**Swift method:** `CDYelpAPIClient.searchEvents(byLocale:offset:limit:sortBy:sortOn:startDate:endDate:categories:isFree:location:latitude:longitude:radius:excludedEvents:)`  
 **Response type:** `CDYelpEventsResponse`
 
 #### Request parameters
@@ -377,7 +375,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_event  
 **HTTP method:** `GET`  
 **Path:** `/v3/events/{event_id}`  
-**Swift method:** `CDYelpAPIClient.fetchEvent(forId:locale:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchEvent(forId:locale:)`  
 **Response type:** `CDYelpEventResponse`
 
 #### Request parameters
@@ -396,7 +394,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_featured_event  
 **HTTP method:** `GET`  
 **Path:** `/v3/events/featured`  
-**Swift method:** `CDYelpAPIClient.fetchFeaturedEvent(forLocale:location:latitude:longitude:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchFeaturedEvent(forLocale:location:latitude:longitude:)`  
 **Response type:** `CDYelpEventResponse`
 
 #### Request parameters
@@ -421,7 +419,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_all_categories  
 **HTTP method:** `GET`  
 **Path:** `/v3/categories`  
-**Swift method:** `CDYelpAPIClient.fetchCategories(forLocale:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchCategories(forLocale:)`  
 **Response type:** `CDYelpCategoriesResponse`
 
 #### Request parameters
@@ -439,7 +437,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_categories  
 **HTTP method:** `GET`  
 **Path:** `/v3/categories/{alias}`  
-**Swift method:** `CDYelpAPIClient.fetchCategory(forAlias:andLocale:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchCategory(forAlias:andLocale:)`  
 **Response type:** `CDYelpCategoryResponse`
 
 #### Request parameters
@@ -462,7 +460,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_get_jobs  
 **HTTP method:** `POST`  
 **Path:** `/v3/jobs`  
-**Swift method:** `CDYelpAPIClient.fetchJobs(forQuery:locale:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchJobs(forQuery:locale:)`  
 **Response type:** `CDYelpJobsResponse`
 
 #### Request body (JSON)
@@ -485,7 +483,7 @@ Schema is correct. No changes needed.
 **API reference:** https://docs.developer.yelp.com/reference/v3_autocomplete  
 **HTTP method:** `GET`  
 **Path:** `/v3/autocomplete`  
-**Swift method:** `CDYelpAPIClient.autocompleteBusinesses(byText:latitude:longitude:locale:completion:)`  
+**Swift method:** `CDYelpAPIClient.autocompleteBusinesses(byText:latitude:longitude:locale:)`  
 **Response type:** `CDYelpAutoCompleteResponse`
 
 #### Request parameters
@@ -695,7 +693,7 @@ public func addBusinessesToWebhookAllowList(_ businessIds: [String]) async throw
 **API reference:** https://docs.developer.yelp.com/reference/v3_openings  
 **HTTP method:** `GET`  
 **Path:** `/v3/bookings/{business_id_or_alias}/openings`  
-**Swift method:** `CDYelpAPIClient.fetchOpenings(forBusinessId:covers:date:time:getCoversRange:completion:)`  
+**Swift method:** `CDYelpAPIClient.fetchOpenings(forBusinessId:covers:date:time:getCoversRange:)`  
 **Response type:** `CDYelpOpeningsResponse`
 
 #### Request parameters
