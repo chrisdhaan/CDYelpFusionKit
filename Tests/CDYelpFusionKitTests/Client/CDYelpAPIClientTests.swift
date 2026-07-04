@@ -637,6 +637,38 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.allSatisfy { $0.error == nil })
     }
 
+    @Test func cacheHitDecodeFailureFallsThroughToLiveNetworkFetch() async throws {
+        // Regression test: a cache-hit whose bytes fail to decode (e.g. a stale entry left over
+        // after an app update changes the Codable model) must not fail the caller if a live
+        // fetch would succeed right now. The pipeline should evict the corrupt entry and fall
+        // through to the network, not throw immediately, and re-cache the fresh response.
+        let cache = CDYelpResponseCache(configuration: CDYelpCacheConfiguration(ttl: 300))
+        let request = try CDYelpRouter.search(parameters: ["term": "coffee"]).asURLRequest(apiKey: "test-key")
+        let cacheKey = CDYelpCacheKey.key(for: request)
+        cache.set(data: Data(#"{"total":"not-an-int"}"#.utf8), forKey: cacheKey)
+
+        let validData = try FixtureLoader.data(named: "search_response.json")
+        CDYelpMockURLProtocol.register(stub: .init(data: validData, statusCode: 200), forURLContaining: "businesses/search")
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let sessionConfiguration = URLSessionConfiguration.ephemeral
+        sessionConfiguration.protocolClasses = [CDYelpMockURLProtocol.self]
+        let urlSession = CDYelpURLSession(
+            session: URLSession(configuration: sessionConfiguration),
+            makeDecoder: { JSONDecoder() },
+            cache: cache,
+            monitors: [],
+            adapters: [],
+            retryConfig: .disabled
+        )
+
+        let response: CDYelpSearchResponse.Business = try await urlSession.perform(request)
+        #expect(response.businesses?.isEmpty == false)
+
+        // The corrupt entry must have been evicted, and the fresh response re-cached.
+        #expect(cache.data(forKey: cacheKey) != nil)
+    }
+
     @Test func fetchOpeningsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
         // Regression test: the unified caching pipeline caches any GET request whenever a cache
         // is configured, but fetchOpenings (real-time reservation availability) — along with

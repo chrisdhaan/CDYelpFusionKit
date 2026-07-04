@@ -75,18 +75,17 @@ actor CDYelpURLSession {
         // Cache is only ever consulted on the first attempt — a retry means the caller's retry
         // policy asked for a fresh network attempt, not an opportunistic cache hit.
         if attempt == 0, let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
-            notifyStart(request)
-            let decoded: T
-            do {
-                decoded = try decodeWrapping(cached, decoder: decoder)
-            } catch {
-                // Evict the undecodable entry so the next request falls through to the network.
-                cache.remove(forKey: cacheKey)
-                notifyComplete(request, response: nil, data: cached, error: error)
-                throw error
+            let decoded: T? = try? decodeWrapping(cached, decoder: decoder)
+            if let decoded {
+                notifyStart(request)
+                notifyComplete(request, response: nil, data: cached, error: nil)
+                return decoded
             }
-            notifyComplete(request, response: nil, data: cached, error: nil)
-            return decoded
+            // Evict the undecodable entry and fall through to a live network fetch below — a
+            // corrupt/stale cache entry (e.g. a model shape change after an app update) should
+            // not fail the caller when the network can serve a fresh response right now. No
+            // notifyStart/notifyComplete here: the single pair below covers this logical request.
+            cache.remove(forKey: cacheKey)
         }
 
         // requestDidStart fires once per logical request (attempt 0 only).
