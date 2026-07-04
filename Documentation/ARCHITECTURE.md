@@ -130,12 +130,14 @@ The response status code is checked. Non-2xx responses throw `CDYelpNetworkError
 
 #### 9. Retry
 
-When a retryable failure occurs (network error or retryable status code), the actor waits for the exponential backoff delay and recursively calls `perform(_:decoder:attempt:)` with `attempt + 1`:
+When a retryable failure occurs (network error or retryable status code), the actor waits for the exponential backoff delay and recursively calls `perform(_:decoder:cacheable:attempt:)` with `attempt + 1`:
 
 ```swift
-try await Task.sleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-return try await perform(urlRequest, decoder: decoder, attempt: attempt + 1)
+try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+return try await perform(urlRequest, decoder: decoder, cacheable: cacheable, attempt: attempt + 1)
 ```
+
+The backoff sleep is wrapped in `trackedSleep(nanoseconds:)` rather than a bare `Task.sleep` — see the Cancellation details under `CDYelpURLSession` in Key Types below.
 
 Monitors receive a `requestWillRetry` notification before each retry.
 
@@ -182,7 +184,11 @@ public final class CDYelpAPIClient: Sendable {
 
 `actor CDYelpURLSession`
 
-Internal Swift actor that owns the `URLSession` and orchestrates the full pipeline: adapter chain → cache → network → retry → decode. Being an actor ensures its mutable state (the `CDYelpResponseCache` instance) is protected from concurrent access without additional locks. Task cancellation is delegated to `URLSession.getTasksWithCompletionHandler` — no separate task list is maintained.
+Internal Swift actor that owns the `URLSession` and orchestrates the full pipeline: adapter chain → cache → network → retry → decode. Being an actor ensures its mutable state (the `CDYelpResponseCache` instance) is protected from concurrent access without additional locks.
+
+Cancellation has two parts, both awaited by `cancelAllTasks()` so cancellation is guaranteed to be in effect by the time it returns:
+- In-flight network calls: cancelled via `await session.tasks`, then `task.cancel()` on each data/upload/download task.
+- In-flight retry-backoff sleeps: tracked in `retrySleepTasks: [UUID: Task<Void, Error>]` (populated by `trackedSleep(nanoseconds:)`) and cancelled explicitly. A plain `Task.sleep` wouldn't observe `cancelAllTasks()`, and — because it runs in an unstructured `Task` for tracking purposes — wouldn't observe the ambient caller's `Task.cancel()` either without `trackedSleep` forwarding it via `withTaskCancellationHandler`.
 
 ### CDYelpRouter
 
