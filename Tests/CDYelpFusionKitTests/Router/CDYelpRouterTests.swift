@@ -386,4 +386,15 @@ struct CDYelpRouterTests {
         #expect(urlString.contains("latitude=0.00001000"))
         #expect(urlString.contains("longitude=-0.00005000"))
     }
+
+    @Test func nonFiniteDoubleQueryParameterThrowsInvalidRequest() throws {
+        // NaN/Infinity have no valid coordinate representation — %.8f would silently render
+        // "nan"/"inf"/"-inf" and send a malformed request instead of failing fast.
+        for nonFinite in [Double.nan, .infinity, -.infinity] {
+            let router = CDYelpRouter.search(parameters: ["latitude": nonFinite])
+            #expect(throws: CDYelpNetworkError.self) {
+                _ = try router.asURLRequest(apiKey: "test-key")
+            }
+        }
+    }
 }

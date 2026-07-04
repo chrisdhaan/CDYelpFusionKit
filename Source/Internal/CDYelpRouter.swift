@@ -119,7 +119,7 @@ enum CDYelpRouter {
             }
             let queryParams = queryParameters
             if !queryParams.isEmpty {
-                components.queryItems = queryParams.map {
+                components.queryItems = try queryParams.map {
                     let value: String
                     if let boolValue = $0.value as? Bool {
                         // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
@@ -127,6 +127,11 @@ enum CDYelpRouter {
                         // default URLEncoding, whose boolEncoding is .numeric).
                         value = boolValue ? "1" : "0"
                     } else if let doubleValue = $0.value as? Double {
+                        // NaN/Infinity have no valid coordinate representation — %.8f would
+                        // silently render "nan"/"inf"/"-inf" and send a malformed request.
+                        guard doubleValue.isFinite else {
+                            throw CDYelpNetworkError.invalidRequest(underlying: NonFiniteQueryValueError(parameterName: $0.key))
+                        }
                         // String(describing:) renders small magnitudes (e.g. latitude/longitude
                         // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
                         // don't parse as a coordinate. Always use fixed-point decimal notation.
@@ -150,6 +155,14 @@ enum CDYelpRouter {
             urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             return urlRequest
+        }
+    }
+
+    /// Thrown when a Double query parameter is NaN or infinite and has no valid wire representation.
+    struct NonFiniteQueryValueError: LocalizedError, Sendable {
+        let parameterName: String
+        var errorDescription: String? {
+            "Query parameter '\(parameterName)' is not a finite number (NaN or infinite) and cannot be sent to the Yelp Fusion API."
         }
     }
 
