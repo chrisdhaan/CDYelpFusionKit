@@ -613,7 +613,7 @@ API methods throw `CDYelpNetworkError` when requests fail.
 public enum CDYelpNetworkError: Error {
     case invalidRequest(underlying: Error)
     case networkFailure(underlying: Error)
-    case httpError(statusCode: Int, data: Data)
+    case httpError(statusCode: Int, data: Data, headers: [String: String])
     case decodingFailed(underlying: Error)
 }
 ```
@@ -631,7 +631,7 @@ Task {
             print("Invalid request — check search parameters: \(underlying)")
         case .networkFailure(let underlying):
             print("Network failure: \(underlying.localizedDescription)")
-        case .httpError(let statusCode, _):
+        case .httpError(let statusCode, _, _):
             print("HTTP \(statusCode) — check API key validity and rate limits")
         case .decodingFailed(let underlying):
             print("Decoding failed: \(underlying)")
@@ -761,6 +761,12 @@ let client = CDYelpAPIClient(
 ```
 
 Multiple adapters can be passed; they are applied in order.
+
+> **Note:** `adapt(_:)` runs once per logical API call, before the first attempt — not once per
+> retry attempt. If a request is retried (see [Retry Strategy](#retry-strategy)), the same
+> already-adapted request is resent unchanged. An adapter that refreshes an expiring auth token or
+> signs requests with a per-attempt nonce/timestamp should refresh proactively rather than relying
+> on being re-invoked mid-retry.
 
 ---
 
@@ -1016,13 +1022,13 @@ visionOS support is available on Apple Vision Pro:
 **`CDYelpNetworkError.invalidRequest(underlying:)`**
 - Check that search parameters are valid (e.g., location is not empty)
 
-**`CDYelpNetworkError.httpError(statusCode: 401, _)`**
+**`CDYelpNetworkError.httpError(statusCode: 401, _, _)`**
 - API key is invalid or missing
 
-**`CDYelpNetworkError.httpError(statusCode: 429, _)`**
-- Rate limit exceeded — enable `CDYelpRetryConfiguration` for automatic backoff
+**`CDYelpNetworkError.httpError(statusCode: 429, _, _)`**
+- Rate limit exceeded — enable `CDYelpRetryConfiguration` for automatic backoff. If the response includes a `Retry-After` header, it's honored automatically instead of blind exponential backoff.
 
-**`CDYelpNetworkError.httpError(statusCode: 404, _)`**
+**`CDYelpNetworkError.httpError(statusCode: 404, _, _)`**
 - Verify the business or event ID exists
 
 **`CDYelpNetworkError.decodingFailed`**
