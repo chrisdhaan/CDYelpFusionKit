@@ -32,6 +32,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 - `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidRequest(underlying:)`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:headers:)`, `.decodingFailed(underlying:)`
 - `CDYelpURLSession` — internal Swift actor managing the URLSession-based networking pipeline: adapter chain, cache, network dispatch, retry, and decode
+- Retry backoff honors a server-provided `Retry-After` response header when present, instead of always using exponential backoff
 
 ### Updated
 
@@ -41,6 +42,8 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - `CDYelpRouter` internal routing enum renamed from `CDYelpNativeRouter` for continuity with v5 naming; `asURLRequest()` now requires an explicit `apiKey:` parameter
 - `CDYelpRetryConfiguration` default retry codes updated to `[408, 429, 500, 502, 503, 504]`
 - `cancelAllPendingAPIRequests()` is now `async` — it suspends until in-flight tasks and retry backoff sleeps are actually cancelled, instead of returning before cancellation takes effect
+- Requests include `User-Agent` and `Accept-Language` headers (matching Alamofire's previous default header behavior); any framework-set header a request adapter removes entirely is automatically restored
+- `fetchAIChat` requires `latitude` and `longitude` to be provided together, or not at all — see the 6.0 migration guide
 
 ### Removed
 
@@ -48,21 +51,6 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter` internal Alamofire bridge types
 - Alamofire SPM and CocoaPods dependency
 - `isAuthenticated()` method — `init` already enforces a non-empty `apiKey` via `precondition`, so the check could never return `false`
-
-### Fixed
-
-- `CDYelpURLSession`: a non-`HTTPURLResponse` result now goes through the same retry/backoff path as every other failure, instead of throwing immediately with no retry
-- `CDYelpURLSession`: header restoration after the adapter chain now snapshots and restores the full original header set, instead of a hardcoded list of three header names
-- `CDYelpRouter`: restored a `User-Agent` header (dropped along with Alamofire's `HTTPHeaders.default`) so requests identify the framework again
-- `CDYelpRouter`: endpoint cacheability is now owned by a single `isCacheable` property on the router instead of being repeated as a boolean literal at each call site
-- `CDYelpRouter`: de-duplicated the `.aiChat`/`.jobs` POST request construction and the repeated Authorization/Accept/Content-Type header assembly into shared helpers
-- `CDYelpEventMonitor.requestDidComplete` documentation now states `response` can be `nil` for a cache-served result
-- `CDYelpRouter`: restored an `Accept-Language` header (dropped along with Alamofire's `HTTPHeaders.default`) derived from `Locale.preferredLanguages`
-- `CDYelpMockURLProtocol`: an invalid stub (e.g. an out-of-range status code) now fails the request with `URLError(.badServerResponse)` instead of crashing on a force-unwrapped `HTTPURLResponse`
-- `fetchAIChat`: documented the new `latitude`/`longitude` joint precondition (see migration guide item 8) — passing only one now traps intentionally instead of silently dropping the coordinate
-- `CDYelpNetworkError.httpError` now carries response `headers:`, and retry backoff honors a server-provided `Retry-After` header when present instead of always using blind exponential backoff
-- `CDYelpRouter.isCacheable` is now an explicit allow-list of endpoints safe to cache, so a newly-added endpoint defaults to not cacheable instead of cacheable
-- `CDYelpRequestAdapter`: documented that `adapt(_:)` runs once per logical call rather than once per retry attempt, so token-refresh/request-signing adapters aren't re-invoked mid-retry
 
 ---
 
