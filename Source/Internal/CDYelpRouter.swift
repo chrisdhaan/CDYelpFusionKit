@@ -74,17 +74,29 @@ enum CDYelpRouter {
         return raw.addingPercentEncoding(withAllowedCharacters: unreserved) ?? raw
     }
 
-    /// Sets the headers every request needs (User-Agent, Authorization, Accept), plus
-    /// Content-Type when a request body is present, so the header set only needs to be
+    /// Sets the headers every request needs (User-Agent, Authorization, Accept, Accept-Language),
+    /// plus Content-Type when a request body is present, so the header set only needs to be
     /// expressed once regardless of which branch of `asURLRequest(apiKey:)` builds the request.
     private static func applyStandardHeaders(to urlRequest: inout URLRequest, apiKey: String, hasBody: Bool) {
         urlRequest.setValue(CDYelpFusionKitUserAgent, forHTTPHeaderField: "User-Agent")
         urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        urlRequest.setValue(defaultAcceptLanguage, forHTTPHeaderField: "Accept-Language")
         if hasBody {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
     }
+
+    /// Mirrors Alamofire's `HTTPHeaders.default` Accept-Language header, which the pre-v6
+    /// Alamofire-backed session sent on every request via `sessionConfiguration.httpAdditionalHeaders`.
+    /// Encodes the device's preferred languages with decreasing quality values, e.g.
+    /// `"en-US;q=1.0, fr-FR;q=0.9"`.
+    private static let defaultAcceptLanguage: String = {
+        Locale.preferredLanguages.prefix(6).enumerated().map { index, languageCode in
+            let quality = 1.0 - (Double(index) * 0.1)
+            return "\(languageCode);q=\(quality)"
+        }.joined(separator: ", ")
+    }()
 
     /// Builds a POST request with a JSON-encoded body, shared by the `.aiChat` and `.jobs`
     /// branches of `asURLRequest(apiKey:)` — they differ only in base URL and encoded value.
@@ -168,14 +180,22 @@ enum CDYelpRouter {
     /// Single source of truth for which endpoints are safe to serve from the response cache.
     /// `CDYelpURLSession.perform` also requires the request be a GET before honoring this, so the
     /// value here is only consulted for endpoints that could ever be cacheable in practice.
+    ///
+    /// Deliberately an explicit allow-list with no `default` case: a newly added `CDYelpRouter`
+    /// case fails to compile here until someone decides which bucket it belongs in, rather than
+    /// silently inheriting "cacheable" the way an exclusion list with a `default: true` would.
     var isCacheable: Bool {
         switch self {
-        case .engagement, .serviceOfferings, .businessInsights, .reviewHighlights, .openings:
-            // Near-real-time analytics/availability endpoints were never cached prior to v6 —
-            // preserve that behavior explicitly rather than inheriting the default.
-            return false
-        default:
+        case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete,
+             .event, .events, .featuredEvent, .allCategories, .categoryDetails:
             return true
+        case .engagement, .serviceOfferings, .businessInsights, .reviewHighlights, .openings:
+            // Near-real-time analytics/availability endpoints were never cached prior to v6.
+            return false
+        case .aiChat, .jobs:
+            // POST endpoints; CDYelpURLSession's GET-only cache-key gate would exclude these
+            // regardless, but listing them here keeps this switch exhaustive and self-documenting.
+            return false
         }
     }
 
