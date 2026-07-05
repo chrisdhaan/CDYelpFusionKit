@@ -85,8 +85,7 @@ actor CDYelpURLSession {
                 httpResponse = response as? HTTPURLResponse
             } catch {
                 let networkError = CDYelpNetworkError.networkFailure(underlying: error)
-                try await retryOrThrow(networkError, request: request, attempt: attempt, response: nil, data: nil)
-                attempt += 1
+                try await retryOrThrow(networkError, request: request, attempt: &attempt, response: nil, data: nil)
                 continue
             }
 
@@ -95,16 +94,14 @@ actor CDYelpURLSession {
             // occasionally hands back a non-HTTP URLResponse still benefits from retry/backoff.
             guard let httpResponse else {
                 let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
-                try await retryOrThrow(error, request: request, attempt: attempt, response: nil, data: data)
-                attempt += 1
+                try await retryOrThrow(error, request: request, attempt: &attempt, response: nil, data: data)
                 continue
             }
 
             let statusCode = httpResponse.statusCode
             guard (200 ..< 300).contains(statusCode) else {
                 let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data, headers: httpResponse.stringHeaderFields)
-                try await retryOrThrow(error, request: request, attempt: attempt, response: httpResponse, data: data)
-                attempt += 1
+                try await retryOrThrow(error, request: request, attempt: &attempt, response: httpResponse, data: data)
                 continue
             }
 
@@ -124,13 +121,14 @@ actor CDYelpURLSession {
     }
 
     /// Shared retry-or-throw path for both the transport-error and HTTP-status-error cases:
-    /// returns (having slept for backoff and notified monitors) if the caller should retry, or
-    /// notifies monitors of the terminal failure and throws `error` (or a cancellation error
-    /// from the backoff sleep itself) if it shouldn't.
+    /// returns (having slept for backoff, notified monitors, and advanced `attempt`) if the
+    /// caller should retry, or notifies monitors of the terminal failure and throws `error` (or
+    /// a cancellation error from the backoff sleep itself) if it shouldn't. Owns incrementing
+    /// `attempt` itself so every call site doesn't have to repeat `attempt += 1` after this returns.
     private func retryOrThrow(
         _ error: CDYelpNetworkError,
         request: URLRequest,
-        attempt: UInt,
+        attempt: inout UInt,
         response: HTTPURLResponse?,
         data: Data?
     ) async throws {
@@ -145,6 +143,7 @@ actor CDYelpURLSession {
             notifyComplete(request, response: response, data: data, error: error)
             throw error
         }
+        attempt += 1
     }
 
     private func restoreHeaderIfStripped(_ header: String, originalValue: String?, in request: inout URLRequest) {
