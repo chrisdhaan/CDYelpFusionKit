@@ -91,12 +91,10 @@ enum CDYelpRouter {
     /// Alamofire-backed session sent on every request via `sessionConfiguration.httpAdditionalHeaders`.
     /// Encodes the device's preferred languages with decreasing quality values, e.g.
     /// `"en-US;q=1.0, fr-FR;q=0.9"`.
-    private static let defaultAcceptLanguage: String = {
-        Locale.preferredLanguages.prefix(6).enumerated().map { index, languageCode in
-            let quality = 1.0 - (Double(index) * 0.1)
-            return "\(languageCode);q=\(quality)"
-        }.joined(separator: ", ")
-    }()
+    private static let defaultAcceptLanguage: String = Locale.preferredLanguages.prefix(6).enumerated().map { index, languageCode in
+        let quality = 1.0 - (Double(index) * 0.1)
+        return "\(languageCode);q=\(quality)"
+    }.joined(separator: ", ")
 
     /// Builds a POST request with a JSON-encoded body, shared by the `.aiChat` and `.jobs`
     /// branches of `asURLRequest(apiKey:)` — they differ only in base URL and encoded value.
