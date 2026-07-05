@@ -56,6 +56,10 @@ final class CDYelpResponseCache: @unchecked Sendable {
 
     func data(forKey key: String) -> Data? {
         guard let entry = cache.object(forKey: key as NSString) else { return nil }
+        // Do not removeObject(forKey:) here: a concurrent writer could replace this key with a
+        // fresh entry between this expiry check and the removal, and removeObject would then
+        // delete that fresh entry out from under it (TOCTOU). A pure miss is safe; NSCache's own
+        // countLimit/totalCostLimit eviction reclaims stale entries without this race.
         guard entry.expiresAt > Date() else { return nil }
         return entry.data
     }
