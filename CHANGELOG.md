@@ -30,7 +30,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidRequest(underlying:)`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:)`, `.decodingFailed(underlying:)`
+- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidRequest(underlying:)`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:headers:)`, `.decodingFailed(underlying:)`
 - `CDYelpURLSession` — internal Swift actor managing the URLSession-based networking pipeline: adapter chain, cache, network dispatch, retry, and decode
 
 ### Updated
@@ -57,6 +57,12 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - `CDYelpRouter`: endpoint cacheability is now owned by a single `isCacheable` property on the router instead of being repeated as a boolean literal at each call site
 - `CDYelpRouter`: de-duplicated the `.aiChat`/`.jobs` POST request construction and the repeated Authorization/Accept/Content-Type header assembly into shared helpers
 - `CDYelpEventMonitor.requestDidComplete` documentation now states `response` can be `nil` for a cache-served result
+- `CDYelpRouter`: restored an `Accept-Language` header (dropped along with Alamofire's `HTTPHeaders.default`) derived from `Locale.preferredLanguages`
+- `CDYelpMockURLProtocol`: an invalid stub (e.g. an out-of-range status code) now fails the request with `URLError(.badServerResponse)` instead of crashing on a force-unwrapped `HTTPURLResponse`
+- `fetchAIChat`: documented the new `latitude`/`longitude` joint precondition (see migration guide item 8) — passing only one now traps intentionally instead of silently dropping the coordinate
+- `CDYelpNetworkError.httpError` now carries response `headers:`, and retry backoff honors a server-provided `Retry-After` header when present instead of always using blind exponential backoff
+- `CDYelpRouter.isCacheable` is now an explicit allow-list of endpoints safe to cache, so a newly-added endpoint defaults to not cacheable instead of cacheable
+- `CDYelpRequestAdapter`: documented that `adapt(_:)` runs once per logical call rather than once per retry attempt, so token-refresh/request-signing adapters aren't re-invoked mid-retry
 
 ---
 

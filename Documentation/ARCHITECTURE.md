@@ -126,18 +126,19 @@ for monitor in monitors {
 
 #### 8. HTTP Status Validation
 
-The response status code is checked. Non-2xx responses throw `CDYelpNetworkError.httpError(statusCode:data:)`. Retryable status codes (e.g. 429, 500–504) trigger the retry path.
+The response status code is checked. Non-2xx responses throw `CDYelpNetworkError.httpError(statusCode:data:headers:)`. Retryable status codes (e.g. 429, 500–504) trigger the retry path.
 
 #### 9. Retry
 
-When a retryable failure occurs (network error or retryable status code), the actor waits for the exponential backoff delay and recursively calls `perform(_:decoder:cacheable:attempt:)` with `attempt + 1`:
+When a retryable failure occurs (network error or retryable status code), the actor waits for the backoff delay and loops back to the top of an explicit `while true` loop with `attempt + 1`, rather than recursing:
 
 ```swift
-try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
-return try await perform(urlRequest, decoder: decoder, cacheable: cacheable, attempt: attempt + 1)
+try await retryOrThrow(error, request: request, attempt: attempt, response: httpResponse, data: data)
+attempt += 1
+continue
 ```
 
-The backoff sleep is wrapped in `trackedSleep(nanoseconds:)` rather than a bare `Task.sleep` — see the Cancellation details under `CDYelpURLSession` in Key Types below.
+The backoff delay prefers a server-provided `Retry-After` response header (seconds or HTTP-date form) when present, falling back to exponential backoff (`initialDelay * 2^attempt`, capped at 300s) otherwise. The sleep itself is wrapped in `trackedSleep(nanoseconds:)` rather than a bare `Task.sleep` — see the Cancellation details under `CDYelpURLSession` in Key Types below.
 
 Monitors receive a `requestWillRetry` notification before each retry.
 
@@ -206,7 +207,7 @@ Four-case native Swift error type thrown by all async API methods:
 |------|---------|
 | `.invalidRequest(underlying:)` | URL could not be constructed from the given parameters |
 | `.networkFailure(underlying:)` | URLSession threw an error (no connectivity, timeout, etc.) |
-| `.httpError(statusCode:data:)` | Server returned a non-2xx status code |
+| `.httpError(statusCode:data:headers:)` | Server returned a non-2xx status code |
 | `.decodingFailed(underlying:)` | `JSONDecoder` failed to parse the response body |
 
 ---
@@ -415,8 +416,8 @@ Task {
             // Bad parameters: underlying contains the construction error
         case .networkFailure(let underlying):
             // No connectivity, timeout, etc.
-        case .httpError(let statusCode, let data):
-            // Non-2xx response; data contains the raw body for inspection
+        case .httpError(let statusCode, let data, let headers):
+            // Non-2xx response; data contains the raw body, headers the response headers
         case .decodingFailed(let underlying):
             // JSON parse error
         }
@@ -433,9 +434,9 @@ Errors surface directly from `async throws` — there is no `nil`-on-error patte
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `.invalidRequest(underlying:)` | Search parameters contain invalid characters | Validate input strings |
-| `.httpError(statusCode: 401, _)` | Invalid API key | Check key in Yelp Developer Console |
-| `.httpError(statusCode: 429, _)` | Rate limit exceeded | Enable `CDYelpRetryConfiguration` |
-| `.httpError(statusCode: 404, _)` | Business or event ID not found | Verify the ID exists |
+| `.httpError(statusCode: 401, _, _)` | Invalid API key | Check key in Yelp Developer Console |
+| `.httpError(statusCode: 429, _, _)` | Rate limit exceeded | Enable `CDYelpRetryConfiguration` |
+| `.httpError(statusCode: 404, _, _)` | Business or event ID not found | Verify the ID exists |
 | `.networkFailure` | No connectivity or timeout | Check network; retry with backoff |
 | `.decodingFailed` | API schema changed | Update CDYelpFusionKit |
 
