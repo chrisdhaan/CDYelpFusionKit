@@ -33,9 +33,7 @@ actor CDYelpURLSession {
         // One-time setup, run exactly once per logical API call regardless of how many retry
         // attempts occur below: the adapter chain, header restoration, and cache lookup.
         var request = urlRequest
-        let authHeader = urlRequest.value(forHTTPHeaderField: "Authorization")
-        let acceptHeader = urlRequest.value(forHTTPHeaderField: "Accept")
-        let contentTypeHeader = urlRequest.value(forHTTPHeaderField: "Content-Type")
+        let originalHeaders = urlRequest.allHTTPHeaderFields ?? [:]
         do {
             for adapter in adapters {
                 request = try adapter.adapt(request)
@@ -47,13 +45,13 @@ actor CDYelpURLSession {
             notifyComplete(request, response: nil, data: nil, error: networkError)
             throw networkError
         }
-        // Re-inject a framework-set header only if an adapter inadvertently removed it
-        // entirely; an adapter that sets a different value (e.g. token rotation) keeps its
-        // replacement. Content-Type is only ever set on POST requests to begin with, so
-        // contentTypeHeader is nil (and this is a no-op) for every GET request.
-        restoreHeaderIfStripped("Authorization", originalValue: authHeader, in: &request)
-        restoreHeaderIfStripped("Accept", originalValue: acceptHeader, in: &request)
-        restoreHeaderIfStripped("Content-Type", originalValue: contentTypeHeader, in: &request)
+        // Re-inject any framework-set header an adapter inadvertently removed entirely — not
+        // just the handful of headers CDYelpRouter happens to set today. An adapter that sets a
+        // different value for a given header (e.g. token rotation) keeps its replacement; only
+        // headers missing from the adapted request are restored from their original value.
+        for (header, originalValue) in originalHeaders {
+            restoreHeaderIfStripped(header, originalValue: originalValue, in: &request)
+        }
 
         // .uppercased() matches the normalization shouldRetry uses for idempotentHTTPMethods.
         // URLRequest.httpMethod's own setter already uppercases on assignment (confirmed: even
@@ -93,10 +91,13 @@ actor CDYelpURLSession {
             }
 
             // Guard before notifying monitors so non-HTTP responses don't produce a false success signal.
+            // Routed through retryOrThrow like every other failure path below, so a transport that
+            // occasionally hands back a non-HTTP URLResponse still benefits from retry/backoff.
             guard let httpResponse else {
                 let error = CDYelpNetworkError.networkFailure(underlying: URLError(.badServerResponse))
-                notifyComplete(request, response: nil, data: data, error: error)
-                throw error
+                try await retryOrThrow(error, request: request, attempt: attempt, response: nil, data: data)
+                attempt += 1
+                continue
             }
 
             let statusCode = httpResponse.statusCode
