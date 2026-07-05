@@ -124,6 +124,14 @@ await client.cancelAllPendingAPIRequests()
 
 ---
 
+### 7. Parameter validation now traps in Release builds too
+
+In v5.x, most parameter validation (radius/limit bounds, required strings, coordinate ranges, etc. — see `API_SCHEMA.md` for the full per-endpoint list) used `assert`, which is compiled out in optimized Release builds; only the `apiKey` check in `init` used `precondition`. In v6.0, every one of these checks uses `precondition`, consistent with `init`'s existing `apiKey` check — they now trap in Release builds as well as Debug.
+
+This is intentional: a request built from invalid input (e.g. a radius over 40,000, an empty required string, an out-of-range coordinate) was never going to succeed against the Yelp Fusion API, so failing fast at the call site is preferable to silently sending a malformed request in Debug and doing the same silently in Release. If your app has a code path that could pass out-of-range values to any `CDYelpAPIClient` method, fix the call site — it will now crash instead of silently proceeding.
+
+---
+
 ## What Did Not Change
 
 The following public API surface is **identical** in v6.0 — no call-site changes needed beyond the completion handler conversion:

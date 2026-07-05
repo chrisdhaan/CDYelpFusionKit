@@ -82,10 +82,10 @@ This document maps every endpoint in the [Yelp Fusion REST API](https://docs.dev
 | `location` | string | Conditional | ✅ | Required unless lat/lng provided |
 | `latitude` | number | Conditional | ✅ | Required unless location provided |
 | `longitude` | number | Conditional | ✅ | Required unless location provided |
-| `radius` | integer | No | ✅ | Max 40,000 m; asserted in client |
+| `radius` | integer | No | ✅ | Max 40,000 m; precondition-checked in client |
 | `categories` | array | No | ✅ | Comma-joined `CDYelpCategoryAlias` raw values |
 | `locale` | string | No | ✅ | `CDYelpLocale` raw value |
-| `limit` | integer | No | ✅ | 0–50; asserted in client |
+| `limit` | integer | No | ✅ | 0–50; precondition-checked in client |
 | `offset` | integer | No | ✅ | 0–1000 |
 | `sort_by` | string | No | ✅ | `CDYelpBusinessSortType` raw value |
 | `price` | array | No | ✅ | Comma-joined `CDYelpPriceTier` raw values |
@@ -134,19 +134,19 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `name` | string | Yes | ✅ | Max 64 chars; asserted |
-| `address1` | string | Yes | ✅ | Max 64 chars; asserted |
+| `name` | string | Yes | ✅ | Max 64 chars; precondition-checked |
+| `address1` | string | Yes | ✅ | Max 64 chars; precondition-checked |
 | `address2` | string | No | ✅ | |
 | `address3` | string | No | ✅ | |
-| `city` | string | Yes | ✅ | Max 64 chars; asserted |
-| `state` | string | Yes | ✅ | ISO 3166-2; max 3 chars; asserted |
-| `country` | string | Yes | ✅ | ISO 3166-1 alpha-2; max 2 chars; asserted |
+| `city` | string | Yes | ✅ | Max 64 chars; precondition-checked |
+| `state` | string | Yes | ✅ | ISO 3166-2; max 3 chars; precondition-checked |
+| `country` | string | Yes | ✅ | ISO 3166-1 alpha-2; max 2 chars; precondition-checked |
 | `postal_code` | string | No | ✅ | |
-| `latitude` | number | No | ✅ | –90 to +90; asserted |
-| `longitude` | number | No | ✅ | –180 to +180; asserted |
-| `phone` | string | No | ✅ | Max 32 chars; asserted |
+| `latitude` | number | No | ✅ | –90 to +90; precondition-checked |
+| `longitude` | number | No | ✅ | –180 to +180; precondition-checked |
+| `phone` | string | No | ✅ | Max 32 chars; precondition-checked |
 | `yelp_business_id` | string | No | ✅ | |
-| `limit` | integer | No | ✅ | 1–10; asserted |
+| `limit` | integer | No | ✅ | 1–10; precondition-checked |
 | `match_threshold` | string | No | ✅ | `CDYelpBusinessMatchThresholdType` raw value |
 
 Schema is correct. No changes needed.
@@ -165,7 +165,7 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_id_or_alias` | string | Yes | ✅ | Path parameter; asserted non-empty |
+| `business_id_or_alias` | string | Yes | ✅ | Path parameter; precondition-checked non-empty |
 | `locale` | string | No | ✅ | |
 | `device_platform` | string | No | ✅ | Values: `android`, `ios`, `mobile-generic` |
 
@@ -211,7 +211,7 @@ Schema is correct. No changes needed.
 
 | Field | Type | Required | Implemented | Notes |
 |-------|------|----------|-------------|-------|
-| `query` | string | Yes | ✅ | Max 1000 characters; asserted in client |
+| `query` | string | Yes | ✅ | Max 1000 characters; precondition-checked in client |
 | `chat_id` | string | No | ✅ | Conversation ID for multi-turn chat |
 | `user_context` | object | No | ✅ | `{ "latitude": Double, "longitude": Double }` |
 | `request_context` | object | No | ✅ | Key-value context for response format control |
@@ -241,7 +241,7 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_ids` | array of strings | Yes | ✅ | 1–20 items; comma-joined; asserted in client |
+| `business_ids` | array of strings | Yes | ✅ | 1–20 items; comma-joined; precondition-checked in client |
 | `date_range_start` | date | No | ✅ | Start of date range |
 | `date_range_end` | date | No | ✅ | End of date range |
 
@@ -261,7 +261,7 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_id_or_alias` | string | Yes | ✅ | Path parameter; asserted non-empty |
+| `business_id_or_alias` | string | Yes | ✅ | Path parameter; precondition-checked non-empty |
 | `locale` | string | No | ✅ | |
 
 Schema is correct. No changes needed.
@@ -280,9 +280,9 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_ids` | array of strings | Yes | ✅ | 1–20 items; comma-joined; asserted in client |
-| `date_range_start` | string | Yes | ✅ | Format: `YYYYMM`; asserted non-empty |
-| `date_range_end` | string | Yes | ✅ | Format: `YYYYMM`; asserted non-empty |
+| `business_ids` | array of strings | Yes | ✅ | 1–20 items; comma-joined; precondition-checked in client |
+| `date_range_start` | string | Yes | ✅ | Format: `YYYYMM`; precondition-checked non-empty |
+| `date_range_end` | string | Yes | ✅ | Format: `YYYYMM`; precondition-checked non-empty |
 
 Schema is correct. No changes needed.
 
@@ -307,7 +307,7 @@ Schema is correct. No changes needed.
 | `business_id_or_alias` | string | Yes | ✅ | Path parameter |
 | `locale` | string | No | ✅ | |
 | `offset` | integer | No | ✅ | 0–1000 |
-| `limit` | integer | No | ✅ | 0–50; asserted in client |
+| `limit` | integer | No | ✅ | 0–50; precondition-checked in client |
 | `sort_by` | string | No | ✅ | `CDYelpReviewSortType` raw value |
 
 Schema is correct. No changes needed.
@@ -326,8 +326,8 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_id_or_alias` | string | Yes | ✅ | Path parameter; asserted non-empty |
-| `count` | integer | No | ✅ | 1–5; asserted in client |
+| `business_id_or_alias` | string | Yes | ✅ | Path parameter; precondition-checked non-empty |
+| `count` | integer | No | ✅ | 1–5; precondition-checked in client |
 | `locale` | string | No | ✅ | |
 | `device_platform` | string | No | ✅ | Values: `android`, `ios`, `mobile-generic` |
 
@@ -353,7 +353,7 @@ Schema is correct. No changes needed.
 |-----------|------|----------|-------------|-------|
 | `locale` | string | No | ✅ | |
 | `offset` | integer | No | ✅ | 0–1000 |
-| `limit` | integer | No | ✅ | 0–50; asserted |
+| `limit` | integer | No | ✅ | 0–50; precondition-checked |
 | `sort_by` | string | No | ✅ | `CDYelpEventSortByType` raw value |
 | `sort_on` | string | No | ✅ | `CDYelpEventSortOnType` raw value |
 | `start_date` | integer | No | ✅ | Unix timestamp from `Date` |
@@ -363,7 +363,7 @@ Schema is correct. No changes needed.
 | `location` | string | Conditional | ✅ | |
 | `latitude` | number | Conditional | ✅ | |
 | `longitude` | number | Conditional | ✅ | |
-| `radius` | integer | No | ✅ | Max 40,000 m; asserted |
+| `radius` | integer | No | ✅ | Max 40,000 m; precondition-checked |
 | `excluded_events` | array | No | ✅ | |
 
 Schema is correct. No changes needed.
@@ -382,7 +382,7 @@ Schema is correct. No changes needed.
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `event_id` | string | Yes | ✅ | Path parameter; asserted non-empty |
+| `event_id` | string | Yes | ✅ | Path parameter; precondition-checked non-empty |
 | `locale` | string | No | ✅ | |
 
 Schema is correct. No changes needed.
@@ -467,7 +467,7 @@ Schema is correct. No changes needed.
 
 | Field | Type | Required | Implemented | Notes |
 |-------|------|----------|-------------|-------|
-| `query` | string | Yes | ✅ | 1–1000 characters; asserted in client |
+| `query` | string | Yes | ✅ | 1–1000 characters; precondition-checked in client |
 | `locale` | string | No | ✅ | `CDYelpLocale` raw value |
 
 Schema is correct. No changes needed.
@@ -700,10 +700,10 @@ public func addBusinessesToWebhookAllowList(_ businessIds: [String]) async throw
 
 | Parameter | Type | Required | Implemented | Notes |
 |-----------|------|----------|-------------|-------|
-| `business_id_or_alias` | string | Yes | ✅ | Path parameter; asserted non-empty |
-| `covers` | integer | Yes | ✅ | Party size 1–10; asserted in client |
-| `date` | string | Yes | ✅ | Format `YYYY-MM-DD`; asserted non-empty |
-| `time` | string | Yes | ✅ | Format `HH:MM`; asserted non-empty |
+| `business_id_or_alias` | string | Yes | ✅ | Path parameter; precondition-checked non-empty |
+| `covers` | integer | Yes | ✅ | Party size 1–10; precondition-checked in client |
+| `date` | string | Yes | ✅ | Format `YYYY-MM-DD`; precondition-checked non-empty |
+| `time` | string | Yes | ✅ | Format `HH:MM`; precondition-checked non-empty |
 | `get_covers_range` | boolean | No | ✅ | Include `CDYelpCoversRange` in response |
 
 #### Response fields

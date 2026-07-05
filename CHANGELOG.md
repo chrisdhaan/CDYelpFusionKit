@@ -49,6 +49,15 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - Alamofire SPM and CocoaPods dependency
 - `isAuthenticated()` method — `init` already enforces a non-empty `apiKey` via `precondition`, so the check could never return `false`
 
+### Fixed
+
+- `CDYelpURLSession`: a non-`HTTPURLResponse` result now goes through the same retry/backoff path as every other failure, instead of throwing immediately with no retry
+- `CDYelpURLSession`: header restoration after the adapter chain now snapshots and restores the full original header set, instead of a hardcoded list of three header names
+- `CDYelpRouter`: restored a `User-Agent` header (dropped along with Alamofire's `HTTPHeaders.default`) so requests identify the framework again
+- `CDYelpRouter`: endpoint cacheability is now owned by a single `isCacheable` property on the router instead of being repeated as a boolean literal at each call site
+- `CDYelpRouter`: de-duplicated the `.aiChat`/`.jobs` POST request construction and the repeated Authorization/Accept/Content-Type header assembly into shared helpers
+- `CDYelpEventMonitor.requestDidComplete` documentation now states `response` can be `nil` for a cache-served result
+
 ---
 
 ## [5.1.0] - 2026-06-15
