@@ -8,7 +8,7 @@ import Foundation
 /// responsible for ensuring the error is safe to cross actor or task boundaries.
 public enum CDYelpNetworkError: Error, @unchecked Sendable {
     case invalidRequest(underlying: Error)
-    case httpError(statusCode: Int, data: Data)
+    case httpError(statusCode: Int, data: Data, headers: [String: String])
     case decodingFailed(underlying: Error)
     case networkFailure(underlying: Error)
 }

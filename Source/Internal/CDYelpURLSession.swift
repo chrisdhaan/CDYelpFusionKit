@@ -102,7 +102,7 @@ actor CDYelpURLSession {
 
             let statusCode = httpResponse.statusCode
             guard (200 ..< 300).contains(statusCode) else {
-                let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data)
+                let error = CDYelpNetworkError.httpError(statusCode: statusCode, data: data, headers: httpResponse.stringHeaderFields)
                 try await retryOrThrow(error, request: request, attempt: attempt, response: httpResponse, data: data)
                 attempt += 1
                 continue
@@ -140,7 +140,7 @@ actor CDYelpURLSession {
         }
         notifyRetry(request, retryCount: Int(attempt + 1))
         do {
-            try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt))
+            try await trackedSleep(nanoseconds: backoffNanoseconds(attempt: attempt, error: error))
         } catch {
             notifyComplete(request, response: response, data: data, error: error)
             throw error
@@ -238,7 +238,7 @@ actor CDYelpURLSession {
         guard attempt < retryConfig.retryLimit else { return false }
         guard let httpMethod, Self.idempotentHTTPMethods.contains(httpMethod.uppercased()) else { return false }
         switch error {
-        case let .httpError(statusCode, _):
+        case let .httpError(statusCode, _, _):
             return retryConfig.retryableHTTPStatusCodes.contains(statusCode)
         case let .networkFailure(underlying):
             guard let urlError = underlying as? URLError else { return false }
@@ -252,9 +252,48 @@ actor CDYelpURLSession {
         }
     }
 
-    private func backoffNanoseconds(attempt: UInt) -> UInt64 {
+    /// Prefers a server-provided `Retry-After` header (seconds or HTTP-date form) over blind
+    /// exponential backoff when the failing response supplies one, so a rate-limited endpoint
+    /// that tells the client exactly how long to wait is honored instead of guessed at.
+    private func backoffNanoseconds(attempt: UInt, error: CDYelpNetworkError) -> UInt64 {
         let maxDelay: TimeInterval = 300
+        if case let .httpError(_, _, headers) = error, let retryAfter = Self.retryAfterInterval(from: headers) {
+            return UInt64(max(0, min(retryAfter, maxDelay)) * 1_000_000_000)
+        }
         let delay = min(retryConfig.initialDelay * pow(2.0, Double(attempt)), maxDelay)
         return UInt64(max(0, delay) * 1_000_000_000)
+    }
+
+    /// Parses a `Retry-After` header value per RFC 9110 §10.2.3: either a non-negative integer
+    /// number of seconds, or an HTTP-date to wait until. Returns nil for anything else so the
+    /// caller falls back to exponential backoff instead of trusting a malformed value.
+    private static func retryAfterInterval(from headers: [String: String]) -> TimeInterval? {
+        guard let value = headers.first(where: { $0.key.caseInsensitiveCompare("Retry-After") == .orderedSame })?.value else {
+            return nil
+        }
+        if let seconds = TimeInterval(value.trimmingCharacters(in: .whitespaces)), seconds >= 0 {
+            return seconds
+        }
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "GMT")
+        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
+        guard let date = formatter.date(from: value) else { return nil }
+        return max(0, date.timeIntervalSinceNow)
+    }
+}
+
+extension HTTPURLResponse {
+    /// Snapshots `allHeaderFields` as `[String: String]` for `CDYelpNetworkError.httpError`,
+    /// dropping any non-String key/value pairs (HTTPURLResponse's header dictionary is typed
+    /// as `[AnyHashable: Any]`, but HTTP header names and values are always strings in practice).
+    var stringHeaderFields: [String: String] {
+        let pairs = allHeaderFields.compactMap { key, value -> (String, String)? in
+            guard let key = key as? String, let value = value as? String else { return nil }
+            return (key, value)
+        }
+        // uniquingKeysWith rather than uniqueKeysWithValues: HTTPURLResponse can report the same
+        // header name differing only in case (e.g. proxies/CDNs), which would otherwise trap.
+        return Dictionary(pairs, uniquingKeysWith: { first, _ in first })
     }
 }

@@ -61,7 +61,7 @@ struct CDYelpAPIClientTests {
                 attributes: nil
             )
             Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
-        } catch let CDYelpNetworkError.httpError(statusCode, _) {
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
             #expect(statusCode == 404)
         } catch {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
@@ -439,7 +439,7 @@ struct CDYelpAPIClientTests {
                 attributes: nil
             )
             Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
-        } catch let CDYelpNetworkError.httpError(statusCode, _) {
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
             #expect(statusCode == 500)
         } catch {
             Issue.record("Expected CDYelpNetworkError.httpError(500) but threw \(error)")
