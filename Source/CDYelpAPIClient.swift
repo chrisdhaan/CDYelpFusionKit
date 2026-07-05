@@ -70,8 +70,9 @@ public final class CDYelpAPIClient: Sendable {
 
     ///
     /// Initializes a new CDYelpAPIClient object with a custom URLSessionConfiguration. This
-    /// overload exists primarily so ``CDYelpMockClientFactory`` can inject a configuration whose
-    /// `protocolClasses` route requests through ``CDYelpMockURLProtocol`` for testing.
+    /// overload exists primarily so `CDYelpMockClientFactory` (in the separate `CDYelpFusionKitTesting`
+    /// target) can inject a configuration whose `protocolClasses` route requests through
+    /// `CDYelpMockURLProtocol` for testing.
     ///
     /// - parameters:
     ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
