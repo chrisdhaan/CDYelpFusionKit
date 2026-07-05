@@ -74,6 +74,32 @@ enum CDYelpRouter {
         return raw.addingPercentEncoding(withAllowedCharacters: unreserved) ?? raw
     }
 
+    /// Sets the headers every request needs (User-Agent, Authorization, Accept), plus
+    /// Content-Type when a request body is present, so the header set only needs to be
+    /// expressed once regardless of which branch of `asURLRequest(apiKey:)` builds the request.
+    private static func applyStandardHeaders(to urlRequest: inout URLRequest, apiKey: String, hasBody: Bool) {
+        urlRequest.setValue(CDYelpFusionKitUserAgent, forHTTPHeaderField: "User-Agent")
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        if hasBody {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+    }
+
+    /// Builds a POST request with a JSON-encoded body, shared by the `.aiChat` and `.jobs`
+    /// branches of `asURLRequest(apiKey:)` — they differ only in base URL and encoded value.
+    private static func postRequest(url: URL, apiKey: String, encoding encode: () throws -> Data) throws -> URLRequest {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: true)
+        do {
+            urlRequest.httpBody = try encode()
+        } catch {
+            throw CDYelpNetworkError.invalidRequest(underlying: error)
+        }
+        return urlRequest
+    }
+
     func asURLRequest(apiKey: String) throws -> URLRequest {
         switch self {
         case let .aiChat(request):
@@ -81,36 +107,18 @@ enum CDYelpRouter {
             guard let url = URL(string: CDYelpURL.rootBase + path) else {
                 throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
             }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "POST"
-            urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-            do {
-                urlRequest.httpBody = try JSONEncoder().encode(request)
-            } catch {
-                throw CDYelpNetworkError.invalidRequest(underlying: error)
-            }
-            return urlRequest
+            return try Self.postRequest(url: url, apiKey: apiKey) { try JSONEncoder().encode(request) }
 
         case let .jobs(query, locale):
             // jobs: POST + JSON body under /v3/ base
             guard let url = URL(string: CDYelpURL.base + path) else {
                 throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
             }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "POST"
-            urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-            var body: [String: String] = ["query": query]
-            if let locale { body["locale"] = locale }
-            do {
-                urlRequest.httpBody = try JSONEncoder().encode(body)
-            } catch {
-                throw CDYelpNetworkError.invalidRequest(underlying: error)
+            return try Self.postRequest(url: url, apiKey: apiKey) {
+                var body: [String: String] = ["query": query]
+                if let locale { body["locale"] = locale }
+                return try JSONEncoder().encode(body)
             }
-            return urlRequest
 
         default:
             // All other cases: GET + URL query parameters
@@ -152,9 +160,22 @@ enum CDYelpRouter {
             }
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
-            urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+            Self.applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: false)
             return urlRequest
+        }
+    }
+
+    /// Single source of truth for which endpoints are safe to serve from the response cache.
+    /// `CDYelpURLSession.perform` also requires the request be a GET before honoring this, so the
+    /// value here is only consulted for endpoints that could ever be cacheable in practice.
+    var isCacheable: Bool {
+        switch self {
+        case .engagement, .serviceOfferings, .businessInsights, .reviewHighlights, .openings:
+            // Near-real-time analytics/availability endpoints were never cached prior to v6 —
+            // preserve that behavior explicitly rather than inheriting the default.
+            return false
+        default:
+            return true
         }
     }
 

@@ -33,3 +33,7 @@ enum CDYelpURL {
     static let deepLink = "yelp4:"
     static let web = "https://yelp.com/"
 }
+
+/// Identifies this framework to the Yelp Fusion API on every request. Alamofire previously set
+/// this implicitly via `HTTPHeaders.default`; the native `URLSession` client sets it explicitly.
+let CDYelpFusionKitUserAgent = "CDYelpFusionKit/6.0.0"

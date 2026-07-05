@@ -204,8 +204,9 @@ public final class CDYelpAPIClient: Sendable {
             matchesPartySize: matchesPartySize,
             jobAlias: jobAlias
         )
-        let request = try CDYelpRouter.search(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.search(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -223,8 +224,9 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpSearchResponse.Phone {
         precondition(!phoneNumber.isEmpty, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
         let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber, locale: locale)
-        let request = try CDYelpRouter.phone(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.phone(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -262,8 +264,9 @@ public final class CDYelpAPIClient: Sendable {
             categories: categories,
             priceTiers: priceTiers
         )
-        let request = try CDYelpRouter.transactions(type: type.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.transactions(type: type.rawValue, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -283,8 +286,9 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpBusinessResponse {
         precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API business endpoint.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
-        let request = try CDYelpRouter.business(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.business(id: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -364,8 +368,9 @@ public final class CDYelpAPIClient: Sendable {
             limit: limit,
             matchThresholdType: matchThresholdType
         )
-        let request = try CDYelpRouter.matches(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.matches(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -391,10 +396,11 @@ public final class CDYelpAPIClient: Sendable {
         if let offset { precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
         if let limit { precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
-        let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let router = CDYelpRouter.reviews(id: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
-        return try await urlSession.perform(request, decoder: decoder)
+        return try await urlSession.perform(request, decoder: decoder, cacheable: router.isCacheable)
     }
 
     ///
@@ -416,8 +422,9 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpAutoCompleteResponse {
         precondition(!text.isEmpty, "A search term is required to query the Yelp Fusion API autocomplete endpoint.")
         let parameters = Parameters.autocompleteParameters(withText: text, latitude: latitude, longitude: longitude, locale: locale)
-        let request = try CDYelpRouter.autocomplete(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.autocomplete(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     // MARK: - Event Endpoints
@@ -437,10 +444,11 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpEventResponse {
         precondition(!id.isEmpty, "An event id is required to query the Yelp Fusion API event endpoint.")
         let parameters = Parameters.eventParameters(withLocale: locale)
-        let request = try CDYelpRouter.event(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+        let router = CDYelpRouter.event(id: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-        return try await urlSession.perform(request, decoder: decoder)
+        return try await urlSession.perform(request, decoder: decoder, cacheable: router.isCacheable)
     }
 
     ///
@@ -498,10 +506,11 @@ public final class CDYelpAPIClient: Sendable {
             radius: radius,
             excludedEvents: excludedEvents
         )
-        let request = try CDYelpRouter.events(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let router = CDYelpRouter.events(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-        return try await urlSession.perform(request, decoder: decoder)
+        return try await urlSession.perform(request, decoder: decoder, cacheable: router.isCacheable)
     }
 
     ///
@@ -531,10 +540,11 @@ public final class CDYelpAPIClient: Sendable {
             latitude: latitude,
             longitude: longitude
         )
-        let request = try CDYelpRouter.featuredEvent(parameters: parameters).asURLRequest(apiKey: apiKey)
+        let router = CDYelpRouter.featuredEvent(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
         let decoder = decoderConfiguration.makeDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-        return try await urlSession.perform(request, decoder: decoder)
+        return try await urlSession.perform(request, decoder: decoder, cacheable: router.isCacheable)
     }
 
     // MARK: - Category Endpoints
@@ -549,8 +559,9 @@ public final class CDYelpAPIClient: Sendable {
     ///
     public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
         let parameters = Parameters.categoriesParameters(withLocale: locale)
-        let request = try CDYelpRouter.allCategories(parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.allCategories(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -568,8 +579,9 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpCategoryResponse {
         precondition(!alias.rawValue.isEmpty, "A category alias is required to query the Yelp Fusion API category details endpoint.")
         let parameters = Parameters.categoriesParameters(withLocale: locale)
-        let request = try CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -609,8 +621,9 @@ public final class CDYelpAPIClient: Sendable {
             userContext: userContext,
             requestContext: requestContext
         )
-        let urlRequest = try CDYelpRouter.aiChat(request: chatRequest).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(urlRequest)
+        let router = CDYelpRouter.aiChat(request: chatRequest)
+        let urlRequest = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(urlRequest, cacheable: router.isCacheable)
     }
 
     ///
@@ -634,10 +647,9 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        let request = try CDYelpRouter.engagement(parameters: parameters).asURLRequest(apiKey: apiKey)
-        // Engagement metrics are near-real-time analytics and were never cached prior to v6 —
-        // preserve that behavior explicitly rather than inheriting the shared GET-cache default.
-        return try await urlSession.perform(request, cacheable: false)
+        let router = CDYelpRouter.engagement(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -655,10 +667,9 @@ public final class CDYelpAPIClient: Sendable {
     ) async throws -> CDYelpServiceOfferingsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: nil)
-        let request = try CDYelpRouter.serviceOfferings(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        // Service offerings can change frequently and were never cached prior to v6 — preserve
-        // that behavior explicitly rather than inheriting the shared GET-cache default.
-        return try await urlSession.perform(request, cacheable: false)
+        let router = CDYelpRouter.serviceOfferings(id: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -683,10 +694,9 @@ public final class CDYelpAPIClient: Sendable {
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        let request = try CDYelpRouter.businessInsights(parameters: parameters).asURLRequest(apiKey: apiKey)
-        // Business insights are analytics data and were never cached prior to v6 — preserve
-        // that behavior explicitly rather than inheriting the shared GET-cache default.
-        return try await urlSession.perform(request, cacheable: false)
+        let router = CDYelpRouter.businessInsights(parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -709,10 +719,9 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!id.isEmpty, "A business ID is required.")
         if let count { precondition(count >= 1 && count <= 5, "count must be between 1 and 5.") }
         let parameters = Parameters.reviewHighlightsParameters(count: count, locale: locale, devicePlatform: devicePlatform)
-        let request = try CDYelpRouter.reviewHighlights(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        // Review highlights were never cached prior to v6 — preserve that behavior explicitly
-        // rather than inheriting the shared GET-cache default.
-        return try await urlSession.perform(request, cacheable: false)
+        let router = CDYelpRouter.reviewHighlights(id: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -729,8 +738,9 @@ public final class CDYelpAPIClient: Sendable {
         locale: CDYelpLocale? = nil
     ) async throws -> CDYelpJobsResponse {
         precondition(!query.isEmpty && query.count <= 1000, "A query of 1–1000 characters is required.")
-        let request = try CDYelpRouter.jobs(query: query, locale: locale?.rawValue).asURLRequest(apiKey: apiKey)
-        return try await urlSession.perform(request)
+        let router = CDYelpRouter.jobs(query: query, locale: locale?.rawValue)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 
     ///
@@ -757,9 +767,8 @@ public final class CDYelpAPIClient: Sendable {
         precondition(!date.isEmpty, "A date is required (format: YYYY-MM-DD).")
         precondition(!time.isEmpty, "A time is required (format: HH:MM).")
         let parameters = Parameters.openingsParameters(covers: covers, date: date, time: time, getCoversRange: getCoversRange)
-        let request = try CDYelpRouter.openings(businessId: id, parameters: parameters).asURLRequest(apiKey: apiKey)
-        // Reservation openings are real-time availability and were never cached prior to v6 —
-        // preserve that behavior explicitly rather than inheriting the shared GET-cache default.
-        return try await urlSession.perform(request, cacheable: false)
+        let router = CDYelpRouter.openings(businessId: id, parameters: parameters)
+        let request = try router.asURLRequest(apiKey: apiKey)
+        return try await urlSession.perform(request, cacheable: router.isCacheable)
     }
 }
