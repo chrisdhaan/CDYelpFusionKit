@@ -1142,6 +1142,112 @@ struct CDYelpAPIClientTests {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
         }
     }
+
+    @Test func fetchEventReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"id":"evt-1","name":"Test Event"}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "events/test-event-id"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events/test-event-id") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.fetchEvent(forId: "test-event-id", locale: nil)
+        #expect(response.event?.id == "evt-1")
+    }
+
+    @Test func fetchEventReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "events/test-event-id"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events/test-event-id") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.fetchEvent(forId: "test-event-id", locale: nil)
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func searchEventsReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"total":1,"events":[{"id":"evt-1","name":"Test Event"}]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "events"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchEvents(
+            byLocale: nil, offset: nil, limit: nil, sortBy: nil, sortOn: nil,
+            startDate: nil, endDate: nil, categories: nil, isFree: nil,
+            location: "San Francisco", latitude: nil, longitude: nil, radius: nil, excludedEvents: nil
+        )
+        #expect(response.total == 1)
+        #expect(response.events?.first?.id == "evt-1")
+    }
+
+    @Test func searchEventsReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "events"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.searchEvents(
+                byLocale: nil, offset: nil, limit: nil, sortBy: nil, sortOn: nil,
+                startDate: nil, endDate: nil, categories: nil, isFree: nil,
+                location: "San Francisco", latitude: nil, longitude: nil, radius: nil, excludedEvents: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func fetchFeaturedEventReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"id":"evt-1","name":"Test Event"}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "events/featured"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events/featured") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.fetchFeaturedEvent(
+            forLocale: nil, location: "San Francisco", latitude: nil, longitude: nil
+        )
+        #expect(response.event?.id == "evt-1")
+    }
+
+    @Test func fetchFeaturedEventReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "events/featured"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "events/featured") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.fetchFeaturedEvent(
+                forLocale: nil, location: "San Francisco", latitude: nil, longitude: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
 }
 
 // MARK: - Test Helpers
