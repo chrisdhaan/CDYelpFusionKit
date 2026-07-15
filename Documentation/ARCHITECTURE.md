@@ -74,9 +74,13 @@ urlComponents?.queryItems = queryParams.map {
 
 var request = URLRequest(url: urlComponents!.url!)
 request.httpMethod = "GET"
+// applyStandardHeaders sets all four headers below on every request, plus
+// Content-Type when a body is present (POST endpoints only).
 request.allHTTPHeaderFields = [
+    "User-Agent": CDYelpFusionKitUserAgent,
     "Authorization": "Bearer \(apiKey)",
-    "Accept": "application/json"
+    "Accept": "application/json",
+    "Accept-Language": defaultAcceptLanguage
 ]
 return request
 ```
@@ -95,12 +99,16 @@ This is where custom headers, correlation IDs, or request signing can be injecte
 
 #### 6. Cache Lookup
 
-The cache key is derived from the canonical URL (query parameters sorted alphabetically). If a cached response exists within its TTL, it is decoded and returned immediately — no network request is made.
+The cache key is derived from the canonical URL (query parameters sorted alphabetically). If a cached response exists within its TTL, it is decoded and returned immediately — no network request is made. If the cached bytes fail to decode (e.g. after a model shape change in an app update), the entry is evicted and execution falls through to a live network fetch below, rather than throwing — a stale, corrupt cache entry should not fail the caller when the network can serve a fresh response right now.
 
 ```swift
 let cacheKey = CDYelpCacheKey.key(for: request)
 if let cache, let cached = cache.data(forKey: cacheKey) {
-    return try decoder.decode(T.self, from: cached)
+    if let decoded = try? decoder.decode(T.self, from: cached) {
+        return decoded
+    }
+    cache.remove(forKey: cacheKey)
+    // ... falls through to the live network fetch below
 }
 ```
 
@@ -130,11 +138,10 @@ The response status code is checked. Non-2xx responses throw `CDYelpNetworkError
 
 #### 9. Retry
 
-When a retryable failure occurs (network error or retryable status code), the actor waits for the backoff delay and loops back to the top of an explicit `while true` loop with `attempt + 1`, rather than recursing:
+When a retryable failure occurs (network error or retryable status code), the actor waits for the backoff delay and loops back to the top of an explicit `while true` loop. `retryOrThrow` takes `attempt` as `inout` and increments it itself (so every call site doesn't repeat the increment) before returning to allow a retry, or notifies monitors and throws if the failure is terminal:
 
 ```swift
-try await retryOrThrow(error, request: request, attempt: attempt, response: httpResponse, data: data)
-attempt += 1
+try await retryOrThrow(error, request: request, attempt: &attempt, response: httpResponse, data: data)
 continue
 ```
 
