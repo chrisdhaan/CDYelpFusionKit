@@ -3,6 +3,10 @@ import CDYelpFusionKitTesting
 import Foundation
 import Testing
 
+/// .serialized is required: several tests register mock stub keys that are substrings of
+/// other tests' keys (e.g. "events" / "events/featured"), and CDYelpMockURLProtocol's stub
+/// lookup has no deterministic priority between overlapping keys — safe only because tests
+/// never run concurrently and each defers its own stub removal before the next test starts.
 @Suite(.serialized)
 struct CDYelpAPIClientTests {
     @Test func searchBusinessesReturnsDecodedResponse() async throws {
@@ -947,6 +951,8 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.first?.error != nil)
     }
 
+    // MARK: - Business Endpoints
+
     @Test func searchBusinessesByPhoneNumberReturnsDecodedResponse() async throws {
         let fixture = Data(#"{"total":1,"businesses":[{"id":"biz-1","name":"Test Biz"}]}"#.utf8)
         CDYelpMockURLProtocol.register(
@@ -1143,8 +1149,10 @@ struct CDYelpAPIClientTests {
         }
     }
 
+    // MARK: - Event Endpoints
+
     @Test func fetchEventReturnsDecodedResponse() async throws {
-        let fixture = Data(#"{"id":"evt-1","name":"Test Event"}"#.utf8)
+        let fixture = Data(#"{"id":"evt-1","name":"Test Event","time_start":"2026-08-15T19:00:00-07:00"}"#.utf8)
         CDYelpMockURLProtocol.register(
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "events/test-event-id"
@@ -1154,6 +1162,7 @@ struct CDYelpAPIClientTests {
         let client = CDYelpMockClientFactory.makeClient()
         let response = try await client.fetchEvent(forId: "test-event-id", locale: nil)
         #expect(response.event?.id == "evt-1")
+        #expect(response.event?.timeStart == DateFormatter.events.date(from: "2026-08-15T19:00:00-07:00"))
     }
 
     @Test func fetchEventReturns404AsSpecificHttpError() async {
@@ -1249,6 +1258,8 @@ struct CDYelpAPIClientTests {
         }
     }
 
+    // MARK: - Category Endpoints
+
     @Test func fetchCategoriesReturnsDecodedResponse() async throws {
         let fixture = Data(#"{"categories":[{"alias":"active","title":"Active Life"}]}"#.utf8)
         CDYelpMockURLProtocol.register(
@@ -1310,6 +1321,8 @@ struct CDYelpAPIClientTests {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
         }
     }
+
+    // MARK: - Analytics Endpoints
 
     @Test func fetchEngagementMetricsReturnsDecodedResponse() async throws {
         let fixture = Data(#"{"data":[{"business_id":"biz-1","metrics":{"page_views":10.0}}]}"#.utf8)
