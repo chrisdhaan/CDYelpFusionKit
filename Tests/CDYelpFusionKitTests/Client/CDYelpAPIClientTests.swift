@@ -662,7 +662,7 @@ struct CDYelpAPIClientTests {
             retryConfig: .disabled
         )
 
-        let response: CDYelpSearchResponse.Business = try await urlSession.perform(request)
+        let response: CDYelpSearchResponse.Business = try await urlSession.perform(buildRequest: { request })
         #expect(response.businesses?.isEmpty == false)
 
         // The corrupt entry must have been evicted, and the fresh response re-cached.
@@ -919,6 +919,32 @@ struct CDYelpAPIClientTests {
             _ = try await task.value
         }
         #expect(Date().timeIntervalSince(start) < 2)
+    }
+
+    @Test func routerInvalidRequestErrorFiresPairedMonitorNotifications() async {
+        // Regression test: a CDYelpNetworkError.invalidRequest thrown by CDYelpRouter itself
+        // (e.g. a non-finite query parameter) must fire a paired requestDidStart/requestDidComplete,
+        // just like an adapter-thrown .invalidRequest already does — otherwise a consumer that only
+        // observes errors via CDYelpEventMonitor has a blind spot for this entire error subclass.
+        let spy = LocalSpyMonitor()
+        let client = CDYelpMockClientFactory.makeClient(eventMonitors: [spy])
+        do {
+            _ = try await client.searchBusinesses(
+                byTerm: nil, location: "SF",
+                latitude: .nan, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.invalidRequest to be thrown")
+        } catch CDYelpNetworkError.invalidRequest {
+            // Correct — a non-finite query value is wrapped in .invalidRequest by CDYelpRouter
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.invalidRequest but threw \(error)")
+        }
+        #expect(spy.startedURLs.count == 1)
+        #expect(spy.completedRequests.count == 1)
+        #expect(spy.completedRequests.first?.error != nil)
     }
 }
 

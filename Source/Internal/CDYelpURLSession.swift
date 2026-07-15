@@ -25,15 +25,34 @@ actor CDYelpURLSession {
         self.retryConfig = retryConfig
     }
 
+    /// A request that failed to construct entirely (e.g. a non-finite query parameter, a JSON
+    /// body-encoding failure) has no real `URLRequest` to notify monitors with. Using this fixed,
+    /// non-throwing placeholder — rather than skipping notification — keeps the "every logical
+    /// call fires a paired requestDidStart/requestDidComplete" invariant true even for failures
+    /// that occur before a request exists, matching the adapter-failure path below.
+    private static let placeholderRequestURL = URL(string: CDYelpURL.base) ?? URL(fileURLWithPath: "/")
+
     func perform<T: Decodable>(
-        _ urlRequest: URLRequest,
+        buildRequest: () throws -> URLRequest,
         decoder: JSONDecoder? = nil,
         cacheable: Bool = true
     ) async throws -> T {
+        let builtRequest: URLRequest
+        do {
+            builtRequest = try buildRequest()
+        } catch {
+            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+            let placeholderRequest = URLRequest(url: Self.placeholderRequestURL)
+            // Fire start before complete so the monitor lifecycle is always paired, matching the
+            // adapter-failure path below even though no real URLRequest exists yet.
+            notifyStart(placeholderRequest)
+            notifyComplete(placeholderRequest, response: nil, data: nil, error: networkError)
+            throw networkError
+        }
         // One-time setup, run exactly once per logical API call regardless of how many retry
         // attempts occur below: the adapter chain, header restoration, and cache lookup.
-        var request = urlRequest
-        let originalHeaders = urlRequest.allHTTPHeaderFields ?? [:]
+        var request = builtRequest
+        let originalHeaders = builtRequest.allHTTPHeaderFields ?? [:]
         do {
             for adapter in adapters {
                 request = try adapter.adapt(request)
