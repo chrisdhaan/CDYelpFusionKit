@@ -946,6 +946,202 @@ struct CDYelpAPIClientTests {
         #expect(spy.completedRequests.count == 1)
         #expect(spy.completedRequests.first?.error != nil)
     }
+
+    @Test func searchBusinessesByPhoneNumberReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"total":1,"businesses":[{"id":"biz-1","name":"Test Biz"}]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/search/phone"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search/phone") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchBusinesses(byPhoneNumber: "+14159083801", locale: nil)
+        #expect(response.total == 1)
+        #expect(response.businesses?.first?.id == "biz-1")
+    }
+
+    @Test func searchBusinessesByPhoneNumberReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "businesses/search/phone"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search/phone") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.searchBusinesses(byPhoneNumber: "+14159083801", locale: nil)
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func searchTransactionsReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"total":1,"businesses":[{"id":"biz-1","name":"Test Biz"}]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "transactions/delivery/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "transactions/delivery/search") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchTransactions(
+            byType: .foodDelivery, location: "San Francisco", latitude: nil, longitude: nil
+        )
+        #expect(response.total == 1)
+        #expect(response.businesses?.first?.id == "biz-1")
+    }
+
+    @Test func searchTransactionsReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "transactions/delivery/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "transactions/delivery/search") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.searchTransactions(
+                byType: .foodDelivery, location: "San Francisco", latitude: nil, longitude: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func fetchBusinessReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"id":"biz-1","name":"Test Biz"}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/test-business-id"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/test-business-id") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.fetchBusiness(forId: "test-business-id", locale: nil)
+        #expect(response.business?.id == "biz-1")
+    }
+
+    @Test func fetchBusinessReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "businesses/test-business-id"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/test-business-id") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.fetchBusiness(forId: "test-business-id", locale: nil)
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func searchBusinessesByMatchReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"total":1,"businesses":[{"id":"biz-1","name":"Test Biz"}]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "businesses/matches"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/matches") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.searchBusinesses(
+            name: "Test Biz",
+            addressOne: "123 Main St",
+            addressTwo: nil,
+            addressThree: nil,
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+            latitude: nil,
+            longitude: nil,
+            phone: nil,
+            zipCode: nil,
+            yelpBusinessId: nil,
+            limit: nil,
+            matchThresholdType: .none
+        )
+        #expect(response.total == 1)
+        #expect(response.businesses?.first?.id == "biz-1")
+    }
+
+    @Test func searchBusinessesByMatchReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "businesses/matches"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/matches") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.searchBusinesses(
+                name: "Test Biz",
+                addressOne: "123 Main St",
+                addressTwo: nil,
+                addressThree: nil,
+                city: "San Francisco",
+                state: "CA",
+                country: "US",
+                latitude: nil,
+                longitude: nil,
+                phone: nil,
+                zipCode: nil,
+                yelpBusinessId: nil,
+                limit: nil,
+                matchThresholdType: .none
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func autocompleteBusinessesReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"terms":[{"text":"coffee"}],"businesses":[{"id":"biz-1","name":"Test Biz"}],"categories":[]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "autocomplete"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "autocomplete") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.autocompleteBusinesses(
+            byText: "coffee", latitude: 37.7749, longitude: -122.4194, locale: nil
+        )
+        #expect(response.businesses?.first?.id == "biz-1")
+    }
+
+    @Test func autocompleteBusinessesReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "autocomplete"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "autocomplete") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.autocompleteBusinesses(
+                byText: "coffee", latitude: 37.7749, longitude: -122.4194, locale: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
 }
 
 // MARK: - Test Helpers
