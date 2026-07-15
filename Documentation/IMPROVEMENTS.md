@@ -200,7 +200,7 @@ actor CDYelpURLSession {
 
 ---
 
-### ✅ Step 4 — Create `Source/Internal/CDYelpNativeRouter.swift`
+### ✅ Step 4 — Create `Source/Internal/CDYelpRouter.swift`
 
 Create this file from scratch. It replaces `CDYelpRouter.swift`. It builds `URLRequest` using `URLComponents` / `URLQueryItem` with no Alamofire dependency, and adds the `Authorization` header (which in v5 was injected by Alamofire via `sessionConfiguration.httpAdditionalHeaders`).
 
@@ -209,7 +209,7 @@ Create this file from scratch. It replaces `CDYelpRouter.swift`. It builds `URLR
 ```swift
 import Foundation
 
-enum CDYelpNativeRouter {
+enum CDYelpRouter {
     // GET endpoints
     case search(parameters: [String: Any])
     case phone(parameters: [String: Any])
@@ -475,7 +475,7 @@ public func searchBusinesses(
         reservationTime: reservationTime, reservationCovers: reservationCovers,
         matchesPartySize: matchesPartySize, jobAlias: jobAlias
     )
-    let request = try CDYelpNativeRouter.search(parameters: parameters).asURLRequest(apiKey: apiKey)
+    let request = try CDYelpRouter.search(parameters: parameters).asURLRequest(apiKey: apiKey)
     return try await urlSession.perform(request)
 }
 ```
@@ -496,7 +496,7 @@ public func fetchReviews(
     if let offset { assert(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
     if let limit { assert(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
     let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
-    let request = try CDYelpNativeRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
+    let request = try CDYelpRouter.reviews(id: id, parameters: parameters).asURLRequest(apiKey: apiKey)
     let decoder = decoderConfiguration.makeDecoder()
     decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
     return try await urlSession.perform(request, decoder: decoder)
@@ -537,7 +537,7 @@ public func fetchAIChat(
     let chatRequest = CDYelpAIChatRequest(
         query: query, chatId: chatId, userContext: userContext, requestContext: requestContext
     )
-    let urlRequest = try CDYelpNativeRouter.aiChat(request: chatRequest).asURLRequest(apiKey: apiKey)
+    let urlRequest = try CDYelpRouter.aiChat(request: chatRequest).asURLRequest(apiKey: apiKey)
     return try await urlSession.perform(urlRequest)
 }
 ```
@@ -568,8 +568,8 @@ The existing router tests in `Tests/CDYelpFusionKitTests/Router/CDYelpRouterTest
 
 | v5 | v6 |
 |---|---|
-| `CDYelpRouter.search(parameters: params).asURLRequest()` | `try CDYelpNativeRouter.search(parameters: params).asURLRequest(apiKey: "test-key")` |
-| `CDYelpRouter.phone(parameters: params).asURLRequest()` | `try CDYelpNativeRouter.phone(parameters: params).asURLRequest(apiKey: "test-key")` |
+| `CDYelpRouter.search(parameters: params).asURLRequest()` | `try CDYelpRouter.search(parameters: params).asURLRequest(apiKey: "test-key")` |
+| `CDYelpRouter.phone(parameters: params).asURLRequest()` | `try CDYelpRouter.phone(parameters: params).asURLRequest(apiKey: "test-key")` |
 | *(same pattern for all 19 cases)* | |
 
 The assertions in the tests (correct URL host, path, query parameters, HTTP method) are identical — only the call site changes.
@@ -598,9 +598,9 @@ visionOS 1.0 already satisfies its minimum.
 | `CDYelpRetryConfigurationTests` | Retry limit, backoff config | `CDYelpURLSession.shouldRetry` + `backoffNanoseconds` |
 | `CDYelpDecoderConfigurationTests` | Key strategy applied | `CDYelpURLSession.perform` decode step |
 | `CDYelpEventMonitorTests` | Monitor callbacks fire | `CDYelpURLSession` direct calls to monitors |
-| `CDYelpAPIClientTests` | End-to-end decode via mock session | `CDYelpURLSession` + `CDYelpNativeRouter` |
+| `CDYelpAPIClientTests` | End-to-end decode via mock session | `CDYelpURLSession` + `CDYelpRouter` |
 | Model tests | JSON → struct decode | Unchanged — `Decodable` conformances are untouched |
-| Router tests | URL path/parameter construction | Rewritten to call `CDYelpNativeRouter.asURLRequest(apiKey:)` |
+| Router tests | URL path/parameter construction | Rewritten to call `CDYelpRouter.asURLRequest(apiKey:)` |
 
 ---
 
@@ -619,7 +619,7 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Create actor with `perform<T>(_:decoder:attempt:)`, `cancelAllTasks()`, `clearCache()`
 - [x] Retry calls `requestWillRetry` monitor callback before sleeping
 
-#### Step 4 — New file: `Source/Internal/CDYelpNativeRouter.swift`
+#### Step 4 — New file: `Source/Internal/CDYelpRouter.swift`
 - [x] Create enum with all 19 cases (17 GET + 2 POST)
 - [x] `path` covers all 19 cases
 - [x] `asURLRequest(apiKey:)` handles aiChat (hardcoded URL, no `/v3/`), jobs (POST+JSON under `/v3/`), and all GET cases (URLComponents + query items)
@@ -654,7 +654,7 @@ visionOS 1.0 already satisfies its minimum.
 - [x] Confirm `CDYelpMockURLProtocol.swift` compiles unchanged
 
 #### Step 9 — Update router tests
-- [x] Replace all `CDYelpRouter.X.asURLRequest()` calls with `try CDYelpNativeRouter.X.asURLRequest(apiKey: "test-key")`
+- [x] Replace all `CDYelpRouter.X.asURLRequest()` calls with `try CDYelpRouter.X.asURLRequest(apiKey: "test-key")`
 - [x] Remove any `import Alamofire` from test files
 - [x] Replace any `AFError` references with `CDYelpNetworkError`
 
