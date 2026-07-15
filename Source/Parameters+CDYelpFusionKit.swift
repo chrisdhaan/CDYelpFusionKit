@@ -161,9 +161,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let location = location, location != "" {
             parameters["location"] = location
         }
-        if let latitude = latitude { parameters["latitude"] = latitude }
-        if let longitude = longitude { parameters["longitude"] = longitude }
-        if let term = term, term != "" { parameters["term"] = term }
+        if let latitude = latitude {
+            parameters["latitude"] = latitude
+        }
+        if let longitude = longitude {
+            parameters["longitude"] = longitude
+        }
+        if let term = term, term != "" {
+            parameters["term"] = term
+        }
         if let categories = categories, !categories.isEmpty {
             parameters["categories"] = categories.map { $0.rawValue }.joined(separator: ",")
         }
@@ -209,7 +215,9 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     {
         var parameters: Parameters = [:]
 
-        if !name.isEmpty { parameters["name"] = name }
+        if !name.isEmpty {
+            parameters["name"] = name
+        }
         if let addressOne = addressOne,
            addressOne != ""
         {
@@ -225,9 +233,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         {
             parameters["address3"] = addressThree
         }
-        if !city.isEmpty { parameters["city"] = city }
-        if !state.isEmpty { parameters["state"] = state }
-        if !country.isEmpty { parameters["country"] = country }
+        if !city.isEmpty {
+            parameters["city"] = city
+        }
+        if !state.isEmpty {
+            parameters["state"] = state
+        }
+        if !country.isEmpty {
+            parameters["country"] = country
+        }
         if let latitude = latitude {
             parameters["latitude"] = latitude
         }
@@ -267,9 +281,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         if let locale = locale, locale.rawValue != "" {
             parameters["locale"] = locale.rawValue
         }
-        if let offset = offset { parameters["offset"] = offset }
-        if let limit = limit { parameters["limit"] = limit }
-        if let sortBy = sortBy { parameters["sort_by"] = sortBy.rawValue }
+        if let offset = offset {
+            parameters["offset"] = offset
+        }
+        if let limit = limit {
+            parameters["limit"] = limit
+        }
+        if let sortBy = sortBy {
+            parameters["sort_by"] = sortBy.rawValue
+        }
         return parameters
     }
 
@@ -280,7 +300,9 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     {
         var parameters: Parameters = [:]
 
-        if !text.isEmpty { parameters["text"] = text }
+        if !text.isEmpty {
+            parameters["text"] = text
+        }
         parameters["latitude"] = latitude
         parameters["longitude"] = longitude
         if let locale = locale,
@@ -425,8 +447,12 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     {
         var parameters: Parameters = [:]
         parameters["business_ids"] = businessIds.joined(separator: ",")
-        if let start = dateRangeStart { parameters["date_range_start"] = start }
-        if let end = dateRangeEnd { parameters["date_range_end"] = end }
+        if let start = dateRangeStart {
+            parameters["date_range_start"] = start
+        }
+        if let end = dateRangeEnd {
+            parameters["date_range_end"] = end
+        }
         return parameters
     }
 
@@ -448,9 +474,15 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
         -> Parameters
     {
         var parameters: Parameters = [:]
-        if let count = count { parameters["count"] = count }
-        if let locale = locale, locale.rawValue != "" { parameters["locale"] = locale.rawValue }
-        if let devicePlatform = devicePlatform { parameters["device_platform"] = devicePlatform }
+        if let count = count {
+            parameters["count"] = count
+        }
+        if let locale = locale, locale.rawValue != "" {
+            parameters["locale"] = locale.rawValue
+        }
+        if let devicePlatform = devicePlatform {
+            parameters["device_platform"] = devicePlatform
+        }
         return parameters
     }
 

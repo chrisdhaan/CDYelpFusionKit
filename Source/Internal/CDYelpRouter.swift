@@ -126,7 +126,9 @@ enum CDYelpRouter {
             }
             return try Self.postRequest(url: url, apiKey: apiKey) {
                 var body: [String: String] = ["query": query]
-                if let locale { body["locale"] = locale }
+                if let locale {
+                    body["locale"] = locale
+                }
                 return try JSONEncoder().encode(body)
             }
 

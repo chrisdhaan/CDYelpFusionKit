@@ -196,8 +196,12 @@ public final class CDYelpAPIClient: Sendable {
             (latitude != nil && longitude != nil) || location != nil,
             "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint."
         )
-        if let radius { precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.") }
-        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.") }
+        if let radius {
+            precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
+        }
+        if let limit {
+            precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
+        }
         let parameters = Parameters.searchParameters(
             withTerm: term,
             location: location,
@@ -404,8 +408,12 @@ public final class CDYelpAPIClient: Sendable {
         sortBy: CDYelpReviewSortType? = nil
     ) async throws -> CDYelpReviewsResponse {
         precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API reviews endpoint.")
-        if let offset { precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.") }
-        if let limit { precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.") }
+        if let offset {
+            precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.")
+        }
+        if let limit {
+            precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.")
+        }
         let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
         let router = CDYelpRouter.reviews(id: id, parameters: parameters)
         return try await perform(router, decoder: makeDecoder(dateFormat: DateFormatter.reviews))
@@ -492,8 +500,12 @@ public final class CDYelpAPIClient: Sendable {
         radius: Int?,
         excludedEvents: [String]?
     ) async throws -> CDYelpEventsResponse {
-        if let limit { precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.") }
-        if let radius { precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.") }
+        if let limit {
+            precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
+        }
+        if let radius {
+            precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
+        }
         let parameters = Parameters.eventsParameters(
             withLocale: locale,
             offset: offset,
@@ -711,7 +723,9 @@ public final class CDYelpAPIClient: Sendable {
         devicePlatform: String? = nil
     ) async throws -> CDYelpReviewHighlightsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
-        if let count { precondition(count >= 1 && count <= 5, "count must be between 1 and 5.") }
+        if let count {
+            precondition(count >= 1 && count <= 5, "count must be between 1 and 5.")
+        }
         let parameters = Parameters.reviewHighlightsParameters(count: count, locale: locale, devicePlatform: devicePlatform)
         let router = CDYelpRouter.reviewHighlights(id: id, parameters: parameters)
         return try await perform(router)

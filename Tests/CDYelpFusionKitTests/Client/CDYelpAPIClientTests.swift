@@ -955,7 +955,9 @@ private final class LocalSpyMonitor: CDYelpEventMonitor, @unchecked Sendable {
 
     func requestDidStart(urlRequest: URLRequest) {
         lock.lock()
-        if let url = urlRequest.url { _startedURLs.append(url) }
+        if let url = urlRequest.url {
+            _startedURLs.append(url)
+        }
         lock.unlock()
     }
 
