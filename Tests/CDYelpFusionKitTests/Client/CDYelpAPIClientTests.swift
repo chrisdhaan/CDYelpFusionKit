@@ -1248,6 +1248,68 @@ struct CDYelpAPIClientTests {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
         }
     }
+
+    @Test func fetchCategoriesReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"categories":[{"alias":"active","title":"Active Life"}]}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "categories"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "categories") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.fetchCategories(forLocale: nil)
+        #expect(response.categories?.first?.alias == "active")
+    }
+
+    @Test func fetchCategoriesReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "categories"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "categories") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.fetchCategories(forLocale: nil)
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func fetchCategoryReturnsDecodedResponse() async throws {
+        let fixture = Data(#"{"category":{"alias":"active","title":"Active Life"}}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: fixture, statusCode: 200),
+            forURLContaining: "categories/active"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "categories/active") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        let response = try await client.fetchCategory(forAlias: .activeLife, andLocale: nil)
+        #expect(response.category?.alias == "active")
+    }
+
+    @Test func fetchCategoryReturns404AsSpecificHttpError() async {
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 404),
+            forURLContaining: "categories/active"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "categories/active") }
+
+        let client = CDYelpMockClientFactory.makeClient()
+        do {
+            _ = try await client.fetchCategory(forAlias: .activeLife, andLocale: nil)
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, _, _) {
+            #expect(statusCode == 404)
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
 }
 
 // MARK: - Test Helpers
