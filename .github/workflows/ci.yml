@@ -335,7 +335,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install SwiftFormat
-        run: brew install swiftformat
+        run: |
+          brew update
+          brew upgrade swiftformat || brew install swiftformat
       - name: Verify pinned SwiftFormat version
         run: |
           installed="$(swiftformat --version)"
