@@ -85,7 +85,7 @@ This document maps every endpoint in the [Yelp Fusion REST API](https://docs.dev
 | `radius` | integer | No | ✅ | Max 40,000 m; precondition-checked in client |
 | `categories` | array | No | ✅ | Comma-joined `CDYelpCategoryAlias` raw values |
 | `locale` | string | No | ✅ | `CDYelpLocale` raw value |
-| `limit` | integer | No | ✅ | 0–50; precondition-checked in client |
+| `limit` | integer | No | ✅ | 1–50; precondition-checked in client |
 | `offset` | integer | No | ✅ | 0–1000 |
 | `sort_by` | string | No | ✅ | `CDYelpBusinessSortType` raw value |
 | `price` | array | No | ✅ | Comma-joined `CDYelpPriceTier` raw values |
@@ -353,7 +353,7 @@ Schema is correct. No changes needed.
 |-----------|------|----------|-------------|-------|
 | `locale` | string | No | ✅ | |
 | `offset` | integer | No | ✅ | 0–1000 |
-| `limit` | integer | No | ✅ | 0–50; precondition-checked |
+| `limit` | integer | No | ✅ | 1–50; precondition-checked |
 | `sort_by` | string | No | ✅ | `CDYelpEventSortByType` raw value |
 | `sort_on` | string | No | ✅ | `CDYelpEventSortOnType` raw value |
 | `start_date` | integer | No | ✅ | Unix timestamp from `Date` |
