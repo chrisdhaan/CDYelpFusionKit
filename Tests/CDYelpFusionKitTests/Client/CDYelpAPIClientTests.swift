@@ -72,6 +72,38 @@ struct CDYelpAPIClientTests {
         }
     }
 
+    @Test func httpErrorCarriesResponseBodyAndHeaders() async {
+        // CDYelpNetworkError.httpError's data and headers associated values (added in this PR
+        // so callers can read a failed response's error body / rate-limit headers) must actually
+        // be the real response body and headers, not empty placeholders.
+        let errorBody = Data(#"{"error": {"code": "TOO_MANY_REQUESTS_QPS"}}"#.utf8)
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: errorBody, statusCode: 429, headers: ["X-RateLimit-Remaining": "0"]),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 0, initialDelay: 0)
+        )
+        do {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+            Issue.record("Expected CDYelpNetworkError.httpError to be thrown")
+        } catch let CDYelpNetworkError.httpError(statusCode, data, headers) {
+            #expect(statusCode == 429)
+            #expect(data == errorBody)
+            #expect(headers["X-RateLimit-Remaining"] == "0")
+        } catch {
+            Issue.record("Expected CDYelpNetworkError.httpError(429) but threw \(error)")
+        }
+    }
+
     @Test func malformedResponseBodyThrowsDecodingFailed() async {
         // "total" is Int? — providing a string causes a type-mismatch DecodingError
         let malformedData = Data(#"{"total":"not-an-int"}"#.utf8)
@@ -326,6 +358,91 @@ struct CDYelpAPIClientTests {
             )
         }
         #expect(spy.retryEventCount == 2)
+    }
+
+    @Test func retryAfterSecondsHeaderOverridesExponentialBackoff() async throws {
+        // A server-provided Retry-After: 0 must be honored instead of exponential backoff — with
+        // initialDelay: 10, exponential backoff alone would take 10s before the first retry, so
+        // completing well under that proves the header value won this attempt's delay.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 429, headers: ["Retry-After": "0"]),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 1, initialDelay: 10)
+        )
+        let start = Date()
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(Date().timeIntervalSince(start) < 2)
+    }
+
+    @Test func retryAfterHTTPDateHeaderOverridesExponentialBackoff() async throws {
+        // The HTTP-date form of Retry-After (RFC 9110 §10.2.3) must parse and be honored the
+        // same way the integer-seconds form is. A date effectively "now" resolves to ~0s, so —
+        // as above — completing well under the 10s exponential-only delay proves it was parsed
+        // and used rather than silently ignored.
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "GMT")
+        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
+        let retryAfterDate = formatter.string(from: Date())
+
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 429, headers: ["Retry-After": retryAfterDate]),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 1, initialDelay: 10)
+        )
+        let start = Date()
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(Date().timeIntervalSince(start) < 2)
+    }
+
+    @Test func malformedRetryAfterHeaderFallsBackToExponentialBackoff() async throws {
+        // A Retry-After value that's neither a valid integer nor a valid HTTP-date must be
+        // ignored in favor of exponential backoff, not treated as an immediate (or otherwise
+        // arbitrary) retry — proven by observing the full initialDelay actually elapses.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data(), statusCode: 429, headers: ["Retry-After": "not-a-valid-value"]),
+            forURLContaining: "businesses/search"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
+        let client = CDYelpMockClientFactory.makeClient(
+            retryConfiguration: CDYelpRetryConfiguration(retryLimit: 1, initialDelay: 1)
+        )
+        let start = Date()
+        await #expect(throws: Error.self) {
+            _ = try await client.searchBusinesses(
+                byTerm: "coffee", location: "SF",
+                latitude: nil, longitude: nil, radius: nil,
+                categories: nil, locale: nil, limit: nil, offset: nil,
+                sortBy: nil, priceTiers: nil, openNow: nil, openAt: nil,
+                attributes: nil
+            )
+        }
+        #expect(Date().timeIntervalSince(start) >= 0.9)
     }
 
     @Test func transportErrorTriggersRetryAndSurfacesAsNetworkFailure() async {
@@ -1358,6 +1475,25 @@ struct CDYelpAPIClientTests {
         }
     }
 
+    @Test func fetchEngagementMetricsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
+        // Regression test: engagement metrics must never be served from cache — see the
+        // fetchOpenings variant of this test above for the full rationale.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "businesses/engagement"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/engagement") }
+
+        let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
+        _ = try await client.fetchEngagementMetrics(forBusinessIds: ["biz-1"])
+
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/engagement")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchEngagementMetrics(forBusinessIds: ["biz-1"])
+        }
+    }
+
     @Test func fetchServiceOfferingsReturnsDecodedResponse() async throws {
         let fixture = Data(#"{"service_offerings":[{"id":"svc-1","name":"Delivery"}]}"#.utf8)
         CDYelpMockURLProtocol.register(
@@ -1386,6 +1522,25 @@ struct CDYelpAPIClientTests {
             #expect(statusCode == 404)
         } catch {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func fetchServiceOfferingsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
+        // Regression test: service offerings must never be served from cache — see the
+        // fetchOpenings variant of this test above for the full rationale.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "test-business-id/service_offerings"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "test-business-id/service_offerings") }
+
+        let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
+        _ = try await client.fetchServiceOfferings(forBusinessId: "test-business-id", locale: nil)
+
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "test-business-id/service_offerings")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchServiceOfferings(forBusinessId: "test-business-id", locale: nil)
         }
     }
 
@@ -1424,6 +1579,29 @@ struct CDYelpAPIClientTests {
         }
     }
 
+    @Test func fetchBusinessInsightsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
+        // Regression test: business insights must never be served from cache — see the
+        // fetchOpenings variant of this test above for the full rationale.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "businesses/insights"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/insights") }
+
+        let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
+        _ = try await client.fetchBusinessInsights(
+            forBusinessIds: ["biz-1"], dateRangeStart: "202601", dateRangeEnd: "202602"
+        )
+
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/insights")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchBusinessInsights(
+                forBusinessIds: ["biz-1"], dateRangeStart: "202601", dateRangeEnd: "202602"
+            )
+        }
+    }
+
     @Test func fetchReviewHighlightsReturnsDecodedResponse() async throws {
         let fixture = Data(#"{"highlights":[{"text":"Great food!","rating":5.0}]}"#.utf8)
         CDYelpMockURLProtocol.register(
@@ -1452,6 +1630,25 @@ struct CDYelpAPIClientTests {
             #expect(statusCode == 404)
         } catch {
             Issue.record("Expected CDYelpNetworkError.httpError(404) but threw \(error)")
+        }
+    }
+
+    @Test func fetchReviewHighlightsBypassesCacheDespiteCacheConfigurationEnabled() async throws {
+        // Regression test: review highlights must never be served from cache — see the
+        // fetchOpenings variant of this test above for the full rationale.
+        CDYelpMockURLProtocol.register(
+            stub: .init(data: Data("{}".utf8), statusCode: 200),
+            forURLContaining: "test-business-id/review_highlights"
+        )
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "test-business-id/review_highlights") }
+
+        let client = CDYelpMockClientFactory.makeClient(cacheConfiguration: CDYelpCacheConfiguration(ttl: 300))
+        _ = try await client.fetchReviewHighlights(forBusinessId: "test-business-id")
+
+        CDYelpMockURLProtocol.removeStub(forURLContaining: "test-business-id/review_highlights")
+
+        await #expect(throws: Error.self) {
+            _ = try await client.fetchReviewHighlights(forBusinessId: "test-business-id")
         }
     }
 }
