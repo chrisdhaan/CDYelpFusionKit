@@ -941,8 +941,11 @@ struct CDYelpAPIClientTests {
                 attributes: nil
             )
             Issue.record("Expected CDYelpNetworkError.invalidRequest to be thrown")
-        } catch CDYelpNetworkError.invalidRequest {
-            // Correct — a non-finite query value is wrapped in .invalidRequest by CDYelpRouter
+        } catch let CDYelpNetworkError.invalidRequest(underlying) {
+            // The underlying value must be the actual NonFiniteQueryValueError CDYelpRouter
+            // threw, not another CDYelpNetworkError — CDYelpURLSession must not re-wrap an
+            // error that CDYelpRouter.asURLRequest() already wrapped in .invalidRequest.
+            #expect(underlying is CDYelpRouter.NonFiniteQueryValueError)
         } catch {
             Issue.record("Expected CDYelpNetworkError.invalidRequest but threw \(error)")
         }

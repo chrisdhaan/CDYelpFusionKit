@@ -41,7 +41,9 @@ actor CDYelpURLSession {
         do {
             builtRequest = try buildRequest()
         } catch {
-            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+            // buildRequest (CDYelpRouter.asURLRequest) already throws a wrapped CDYelpNetworkError
+            // for every one of its own failure sites — don't wrap it a second time.
+            let networkError = (error as? CDYelpNetworkError) ?? .invalidRequest(underlying: error)
             let placeholderRequest = URLRequest(url: Self.placeholderRequestURL)
             // Fire start before complete so the monitor lifecycle is always paired, matching the
             // adapter-failure path below even though no real URLRequest exists yet.
@@ -58,7 +60,9 @@ actor CDYelpURLSession {
                 request = try adapter.adapt(request)
             }
         } catch {
-            let networkError = CDYelpNetworkError.invalidRequest(underlying: error)
+            // A custom adapter may deliberately throw a typed CDYelpNetworkError itself; don't
+            // relabel it as .invalidRequest by wrapping it a second time.
+            let networkError = (error as? CDYelpNetworkError) ?? .invalidRequest(underlying: error)
             // Fire start before complete so the monitor lifecycle is always paired.
             notifyStart(request)
             notifyComplete(request, response: nil, data: nil, error: networkError)
