@@ -35,10 +35,12 @@ import Foundation
 ///   signs requests with a per-attempt nonce/timestamp will not get a fresh value on retry; such
 ///   an adapter should refresh proactively before the request reaches CDYelpFusionKit, rather than
 ///   relying on being re-invoked mid-retry.
-/// - Important: An error thrown from `adapt(_:)` is wrapped in `CDYelpNetworkError.invalidRequest`
-///   and must be safe to share across concurrency domains — it crosses an actor boundary on its
-///   way to the caller. `CDYelpNetworkError` is `@unchecked Sendable` specifically to accommodate
-///   this, since the protocol itself cannot require `adapt(_:)`'s thrown error type to be `Sendable`.
+/// - Important: An error thrown from `adapt(_:)` must be safe to share across concurrency domains —
+///   it crosses an actor boundary on its way to the caller. If the error is already a
+///   `CDYelpNetworkError`, it is rethrown unchanged; any other error is wrapped in
+///   `CDYelpNetworkError.invalidRequest`. `CDYelpNetworkError` is `@unchecked Sendable` specifically
+///   to accommodate this, since the protocol itself cannot require `adapt(_:)`'s thrown error type
+///   to be `Sendable`.
 public protocol CDYelpRequestAdapter: AnyObject, Sendable {
     /// Mutate and return the request. Return the request unchanged to pass it through.
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest

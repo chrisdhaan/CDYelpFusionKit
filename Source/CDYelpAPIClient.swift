@@ -115,6 +115,8 @@ public final class CDYelpAPIClient: Sendable {
         urlSession.clearCache()
     }
 
+    // MARK: - Decoding Helpers
+
     /// Builds a decoder honoring `decoderConfiguration` with the given date format substituted in,
     /// shared by the reviews/events endpoints whose date fields don't use the default ISO-8601 strategy.
     private func makeDecoder(dateFormat: DateFormatter) -> JSONDecoder {
@@ -594,6 +596,8 @@ public final class CDYelpAPIClient: Sendable {
         let router = CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters)
         return try await perform(router)
     }
+
+    // MARK: - AI Chat, Engagement, and Business Data Endpoints
 
     ///
     /// Fetches AI chat response from the Yelp AI Chat endpoint.
