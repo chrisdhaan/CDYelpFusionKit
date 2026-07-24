@@ -4,9 +4,12 @@ A comprehensive Swift wrapper for the Yelp Fusion API.
 
 ## Overview
 
-CDYelpFusionKit provides a fully typed, Alamofire-backed HTTP client for every endpoint
-of the Yelp Fusion REST API. It covers business search, event search, business details,
-reviews, autocomplete, and category browsing — with both completion-handler and async/await APIs.
+CDYelpFusionKit provides a fully typed, dependency-free HTTP client for every endpoint
+of the Yelp Fusion REST API. It covers all Yelp Fusion REST API endpoints: business search,
+phone and transaction search, business matching, business details, reviews, autocomplete,
+events, categories, Yelp AI Chat, engagement metrics, service offerings, business insights,
+review highlights, home services, and reservation openings — with a pure async/await API
+backed by URLSession.
 
 ## Topics
 

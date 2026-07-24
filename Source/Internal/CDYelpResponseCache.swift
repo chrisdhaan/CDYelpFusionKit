@@ -27,14 +27,19 @@
 
 import Foundation
 
-struct CDYelpCacheEntry {
+final class CDYelpCacheEntry {
     let data: Data
     let expiresAt: Date
+    init(data: Data, expiresAt: Date) {
+        self.data = data
+        self.expiresAt = expiresAt
+    }
 }
 
 final class CDYelpResponseCache: @unchecked Sendable {
     // NSCache is thread-safe for all individual operations; no external lock is needed.
-    private let cache = NSCache<NSString, AnyObject>()
+    // Internal (not private) so tests can attach an NSCacheDelegate to verify eviction behavior.
+    let cache = NSCache<NSString, CDYelpCacheEntry>()
     private let ttl: TimeInterval
 
     init(configuration: CDYelpCacheConfiguration) {
@@ -46,15 +51,16 @@ final class CDYelpResponseCache: @unchecked Sendable {
     func set(data: Data, forKey key: String) {
         guard ttl > 0 else { return }
         let entry = CDYelpCacheEntry(data: data, expiresAt: Date().addingTimeInterval(ttl))
-        cache.setObject(entry as AnyObject, forKey: key as NSString)
+        cache.setObject(entry, forKey: key as NSString, cost: data.count)
     }
 
     func data(forKey key: String) -> Data? {
-        guard let entry = cache.object(forKey: key as NSString) as? CDYelpCacheEntry else { return nil }
-        guard entry.expiresAt > Date() else {
-            cache.removeObject(forKey: key as NSString)
-            return nil
-        }
+        guard let entry = cache.object(forKey: key as NSString) else { return nil }
+        // Do not removeObject(forKey:) here: a concurrent writer could replace this key with a
+        // fresh entry between this expiry check and the removal, and removeObject would then
+        // delete that fresh entry out from under it (TOCTOU). A pure miss is safe; NSCache's own
+        // countLimit/totalCostLimit eviction reclaims stale entries without this race.
+        guard entry.expiresAt > Date() else { return nil }
         return entry.data
     }
 

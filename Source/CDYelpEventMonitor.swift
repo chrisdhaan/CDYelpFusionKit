@@ -31,7 +31,9 @@ import Foundation
 public protocol CDYelpEventMonitor: AnyObject, Sendable {
     /// Called immediately before a URLRequest is sent.
     func requestDidStart(urlRequest: URLRequest)
-    /// Called when a response is received, before decoding.
+    /// Called when a response is received, before decoding. `response` is `nil` for a
+    /// cache-served result (the request never hit the network) and for a request that failed
+    /// before a response was received; check `error` to distinguish the two.
     func requestDidComplete(urlRequest: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?)
     /// Called when a request will be retried after a recoverable failure.
     func requestWillRetry(urlRequest: URLRequest?, retryCount: Int)

@@ -27,9 +27,15 @@ struct CDYelpRetryConfigurationTests {
         #expect(config.initialDelay == 1.0)
     }
 
+    @Test func defaultRetryableURLErrorCodesMatchExpected() {
+        let config = CDYelpRetryConfiguration()
+        #expect(config.retryableURLErrorCodes.contains(.networkConnectionLost))
+        #expect(config.retryableURLErrorCodes.contains(.notConnectedToInternet))
+        #expect(config.retryableURLErrorCodes.contains(.timedOut))
+    }
+
     @Test func clientAcceptsRetryConfiguration() {
         let retry = CDYelpRetryConfiguration(retryLimit: 2, initialDelay: 0.25)
-        let client = CDYelpAPIClient(apiKey: "fake-key-for-test", retryConfiguration: retry)
-        #expect(client.isAuthenticated())
+        _ = CDYelpAPIClient(apiKey: "fake-key-for-test", retryConfiguration: retry)
     }
 }

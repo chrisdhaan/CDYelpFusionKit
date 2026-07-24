@@ -7,11 +7,22 @@ public final class CDYelpMockURLProtocol: URLProtocol {
         public let data: Data
         public let statusCode: Int
         public let headers: [String: String]
+        public let transportError: URLError.Code?
 
         public init(data: Data, statusCode: Int = 200, headers: [String: String] = [:]) {
             self.data = data
             self.statusCode = statusCode
             self.headers = headers
+            transportError = nil
+        }
+
+        /// A stub that fails with a raw transport-level error (e.g. `.timedOut`) instead of
+        /// returning a response, for testing the `CDYelpNetworkError.networkFailure` path.
+        public init(transportError: URLError.Code) {
+            data = Data()
+            statusCode = 0
+            headers = [:]
+            self.transportError = transportError
         }
     }
 
@@ -67,12 +78,20 @@ public final class CDYelpMockURLProtocol: URLProtocol {
             return
         }
 
-        let response = HTTPURLResponse(
+        if let transportError = stub.transportError {
+            client?.urlProtocol(self, didFailWithError: URLError(transportError))
+            return
+        }
+
+        guard let response = HTTPURLResponse(
             url: request.url!,
             statusCode: stub.statusCode,
             httpVersion: "HTTP/1.1",
             headerFields: stub.headers
-        )!
+        ) else {
+            client?.urlProtocol(self, didFailWithError: URLError(.badServerResponse))
+            return
+        }
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         client?.urlProtocol(self, didLoad: stub.data)
         client?.urlProtocolDidFinishLoading(self)

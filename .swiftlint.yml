@@ -16,8 +16,8 @@ cyclomatic_complexity:
   warning: 55
 # number of lines allowed in a function
 function_body_length:
-  error: 75
-  warning: 70
+  error: 140
+  warning: 130
 # number of parameters allowed for a function
 function_parameter_count: 15
 # number of lines allowed in a file

@@ -23,7 +23,6 @@ struct CDYelpDecoderConfigurationTests {
 
     @Test func clientInitializesWithDecoderConfiguration() {
         let config = CDYelpDecoderConfiguration(keyDecodingStrategy: .convertFromSnakeCase)
-        let client = CDYelpAPIClient(apiKey: "fake-key-for-test", decoderConfiguration: config)
-        #expect(client.isAuthenticated())
+        _ = CDYelpAPIClient(apiKey: "fake-key-for-test", decoderConfiguration: config)
     }
 }

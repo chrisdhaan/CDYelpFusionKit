@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "5.1.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "6.0.0"))
 ]
 ```
 
@@ -30,7 +30,7 @@ Then add it to your target's dependencies:
 Add to your `Podfile`:
 
 ```ruby
-pod 'CDYelpFusionKit', '~> 5.1'
+pod 'CDYelpFusionKit', '~> 6.0'
 ```
 
 Then run `pod install`.
@@ -53,7 +53,7 @@ import CDYelpFusionKit
 let client = CDYelpAPIClient(apiKey: "your-api-key-here")
 ```
 
-The API key is required and must be a non-empty string. An assertion will fail at runtime if the key is empty.
+The API key is required and must be a non-empty string. A precondition will fail at runtime if the key is empty.
 
 ---
 
@@ -63,35 +63,6 @@ The API key is required and must be a non-empty string. An assertion will fail a
 
 Search for businesses by term, location, and optional filters:
 
-**Completion Handler:**
-```swift
-client.searchBusinesses(
-    byTerm: "coffee",
-    location: "San Francisco",
-    latitude: nil,
-    longitude: nil,
-    radius: nil,
-    categories: nil,
-    locale: .english_unitedStates,
-    limit: 20,
-    offset: nil,
-    sortBy: .bestMatch,
-    priceTiers: nil,
-    openNow: nil,
-    openAt: nil,
-    attributes: nil
-) { response in
-    guard let businesses = response?.businesses else {
-        print("No results found")
-        return
-    }
-    for business in businesses {
-        print("\(business.name ?? "Unknown") - \(business.rating ?? 0) stars")
-    }
-}
-```
-
-**Async/Await (iOS 13+, macOS 10.15+, tvOS 13+, watchOS 6+):**
 ```swift
 Task {
     do {
@@ -124,12 +95,15 @@ Task {
 Look up a business by its phone number:
 
 ```swift
-client.searchBusinesses(byPhoneNumber: "+14157492060") { response in
-    guard let business = response?.businesses?.first else {
-        print("No business found")
-        return
+Task {
+    do {
+        let response = try await client.searchBusinesses(byPhoneNumber: "+14157492060")
+        if let business = response.businesses?.first {
+            print("Found: \(business.name ?? "Unknown")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
-    print("Found: \(business.name ?? "Unknown")")
 }
 ```
 
@@ -138,14 +112,18 @@ client.searchBusinesses(byPhoneNumber: "+14157492060") { response in
 Search for businesses that support specific transactions (delivery, pickup, reservations):
 
 ```swift
-client.searchTransactions(
-    byType: .foodDelivery,
-    location: nil,
-    latitude: 37.7749,
-    longitude: -122.4194
-) { response in
-    guard let businesses = response?.businesses else { return }
-    print("Found \(businesses.count) businesses with delivery")
+Task {
+    do {
+        let response = try await client.searchTransactions(
+            byType: .foodDelivery,
+            location: nil,
+            latitude: 37.7749,
+            longitude: -122.4194
+        )
+        print("Found \(response.businesses?.count ?? 0) businesses with delivery")
+    } catch {
+        print("Error: \(error)")
+    }
 }
 ```
 
@@ -154,16 +132,19 @@ client.searchTransactions(
 Get detailed information about a specific business:
 
 ```swift
-client.fetchBusiness(
-    forId: "gary-danko-san-francisco",
-    locale: .english_unitedStates
-) { response in
-    guard let business = response?.business else {
-        print("Business not found")
-        return
+Task {
+    do {
+        let response = try await client.fetchBusiness(
+            forId: "gary-danko-san-francisco",
+            locale: .english_unitedStates
+        )
+        if let business = response.business {
+            print("Hours: \(business.hours ?? [])")
+            print("Phone: \(business.phone ?? "N/A")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
-    print("Hours: \(business.hours ?? [])")
-    print("Phone: \(business.phone ?? "N/A")")
 }
 ```
 
@@ -172,27 +153,30 @@ client.fetchBusiness(
 Find a business by matching provided details (name, address, phone):
 
 ```swift
-client.searchBusinesses(
-    name: "Gary Danko",
-    addressOne: "800 North Point Street",
-    addressTwo: nil,
-    addressThree: nil,
-    city: "San Francisco",
-    state: "CA",
-    country: "US",
-    latitude: nil,
-    longitude: nil,
-    phone: nil,
-    zipCode: nil,
-    yelpBusinessId: nil,
-    limit: 1,
-    matchThresholdType: .normal
-) { response in
-    guard let business = response?.businesses?.first else {
-        print("No matching business found")
-        return
+Task {
+    do {
+        let response = try await client.searchBusinesses(
+            name: "Gary Danko",
+            addressOne: "800 North Point Street",
+            addressTwo: nil,
+            addressThree: nil,
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+            latitude: nil,
+            longitude: nil,
+            phone: nil,
+            zipCode: nil,
+            yelpBusinessId: nil,
+            limit: 1,
+            matchThresholdType: .normal
+        )
+        if let business = response.businesses?.first {
+            print("Matched: \(business.name ?? "Unknown")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
-    print("Matched: \(business.name ?? "Unknown")")
 }
 ```
 
@@ -201,13 +185,17 @@ client.searchBusinesses(
 Get reviews for a specific business:
 
 ```swift
-client.fetchReviews(
-    forBusinessId: "gary-danko-san-francisco",
-    locale: .english_unitedStates
-) { response in
-    guard let reviews = response?.reviews else { return }
-    for review in reviews {
-        print("\(review.rating ?? 0) stars: \(review.text ?? "")")
+Task {
+    do {
+        let response = try await client.fetchReviews(
+            forBusinessId: "gary-danko-san-francisco",
+            locale: .english_unitedStates
+        )
+        for review in response.reviews ?? [] {
+            print("\(review.rating ?? 0) stars: \(review.text ?? "")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -217,20 +205,25 @@ client.fetchReviews(
 Get autocomplete suggestions for business searches:
 
 ```swift
-client.autocompleteBusinesses(
-    byText: "coff",
-    latitude: 37.7749,
-    longitude: -122.4194,
-    locale: .english_unitedStates
-) { response in
-    if let terms = response?.terms {
-        print("Term suggestions: \(terms.map { $0.text ?? "" })")
-    }
-    if let categories = response?.categories {
-        print("Categories: \(categories.map { $0.title ?? "" })")
-    }
-    if let businesses = response?.businesses {
-        print("Businesses: \(businesses.map { $0.name ?? "" })")
+Task {
+    do {
+        let response = try await client.autocompleteBusinesses(
+            byText: "coff",
+            latitude: 37.7749,
+            longitude: -122.4194,
+            locale: .english_unitedStates
+        )
+        if let terms = response.terms {
+            print("Term suggestions: \(terms.map { $0.text ?? "" })")
+        }
+        if let categories = response.categories {
+            print("Categories: \(categories.map { $0.title ?? "" })")
+        }
+        if let businesses = response.businesses {
+            print("Businesses: \(businesses.map { $0.name ?? "" })")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -238,22 +231,6 @@ client.autocompleteBusinesses(
 ### Yelp AI Chat
 
 Query Yelp's AI for natural language business recommendations:
-
-```swift
-client.fetchAIChat(
-    query: "Best tacos near me with outdoor seating",
-    chatId: nil,
-    latitude: 37.7749,
-    longitude: -122.4194
-) { response in
-    print(response?.response ?? "No response")
-    if let businesses = response?.businesses {
-        print("Suggested businesses: \(businesses.map { $0.name ?? "" })")
-    }
-}
-```
-
-Continue a multi-turn conversation by passing back the `chatId`:
 
 ```swift
 Task {
@@ -275,14 +252,18 @@ Task {
 Get engagement metrics for one or more businesses (requires special API key permissions):
 
 ```swift
-client.fetchEngagementMetrics(
-    forBusinessIds: ["gary-danko-san-francisco", "flour-water-san-francisco"],
-    dateRangeStart: "2026-01-01",
-    dateRangeEnd: "2026-06-01"
-) { response in
-    guard let data = response?.data else { return }
-    for entry in data {
-        print("\(entry.businessId ?? ""): \(entry.metrics ?? [:])")
+Task {
+    do {
+        let response = try await client.fetchEngagementMetrics(
+            forBusinessIds: ["gary-danko-san-francisco", "flour-water-san-francisco"],
+            dateRangeStart: "2026-01-01",
+            dateRangeEnd: "2026-06-01"
+        )
+        for entry in response.data ?? [] {
+            print("\(entry.businessId ?? ""): \(entry.metrics ?? [:])")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -292,13 +273,17 @@ client.fetchEngagementMetrics(
 Get the service offerings available for a business:
 
 ```swift
-client.fetchServiceOfferings(
-    forBusinessId: "gary-danko-san-francisco",
-    locale: .english_unitedStates
-) { response in
-    guard let offerings = response?.serviceOfferings else { return }
-    for offering in offerings {
-        print("\(offering.name ?? "Unknown"): \(offering.description ?? "")")
+Task {
+    do {
+        let response = try await client.fetchServiceOfferings(
+            forBusinessId: "gary-danko-san-francisco",
+            locale: .english_unitedStates
+        )
+        for offering in response.serviceOfferings ?? [] {
+            print("\(offering.name ?? "Unknown"): \(offering.description ?? "")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -308,14 +293,18 @@ client.fetchServiceOfferings(
 Get performance insights for one or more businesses (requires Yelp Insights API access):
 
 ```swift
-client.fetchBusinessInsights(
-    forBusinessIds: ["gary-danko-san-francisco"],
-    dateRangeStart: "202601",
-    dateRangeEnd: "202606"
-) { response in
-    guard let insights = response?.insights else { return }
-    for insight in insights {
-        print("\(insight.businessId ?? ""): \(insight.metrics ?? [:])")
+Task {
+    do {
+        let response = try await client.fetchBusinessInsights(
+            forBusinessIds: ["gary-danko-san-francisco"],
+            dateRangeStart: "202601",
+            dateRangeEnd: "202606"
+        )
+        for insight in response.insights ?? [] {
+            print("\(insight.businessId ?? ""): \(insight.metrics ?? [:])")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -325,14 +314,18 @@ client.fetchBusinessInsights(
 Get curated review highlights for a business (requires Premium Plan):
 
 ```swift
-client.fetchReviewHighlights(
-    forBusinessId: "gary-danko-san-francisco",
-    count: 3,
-    locale: .english_unitedStates
-) { response in
-    guard let highlights = response?.highlights else { return }
-    for highlight in highlights {
-        print("\(highlight.rating ?? 0) stars: \(highlight.text ?? "")")
+Task {
+    do {
+        let response = try await client.fetchReviewHighlights(
+            forBusinessId: "gary-danko-san-francisco",
+            count: 3,
+            locale: .english_unitedStates
+        )
+        for highlight in response.highlights ?? [] {
+            print("\(highlight.rating ?? 0) stars: \(highlight.text ?? "")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -342,13 +335,17 @@ client.fetchReviewHighlights(
 Search for home service professionals by describing the need:
 
 ```swift
-client.fetchJobs(
-    forQuery: "I need a licensed plumber to fix a burst pipe",
-    locale: nil
-) { response in
-    guard let jobs = response?.jobs else { return }
-    for job in jobs {
-        print("\(job.name ?? "Unknown") (\(job.alias ?? ""))")
+Task {
+    do {
+        let response = try await client.fetchJobs(
+            forQuery: "I need a licensed plumber to fix a burst pipe",
+            locale: nil
+        )
+        for job in response.jobs ?? [] {
+            print("\(job.name ?? "Unknown") (\(job.alias ?? ""))")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -358,20 +355,24 @@ client.fetchJobs(
 Check available reservation times for a restaurant:
 
 ```swift
-client.fetchOpenings(
-    forBusinessId: "gary-danko-san-francisco",
-    covers: 2,
-    date: "2026-06-20",
-    time: "19:00",
-    getCoversRange: true
-) { response in
-    guard let days = response?.reservationTimes else { return }
-    for day in days {
-        let times = day.times?.map { $0.time ?? "" } ?? []
-        print("\(day.date ?? ""): \(times.joined(separator: ", "))")
-    }
-    if let range = response?.coversRange {
-        print("Accepts \(range.minPartySize ?? 0)–\(range.maxPartySize ?? 0) guests")
+Task {
+    do {
+        let response = try await client.fetchOpenings(
+            forBusinessId: "gary-danko-san-francisco",
+            covers: 2,
+            date: "2026-06-20",
+            time: "19:00",
+            getCoversRange: true
+        )
+        for day in response.reservationTimes ?? [] {
+            let times = day.times?.map { $0.time ?? "" } ?? []
+            print("\(day.date ?? ""): \(times.joined(separator: ", "))")
+        }
+        if let range = response.coversRange {
+            print("Accepts \(range.minPartySize ?? 0)–\(range.maxPartySize ?? 0) guests")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -385,25 +386,29 @@ client.fetchOpenings(
 Search for events by location and optional filters:
 
 ```swift
-client.searchEvents(
-    byLocale: .english_unitedStates,
-    offset: nil,
-    limit: 10,
-    sortBy: .descending,
-    sortOn: .timeStart,
-    startDate: nil,
-    endDate: nil,
-    categories: [.music, .foodAndDrink],
-    isFree: nil,
-    location: "San Francisco",
-    latitude: nil,
-    longitude: nil,
-    radius: nil,
-    excludedEvents: nil
-) { response in
-    guard let events = response?.events else { return }
-    for event in events {
-        print("Event: \(event.title ?? "Unknown")")
+Task {
+    do {
+        let response = try await client.searchEvents(
+            byLocale: .english_unitedStates,
+            offset: nil,
+            limit: 10,
+            sortBy: .descending,
+            sortOn: .timeStart,
+            startDate: nil,
+            endDate: nil,
+            categories: [.music, .foodAndDrink],
+            isFree: nil,
+            location: "San Francisco",
+            latitude: nil,
+            longitude: nil,
+            radius: nil,
+            excludedEvents: nil
+        )
+        for event in response.events ?? [] {
+            print("Event: \(event.title ?? "Unknown")")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -413,13 +418,19 @@ client.searchEvents(
 Get detailed information about a specific event:
 
 ```swift
-client.fetchEvent(
-    forId: "san-francisco-yelp-elite-week",
-    locale: .english_unitedStates
-) { response in
-    guard let event = response?.event else { return }
-    print("Event: \(event.title ?? "Unknown")")
-    print("Description: \(event.eventDescription ?? "N/A")")
+Task {
+    do {
+        let response = try await client.fetchEvent(
+            forId: "san-francisco-yelp-elite-week",
+            locale: .english_unitedStates
+        )
+        if let event = response.event {
+            print("Event: \(event.title ?? "Unknown")")
+            print("Description: \(event.eventDescription ?? "N/A")")
+        }
+    } catch {
+        print("Error: \(error)")
+    }
 }
 ```
 
@@ -428,14 +439,20 @@ client.fetchEvent(
 Get the featured event for a location:
 
 ```swift
-client.fetchFeaturedEvent(
-    forLocale: .english_unitedStates,
-    location: "San Francisco",
-    latitude: nil,
-    longitude: nil
-) { response in
-    guard let event = response?.event else { return }
-    print("Featured event: \(event.title ?? "Unknown")")
+Task {
+    do {
+        let response = try await client.fetchFeaturedEvent(
+            forLocale: .english_unitedStates,
+            location: "San Francisco",
+            latitude: nil,
+            longitude: nil
+        )
+        if let event = response.event {
+            print("Featured event: \(event.title ?? "Unknown")")
+        }
+    } catch {
+        print("Error: \(error)")
+    }
 }
 ```
 
@@ -448,10 +465,14 @@ client.fetchFeaturedEvent(
 Get all available Yelp business categories:
 
 ```swift
-client.fetchCategories(forLocale: .english_unitedStates) { response in
-    guard let categories = response?.categories else { return }
-    for category in categories {
-        print("\(category.title ?? "Unknown") (\(category.alias ?? ""))")
+Task {
+    do {
+        let response = try await client.fetchCategories(forLocale: .english_unitedStates)
+        for category in response.categories ?? [] {
+            print("\(category.title ?? "Unknown") (\(category.alias ?? ""))")
+        }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -461,25 +482,29 @@ client.fetchCategories(forLocale: .english_unitedStates) { response in
 Get details for a specific category:
 
 ```swift
-client.fetchCategory(
-    forAlias: .restaurants,
-    andLocale: .english_unitedStates
-) { response in
-    guard let category = response?.category else { return }
-    print("Category: \(category.title ?? "Unknown")")
-    print("Alias: \(category.alias ?? "")")
+Task {
+    do {
+        let response = try await client.fetchCategory(
+            forAlias: .restaurants,
+            andLocale: .english_unitedStates
+        )
+        if let category = response.category {
+            print("Category: \(category.title ?? "Unknown")")
+            print("Alias: \(category.alias ?? "")")
+        }
+    } catch {
+        print("Error: \(error)")
+    }
 }
 ```
 
 ---
 
-## Async/Await Usage
+## Async/Await Patterns
 
-All API methods have async/await overloads available on iOS 13+, macOS 10.15+, tvOS 13+, and watchOS 6+.
+All API methods are `async throws`. Wrap calls in a `Task` block from synchronous context, or call them directly from within another `async` function.
 
 ### Basic Pattern
-
-Wrap API calls in a `Task` block:
 
 ```swift
 Task {
@@ -494,7 +519,7 @@ Task {
 
 ### With Main Thread Dispatch
 
-Update UI on the main thread:
+Update UI on the main thread after an API call:
 
 ```swift
 Task {
@@ -515,9 +540,8 @@ Task {
             openAt: nil,
             attributes: nil
         )
-        
-        DispatchQueue.main.async {
-            // Update UI with response
+
+        await MainActor.run {
             self.businesses = response.businesses ?? []
             self.tableView.reloadData()
         }
@@ -533,40 +557,41 @@ Use `async let` for concurrent API calls:
 
 ```swift
 Task {
-    async let searchResults = client.searchBusinesses(
-        byTerm: "coffee",
-        location: "San Francisco",
-        latitude: nil,
-        longitude: nil,
-        radius: nil,
-        categories: nil,
-        locale: nil,
-        limit: 10,
-        offset: nil,
-        sortBy: .bestMatch,
-        priceTiers: nil,
-        openNow: nil,
-        openAt: nil,
-        attributes: nil
-    )
-    
-    async let eventResults = client.searchEvents(
-        byLocale: .english_unitedStates,
-        offset: nil,
-        limit: 5,
-        sortBy: .popularity,
-        sortOn: .timeStart,
-        categories: nil,
-        startDate: nil,
-        endDate: nil,
-        isFree: nil,
-        location: "San Francisco",
-        latitude: nil,
-        longitude: nil,
-        radius: nil
-    )
-    
     do {
+        async let searchResults = client.searchBusinesses(
+            byTerm: "coffee",
+            location: "San Francisco",
+            latitude: nil,
+            longitude: nil,
+            radius: nil,
+            categories: nil,
+            locale: nil,
+            limit: 10,
+            offset: nil,
+            sortBy: .bestMatch,
+            priceTiers: nil,
+            openNow: nil,
+            openAt: nil,
+            attributes: nil
+        )
+
+        async let eventResults = client.searchEvents(
+            byLocale: .english_unitedStates,
+            offset: nil,
+            limit: 5,
+            sortBy: .descending,
+            sortOn: .timeStart,
+            startDate: nil,
+            endDate: nil,
+            categories: nil,
+            isFree: nil,
+            location: "San Francisco",
+            latitude: nil,
+            longitude: nil,
+            radius: nil,
+            excludedEvents: nil
+        )
+
         let businesses = try await searchResults.businesses ?? []
         let events = try await eventResults.events ?? []
         print("Found \(businesses.count) businesses and \(events.count) events")
@@ -580,7 +605,18 @@ Task {
 
 ## Error Handling
 
-API methods throw `AFError` from the Alamofire framework when network requests fail.
+API methods throw `CDYelpNetworkError` when requests fail.
+
+### Error Cases
+
+```swift
+public enum CDYelpNetworkError: Error {
+    case invalidRequest(underlying: Error)
+    case networkFailure(underlying: Error)
+    case httpError(statusCode: Int, data: Data, headers: [String: String])
+    case decodingFailed(underlying: Error)
+}
+```
 
 ### Handling Errors
 
@@ -589,28 +625,26 @@ Task {
     do {
         let response = try await client.searchBusinesses(...)
         // Use response
-    } catch {
-        if let afError = error as? AFError {
-            switch afError {
-            case .invalidURL(let url):
-                print("Invalid URL: \(url)")
-            case .parameterEncodingFailed(let reason):
-                print("Parameter encoding failed: \(reason)")
-            case .responseValidationFailed(let reason):
-                print("Response validation failed: \(reason)")
-            default:
-                print("Alamofire error: \(afError)")
-            }
-        } else {
-            print("Unknown error: \(error)")
+    } catch let error as CDYelpNetworkError {
+        switch error {
+        case .invalidRequest(let underlying):
+            print("Invalid request — check search parameters: \(underlying)")
+        case .networkFailure(let underlying):
+            print("Network failure: \(underlying.localizedDescription)")
+        case .httpError(let statusCode, _, _):
+            print("HTTP \(statusCode) — check API key validity and rate limits")
+        case .decodingFailed(let underlying):
+            print("Decoding failed: \(underlying)")
         }
+    } catch {
+        print("Unexpected error: \(error)")
     }
 }
 ```
 
 ### Graceful Degradation
 
-Handle missing data gracefully:
+Handle missing optional data gracefully:
 
 ```swift
 Task {
@@ -651,10 +685,10 @@ let response = try await client.searchBusinesses(byTerm: "coffee", location: "SF
 let cached = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
 
 // Manually invalidate the entire cache
-client.clearCache()
+await client.clearCache()
 ```
 
-Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are only stored after a successful decode, preventing poisoned cache entries from bad responses.
+Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are stored on any successful 2xx response before decoding. If decoding subsequently fails, the raw bytes remain cached for the TTL window — callers should account for this when diagnosing persistent decode failures.
 
 ---
 
@@ -673,7 +707,7 @@ let client = CDYelpAPIClient(
 )
 ```
 
-The default preset (`CDYelpRetryConfiguration.default`) retries 3 times starting at 0.5 s for network errors and common server-side status codes. Retrying is disabled by default (`CDYelpRetryConfiguration.disabled`).
+Retrying is disabled by default (`CDYelpRetryConfiguration.disabled`).
 
 ---
 
@@ -728,6 +762,12 @@ let client = CDYelpAPIClient(
 
 Multiple adapters can be passed; they are applied in order.
 
+> **Note:** `adapt(_:)` runs once per logical API call, before the first attempt — not once per
+> retry attempt. If a request is retried (see [Retry Strategy](#retry-strategy)), the same
+> already-adapted request is resent unchanged. An adapter that refreshes an expiring auth token or
+> signs requests with a per-attempt nonce/timestamp should refresh proactively rather than relying
+> on being re-invoked mid-retry.
+
 ---
 
 ### Custom Decoders
@@ -767,7 +807,7 @@ struct MyFeatureTests {
             stub: .init(data: fixture, statusCode: 200),
             forURLContaining: "businesses/search"
         )
-        defer { CDYelpMockURLProtocol.removeAllStubs() }
+        defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
 
         let client = CDYelpMockClientFactory.makeClient()
         let response = try await client.searchBusinesses(
@@ -838,7 +878,7 @@ Supported locales for API responses:
 Filter by supported transaction types:
 - `.foodDelivery` — delivery
 - `.pickup` — pickup
-- `.reservation` — restaurant_reservation
+- `.restaurantReservation` — restaurant_reservation
 
 ### Business Match Threshold
 
@@ -912,29 +952,33 @@ watchOS apps have limited capabilities compared to iOS/macOS:
 Example:
 
 ```swift
-client.searchBusinesses(
-    byTerm: "coffee",
-    location: "San Francisco",
-    latitude: nil,
-    longitude: nil,
-    radius: nil,
-    categories: nil,
-    locale: nil,
-    limit: 5,
-    offset: nil,
-    sortBy: .bestMatch,
-    priceTiers: nil,
-    openNow: nil,
-    openAt: nil,
-    attributes: nil
-) { response in
-    guard let businesses = response?.businesses else { return }
-    for business in businesses {
-        // Fetch image URL but don't try to render UIImage
-        if let imageUrlString = business.imageUrl {
-            print("Image URL: \(imageUrlString)")
-            // Download and display using WatchKit-compatible methods
+Task {
+    do {
+        let response = try await client.searchBusinesses(
+            byTerm: "coffee",
+            location: "San Francisco",
+            latitude: nil,
+            longitude: nil,
+            radius: nil,
+            categories: nil,
+            locale: nil,
+            limit: 5,
+            offset: nil,
+            sortBy: .bestMatch,
+            priceTiers: nil,
+            openNow: nil,
+            openAt: nil,
+            attributes: nil
+        )
+        for business in response.businesses ?? [] {
+            // Fetch image URL but don't try to render UIImage
+            if let imageUrlString = business.imageUrl {
+                print("Image URL: \(imageUrlString)")
+                // Download and display using WatchKit-compatible methods
+            }
         }
+    } catch {
+        print("Error: \(error)")
     }
 }
 ```
@@ -975,19 +1019,35 @@ visionOS support is available on Apple Vision Pro:
 
 ### Network Errors
 
-**Error: "invalidURL"**
+**`CDYelpNetworkError.invalidRequest(underlying:)`**
 - Check that search parameters are valid (e.g., location is not empty)
 
-**Error: "responseValidationFailed"**
-- API may be temporarily unavailable
-- Check your API key is valid
-- Verify the business/event ID exists
+**`CDYelpNetworkError.httpError(statusCode: 401, _, _)`**
+- API key is invalid or missing
+
+**`CDYelpNetworkError.httpError(statusCode: 429, _, _)`**
+- Rate limit exceeded — enable `CDYelpRetryConfiguration` for automatic backoff. If the response includes a `Retry-After` header, it's honored automatically instead of blind exponential backoff.
+
+**`CDYelpNetworkError.httpError(statusCode: 404, _, _)`**
+- Verify the business or event ID exists
+
+**`CDYelpNetworkError.decodingFailed`**
+- API schema mismatch — check for a CDYelpFusionKit update
 
 ### Rate Limiting
 
-The Yelp Fusion API enforces rate limits:
-- Check Alamofire's response headers for rate limit information
-- Implement retry logic with exponential backoff for production apps
+The Yelp Fusion API enforces rate limits. Enable automatic retry with exponential backoff for production apps:
+
+```swift
+let client = CDYelpAPIClient(
+    apiKey: "your-api-key",
+    retryConfiguration: CDYelpRetryConfiguration(
+        retryLimit: 3,
+        initialDelay: 0.5,
+        retryableHTTPStatusCodes: [429, 500, 502, 503, 504]
+    )
+)
+```
 
 ---
 
@@ -996,4 +1056,3 @@ The Yelp Fusion API enforces rate limits:
 - [Yelp Fusion API Documentation](https://www.yelp.com/developers/documentation/v3)
 - [CDYelpFusionKit GitHub Repository](https://github.com/chrisdhaan/CDYelpFusionKit)
 - [Swift Package Manager Documentation](https://www.swift.org/package-manager/)
-- [Alamofire Documentation](https://github.com/Alamofire/Alamofire)

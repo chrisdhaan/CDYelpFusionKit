@@ -28,6 +28,19 @@
 import Foundation
 
 /// Adapts a URLRequest before it is sent by CDYelpFusionKit.
+///
+/// - Important: `adapt(_:)` runs exactly once per logical API call, before the first attempt —
+///   not once per retry attempt. If a retry occurs (see `CDYelpRetryConfiguration`), the same
+///   already-adapted request is resent unchanged. An adapter that refreshes an expiring token or
+///   signs requests with a per-attempt nonce/timestamp will not get a fresh value on retry; such
+///   an adapter should refresh proactively before the request reaches CDYelpFusionKit, rather than
+///   relying on being re-invoked mid-retry.
+/// - Important: An error thrown from `adapt(_:)` must be safe to share across concurrency domains —
+///   it crosses an actor boundary on its way to the caller. If the error is already a
+///   `CDYelpNetworkError`, it is rethrown unchanged; any other error is wrapped in
+///   `CDYelpNetworkError.invalidRequest`. `CDYelpNetworkError` is `@unchecked Sendable` specifically
+///   to accommodate this, since the protocol itself cannot require `adapt(_:)`'s thrown error type
+///   to be `Sendable`.
 public protocol CDYelpRequestAdapter: AnyObject, Sendable {
     /// Mutate and return the request. Return the request unchanged to pass it through.
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest

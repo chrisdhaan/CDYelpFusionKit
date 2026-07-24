@@ -10,33 +10,9 @@ import CDYelpFusionKit
 let client = CDYelpAPIClient(apiKey: "your-api-key-here")
 ```
 
-## Search for Businesses (Completion Handler)
+## Search for Businesses
 
-```swift
-client.searchBusinesses(
-    byTerm: "coffee",
-    location: "San Francisco",
-    latitude: nil,
-    longitude: nil,
-    radius: nil,
-    categories: nil,
-    locale: nil,
-    limit: 10,
-    offset: nil,
-    sortBy: .bestMatch,
-    priceTiers: nil,
-    openNow: nil,
-    openAt: nil,
-    attributes: nil
-) { response in
-    guard let businesses = response?.businesses else { return }
-    for business in businesses {
-        print(business.name ?? "Unknown")
-    }
-}
-```
-
-## Search for Businesses (Async/Await, iOS 13+)
+CDYelpFusionKit's API surface is `async throws` only (iOS 15.0+, macOS 12.0+, tvOS 15.0+, watchOS 8.0+, visionOS 1.0+). There are no completion-handler overloads.
 
 ```swift
 Task {

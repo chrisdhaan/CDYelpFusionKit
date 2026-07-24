@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [6.0.0](#600---2026-07-24)
 - [5.1.0](#510---2026-06-15)
 - [5.0.0](#500---2026-06-07)
 - [4.0.0](#400---2026-06-02)
@@ -22,6 +23,34 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [6.0.0] - 2026-07-24
+
+### Added
+
+- `CDYelpNetworkError` — native Swift error enum replacing `AFError` with four cases: `.invalidRequest(underlying:)`, `.networkFailure(underlying:)`, `.httpError(statusCode:data:headers:)`, `.decodingFailed(underlying:)`
+- `CDYelpURLSession` — internal Swift actor managing the URLSession-based networking pipeline: adapter chain, cache, network dispatch, retry, and decode
+- Retry backoff honors a server-provided `Retry-After` response header when present, instead of always using exponential backoff
+
+### Updated
+
+- **Alamofire removed** — CDYelpFusionKit is now dependency-free, using Apple's URLSession directly
+- All 19 `CDYelpAPIClient` methods are now `async throws` only; completion-handler overloads removed
+- Minimum deployment targets raised: iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0 (visionOS 1.0 unchanged)
+- `CDYelpRouter` internal routing enum renamed from `CDYelpNativeRouter` for continuity with v5 naming; `asURLRequest()` now requires an explicit `apiKey:` parameter
+- `CDYelpRetryConfiguration` default retry codes updated to `[408, 429, 500, 502, 503, 504]`
+- `cancelAllPendingAPIRequests()` is now `async` — it suspends until in-flight tasks and retry backoff sleeps are actually cancelled, instead of returning before cancellation takes effect
+- Requests include `User-Agent` and `Accept-Language` headers (matching Alamofire's previous default header behavior); any framework-set header a request adapter removes entirely is automatically restored
+- `fetchAIChat` requires `latitude` and `longitude` to be provided together, or not at all — see the 6.0 migration guide
+
+### Removed
+
+- Completion-handler API — all `CDYelpAPIClient` methods previously had `completion:` variants; replaced by `async throws` exclusively
+- `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter` internal Alamofire bridge types
+- Alamofire SPM and CocoaPods dependency
+- `isAuthenticated()` method — `init` already enforces a non-empty `apiKey` via `precondition`, so the check could never return `false`
 
 ---
 

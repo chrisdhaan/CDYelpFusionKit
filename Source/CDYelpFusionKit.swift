@@ -33,4 +33,4 @@ import Foundation
 #endif
 
 /// Current CDYelpFusionKit version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.
-let version = "5.0.0"
+let version = "6.0.0"

@@ -29,6 +29,11 @@ let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
 
 enum CDYelpURL {
     static let base = "https://api.yelp.com/v3/"
+    static let rootBase = "https://api.yelp.com/"
     static let deepLink = "yelp4:"
     static let web = "https://yelp.com/"
 }
+
+/// Identifies this framework to the Yelp Fusion API on every request. Alamofire previously set
+/// this implicitly via `HTTPHeaders.default`; the native `URLSession` client sets it explicitly.
+let CDYelpFusionKitUserAgent = "CDYelpFusionKit/6.0.0"

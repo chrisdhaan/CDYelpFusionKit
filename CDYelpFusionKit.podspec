@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CDYelpFusionKit'
-  s.version = '5.1.0'
+  s.version = '6.0.0'
   s.cocoapods_version = '>= 1.13.0'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'An extensive Swift wrapper for the Yelp Fusion API.'
@@ -12,10 +12,10 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/chrisdhaan/CDYelpFusionKit.git', :tag => s.version.to_s }
   s.documentation_url = 'https://chrisdhaan.github.io/CDYelpFusionKit/'
 
-  s.ios.deployment_target = '12.0'
-  s.osx.deployment_target = '11.0'
-  s.tvos.deployment_target = '12.0'
-  s.watchos.deployment_target = '4.0'
+  s.ios.deployment_target = '15.0'
+  s.osx.deployment_target = '12.0'
+  s.tvos.deployment_target = '15.0'
+  s.watchos.deployment_target = '8.0'
   s.visionos.deployment_target = '1.0'
 
   s.swift_versions = ['5']
@@ -27,7 +27,6 @@ Pod::Spec.new do |s|
     c.exclude_files = 'Source/Testing/**/*.swift'
     c.resource_bundles = { 'CDYelpFusionKit' => ['Source/PrivacyInfo.xcprivacy'] }
     c.resources = ['Resources/*.xcassets']
-    c.dependency 'Alamofire', '~> 5.9'
   end
 
   s.subspec 'Testing' do |t|

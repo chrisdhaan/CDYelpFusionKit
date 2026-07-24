@@ -31,74 +31,10 @@
     import UIKit
 #endif
 
-import Alamofire
-
-// swiftlint:disable:next type_body_length
-public class CDYelpAPIClient: @unchecked Sendable {
+public final class CDYelpAPIClient: Sendable {
     private let apiKey: String
-    private let sessionConfiguration: URLSessionConfiguration
-    private let responseCache: CDYelpResponseCache?
-    private let retryConfiguration: CDYelpRetryConfiguration
     private let decoderConfiguration: CDYelpDecoderConfiguration
-    private let eventMonitors: [any CDYelpEventMonitor]
-    private let requestAdapters: [any CDYelpRequestAdapter]
-    private let manager: Alamofire.Session
-
-    private static func makeSession(
-        apiKey: String,
-        sessionConfiguration: URLSessionConfiguration,
-        retryConfiguration: CDYelpRetryConfiguration,
-        eventMonitors: [any CDYelpEventMonitor],
-        requestAdapters: [any CDYelpRequestAdapter]
-    ) -> Alamofire.Session {
-        var headers = HTTPHeaders.default
-        headers["Authorization"] = "Bearer \(apiKey)"
-        sessionConfiguration.httpAdditionalHeaders = headers.dictionary
-
-        let rootQueue = DispatchQueue(label: "org.cdyelp.session.rootQueue")
-        let delegateQueue = OperationQueue()
-        delegateQueue.underlyingQueue = rootQueue
-
-        let delegate = Alamofire.SessionDelegate()
-        let urlSession = URLSession(configuration: sessionConfiguration, delegate: delegate, delegateQueue: delegateQueue)
-
-        let alamofireMonitors: [any EventMonitor] = eventMonitors.isEmpty
-            ? []
-            : [CDYelpAlamofireEventMonitor(monitors: eventMonitors)]
-
-        var adapters: [RequestAdapter] = []
-        if !requestAdapters.isEmpty {
-            adapters.append(CDYelpAlamofireRequestAdapter(adapters: requestAdapters))
-        }
-
-        var retriers: [RequestRetrier] = []
-        if retryConfiguration.retryLimit > 0 {
-            let policy = RetryPolicy(
-                retryLimit: retryConfiguration.retryLimit,
-                exponentialBackoffBase: 2,
-                exponentialBackoffScale: retryConfiguration.initialDelay,
-                retryableHTTPStatusCodes: retryConfiguration.retryableHTTPStatusCodes,
-                retryableURLErrorCodes: [
-                    .networkConnectionLost,
-                    .notConnectedToInternet,
-                    .timedOut,
-                ]
-            )
-            retriers.append(policy)
-        }
-
-        let interceptor: RequestInterceptor? = (adapters.isEmpty && retriers.isEmpty)
-            ? nil
-            : Interceptor(adapters: adapters, retriers: retriers)
-
-        return Alamofire.Session(
-            session: urlSession,
-            delegate: delegate,
-            rootQueue: rootQueue,
-            interceptor: interceptor,
-            eventMonitors: alamofireMonitors
-        )
-    }
+    private let urlSession: CDYelpURLSession
 
     // MARK: - Initializers
 
@@ -113,8 +49,6 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
     ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
     ///
-    /// - returns: Void
-    ///
     public convenience init(
         apiKey: String,
         cacheConfiguration: CDYelpCacheConfiguration = .disabled,
@@ -125,7 +59,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ) {
         self.init(
             apiKey: apiKey,
-            sessionConfiguration: URLSessionConfiguration.default,
+            sessionConfiguration: .default,
             cacheConfiguration: cacheConfiguration,
             retryConfiguration: retryConfiguration,
             decoderConfiguration: decoderConfiguration,
@@ -134,7 +68,21 @@ public class CDYelpAPIClient: @unchecked Sendable {
         )
     }
 
-    /// Internal initializer for testing — allows injection of a custom URLSessionConfiguration.
+    ///
+    /// Initializes a new CDYelpAPIClient object with a custom URLSessionConfiguration. This
+    /// overload exists primarily so `CDYelpMockClientFactory` (in the separate `CDYelpFusionKitTesting`
+    /// target) can inject a configuration whose `protocolClasses` route requests through
+    /// `CDYelpMockURLProtocol` for testing.
+    ///
+    /// - parameters:
+    ///   - apiKey: (**Required**) A unique key for the Yelp application used for authenticating with the Yelp Fusion API. **Do not share this key**.
+    ///   - sessionConfiguration: (**Required**) The `URLSessionConfiguration` used to construct the underlying `URLSession`.
+    ///   - cacheConfiguration: (Optional) Configuration for the built-in response cache. Defaults to disabled.
+    ///   - retryConfiguration: (Optional) Configuration for automatic retry with exponential backoff. Defaults to disabled.
+    ///   - decoderConfiguration: (Optional) Configuration for JSON decoding strategies. Defaults to standard configuration.
+    ///   - eventMonitors: (Optional) An array of event monitors to observe CDYelpFusionKit request and response events. Defaults to an empty array.
+    ///   - requestAdapters: (Optional) An array of request adapters to mutate URLRequests before sending. Defaults to an empty array.
+    ///
     public init(
         apiKey: String,
         sessionConfiguration: URLSessionConfiguration,
@@ -146,90 +94,53 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ) {
         precondition(!apiKey.isEmpty, "An apiKey is required to query the Yelp Fusion API.")
         self.apiKey = apiKey
-        self.sessionConfiguration = sessionConfiguration
         self.decoderConfiguration = decoderConfiguration
-        self.retryConfiguration = retryConfiguration
-        responseCache = cacheConfiguration.ttl > 0
+        let cache = cacheConfiguration.ttl > 0
             ? CDYelpResponseCache(configuration: cacheConfiguration)
             : nil
-        self.eventMonitors = eventMonitors
-        self.requestAdapters = requestAdapters
-        manager = Self.makeSession(
-            apiKey: apiKey,
-            sessionConfiguration: sessionConfiguration,
-            retryConfiguration: retryConfiguration,
-            eventMonitors: eventMonitors,
-            requestAdapters: requestAdapters
+        urlSession = CDYelpURLSession(
+            session: URLSession(configuration: sessionConfiguration),
+            makeDecoder: { decoderConfiguration.makeDecoder() },
+            cache: cache,
+            monitors: eventMonitors,
+            adapters: requestAdapters,
+            retryConfig: retryConfiguration
         )
-    }
-
-    // MARK: - Authentication Methods
-
-    ///
-    /// Determines whether or not the Yelp application has successfully authenticated with the Yelp Fusion API.
-    ///
-    /// - returns: Bool
-    ///
-    public func isAuthenticated() -> Bool {
-        return true
     }
 
     // MARK: - Cache Methods
 
     /// Removes all cached responses.
     public func clearCache() {
-        responseCache?.removeAll()
+        urlSession.clearCache()
     }
 
-    // MARK: - Private Request Helpers
+    // MARK: - Decoding Helpers
 
-    private func cachedRequest<T: Decodable>(
-        _ router: CDYelpRouter,
-        decoder: JSONDecoder? = nil,
-        completion: @escaping (T?) -> Void
-    ) {
-        let decoder = decoder ?? decoderConfiguration.makeDecoder()
+    /// Builds a decoder honoring `decoderConfiguration` with the given date format substituted in,
+    /// shared by the reviews/events endpoints whose date fields don't use the default ISO-8601 strategy.
+    private func makeDecoder(dateFormat: DateFormatter) -> JSONDecoder {
+        let decoder = decoderConfiguration.makeDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormat)
+        return decoder
+    }
 
-        // Only build the cache key when caching is enabled, skipping the redundant
-        // asURLRequest() + adapter pass on every uncached call. If any adapter throws,
-        // skip caching and let Alamofire surface the error through the normal failure path.
-        var cacheKey: String?
-        if responseCache != nil, var urlRequest = try? router.asURLRequest() {
-            do {
-                for adapter in requestAdapters {
-                    urlRequest = try adapter.adapt(urlRequest)
-                }
-                cacheKey = CDYelpCacheKey.key(for: urlRequest)
-            } catch {
-                cacheKey = nil
-            }
-        }
+    // MARK: - Request Methods
 
-        if let cache = responseCache, let key = cacheKey, let cachedData = cache.data(forKey: key) {
-            completion(try? decoder.decode(T.self, from: cachedData))
-            return
-        }
+    /// Cancels any in progress or pending API requests. Suspends until cancellation has been
+    /// applied to all in-flight tasks and retry backoff sleeps.
+    public func cancelAllPendingAPIRequests() async {
+        await urlSession.cancelAllTasks()
+    }
 
-        manager
-            .request(router)
-            .validate()
-            .responseData { [weak self] dataResponse in
-                switch dataResponse.result {
-                case let .success(data):
-                    // Only cache bytes that decode successfully; storing undecoded data would
-                    // poison the cache key for the entire TTL with no recovery path.
-                    if let decoded = try? decoder.decode(T.self, from: data) {
-                        if let key = cacheKey {
-                            self?.responseCache?.set(data: data, forKey: key)
-                        }
-                        completion(decoded)
-                    } else {
-                        completion(nil)
-                    }
-                case .failure:
-                    completion(nil)
-                }
-            }
+    /// Builds and performs the request for a router case, shared by every endpoint method below
+    /// so the "build request, perform, honor cacheability" sequence is expressed once.
+    private func perform<T: Decodable>(_ router: CDYelpRouter, decoder: JSONDecoder? = nil) async throws -> T {
+        try await urlSession.perform(
+            buildRequest: { try router.asURLRequest(apiKey: self.apiKey) },
+            decoder: decoder,
+            cacheable: router.isCacheable
+        )
     }
 
     // MARK: - Yelp Fusion API Methods
@@ -238,7 +149,7 @@ public class CDYelpAPIClient: @unchecked Sendable {
 
     /// Searches for businesses based on the provided search criteria.
     ///
-    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(forId:locale:devicePlatform:completion:)`` for detailed information or ``fetchReviews(forBusinessId:locale:offset:limit:sortBy:completion:)`` for reviews.
+    /// This endpoint returns up to 1000 businesses with basic information. Use ``fetchBusiness(forId:locale:devicePlatform:)`` for detailed information or ``fetchReviews(forBusinessId:locale:offset:limit:sortBy:)`` for reviews.
     ///
     /// - Parameters:
     ///   - term: A search term (e.g. "food", "restaurants"). If not provided, all data is searched.
@@ -261,63 +172,65 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - reservationCovers: (Optional) The party size for reservation filtering.
     ///   - matchesPartySize: (Optional) Whether to filter for businesses that match the party size.
     ///   - jobAlias: (Optional) The job alias for job-related filtering.
-    ///   - completion: Callback with ``CDYelpSearchResponse`` Business results.
     ///
-    public func searchBusinesses(byTerm term: String?,
-                                 location: String?,
-                                 latitude: Double?,
-                                 longitude: Double?,
-                                 radius: Int?,
-                                 categories: [CDYelpCategoryAlias]?,
-                                 locale: CDYelpLocale?,
-                                 limit: Int?,
-                                 offset: Int?,
-                                 sortBy: CDYelpBusinessSortType?,
-                                 priceTiers: [CDYelpPriceTier]?,
-                                 openNow: Bool?,
-                                 openAt: Int?,
-                                 attributes: [CDYelpAttributeFilter]?,
-                                 devicePlatform: String? = nil,
-                                 reservationDate: String? = nil,
-                                 reservationTime: String? = nil,
-                                 reservationCovers: Int? = nil,
-                                 matchesPartySize: Bool? = nil,
-                                 jobAlias: String? = nil,
-                                 completion: @escaping (CDYelpSearchResponse.Business?) -> Void)
-    {
-        assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint.")
-        if let radius = radius {
-            assert(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func searchBusinesses(
+        byTerm term: String?,
+        location: String?,
+        latitude: Double?,
+        longitude: Double?,
+        radius: Int?,
+        categories: [CDYelpCategoryAlias]?,
+        locale: CDYelpLocale?,
+        limit: Int?,
+        offset: Int?,
+        sortBy: CDYelpBusinessSortType?,
+        priceTiers: [CDYelpPriceTier]?,
+        openNow: Bool?,
+        openAt: Int?,
+        attributes: [CDYelpAttributeFilter]?,
+        devicePlatform: String? = nil,
+        reservationDate: String? = nil,
+        reservationTime: String? = nil,
+        reservationCovers: Int? = nil,
+        matchesPartySize: Bool? = nil,
+        jobAlias: String? = nil
+    ) async throws -> CDYelpSearchResponse.Business {
+        precondition(
+            (latitude != nil && longitude != nil) || location != nil,
+            "Either a latitude and longitude or a location are required to query the Yelp Fusion API search endpoint."
+        )
+        if let radius {
+            precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API search endpoint.")
         }
-        if let limit = limit {
-            assert(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
+        if let limit {
+            precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API search endpoint.")
         }
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.searchParameters(withTerm: term,
-                                                         location: location,
-                                                         latitude: latitude,
-                                                         longitude: longitude,
-                                                         radius: radius,
-                                                         categories: categories,
-                                                         locale: locale,
-                                                         limit: limit,
-                                                         offset: offset,
-                                                         sortBy: sortBy,
-                                                         priceTiers: priceTiers,
-                                                         openNow: openNow,
-                                                         openAt: openAt,
-                                                         attributes: attributes,
-                                                         devicePlatform: devicePlatform,
-                                                         reservationDate: reservationDate,
-                                                         reservationTime: reservationTime,
-                                                         reservationCovers: reservationCovers,
-                                                         matchesPartySize: matchesPartySize,
-                                                         jobAlias: jobAlias)
-
-            cachedRequest(CDYelpRouter.search(parameters: parameters), completion: completion)
-        }
+        let parameters = Parameters.searchParameters(
+            withTerm: term,
+            location: location,
+            latitude: latitude,
+            longitude: longitude,
+            radius: radius,
+            categories: categories,
+            locale: locale,
+            limit: limit,
+            offset: offset,
+            sortBy: sortBy,
+            priceTiers: priceTiers,
+            openNow: openNow,
+            openAt: openAt,
+            attributes: attributes,
+            devicePlatform: devicePlatform,
+            reservationDate: reservationDate,
+            reservationTime: reservationTime,
+            reservationCovers: reservationCovers,
+            matchesPartySize: matchesPartySize,
+            jobAlias: jobAlias
+        )
+        let router = CDYelpRouter.search(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -326,20 +239,17 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - phoneNumber: (**Required**) The phone number of the business for the Yelp Fusion API to query. It must start with + and include the country code, (e.g. "+14159083801").
     ///   - locale: (Optional) The interface locale; this determines the language for the results to return.
-    ///   - completion: A completion block in which the Yelp Fusion API phone search endpoint response can be parsed.
     ///
-    public func searchBusinesses(byPhoneNumber phoneNumber: String!,
-                                 locale: CDYelpLocale? = nil,
-                                 completion: @escaping (CDYelpSearchResponse.Phone?) -> Void)
-    {
-        assert(phoneNumber != nil && phoneNumber.count > 0, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber,
-                                                        locale: locale)
-
-            cachedRequest(CDYelpRouter.phone(parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func searchBusinesses(
+        byPhoneNumber phoneNumber: String,
+        locale: CDYelpLocale? = nil
+    ) async throws -> CDYelpSearchResponse.Phone {
+        precondition(!phoneNumber.isEmpty, "A business phone number is required to query the Yelp Fusion API phone endpoint.")
+        let parameters = Parameters.phoneParameters(withPhoneNumber: phoneNumber, locale: locale)
+        let router = CDYelpRouter.phone(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -353,31 +263,32 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - term: (Optional) A search term to filter transaction results.
     ///   - categories: (Optional) Category filters using ``CDYelpCategoryAlias``.
     ///   - priceTiers: (Optional) Price filters using ``CDYelpPriceTier``.
-    ///   - completion: A completion block in which the Yelp Fusion API transactions endpoint response can be parsed.
     ///
-    public func searchTransactions(byType type: CDYelpTransactionType!,
-                                   location: String?,
-                                   latitude: Double?,
-                                   longitude: Double?,
-                                   term: String? = nil,
-                                   categories: [CDYelpCategoryAlias]? = nil,
-                                   priceTiers: [CDYelpPriceTier]? = nil,
-                                   completion: @escaping (CDYelpSearchResponse.Transaction?) -> Void)
-    {
-        assert(type != nil, "A transaction type is required to query the Yelp Fusion API transactions endpoint.")
-        assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.transactionsParameters(withLocation: location,
-                                                               latitude: latitude,
-                                                               longitude: longitude,
-                                                               term: term,
-                                                               categories: categories,
-                                                               priceTiers: priceTiers)
-
-            cachedRequest(CDYelpRouter.transactions(type: type.rawValue, parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func searchTransactions(
+        byType type: CDYelpTransactionType,
+        location: String?,
+        latitude: Double?,
+        longitude: Double?,
+        term: String? = nil,
+        categories: [CDYelpCategoryAlias]? = nil,
+        priceTiers: [CDYelpPriceTier]? = nil
+    ) async throws -> CDYelpSearchResponse.Transaction {
+        precondition(
+            (latitude != nil && longitude != nil) || location != nil,
+            "Either a latitude and longitude or a location are required to query the Yelp Fusion API transactions endpoint."
+        )
+        let parameters = Parameters.transactionsParameters(
+            withLocation: location,
+            latitude: latitude,
+            longitude: longitude,
+            term: term,
+            categories: categories,
+            priceTiers: priceTiers
+        )
+        let router = CDYelpRouter.transactions(type: type.rawValue, parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -387,20 +298,18 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - id: (**Required**) The identifier of the business for the Yelp Fusion API to query.
     ///   - locale: (Optional) The interface locale; this determines the language of the business information returned.
     ///   - devicePlatform: (Optional) The device platform for the request.
-    ///   - completion: A completion block in which the Yelp Fusion API business endpoint response can be parsed.
     ///
-    public func fetchBusiness(forId id: String!,
-                              locale: CDYelpLocale?,
-                              devicePlatform: String? = nil,
-                              completion: @escaping (CDYelpBusinessResponse?) -> Void)
-    {
-        assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API business endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
-
-            cachedRequest(CDYelpRouter.business(id: id, parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchBusiness(
+        forId id: String,
+        locale: CDYelpLocale?,
+        devicePlatform: String? = nil
+    ) async throws -> CDYelpBusinessResponse {
+        precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API business endpoint.")
+        let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: devicePlatform)
+        let router = CDYelpRouter.business(id: id, parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -408,10 +317,10 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - name: (**Required**) The name of the business. Maximum length is 64; only digits, letters, spaces, and !#$%&+,­./:?@'are allowed
-    ///   - addressOne: (Optional) The first line of the business’s address. Maximum length is 64; only digits, letters, spaces, and ­’/#&,.: are allowed.
-    ///   - addressTwo: (Optional) The second line of the business’s address. Maximum length is 64; only digits, letters, spaces, and ­’/#&,.: are allowed.
-    ///   - addressThree: (Optional) The third line of the business’s address. Maximum length is 64; only digits, letters, spaces, and ­’/#&,.: are allowed.
-    ///   - city: (**Required**) The city of the business. Maximum length is 64; only digits, letters, spaces, and ­’.() are allowed.
+    ///   - addressOne: (Optional) The first line of the business's address. Maximum length is 64; only digits, letters, spaces, and ­'/#&,.: are allowed.
+    ///   - addressTwo: (Optional) The second line of the business's address. Maximum length is 64; only digits, letters, spaces, and ­'/#&,.: are allowed.
+    ///   - addressThree: (Optional) The third line of the business's address. Maximum length is 64; only digits, letters, spaces, and ­'/#&,.: are allowed.
+    ///   - city: (**Required**) The city of the business. Maximum length is 64; only digits, letters, spaces, and ­'.() are allowed.
     ///   - state: (**Required**) The ISO 3166-2 (with a few exceptions) state code of this business. Maximum length is 3.
     ///   - country: (**Required**) The ISO 3166-1 alpha-2 country code of this business. Maximum length is 2.
     ///   - latitude: (Optional) The WGS84 latitude of the business in decimal degrees. Must be between ­-90 and +90.
@@ -421,67 +330,67 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - yelpBusinessId: (Optional) Unique Yelp identifier of the business if available. Used as a hint when finding a matching business.
     ///   - limit: (Optional)
     ///   - matchThresholdType: (**Required**) Specifies whether a match quality threshold should be applied to the matched businesses. Use the **CDYelpBusinessMatchThresholdType** enum to get the list of supported thresholds.
-    ///   - completion: A completion block in which the Yelp Fusion API business match endpoint response can be parsed.
     ///
-    public func searchBusinesses(name: String!,
-                                 addressOne: String!,
-                                 addressTwo: String?,
-                                 addressThree: String?,
-                                 city: String!,
-                                 state: String!,
-                                 country: String!,
-                                 latitude: Double?,
-                                 longitude: Double?,
-                                 phone: String?,
-                                 zipCode: String?,
-                                 yelpBusinessId: String?,
-                                 limit: Int?,
-                                 matchThresholdType: CDYelpBusinessMatchThresholdType!,
-                                 completion: @escaping (CDYelpSearchResponse.BusinessMatch?) -> Void)
-    {
-        assert(name != nil && name.count > 0 && name.count <= 64, "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(addressOne != nil && addressOne.count > 0 && addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
-        if let addressTwo = addressTwo {
-            assert(addressTwo.count > 0 && addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func searchBusinesses(
+        name: String,
+        addressOne: String,
+        addressTwo: String?,
+        addressThree: String?,
+        city: String,
+        state: String,
+        country: String,
+        latitude: Double?,
+        longitude: Double?,
+        phone: String?,
+        zipCode: String?,
+        yelpBusinessId: String?,
+        limit: Int?,
+        matchThresholdType: CDYelpBusinessMatchThresholdType
+    ) async throws -> CDYelpSearchResponse.BusinessMatch {
+        precondition(!name.isEmpty && name.count <= 64, "A name (containing no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!addressOne.isEmpty && addressOne.count <= 64, "addressOne must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+        if let addressTwo {
+            precondition(!addressTwo.isEmpty && addressTwo.count <= 64, "addressTwo must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        if let addressThree = addressThree {
-            assert(addressThree.count > 0 && addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
+        if let addressThree {
+            precondition(!addressThree.isEmpty && addressThree.count <= 64, "addressThree must contain no more than 64 characters to query the Yelp Fusion API business match endpoint.")
         }
-        assert(city != nil && city.count > 0 && city.count <= 64, "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(state != nil && state.count > 0 && state.count <= 3, "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
-        assert(country != nil && country.count > 0 && country.count <= 2, "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
-        if let latitude = latitude {
-            assert(latitude >= -90.0 && latitude <= 90.0, "latitude must be between -90 and +90 to query the Yelp Fustion API business match endpoint")
+        precondition(!city.isEmpty && city.count <= 64, "A city (no more than 64 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!state.isEmpty && state.count <= 3, "A state (containing no more than 3 characters) is required to query the Yelp Fusion API business match endpoint.")
+        precondition(!country.isEmpty && country.count <= 2, "A country (containing no more than 2 characters) is required to query the Yelp Fusion API business match endpoint.")
+        if let latitude {
+            precondition(latitude >= -90.0 && latitude <= 90.0, "latitude must be between -90 and +90 to query the Yelp Fusion API business match endpoint.")
         }
-        if let longitude = longitude {
-            assert(longitude >= -180.0 && longitude <= 180.0, "longitude must be between -180 and +180 to query the Yelp Fustion API business match endpoint")
+        if let longitude {
+            precondition(longitude >= -180.0 && longitude <= 180.0, "longitude must be between -180 and +180 to query the Yelp Fusion API business match endpoint.")
         }
-        if let phone = phone {
-            assert(phone.count > 0 && phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
+        if let phone {
+            precondition(!phone.isEmpty && phone.count <= 32, "phone must contain no more than 32 characters to query the Yelp Fusion API business match endpoint.")
         }
-        if let limit = limit {
-            assert(limit > 0 && limit <= 10, "The limit must be between 1 and 10 to query the Yelp Fusion API business match endpoint.")
+        if let limit {
+            precondition(limit > 0 && limit <= 10, "The limit must be between 1 and 10 to query the Yelp Fusion API business match endpoint.")
         }
-        assert(matchThresholdType != nil && matchThresholdType.rawValue.count > 0, "A match threshold type is required to query the Yelp Fusion API business match endpoint")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.matchesParameters(withName: name,
-                                                          addressOne: addressOne,
-                                                          addressTwo: addressTwo,
-                                                          addressThree: addressThree,
-                                                          city: city,
-                                                          state: state,
-                                                          country: country,
-                                                          latitude: latitude,
-                                                          longitude: longitude,
-                                                          phone: phone,
-                                                          zipCode: zipCode,
-                                                          yelpBusinessId: yelpBusinessId,
-                                                          limit: limit,
-                                                          matchThresholdType: matchThresholdType)
-
-            cachedRequest(CDYelpRouter.matches(parameters: parameters), completion: completion)
-        }
+        precondition(!matchThresholdType.rawValue.isEmpty, "A match threshold type is required to query the Yelp Fusion API business match endpoint.")
+        let parameters = Parameters.matchesParameters(
+            withName: name,
+            addressOne: addressOne,
+            addressTwo: addressTwo,
+            addressThree: addressThree,
+            city: city,
+            state: state,
+            country: country,
+            latitude: latitude,
+            longitude: longitude,
+            phone: phone,
+            zipCode: zipCode,
+            yelpBusinessId: yelpBusinessId,
+            limit: limit,
+            matchThresholdType: matchThresholdType
+        )
+        let router = CDYelpRouter.matches(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -493,34 +402,26 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - offset: (Optional) A number the list of returned reviews should be offset by. **The maximum value is 1000**.
     ///   - limit: (Optional) The number of reviews to return. **The maximum value is 50**.
     ///   - sortBy: (Optional) The sort order for reviews. Defaults to `.yelpSort`.
-    ///   - completion: A completion block in which the Yelp Fusion API reviews endpoint response can be parsed.
     ///
-    public func fetchReviews(forBusinessId id: String!,
-                             locale: CDYelpLocale?,
-                             offset: Int? = nil,
-                             limit: Int? = nil,
-                             sortBy: CDYelpReviewSortType? = nil,
-                             completion: @escaping (CDYelpReviewsResponse?) -> Void)
-    {
-        assert(id != nil && id.count > 0, "A business id is required to query the Yelp Fusion API reviews endpoint.")
-
-        if let offset = offset {
-            assert(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.")
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchReviews(
+        forBusinessId id: String,
+        locale: CDYelpLocale?,
+        offset: Int? = nil,
+        limit: Int? = nil,
+        sortBy: CDYelpReviewSortType? = nil
+    ) async throws -> CDYelpReviewsResponse {
+        precondition(!id.isEmpty, "A business id is required to query the Yelp Fusion API reviews endpoint.")
+        if let offset {
+            precondition(offset >= 0 && offset <= 1000, "offset must be between 0 and 1000.")
         }
-        if let limit = limit {
-            assert(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.")
+        if let limit {
+            precondition(limit >= 0 && limit <= 50, "The limit must be between 0 and 50.")
         }
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.reviewsParameters(withLocale: locale,
-                                                          offset: offset,
-                                                          limit: limit,
-                                                          sortBy: sortBy)
-            let decoder = decoderConfiguration.makeDecoder()
-            decoder.dateDecodingStrategy = .formatted(DateFormatter.reviews)
-
-            cachedRequest(CDYelpRouter.reviews(id: id, parameters: parameters), decoder: decoder, completion: completion)
-        }
+        let parameters = Parameters.reviewsParameters(withLocale: locale, offset: offset, limit: limit, sortBy: sortBy)
+        let router = CDYelpRouter.reviews(id: id, parameters: parameters)
+        return try await perform(router, decoder: makeDecoder(dateFormat: DateFormatter.reviews))
     }
 
     ///
@@ -531,26 +432,19 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - latitude: (**Required**) The latitude of the location to look for business autocomplete suggestions.
     ///   - longitude: (**Required**) The longitude of the location to look for business autocomplete suggestions.
     ///   - locale: (Optional) The interface locale; this determines the language for the autocomplete suggestions to return.
-    ///   - completion: A completion block in which the Yelp Fusion API autocomplete endpoint response can be parsed.
     ///
-    public func autocompleteBusinesses(byText text: String!,
-                                       latitude: Double!,
-                                       longitude: Double!,
-                                       locale: CDYelpLocale?,
-                                       completion: @escaping (CDYelpAutoCompleteResponse?) -> Void)
-    {
-        assert((text != nil && text.count > 0) &&
-            latitude != nil &&
-            longitude != nil, "A search term, latitude, and longitude are required to query the Yelp Fusion API autocomplete endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.autocompleteParameters(withText: text,
-                                                               latitude: latitude,
-                                                               longitude: longitude,
-                                                               locale: locale)
-
-            cachedRequest(CDYelpRouter.autocomplete(parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func autocompleteBusinesses(
+        byText text: String,
+        latitude: Double,
+        longitude: Double,
+        locale: CDYelpLocale?
+    ) async throws -> CDYelpAutoCompleteResponse {
+        precondition(!text.isEmpty, "A search term is required to query the Yelp Fusion API autocomplete endpoint.")
+        let parameters = Parameters.autocompleteParameters(withText: text, latitude: latitude, longitude: longitude, locale: locale)
+        let router = CDYelpRouter.autocomplete(parameters: parameters)
+        return try await perform(router)
     }
 
     // MARK: - Event Endpoints
@@ -561,21 +455,17 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - id: (**Required**) The identifier of the event for the Yelp Fusion API to query.
     ///   - locale: (Optional) The locale to return the event information in.
-    ///   - completion: A completion block in which the Yelp Fusion API event endpoint response can be parsed.
     ///
-    public func fetchEvent(forId id: String!,
-                           locale: CDYelpLocale?,
-                           completion: @escaping (CDYelpEventResponse?) -> Void)
-    {
-        assert(id != nil && id.count > 0, "An event id is required to query the Yelp Fusion API event endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.eventParameters(withLocale: locale)
-            let decoder = decoderConfiguration.makeDecoder()
-            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-
-            cachedRequest(CDYelpRouter.event(id: id, parameters: parameters), decoder: decoder, completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchEvent(
+        forId id: String,
+        locale: CDYelpLocale?
+    ) async throws -> CDYelpEventResponse {
+        precondition(!id.isEmpty, "An event id is required to query the Yelp Fusion API event endpoint.")
+        let parameters = Parameters.eventParameters(withLocale: locale)
+        let router = CDYelpRouter.event(id: id, parameters: parameters)
+        return try await perform(router, decoder: makeDecoder(dateFormat: DateFormatter.events))
     }
 
     ///
@@ -596,51 +486,49 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - radius: (Optional) The search radius in meters. If the value is too large, an AREA_TOO_LARGE error may be returned. **The maximum value is 40,000 meters (25 miles)**.
     ///   - categories: (Optional) The categories for the Yelp Fusion API to filter events by.
     ///   - excludedEvents: (Optional) A list of event ids. Events associated with these event ids in this list will not show up in the response.
-    ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
     ///
-    public func searchEvents(byLocale locale: CDYelpLocale?,
-                             offset: Int?,
-                             limit: Int?,
-                             sortBy: CDYelpEventSortByType?,
-                             sortOn: CDYelpEventSortOnType?,
-                             startDate: Date?,
-                             endDate: Date?,
-                             categories: [CDYelpEventCategoryFilter]?,
-                             isFree: Bool?,
-                             location: String?,
-                             latitude: Double?,
-                             longitude: Double?,
-                             radius: Int?,
-                             excludedEvents: [String]?,
-                             completion: @escaping (CDYelpEventsResponse?) -> Void)
-    {
-        if let limit = limit {
-            assert(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func searchEvents(
+        byLocale locale: CDYelpLocale?,
+        offset: Int?,
+        limit: Int?,
+        sortBy: CDYelpEventSortByType?,
+        sortOn: CDYelpEventSortOnType?,
+        startDate: Date?,
+        endDate: Date?,
+        categories: [CDYelpEventCategoryFilter]?,
+        isFree: Bool?,
+        location: String?,
+        latitude: Double?,
+        longitude: Double?,
+        radius: Int?,
+        excludedEvents: [String]?
+    ) async throws -> CDYelpEventsResponse {
+        if let limit {
+            precondition(limit > 0 && limit <= 50, "The limit must be 50 or less to query the Yelp Fusion API events endpoint.")
         }
-        if let radius = radius {
-            assert(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
+        if let radius {
+            precondition(radius > 0 && radius <= 40000, "The radius must be 40,000 meters or less to query the Yelp Fusion API events endpoint.")
         }
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.eventsParameters(withLocale: locale,
-                                                         offset: offset,
-                                                         limit: limit,
-                                                         sortBy: sortBy,
-                                                         sortOn: sortOn,
-                                                         startDate: startDate,
-                                                         endDate: endDate,
-                                                         categories: categories,
-                                                         isFree: isFree,
-                                                         location: location,
-                                                         latitude: latitude,
-                                                         longitude: longitude,
-                                                         radius: radius,
-                                                         excludedEvents: excludedEvents)
-            let decoder = decoderConfiguration.makeDecoder()
-            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-
-            cachedRequest(CDYelpRouter.events(parameters: parameters), decoder: decoder, completion: completion)
-        }
+        let parameters = Parameters.eventsParameters(
+            withLocale: locale,
+            offset: offset,
+            limit: limit,
+            sortBy: sortBy,
+            sortOn: sortOn,
+            startDate: startDate,
+            endDate: endDate,
+            categories: categories,
+            isFree: isFree,
+            location: location,
+            latitude: latitude,
+            longitude: longitude,
+            radius: radius,
+            excludedEvents: excludedEvents
+        )
+        let router = CDYelpRouter.events(parameters: parameters)
+        return try await perform(router, decoder: makeDecoder(dateFormat: DateFormatter.events))
     }
 
     ///
@@ -648,30 +536,30 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - locale: (Optional) The locale to return the event information in.
-    ///   - location: (**Required**) Can be (Optional) if either latitude or longitude is provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
-    ///   - latitude: (**Required**) Can be (Optional) if location is provided. The latitude of the location the Yelp Fusion API should search nearby.
-    ///   - longitude: (**Required**) Can be (Optional) if location is provided. The longitude of the location the Yelp Fusion API should search nearby.
-    ///   - completion: A completion block in which the Yelp Fusion API featured event endpoint response can be parsed.
+    ///   - location: Required unless latitude and longitude are both provided. Specifies the combination of "address, neighborhood, city, state or zip, optional country" to be used when querying the Yelp Fusion API for events.
+    ///   - latitude: Required unless location is provided. Must be accompanied by longitude.
+    ///   - longitude: Required unless location is provided. Must be accompanied by latitude.
     ///
-    public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
-                                   location: String?,
-                                   latitude: Double?,
-                                   longitude: Double?,
-                                   completion: @escaping (CDYelpEventResponse?) -> Void)
-    {
-        assert((latitude != nil && longitude != nil) ||
-            (location != nil), "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.featuredEventParameters(withLocale: locale,
-                                                                location: location,
-                                                                latitude: latitude,
-                                                                longitude: longitude)
-            let decoder = decoderConfiguration.makeDecoder()
-            decoder.dateDecodingStrategy = .formatted(DateFormatter.events)
-
-            cachedRequest(CDYelpRouter.featuredEvent(parameters: parameters), decoder: decoder, completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchFeaturedEvent(
+        forLocale locale: CDYelpLocale?,
+        location: String?,
+        latitude: Double?,
+        longitude: Double?
+    ) async throws -> CDYelpEventResponse {
+        precondition(
+            (latitude != nil && longitude != nil) || location != nil,
+            "Either a latitude and longitude or a location are required to query the Yelp Fusion API featured event endpoint."
+        )
+        let parameters = Parameters.featuredEventParameters(
+            withLocale: locale,
+            location: location,
+            latitude: latitude,
+            longitude: longitude
+        )
+        let router = CDYelpRouter.featuredEvent(parameters: parameters)
+        return try await perform(router, decoder: makeDecoder(dateFormat: DateFormatter.events))
     }
 
     // MARK: - Category Endpoints
@@ -681,16 +569,13 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///
     /// - parameters:
     ///   - locale: (Optional) The locale to return the category information in.
-    ///   - completion: A completion block in which the Yelp Fusion API categories endpoint response can be parsed.
     ///
-    public func fetchCategories(forLocale locale: CDYelpLocale?,
-                                completion: @escaping (CDYelpCategoriesResponse?) -> Void)
-    {
-        if isAuthenticated() == true {
-            let parameters = Parameters.categoriesParameters(withLocale: locale)
-
-            cachedRequest(CDYelpRouter.allCategories(parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
+        let parameters = Parameters.categoriesParameters(withLocale: locale)
+        let router = CDYelpRouter.allCategories(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -699,32 +584,20 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - alias: (**Required**) The alias to return category details for. Use the **CDYelpCategoryAlias** enum to get the list of supported category aliases.
     ///   - locale: (Optional) The locale to return the category information in.
-    ///   - completion: A completion block in which the Yelp Fusion API category endpoint response can be parsed.
     ///
-    public func fetchCategory(forAlias alias: CDYelpCategoryAlias!,
-                              andLocale locale: CDYelpLocale?,
-                              completion: @escaping (CDYelpCategoryResponse?) -> Void)
-    {
-        assert(alias != nil && alias.rawValue.count > 0, "A category alias is required to query the Yelp Fusion API category details endpoint.")
-
-        if isAuthenticated() == true {
-            let parameters = Parameters.categoriesParameters(withLocale: locale)
-
-            cachedRequest(CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters), completion: completion)
-        }
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchCategory(
+        forAlias alias: CDYelpCategoryAlias,
+        andLocale locale: CDYelpLocale?
+    ) async throws -> CDYelpCategoryResponse {
+        precondition(!alias.rawValue.isEmpty, "A category alias is required to query the Yelp Fusion API category details endpoint.")
+        let parameters = Parameters.categoriesParameters(withLocale: locale)
+        let router = CDYelpRouter.categoryDetails(alias: alias.rawValue, parameters: parameters)
+        return try await perform(router)
     }
 
-    // MARK: - Request Methods
-
-    ///
-    /// Cancels any in progress or pending API requests.
-    public func cancelAllPendingAPIRequests() {
-        manager.session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            dataTasks.forEach { $0.cancel() }
-            uploadTasks.forEach { $0.cancel() }
-            downloadTasks.forEach { $0.cancel() }
-        }
-    }
+    // MARK: - AI Chat, Engagement, and Business Data Endpoints
 
     ///
     /// Fetches AI chat response from the Yelp AI Chat endpoint.
@@ -732,38 +605,41 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - query: (Required) A natural language query about local businesses. Maximum length is 1000 characters.
     ///   - chatId: (Optional) The ID of an existing chat to continue a multi-turn conversation.
-    ///   - latitude: (Optional) The latitude of the user's location.
-    ///   - longitude: (Optional) The longitude of the user's location.
+    ///   - latitude: (Optional) The latitude of the user's location. Must be provided together with `longitude`, or not at all.
+    ///   - longitude: (Optional) The longitude of the user's location. Must be provided together with `latitude`, or not at all.
     ///   - requestContext: (Optional) Additional key-value context for the request.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchAIChat(query: String,
-                            chatId: String? = nil,
-                            latitude: Double? = nil,
-                            longitude: Double? = nil,
-                            requestContext: [String: String]? = nil,
-                            completion: @escaping (CDYelpAIChatResponse?) -> Void)
-    {
+    ///
+    /// - Precondition: `latitude` and `longitude` must both be `nil` or both be non-`nil`. Passing only one traps,
+    ///   unlike prior versions, which silently dropped the lone coordinate. See the 6.0 migration guide.
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchAIChat(
+        query: String,
+        chatId: String? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        requestContext: [String: String]? = nil
+    ) async throws -> CDYelpAIChatResponse {
         precondition(!query.isEmpty, "A query is required.")
         precondition(query.count <= 1000, "Query must be 1000 characters or fewer.")
-        guard isAuthenticated() else { return }
-
-        let userContext: CDYelpAIChatRequest.UserContext? = (latitude != nil && longitude != nil)
-            ? .init(latitude: latitude!, longitude: longitude!)
-            : nil
-        let request = CDYelpAIChatRequest(query: query,
-                                          chatId: chatId,
-                                          userContext: userContext,
-                                          requestContext: requestContext)
-
-        manager
-            .request(CDYelpRouter.aiChat(request: request))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpAIChatResponse, AFError>) in
-                switch response.result {
-                case let .success(chatResponse): completion(chatResponse)
-                case .failure: completion(nil)
-                }
-            }
+        precondition(
+            (latitude == nil) == (longitude == nil),
+            "latitude and longitude must be provided together or not at all."
+        )
+        let userContext: CDYelpAIChatRequest.UserContext?
+        if let latitude, let longitude {
+            userContext = .init(latitude: latitude, longitude: longitude)
+        } else {
+            userContext = nil
+        }
+        let chatRequest = CDYelpAIChatRequest(
+            query: query,
+            chatId: chatId,
+            userContext: userContext,
+            requestContext: requestContext
+        )
+        let router = CDYelpRouter.aiChat(request: chatRequest)
+        return try await perform(router)
     }
 
     ///
@@ -773,30 +649,22 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - businessIds: (Required) A list of business IDs (1–20 required).
     ///   - dateRangeStart: (Optional) The start date for the metric date range.
     ///   - dateRangeEnd: (Optional) The end date for the metric date range.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
-                                       dateRangeStart: String? = nil,
-                                       dateRangeEnd: String? = nil,
-                                       completion: @escaping (CDYelpEngagementResponse?) -> Void)
-    {
-        precondition(!businessIds.isEmpty && businessIds.count <= 20,
-                     "Between 1 and 20 business IDs are required.")
-        guard isAuthenticated() else { return }
-
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchEngagementMetrics(
+        forBusinessIds businessIds: [String],
+        dateRangeStart: String? = nil,
+        dateRangeEnd: String? = nil
+    ) async throws -> CDYelpEngagementResponse {
+        precondition(!businessIds.isEmpty && businessIds.count <= 20, "Between 1 and 20 business IDs are required.")
         let parameters = Parameters.engagementParameters(
             withBusinessIds: businessIds,
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        manager
-            .request(CDYelpRouter.engagement(parameters: parameters))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpEngagementResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
+        let router = CDYelpRouter.engagement(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -805,24 +673,17 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - id: (Required) The business ID.
     ///   - locale: (Optional) The desired language for the response.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchServiceOfferings(forBusinessId id: String,
-                                      locale: CDYelpLocale? = nil,
-                                      completion: @escaping (CDYelpServiceOfferingsResponse?) -> Void)
-    {
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchServiceOfferings(
+        forBusinessId id: String,
+        locale: CDYelpLocale? = nil
+    ) async throws -> CDYelpServiceOfferingsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
-        guard isAuthenticated() else { return }
-
         let parameters = Parameters.businessParameters(withLocale: locale, devicePlatform: nil)
-        manager
-            .request(CDYelpRouter.serviceOfferings(id: id, parameters: parameters))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpServiceOfferingsResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
+        let router = CDYelpRouter.serviceOfferings(id: id, parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -832,32 +693,23 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - businessIds: (Required) The business IDs for which to fetch insights. Must be between 1 and 20.
     ///   - dateRangeStart: (Required) Start date for the insights (format: YYYYMM).
     ///   - dateRangeEnd: (Required) End date for the insights (format: YYYYMM).
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchBusinessInsights(forBusinessIds businessIds: [String],
-                                      dateRangeStart: String,
-                                      dateRangeEnd: String,
-                                      completion: @escaping (CDYelpBusinessInsightsResponse?) -> Void)
-    {
-        precondition(!businessIds.isEmpty && businessIds.count <= 20,
-                     "Between 1 and 20 business IDs are required.")
-        precondition(!dateRangeStart.isEmpty && !dateRangeEnd.isEmpty,
-                     "dateRangeStart and dateRangeEnd are required (format: YYYYMM).")
-        guard isAuthenticated() else { return }
-
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchBusinessInsights(
+        forBusinessIds businessIds: [String],
+        dateRangeStart: String,
+        dateRangeEnd: String
+    ) async throws -> CDYelpBusinessInsightsResponse {
+        precondition(!businessIds.isEmpty && businessIds.count <= 20, "Between 1 and 20 business IDs are required.")
+        precondition(!dateRangeStart.isEmpty && !dateRangeEnd.isEmpty, "dateRangeStart and dateRangeEnd are required (format: YYYYMM).")
         let parameters = Parameters.businessInsightsParameters(
             withBusinessIds: businessIds,
             dateRangeStart: dateRangeStart,
             dateRangeEnd: dateRangeEnd
         )
-        manager
-            .request(CDYelpRouter.businessInsights(parameters: parameters))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpBusinessInsightsResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
+        let router = CDYelpRouter.businessInsights(parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -868,33 +720,22 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - count: (Optional) Number of highlights to return (1–5).
     ///   - locale: (Optional) The desired language for the response.
     ///   - devicePlatform: (Optional) The device platform for the request.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchReviewHighlights(forBusinessId id: String,
-                                      count: Int? = nil,
-                                      locale: CDYelpLocale? = nil,
-                                      devicePlatform: String? = nil,
-                                      completion: @escaping (CDYelpReviewHighlightsResponse?) -> Void)
-    {
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchReviewHighlights(
+        forBusinessId id: String,
+        count: Int? = nil,
+        locale: CDYelpLocale? = nil,
+        devicePlatform: String? = nil
+    ) async throws -> CDYelpReviewHighlightsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
-        if let count = count {
+        if let count {
             precondition(count >= 1 && count <= 5, "count must be between 1 and 5.")
         }
-        guard isAuthenticated() else { return }
-
-        let parameters = Parameters.reviewHighlightsParameters(
-            count: count,
-            locale: locale,
-            devicePlatform: devicePlatform
-        )
-        manager
-            .request(CDYelpRouter.reviewHighlights(id: id, parameters: parameters))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpReviewHighlightsResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
+        let parameters = Parameters.reviewHighlightsParameters(count: count, locale: locale, devicePlatform: devicePlatform)
+        let router = CDYelpRouter.reviewHighlights(id: id, parameters: parameters)
+        return try await perform(router)
     }
 
     ///
@@ -903,24 +744,16 @@ public class CDYelpAPIClient: @unchecked Sendable {
     /// - parameters:
     ///   - query: (Required) The search query (1–1000 characters).
     ///   - locale: (Optional) The desired language for the response.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchJobs(forQuery query: String,
-                          locale: CDYelpLocale? = nil,
-                          completion: @escaping (CDYelpJobsResponse?) -> Void)
-    {
-        precondition(!query.isEmpty && query.count <= 1000,
-                     "A query of 1–1000 characters is required.")
-        guard isAuthenticated() else { return }
-
-        manager
-            .request(CDYelpRouter.jobs(query: query, locale: locale?.rawValue))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpJobsResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchJobs(
+        forQuery query: String,
+        locale: CDYelpLocale? = nil
+    ) async throws -> CDYelpJobsResponse {
+        precondition(!query.isEmpty && query.count <= 1000, "A query of 1–1000 characters is required.")
+        let router = CDYelpRouter.jobs(query: query, locale: locale?.rawValue)
+        return try await perform(router)
     }
 
     ///
@@ -932,519 +765,22 @@ public class CDYelpAPIClient: @unchecked Sendable {
     ///   - date: (Required) The desired date (format: YYYY-MM-DD).
     ///   - time: (Required) The desired time (format: HH:MM).
     ///   - getCoversRange: (Optional) Whether to include covers range information.
-    ///   - completion: (Required) A callback for handling the returned response.
-    public func fetchOpenings(forBusinessId id: String,
-                              covers: Int,
-                              date: String,
-                              time: String,
-                              getCoversRange: Bool? = nil,
-                              completion: @escaping (CDYelpOpeningsResponse?) -> Void)
-    {
+    ///
+    /// - Throws: ``CDYelpNetworkError`` if the request fails.
+    ///
+    public func fetchOpenings(
+        forBusinessId id: String,
+        covers: Int,
+        date: String,
+        time: String,
+        getCoversRange: Bool? = nil
+    ) async throws -> CDYelpOpeningsResponse {
         precondition(!id.isEmpty, "A business ID is required.")
         precondition(covers >= 1 && covers <= 10, "covers must be between 1 and 10.")
         precondition(!date.isEmpty, "A date is required (format: YYYY-MM-DD).")
         precondition(!time.isEmpty, "A time is required (format: HH:MM).")
-        guard isAuthenticated() else { return }
-
-        let parameters = Parameters.openingsParameters(
-            covers: covers,
-            date: date,
-            time: time,
-            getCoversRange: getCoversRange
-        )
-        manager
-            .request(CDYelpRouter.openings(businessId: id, parameters: parameters))
-            .validate()
-            .responseDecodable { (response: DataResponse<CDYelpOpeningsResponse, AFError>) in
-                switch response.result {
-                case let .success(result): completion(result)
-                case .failure: completion(nil)
-                }
-            }
-    }
-
-    // MARK: - Async/Await Overloads
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchBusinesses(byTerm term: String?,
-                                 location: String?,
-                                 latitude: Double?,
-                                 longitude: Double?,
-                                 radius: Int?,
-                                 categories: [CDYelpCategoryAlias]?,
-                                 locale: CDYelpLocale?,
-                                 limit: Int?,
-                                 offset: Int?,
-                                 sortBy: CDYelpBusinessSortType?,
-                                 priceTiers: [CDYelpPriceTier]?,
-                                 openNow: Bool?,
-                                 openAt: Int?,
-                                 attributes: [CDYelpAttributeFilter]?,
-                                 devicePlatform: String? = nil,
-                                 reservationDate: String? = nil,
-                                 reservationTime: String? = nil,
-                                 reservationCovers: Int? = nil,
-                                 matchesPartySize: Bool? = nil,
-                                 jobAlias: String? = nil) async throws -> CDYelpSearchResponse.Business
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.searchBusinesses(byTerm: term,
-                                  location: location,
-                                  latitude: latitude,
-                                  longitude: longitude,
-                                  radius: radius,
-                                  categories: categories,
-                                  locale: locale,
-                                  limit: limit,
-                                  offset: offset,
-                                  sortBy: sortBy,
-                                  priceTiers: priceTiers,
-                                  openNow: openNow,
-                                  openAt: openAt,
-                                  attributes: attributes,
-                                  devicePlatform: devicePlatform,
-                                  reservationDate: reservationDate,
-                                  reservationTime: reservationTime,
-                                  reservationCovers: reservationCovers,
-                                  matchesPartySize: matchesPartySize,
-                                  jobAlias: jobAlias)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchBusinesses(byPhoneNumber phoneNumber: String!,
-                                 locale: CDYelpLocale? = nil)
-        async throws -> CDYelpSearchResponse.Phone
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.searchBusinesses(byPhoneNumber: phoneNumber,
-                                  locale: locale)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchTransactions(byType type: CDYelpTransactionType!,
-                                   location: String?,
-                                   latitude: Double?,
-                                   longitude: Double?,
-                                   term: String? = nil,
-                                   categories: [CDYelpCategoryAlias]? = nil,
-                                   priceTiers: [CDYelpPriceTier]? = nil) async throws -> CDYelpSearchResponse.Transaction
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.searchTransactions(byType: type,
-                                    location: location,
-                                    latitude: latitude,
-                                    longitude: longitude,
-                                    term: term,
-                                    categories: categories,
-                                    priceTiers: priceTiers)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchBusiness(forId id: String!,
-                              locale: CDYelpLocale?,
-                              devicePlatform: String? = nil) async throws -> CDYelpBusinessResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchBusiness(forId: id,
-                               locale: locale,
-                               devicePlatform: devicePlatform)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchBusinesses(name: String!,
-                                 addressOne: String!,
-                                 addressTwo: String?,
-                                 addressThree: String?,
-                                 city: String!,
-                                 state: String!,
-                                 country: String!,
-                                 latitude: Double?,
-                                 longitude: Double?,
-                                 phone: String?,
-                                 zipCode: String?,
-                                 yelpBusinessId: String?,
-                                 limit: Int?,
-                                 matchThresholdType: CDYelpBusinessMatchThresholdType!) async throws -> CDYelpSearchResponse.BusinessMatch
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.searchBusinesses(name: name,
-                                  addressOne: addressOne,
-                                  addressTwo: addressTwo,
-                                  addressThree: addressThree,
-                                  city: city,
-                                  state: state,
-                                  country: country,
-                                  latitude: latitude,
-                                  longitude: longitude,
-                                  phone: phone,
-                                  zipCode: zipCode,
-                                  yelpBusinessId: yelpBusinessId,
-                                  limit: limit,
-                                  matchThresholdType: matchThresholdType)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchReviews(forBusinessId id: String!,
-                             locale: CDYelpLocale?,
-                             offset: Int? = nil,
-                             limit: Int? = nil,
-                             sortBy: CDYelpReviewSortType? = nil) async throws -> CDYelpReviewsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchReviews(forBusinessId: id,
-                              locale: locale,
-                              offset: offset,
-                              limit: limit,
-                              sortBy: sortBy)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func autocompleteBusinesses(byText text: String!,
-                                       latitude: Double!,
-                                       longitude: Double!,
-                                       locale: CDYelpLocale?) async throws -> CDYelpAutoCompleteResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.autocompleteBusinesses(byText: text,
-                                        latitude: latitude,
-                                        longitude: longitude,
-                                        locale: locale)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchEvent(forId id: String!,
-                           locale: CDYelpLocale?) async throws -> CDYelpEventResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchEvent(forId: id,
-                            locale: locale)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func searchEvents(byLocale locale: CDYelpLocale?,
-                             offset: Int?,
-                             limit: Int?,
-                             sortBy: CDYelpEventSortByType?,
-                             sortOn: CDYelpEventSortOnType?,
-                             startDate: Date?,
-                             endDate: Date?,
-                             categories: [CDYelpEventCategoryFilter]?,
-                             isFree: Bool?,
-                             location: String?,
-                             latitude: Double?,
-                             longitude: Double?,
-                             radius: Int?,
-                             excludedEvents: [String]?) async throws -> CDYelpEventsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.searchEvents(byLocale: locale,
-                              offset: offset,
-                              limit: limit,
-                              sortBy: sortBy,
-                              sortOn: sortOn,
-                              startDate: startDate,
-                              endDate: endDate,
-                              categories: categories,
-                              isFree: isFree,
-                              location: location,
-                              latitude: latitude,
-                              longitude: longitude,
-                              radius: radius,
-                              excludedEvents: excludedEvents)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                if let error = response.error {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .customValidationFailed(error: error)))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchFeaturedEvent(forLocale locale: CDYelpLocale?,
-                                   location: String?,
-                                   latitude: Double?,
-                                   longitude: Double?) async throws -> CDYelpEventResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchFeaturedEvent(forLocale: locale,
-                                    location: location,
-                                    latitude: latitude,
-                                    longitude: longitude)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchCategories(forLocale locale: CDYelpLocale?) async throws -> CDYelpCategoriesResponse {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchCategories(forLocale: locale) { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchCategory(forAlias alias: CDYelpCategoryAlias!,
-                              andLocale locale: CDYelpLocale?) async throws -> CDYelpCategoryResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchCategory(forAlias: alias,
-                               andLocale: locale)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchAIChat(query: String,
-                            chatId: String? = nil,
-                            latitude: Double? = nil,
-                            longitude: Double? = nil,
-                            requestContext: [String: String]? = nil)
-        async throws -> CDYelpAIChatResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchAIChat(query: query,
-                             chatId: chatId,
-                             latitude: latitude,
-                             longitude: longitude,
-                             requestContext: requestContext)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchEngagementMetrics(forBusinessIds businessIds: [String],
-                                       dateRangeStart: String? = nil,
-                                       dateRangeEnd: String? = nil)
-        async throws -> CDYelpEngagementResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchEngagementMetrics(forBusinessIds: businessIds,
-                                        dateRangeStart: dateRangeStart,
-                                        dateRangeEnd: dateRangeEnd)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchServiceOfferings(forBusinessId id: String,
-                                      locale: CDYelpLocale? = nil)
-        async throws -> CDYelpServiceOfferingsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchServiceOfferings(forBusinessId: id,
-                                       locale: locale)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchBusinessInsights(forBusinessIds businessIds: [String],
-                                      dateRangeStart: String,
-                                      dateRangeEnd: String)
-        async throws -> CDYelpBusinessInsightsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchBusinessInsights(forBusinessIds: businessIds,
-                                       dateRangeStart: dateRangeStart,
-                                       dateRangeEnd: dateRangeEnd)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchReviewHighlights(forBusinessId id: String,
-                                      count: Int? = nil,
-                                      locale: CDYelpLocale? = nil,
-                                      devicePlatform: String? = nil)
-        async throws -> CDYelpReviewHighlightsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchReviewHighlights(forBusinessId: id,
-                                       count: count,
-                                       locale: locale,
-                                       devicePlatform: devicePlatform)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchJobs(forQuery query: String,
-                          locale: CDYelpLocale? = nil)
-        async throws -> CDYelpJobsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchJobs(forQuery: query, locale: locale) { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
-    }
-
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    public func fetchOpenings(forBusinessId id: String,
-                              covers: Int,
-                              date: String,
-                              time: String,
-                              getCoversRange: Bool? = nil)
-        async throws -> CDYelpOpeningsResponse
-    {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchOpenings(forBusinessId: id,
-                               covers: covers,
-                               date: date,
-                               time: time,
-                               getCoversRange: getCoversRange)
-            { response in
-                guard let response = response else {
-                    continuation.resume(throwing: AFError.responseValidationFailed(reason: .dataFileNil))
-                    return
-                }
-                continuation.resume(returning: response)
-            }
-        }
+        let parameters = Parameters.openingsParameters(covers: covers, date: date, time: time, getCoversRange: getCoversRange)
+        let router = CDYelpRouter.openings(businessId: id, parameters: parameters)
+        return try await perform(router)
     }
 }

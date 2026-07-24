@@ -7,36 +7,12 @@ Technical documentation describing the internal design and structure of CDYelpFu
 ```
 CDYelpFusionKit
     ↓
-Alamofire (≥ 5.9.0)
-    ↓
 URLSession (Apple Foundation)
     ↓
 Network stack (OS-level)
 ```
 
-### Relationship to Alamofire
-
-CDYelpFusionKit wraps Alamofire to provide:
-- **Request routing** — `CDYelpRouter` enum implements Alamofire's `URLRequestConvertible` protocol
-- **Response decoding** — Uses Alamofire's `responseData()` + manual `JSONDecoder` to parse JSON into typed models
-- **Authentication** — Adds Bearer token to every request via `HTTPHeaders` on `URLSessionConfiguration`
-- **Session management** — A single `Alamofire.Session` is created eagerly in `CDYelpAPIClient.init` via `makeSession()`
-- **Interceptors** — Alamofire's `EventMonitor` and `RequestInterceptor` extension points are bridged to the public `CDYelpEventMonitor` and `CDYelpRequestAdapter` protocols
-- **Retry** — Alamofire's `RetryPolicy` is wired into the session `Interceptor` when `CDYelpRetryConfiguration.retryLimit > 0`
-
-Alamofire itself manages:
-- HTTP connection pooling
-- SSL/TLS certificate validation
-- Request retry signalling (coordinated with `CDYelpRetryConfiguration`)
-- URLSession delegate lifecycle
-
-### URLSession
-
-Alamofire is built on top of Apple's `URLSession`, which handles:
-- Low-level networking
-- DNS resolution and connection establishment
-- HTTP/2 multiplexing (when available)
-- Background session support
+CDYelpFusionKit is dependency-free. It uses Apple's `URLSession` directly via an internal `CDYelpURLSession` Swift actor, eliminating the Alamofire dependency introduced in earlier versions.
 
 ---
 
@@ -48,9 +24,7 @@ Alamofire is built on top of Apple's `URLSession`, which handles:
 
 ```swift
 let client = CDYelpAPIClient(apiKey: "key")
-client.searchBusinesses(byTerm: "coffee", location: "San Francisco", ...) { response in
-    // Handle response
-}
+let response = try await client.searchBusinesses(byTerm: "coffee", location: "San Francisco", ...)
 ```
 
 The `CDYelpAPIClient` instance is created once and reused for multiple requests.
@@ -80,93 +54,168 @@ A `CDYelpRouter` enum case is created with the parameters:
 let router = CDYelpRouter.search(parameters: parameters)
 ```
 
-Each router case contains:
+Each router case encodes:
 - The Yelp API endpoint path
-- HTTP method (GET for all current endpoints)
-- Request headers (including Bearer token)
-- Query parameters
+- HTTP method (GET for most endpoints, POST for `aiChat` and `jobs`)
+- Query parameters (GET) or JSON body (POST)
 
 #### 4. URL Request Conversion
 
-The router's `asURLRequest()` method (conforming to Alamofire's `URLRequestConvertible`) constructs a `URLRequest`:
+The router's `asURLRequest(apiKey:)` method constructs a `URLRequest`:
 
 ```swift
-// Inside CDYelpRouter.asURLRequest()
+// Inside CDYelpRouter.asURLRequest(apiKey:)
 var urlComponents = URLComponents(string: baseURL + path)
-urlComponents?.queryItems = parameters.map { URLQueryItem(name: $0, value: String(describing: $1)) }
+urlComponents?.queryItems = queryParams.map {
+    URLQueryItem(name: $0.key, value: String(describing: $0.value))
+}
+// Cache keys use a sorted canonical form via CDYelpCacheKey.key(for:);
+// the URL itself is not sorted.
 
-var request = URLRequest(url: urlComponents.url!)
+var request = URLRequest(url: urlComponents!.url!)
 request.httpMethod = "GET"
+// applyStandardHeaders sets all four headers below on every request, plus
+// Content-Type when a body is present (POST endpoints only).
 request.allHTTPHeaderFields = [
+    "User-Agent": CDYelpFusionKitUserAgent,
     "Authorization": "Bearer \(apiKey)",
-    "Accept": "application/json"
+    "Accept": "application/json",
+    "Accept-Language": defaultAcceptLanguage
 ]
 return request
 ```
 
-#### 5. Alamofire Request Execution
+#### 5. Adapter Chain
 
-The `CDYelpAPIClient` passes the request to Alamofire's `Session`:
-
-```swift
-manager.request(router)
-    .responseDecodable(of: CDYelpSearchResponse.self) { response in
-        switch response.result {
-        case .success(let value):
-            completion(value)
-        case .failure(let error):
-            print("error: \(error)")
-            completion(nil)
-        }
-    }
-```
-
-Alamofire:
-- Constructs the actual HTTP request
-- Manages the network connection
-- Sends the request to `api.yelp.com`
-- Receives the HTTP response
-
-#### 6. JSON Deserialization
-
-When the response arrives, Alamofire automatically decodes the JSON body into a Swift model:
+Before the request is sent, each registered `CDYelpRequestAdapter` mutates the `URLRequest` in order:
 
 ```swift
-// Alamofire calls JSONDecoder internally
-let decoder = JSONDecoder()
-let response = try decoder.decode(CDYelpSearchResponse.self, from: data)
-```
-
-The `CDYelpSearchResponse` struct (and all nested models) conform to `Decodable`, allowing Swift's built-in JSON decoder to parse the response.
-
-#### 7. Completion Handler Execution
-
-The decoded response (or error) is passed back to the caller:
-
-```swift
-completion(response)  // CDYelpSearchResponse or nil on error
-```
-
-### Async/Await Alternative
-
-Async/await overloads use `withCheckedThrowingContinuation` to bridge the completion-handler-based Alamofire API:
-
-```swift
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-public func searchBusinesses(...) async throws -> CDYelpSearchResponse {
-    try await withCheckedThrowingContinuation { continuation in
-        manager.request(router)
-            .responseDecodable(of: CDYelpSearchResponse.self) { response in
-                switch response.result {
-                case .success(let value):
-                    continuation.resume(returning: value)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-    }
+for adapter in adapters {
+    request = try adapter.adapt(request)
 }
 ```
+
+This is where custom headers, correlation IDs, or request signing can be injected.
+
+#### 6. Cache Lookup
+
+The cache key is derived from the canonical URL (query parameters sorted alphabetically). If a cached response exists within its TTL, it is decoded and returned immediately — no network request is made. If the cached bytes fail to decode (e.g. after a model shape change in an app update), the entry is evicted and execution falls through to a live network fetch below, rather than throwing — a stale, corrupt cache entry should not fail the caller when the network can serve a fresh response right now.
+
+```swift
+let cacheKey = CDYelpCacheKey.key(for: request)
+if let cache, let cached = cache.data(forKey: cacheKey) {
+    if let decoded = try? decoder.decode(T.self, from: cached) {
+        return decoded
+    }
+    cache.remove(forKey: cacheKey)
+    // ... falls through to the live network fetch below
+}
+```
+
+#### 7. URLSession Dispatch
+
+If no cache hit, the request is dispatched via `URLSession.data(for:)`:
+
+```swift
+let (data, response) = try await session.data(for: request)
+```
+
+Monitors are notified at the start of the request and again when it completes:
+
+```swift
+for monitor in monitors {
+    monitor.requestDidStart(urlRequest: request)
+}
+// ... dispatch ...
+for monitor in monitors {
+    monitor.requestDidComplete(urlRequest: request, response: httpResponse, data: data, error: nil)
+}
+```
+
+#### 8. HTTP Status Validation
+
+The response status code is checked. Non-2xx responses throw `CDYelpNetworkError.httpError(statusCode:data:headers:)`. Retryable status codes (e.g. 429, 500–504) trigger the retry path.
+
+#### 9. Retry
+
+When a retryable failure occurs (network error or retryable status code), the actor waits for the backoff delay and loops back to the top of an explicit `while true` loop. `retryOrThrow` takes `attempt` as `inout` and increments it itself (so every call site doesn't repeat the increment) before returning to allow a retry, or notifies monitors and throws if the failure is terminal:
+
+```swift
+try await retryOrThrow(error, request: request, attempt: &attempt, response: httpResponse, data: data)
+continue
+```
+
+The backoff delay prefers a server-provided `Retry-After` response header (seconds or HTTP-date form) when present, falling back to exponential backoff (`initialDelay * 2^attempt`, capped at 300s) otherwise. The sleep itself is wrapped in `trackedSleep(nanoseconds:)` rather than a bare `Task.sleep` — see the Cancellation details under `CDYelpURLSession` in Key Types below.
+
+Monitors receive a `requestWillRetry` notification before each retry.
+
+#### 10. JSON Decoding
+
+On a successful 2xx response, the data is decoded into the expected type:
+
+```swift
+let dec = decoder ?? makeDecoder()
+return try dec.decode(T.self, from: data)
+```
+
+Decoding failures throw `CDYelpNetworkError.decodingFailed(underlying:)`.
+
+The successfully decoded raw `Data` is then stored in the cache (if caching is enabled), keyed by canonical URL.
+
+---
+
+## Key Types
+
+### CDYelpAPIClient
+
+`public final class CDYelpAPIClient: Sendable`
+
+The public entry point. Holds the API key, a `CDYelpURLSession` actor, and the five opt-in configuration objects. All 19 endpoint methods are pure `async throws` functions — no completion-handler variants exist in v6.
+
+```swift
+public final class CDYelpAPIClient: Sendable {
+    private let apiKey: String
+    private let urlSession: CDYelpURLSession
+
+    public init(
+        apiKey: String,
+        cacheConfiguration: CDYelpCacheConfiguration = .disabled,
+        retryConfiguration: CDYelpRetryConfiguration = .disabled,
+        decoderConfiguration: CDYelpDecoderConfiguration = .default,
+        eventMonitors: [any CDYelpEventMonitor] = [],
+        requestAdapters: [any CDYelpRequestAdapter] = []
+    )
+}
+```
+
+### CDYelpURLSession
+
+`actor CDYelpURLSession`
+
+Internal Swift actor that owns the `URLSession` and orchestrates the full pipeline: adapter chain → cache → network → retry → decode. Being an actor ensures its mutable state (the `CDYelpResponseCache` instance) is protected from concurrent access without additional locks.
+
+Cancellation has two parts, both awaited by `cancelAllTasks()` so cancellation is guaranteed to be in effect by the time it returns:
+- In-flight network calls: cancelled via `await session.tasks`, then `task.cancel()` on each data/upload/download task.
+- In-flight retry-backoff sleeps: tracked in `retrySleepTasks: [UUID: Task<Void, Error>]` (populated by `trackedSleep(nanoseconds:)`) and cancelled explicitly. A plain `Task.sleep` wouldn't observe `cancelAllTasks()`, and — because it runs in an unstructured `Task` for tracking purposes — wouldn't observe the ambient caller's `Task.cancel()` either without `trackedSleep` forwarding it via `withTaskCancellationHandler`.
+
+### CDYelpRouter
+
+`enum CDYelpRouter` (internal)
+
+19-case enum mapping each API endpoint to its URL path, HTTP method, and parameters. `asURLRequest(apiKey:)` constructs the `URLRequest`, injecting the Bearer token header. The `apiKey` parameter is explicit rather than stored on the router.
+
+### CDYelpNetworkError
+
+`public enum CDYelpNetworkError: Error`
+
+Four-case native Swift error type thrown by all async API methods:
+
+| Case | Meaning |
+|------|---------|
+| `.invalidRequest(underlying:)` | URL could not be constructed from the given parameters |
+| `.networkFailure(underlying:)` | URLSession threw an error (no connectivity, timeout, etc.) |
+| `.httpError(statusCode:data:headers:)` | Server returned a non-2xx status code |
+| `.decodingFailed(underlying:)` | `JSONDecoder` failed to parse the response body |
 
 ---
 
@@ -180,44 +229,13 @@ All Yelp Fusion API requests require authentication via HTTP Bearer token:
 Authorization: Bearer YOUR_API_KEY
 ```
 
-### Implementation in CDYelpAPIClient
-
-The API key is stored as a private property and injected into every request:
-
-```swift
-public class CDYelpAPIClient {
-    private let apiKey: String
-    private let manager: Session
-    
-    public init(apiKey: String) {
-        precondition(!apiKey.isEmpty, "An apiKey is required...")
-        self.apiKey = apiKey
-        
-        // Create a custom Session with default headers
-        var headers = HTTPHeaders.default
-        headers["Authorization"] = "Bearer \(apiKey)"
-        
-        let configuration = URLSessionConfiguration.default
-        self.manager = Session(
-            configuration: configuration,
-            httpHeaders: headers
-        )
-    }
-}
-```
-
-### Request Headers
-
-Every request includes:
-- `Authorization: Bearer <apiKey>` — Required for authentication
-- `Accept: application/json` — Tells Yelp API to return JSON
-- Standard `User-Agent` and `Accept-Encoding` headers (added by Alamofire)
+The API key is passed as an explicit `apiKey:` parameter to `CDYelpRouter.asURLRequest(apiKey:)`, ensuring it is injected at request-construction time and never stored on the router enum itself.
 
 ### Security Notes
 
 - The API key is **not logged or exposed** in request bodies
-- The API key is transmitted via HTTPS only (enforced by the router)
-- Never commit API keys to source control; use environment variables or secure configuration
+- The API key is transmitted via HTTPS only
+- Never commit API keys to source control; use environment variables or secure configuration files
 - Consider rotating API keys periodically via the Yelp Developer Console
 
 ---
@@ -291,22 +309,6 @@ Instead, we have clean namespacing:
 - `CDYelpBusiness.Detailed`
 - `CDYelpBusiness.Match`
 
-### Nested Response Models
-
-Response objects nest their contained models:
-
-```swift
-public struct CDYelpSearchResponse: Decodable {
-    public let businesses: [CDYelpBusiness.BusinessSearch]?
-    public let total: Int?
-    public let region: CDYelpRegion?
-}
-
-public struct CDYelpBusinessResponse: Decodable {
-    public let business: CDYelpBusiness.Detailed?
-}
-```
-
 ### Codable Conformance
 
 All models conform to `Decodable` (not `Codable`) because:
@@ -348,33 +350,6 @@ public enum CDYelpLocale: String {
 
 // ... and more
 ```
-
-### Historical Rationale
-
-The single-file approach was adopted for two reasons:
-
-1. **Reduced import complexity** — Users import once: `import CDYelpFusionKit`
-2. **Simplified maintenance** — All enum variants in one place for consistency checks
-
-### Future Split Plan
-
-A future major version (v5.0) could split enums into logical files:
-
-```
-Source/
-├── Enums/
-│   ├── CDYelpSortEnums.swift
-│   ├── CDYelpFilterEnums.swift
-│   ├── CDYelpLocaleEnums.swift
-│   ├── CDYelpCategoryEnums.swift
-│   └── CDYelpAttributeEnums.swift
-└── CDYelpEnums.swift (re-exports all for backward compatibility)
-```
-
-This would:
-- Improve code organization
-- Make git diffs cleaner for enum-specific changes
-- Maintain backward compatibility via re-exports
 
 ### RawValue Strategy
 
@@ -430,118 +405,62 @@ Stars are rendered at multiple sizes (`small`, `regular`, `large`, `extraLarge`)
 - Yelp logo variations (light, dark, monochrome)
 - Brand colors (pre-configured in the asset catalog for SwiftUI/Storyboard compatibility)
 
-The asset catalog is included in the SPM package via `resources` in `Package.swift`:
-
-```swift
-.target(
-    name: "CDYelpFusionKit",
-    resources: [.process("PrivacyInfo.xcprivacy")]
-)
-```
-
-### Usage Example
-
-Rendering star ratings in a UITableViewCell:
-
-```swift
-if let stars = business.rating {
-    let starEnum = CDYelpStars(rating: stars)  // Converts 4.5 → .fourHalf
-    let starImage = UIImage.yelpStars(rating: starEnum, size: .regular)
-    self.starImageView.image = starImage
-}
-```
-
 ---
 
 ## Error Handling
 
-### Error Types
+### CDYelpNetworkError
 
-The library uses Alamofire's `AFError` enum for all network-related errors:
-
-```swift
-public enum AFError: Error {
-    case invalidURL(url: URLConvertible)
-    case parameterEncodingFailed(reason: ParameterEncodingFailureReason)
-    case responseValidationFailed(reason: ResponseValidationFailureReason)
-    case responseSerializationFailed(reason: ResponseSerializationFailureReason)
-    // ... more cases
-}
-```
-
-### Error Propagation (Completion Handlers)
-
-Completion-handler-based methods return the response or `nil` on error:
+All async API methods throw `CDYelpNetworkError`:
 
 ```swift
-public func searchBusinesses(..., completion: @escaping (CDYelpSearchResponse?) -> Void) {
-    manager.request(...)
-        .responseDecodable(of: CDYelpSearchResponse.self) { response in
-            switch response.result {
-            case .success(let value):
-                completion(value)
-            case .failure(let error):
-                // Error is silently dropped; completion called with nil
-                completion(nil)
-            }
+Task {
+    do {
+        let response = try await client.searchBusinesses(...)
+    } catch let error as CDYelpNetworkError {
+        switch error {
+        case .invalidRequest(let underlying):
+            // Bad parameters: underlying contains the construction error
+        case .networkFailure(let underlying):
+            // No connectivity, timeout, etc.
+        case .httpError(let statusCode, let data, let headers):
+            // Non-2xx response; data contains the raw body, headers the response headers
+        case .decodingFailed(let underlying):
+            // JSON parse error
         }
-}
-```
-
-This pattern maintains backward compatibility — callers check for nil rather than handling errors.
-
-### Error Propagation (Async/Await)
-
-Async/await overloads throw `AFError` for proper error handling:
-
-```swift
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-public func searchBusinesses(...) async throws -> CDYelpSearchResponse {
-    try await withCheckedThrowingContinuation { continuation in
-        manager.request(...)
-            .responseDecodable(of: CDYelpSearchResponse.self) { response in
-                switch response.result {
-                case .success(let value):
-                    continuation.resume(returning: value)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
     }
 }
 ```
+
+### Error Propagation
+
+Errors surface directly from `async throws` — there is no `nil`-on-error pattern. Callers must either catch errors or propagate them with `try`.
 
 ### Common Errors
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| `invalidURL` | Search parameters contain invalid characters | Validate input strings |
-| `responseSerializationFailed` | API returned non-JSON response | Check API status; verify endpoint exists |
-| `responseValidationFailed` | HTTP status is not 2xx | Check API key validity; check rate limits |
-| Network timeout | Request took too long | Check network connectivity; retry with backoff |
+| `.invalidRequest(underlying:)` | Search parameters contain invalid characters | Validate input strings |
+| `.httpError(statusCode: 401, _, _)` | Invalid API key | Check key in Yelp Developer Console |
+| `.httpError(statusCode: 429, _, _)` | Rate limit exceeded | Enable `CDYelpRetryConfiguration` |
+| `.httpError(statusCode: 404, _, _)` | Business or event ID not found | Verify the ID exists |
+| `.networkFailure` | No connectivity or timeout | Check network; retry with backoff |
+| `.decodingFailed` | API schema changed | Update CDYelpFusionKit |
 
 ---
 
 ## Thread Safety
 
-### Alamofire.Session Thread Safety
+### Actor-Based Isolation
 
-Alamofire's `Session` is thread-safe and can be safely accessed from multiple threads/queues. CDYelpFusionKit's `manager` property is shared across all API methods and requires no synchronization.
+`CDYelpURLSession` is a Swift actor. All access to internal mutable state (data tasks, cache) is serialized automatically by the actor runtime — no manual locking is needed.
 
 ### Sendable Conformance
 
-For Swift 6 strict concurrency:
-
-```swift
-public class CDYelpAPIClient: @unchecked Sendable {
-    // manager is thread-safe (Alamofire.Session is Sendable)
-}
-```
-
-The `@unchecked Sendable` conformance is justified because:
-- `manager` (Alamofire.Session) is thread-safe
-- `apiKey` is immutable (never modified after init)
-- No other mutable state is accessed from concurrent tasks
+`CDYelpAPIClient` is `public final class CDYelpAPIClient: Sendable`. This is safe because:
+- `apiKey` is an immutable `let`
+- `urlSession` is a `CDYelpURLSession` actor (actors are `Sendable`)
+- No other mutable state is accessible from concurrent tasks
 
 ### Best Practices
 
@@ -565,20 +484,13 @@ async let search3 = client.searchBusinesses(...)
 let (result1, result2, result3) = try await (search1, search2, search3)
 ```
 
-Alamofire's session automatically manages connection pooling and multiplexing.
+URLSession automatically manages connection pooling and HTTP/2 multiplexing.
 
 ### Memory Management
 
-- Response models are value types (structs) — they're cheap to copy
-- Decodable deserialization is fast (Swift's built-in JSON decoder is optimized)
-- Models are not cached; each request returns a fresh decoded object
-- Completion handlers should use weak captures to avoid retain cycles:
-
-```swift
-client.searchBusinesses(...) { [weak self] response in
-    self?.updateUI(response)
-}
-```
+- Response models are value types (structs) — cheap to copy
+- Decodable deserialization uses Swift's built-in JSON decoder (optimized)
+- Models are not retained by the client; each call returns fresh decoded objects
 
 ### Caching
 
@@ -587,13 +499,6 @@ CDYelpFusionKit provides opt-in in-memory response caching via `CDYelpCacheConfi
 Cache keys are built by `CDYelpCacheKey.key(for:)`, which normalises URL query parameters to a sorted canonical form so that parameter dictionary ordering does not produce cache misses.
 
 Bytes are only stored after a successful decode, preventing a bad response from poisoning the cache for the TTL window.
-
-```swift
-let client = CDYelpAPIClient(
-    apiKey: "key",
-    cacheConfiguration: CDYelpCacheConfiguration(ttl: 300)
-)
-```
 
 ---
 
@@ -614,33 +519,6 @@ All functionality available for network requests. Limited UI rendering:
 - No access to `UIImage` (WatchKit does not support UIKit)
 - Use image URLs directly; render via `AsyncImage` or WatchKit image views
 - All API methods work identically to iOS
-
----
-
-## Future Architecture Changes
-
-### Completed in v5.0.0
-
-Five improvements were added in v5.0.0, all additive and opt-in via `CDYelpAPIClient.init` parameters:
-
-1. **Middleware/Interceptor Pattern** — `CDYelpEventMonitor` and `CDYelpRequestAdapter` protocols; bridged to Alamofire internals via `CDYelpAlamofireEventMonitor` and `CDYelpAlamofireRequestAdapter`
-2. **Response Caching Layer** — `CDYelpCacheConfiguration` + internal `CDYelpResponseCache` (NSCache + TTL) + `CDYelpCacheKey`
-3. **Retry Strategy** — `CDYelpRetryConfiguration`; wires Alamofire `RetryPolicy` into the session `Interceptor`
-4. **Custom Decoders** — `CDYelpDecoderConfiguration`; injected into every `cachedRequest` call path
-5. **Testing Utilities** — `CDYelpMockURLProtocol` + `CDYelpMockClientFactory`; compiled under `#if DEBUG || TESTING`
-
-### Planned for v6.0.0
-
-- Drop Alamofire entirely; replace with a native `CDYelpURLSession` actor
-- All v5 public configuration structs and protocols survive unchanged
-- See `Documentation/IMPROVEMENTS.md` for the full v6 implementation plan
-
-### Backward Compatibility
-
-CDYelpFusionKit commits to semantic versioning:
-- **Patch versions** — Bug fixes only
-- **Minor versions** — New features, backward-compatible
-- **Major versions** — Breaking changes allowed (e.g., v3.x → v4.0)
 
 ---
 
@@ -673,7 +551,7 @@ Router tests validate URL construction without network access:
 @Suite struct CDYelpRouterTests {
     @Test func searchRouterProducesGetRequest() throws {
         let router = CDYelpRouter.search(parameters: ["term": "coffee"])
-        let request = try router.asURLRequest()
+        let request = try router.asURLRequest(apiKey: "test-key")
         #expect(request.httpMethod == "GET")
         #expect(request.url?.host == "api.yelp.com")
     }
@@ -682,13 +560,15 @@ Router tests validate URL construction without network access:
 
 ### Integration Testing
 
-`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (in `Source/Testing/`, compiled under `#if DEBUG || TESTING`) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (in `Source/Testing/`) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
 
 ```swift
 CDYelpMockURLProtocol.register(
     stub: .init(data: fixtureData, statusCode: 200),
     forURLContaining: "businesses/search"
 )
+defer { CDYelpMockURLProtocol.removeStub(forURLContaining: "businesses/search") }
+
 let client = CDYelpMockClientFactory.makeClient()
 let response = try await client.searchBusinesses(...)
 ```
@@ -704,11 +584,7 @@ JSON fixtures live in `Tests/CDYelpFusionKitTests/Fixtures/` and are loaded via 
 API documentation is generated via Swift's native DocC system:
 
 ```bash
-swift package --disable-sandbox generate-documentation \
-  --target CDYelpFusionKit \
-  --output-path docs \
-  --transform-for-static-hosting \
-  --hosting-base-path CDYelpFusionKit
+bash scripts/generate-docs.sh
 ```
 
 Generated docs are published to GitHub Pages at [chrisdhaan.github.io/CDYelpFusionKit](https://chrisdhaan.github.io/CDYelpFusionKit).
@@ -722,8 +598,6 @@ All public API includes triple-slash `///` documentation comments:
 /// - Parameter term: Business type or name (e.g., "coffee", "restaurants").
 /// - Parameter location: Location string (e.g., "San Francisco").
 /// - Returns: A ``CDYelpSearchResponse`` containing matching businesses.
-/// - Throws: ``AFError`` if the request fails.
+/// - Throws: ``CDYelpNetworkError`` if the request fails.
 public func searchBusinesses(...) async throws -> CDYelpSearchResponse
 ```
-
-DocC cross-references use backtick syntax (e.g., `` ``CDYelpSearchResponse`` ``).

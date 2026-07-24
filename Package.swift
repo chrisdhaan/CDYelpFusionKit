@@ -31,10 +31,10 @@ import PackageDescription
 let package = Package(
     name: "CDYelpFusionKit",
     platforms: [
-        .iOS(.v12),
-        .macOS(.v11),
-        .tvOS(.v12),
-        .watchOS(.v4),
+        .iOS(.v15),
+        .macOS(.v12),
+        .tvOS(.v15),
+        .watchOS(.v8),
         .visionOS(.v1)
     ],
     products: [
@@ -50,13 +50,12 @@ let package = Package(
             targets: ["CDYelpFusionKitTesting"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
     ],
     targets: [
         .target(
             name: "CDYelpFusionKit",
-            dependencies: [.product(name: "Alamofire", package: "Alamofire")],
+            dependencies: [],
             path: "Source",
             exclude: ["Info.plist", "Info-tvOS.plist", "Testing"],
             resources: [.process("PrivacyInfo.xcprivacy")],
