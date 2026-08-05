@@ -57,7 +57,7 @@ let package = Package(
             name: "CDYelpFusionKit",
             dependencies: [],
             path: "Source",
-            exclude: ["Info.plist", "Info-tvOS.plist", "Testing"],
+            exclude: ["Info.plist", "Info-tvOS.plist", "CDYelpMockClientFactory.swift", "CDYelpMockURLProtocol.swift"],
             resources: [.process("PrivacyInfo.xcprivacy")],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS, .watchOS, .visionOS]))
@@ -65,7 +65,8 @@ let package = Package(
         .target(
             name: "CDYelpFusionKitTesting",
             dependencies: ["CDYelpFusionKit"],
-            path: "Source/Testing"),
+            path: "Source",
+            sources: ["CDYelpMockClientFactory.swift", "CDYelpMockURLProtocol.swift"]),
         .testTarget(
             name: "CDYelpFusionKitTests",
             dependencies: ["CDYelpFusionKit", "CDYelpFusionKitTesting"],

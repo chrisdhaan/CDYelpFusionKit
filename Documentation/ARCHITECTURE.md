@@ -560,7 +560,7 @@ Router tests validate URL construction without network access:
 
 ### Integration Testing
 
-`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (in `Source/Testing/`) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (part of the `CDYelpFusionKitTesting` target) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
 
 ```swift
 CDYelpMockURLProtocol.register(

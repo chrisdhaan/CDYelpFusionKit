@@ -24,13 +24,13 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |c|
     c.source_files = 'Source/**/*.swift'
-    c.exclude_files = 'Source/Testing/**/*.swift'
+    c.exclude_files = ['Source/CDYelpMockClientFactory.swift', 'Source/CDYelpMockURLProtocol.swift']
     c.resource_bundles = { 'CDYelpFusionKit' => ['Source/PrivacyInfo.xcprivacy'] }
     c.resources = ['Resources/*.xcassets']
   end
 
   s.subspec 'Testing' do |t|
-    t.source_files = 'Source/Testing/**/*.swift'
+    t.source_files = ['Source/CDYelpMockClientFactory.swift', 'Source/CDYelpMockURLProtocol.swift']
     t.dependency 'CDYelpFusionKit/Core'
   end
 end
