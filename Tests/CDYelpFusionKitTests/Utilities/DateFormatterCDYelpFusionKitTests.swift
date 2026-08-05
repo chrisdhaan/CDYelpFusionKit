@@ -1,8 +1,8 @@
 //
-//  DateFormatter+CDYelpFusionKit.swift
-//  CDYelpFusionKit
+//  DateFormatterCDYelpFusionKitTests.swift
+//  CDYelpFusionKitTests
 //
-//  Created by Christopher de Haan on 6/1/21.
+//  Created by Christopher de Haan on 8/5/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,34 +25,20 @@
 //  THE SOFTWARE.
 //
 
-#if os(macOS)
-    import Foundation
-#else
-    import UIKit
-#endif
+@testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-extension DateFormatter {
-    /// Date formatter for Yelp Events API responses using ISO 8601 format with timezone.
-    static let events: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        return formatter
-    }()
+struct DateFormatterCDYelpFusionKitTests {
+    @Test func eventsFormatterUsesPosixLocale() {
+        #expect(DateFormatter.events.locale?.identifier == "en_US_POSIX")
+    }
 
-    /// Date formatter for Yelp Reviews API responses using standard date and time format.
-    static let reviews: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter
-    }()
+    @Test func reviewsFormatterUsesPosixLocale() {
+        #expect(DateFormatter.reviews.locale?.identifier == "en_US_POSIX")
+    }
 
-    /// Date formatter for Yelp Special Hours date fields using ISO date-only format.
-    static let specialHours: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
+    @Test func specialHoursFormatterUsesPosixLocale() {
+        #expect(DateFormatter.specialHours.locale?.identifier == "en_US_POSIX")
+    }
 }

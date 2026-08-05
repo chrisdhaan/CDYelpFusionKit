@@ -48,7 +48,7 @@ extension String {
         {
             path += "&category=\(category)"
         } else if let category = category {
-            path += "category=\(category)"
+            path += "category=\(category.rawValue)"
         }
 
         if term != nil,
@@ -56,10 +56,10 @@ extension String {
         {
             path += "&location=\(location)"
         } else if category != nil,
-                  let location = location
+                  let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         {
             path += "&location=\(location)"
-        } else if let location = location {
+        } else if let location = location?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
             path += "location=\(location)"
         }
 

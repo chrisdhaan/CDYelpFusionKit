@@ -1,8 +1,8 @@
 //
-//  DateFormatter+CDYelpFusionKit.swift
-//  CDYelpFusionKit
+//  StringCDYelpFusionKitTests.swift
+//  CDYelpFusionKitTests
 //
-//  Created by Christopher de Haan on 6/1/21.
+//  Created by Christopher de Haan on 8/5/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,34 +25,24 @@
 //  THE SOFTWARE.
 //
 
-#if os(macOS)
-    import Foundation
-#else
-    import UIKit
-#endif
+@testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-extension DateFormatter {
-    /// Date formatter for Yelp Events API responses using ISO 8601 format with timezone.
-    static let events: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        return formatter
-    }()
+struct StringCDYelpFusionKitTests {
+    @Test func searchLinkPathUsesCategoryRawValueNotCaseName() {
+        let path = String.searchLinkPath(withTerm: nil, category: .activeLife, location: nil)
+        #expect(path == "search?category=active")
+    }
 
-    /// Date formatter for Yelp Reviews API responses using standard date and time format.
-    static let reviews: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter
-    }()
+    @Test func searchLinkPathPercentEncodesLocationInAllBranches() throws {
+        let location = "San Francisco, CA"
+        let encodedLocation = try #require(location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
 
-    /// Date formatter for Yelp Special Hours date fields using ISO date-only format.
-    static let specialHours: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
+        let categoryAndLocation = String.searchLinkPath(withTerm: nil, category: .pizza, location: location)
+        #expect(categoryAndLocation == "search?category=pizza&location=\(encodedLocation)")
+
+        let locationOnly = String.searchLinkPath(withTerm: nil, category: nil, location: location)
+        #expect(locationOnly == "search?location=\(encodedLocation)")
+    }
 }

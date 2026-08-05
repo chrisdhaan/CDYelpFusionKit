@@ -110,4 +110,46 @@ struct CDYelpBusinessTests {
         let business = try JSONDecoder().decode(CDYelpBusiness.BusinessSearch.self, from: json)
         #expect(business.rating == 5.0)
     }
+
+    @Test func phoneSearchDecodesDisplayAddressAndCrossStreets() throws {
+        let json = """
+        {
+            "id": "abc123",
+            "name": "Test Restaurant",
+            "location": {
+                "address1": "123 Main St",
+                "city": "San Francisco",
+                "state": "CA",
+                "zip_code": "94102",
+                "country": "US",
+                "display_address": ["123 Main St", "San Francisco, CA 94102"],
+                "cross_streets": "Main St & 1st Ave"
+            }
+        }
+        """.data(using: .utf8)!
+        let business = try JSONDecoder().decode(CDYelpBusiness.PhoneSearch.self, from: json)
+        #expect(business.location?.displayAddress == ["123 Main St", "San Francisco, CA 94102"])
+        #expect(business.location?.crossStreets == "Main St & 1st Ave")
+    }
+
+    @Test func transactionSearchDecodesDisplayAddressAndCrossStreets() throws {
+        let json = """
+        {
+            "id": "abc123",
+            "name": "Test Restaurant",
+            "location": {
+                "address1": "123 Main St",
+                "city": "San Francisco",
+                "state": "CA",
+                "zip_code": "94102",
+                "country": "US",
+                "display_address": ["123 Main St", "San Francisco, CA 94102"],
+                "cross_streets": "Main St & 1st Ave"
+            }
+        }
+        """.data(using: .utf8)!
+        let business = try JSONDecoder().decode(CDYelpBusiness.TransactionSearch.self, from: json)
+        #expect(business.location?.displayAddress == ["123 Main St", "San Francisco, CA 94102"])
+        #expect(business.location?.crossStreets == "Main St & 1st Ave")
+    }
 }

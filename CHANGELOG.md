@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [Unreleased](#unreleased)
 - [6.0.0](#600---2026-07-24)
 - [5.1.0](#510---2026-06-15)
 - [5.0.0](#500---2026-06-07)
@@ -23,6 +24,18 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [Unreleased]
+
+### Fixed
+
+- `URL.yelpSearchWebLink`/`yelpSearchDeepLink` sent the wrong category slug when called without a search term — the Swift enum case name (e.g. `activeLife`) was interpolated instead of its Yelp API raw value (`active`)
+- `URL.yelpSearchWebLink`/`yelpSearchDeepLink` produced a malformed URL when called with a `location` but no term — the category-only and location-only code paths didn't percent-encode `location`
+- `CDYelpBusiness.PhoneSearch` and `CDYelpBusiness.TransactionSearch` silently dropped `display_address` and `cross_streets` from decoded responses — both used the plain `CDYelpLocation` type instead of `CDYelpLocation.Detailed`
+- `DateFormatter.events`, `.reviews`, and `.specialHours` could fail to parse (or misparse) Yelp API date strings on devices set to a non-Gregorian-calendar locale — none of the three explicitly set `locale`
+- The `Accept-Language` request header was computed once from `Locale.preferredLanguages` and cached for the lifetime of the process, so a device language change wasn't reflected until relaunch
 
 ---
 
