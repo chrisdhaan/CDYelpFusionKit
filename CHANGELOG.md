@@ -36,6 +36,10 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - `CDYelpBusiness.PhoneSearch` and `CDYelpBusiness.TransactionSearch` silently dropped `display_address` and `cross_streets` from decoded responses — both used the plain `CDYelpLocation` type instead of `CDYelpLocation.Detailed`
 - `DateFormatter.events`, `.reviews`, and `.specialHours` could fail to parse (or misparse) Yelp API date strings on devices set to a non-Gregorian-calendar locale — none of the three explicitly set `locale`
 - The `Accept-Language` request header was computed once from `Locale.preferredLanguages` and cached for the lifetime of the process, so a device language change wasn't reflected until relaunch
+- `Documentation/Usage.md`'s cache example showed `await client.clearCache()`; the method is synchronous
+- `Documentation/ARCHITECTURE.md`'s `CDColor`/`CDImage` code samples referenced `UIColor`/`UIImage` types and signatures that don't exist in this framework; corrected to the actual `CDColor`/`CDImage` API
+- `Documentation/ARCHITECTURE.md` and `Documentation/Usage.md` incorrectly claimed watchOS has no `UIImage` access; `CDImage` is a `UIImage` typealias on watchOS and the framework's star rating images render there normally
+- `Documentation/ARCHITECTURE.md`'s Asset Catalog section referenced the wrong path (`Resources/Assets.xcassets` instead of `Resources/Images.xcassets`), an incorrect star image count (44 instead of 40), and a nonexistent colorset-based brand color setup
 
 ---
 
