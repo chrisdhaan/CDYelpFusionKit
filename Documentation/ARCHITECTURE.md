@@ -80,7 +80,7 @@ request.allHTTPHeaderFields = [
     "User-Agent": CDYelpFusionKitUserAgent,
     "Authorization": "Bearer \(apiKey)",
     "Accept": "application/json",
-    "Accept-Language": defaultAcceptLanguage
+    "Accept-Language": acceptLanguageHeaderValue()
 ]
 return request
 ```
