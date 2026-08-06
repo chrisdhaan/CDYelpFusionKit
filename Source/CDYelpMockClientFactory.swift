@@ -1,3 +1,7 @@
+// The CDYelpFusionKitTesting target in CDYelpFusionKit.xcodeproj doesn't link
+// CDYelpFusionKit.framework (empty Frameworks phase, no target dependency) — it exists only to
+// mirror the SPM/CocoaPods Testing product in Xcode's file navigator, not to build standalone.
+// SWIFT_PACKAGE is set only when compiling through SPM, where the dependency is real.
 #if SWIFT_PACKAGE
     import CDYelpFusionKit
 #endif
