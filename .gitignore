@@ -35,6 +35,9 @@ playground.xcworkspace
 # Swift Package Manager
 .build/
 
+# Claude Code onlydiff session cache
+.claude/onlydiff/
+
 # DocC build artifacts (docs/ is tracked intentionally for GitHub Pages)
 /tmp/docc-output/
 
