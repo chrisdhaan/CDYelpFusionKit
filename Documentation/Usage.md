@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "6.0.1"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "7.0.0"))
 ]
 ```
 
@@ -25,19 +25,9 @@ Then add it to your target's dependencies:
 )
 ```
 
-#### CocoaPods
-
-Add to your `Podfile`:
-
-```ruby
-pod 'CDYelpFusionKit', '~> 6.0'
-```
-
-Then run `pod install`.
-
 #### Carthage (Legacy)
 
-Carthage support has been removed in v4.0.0. Please migrate to SPM or CocoaPods.
+Carthage support has been removed in v4.0.0. Please migrate to SPM.
 
 ---
 

@@ -28,4 +28,4 @@ assignees: chrisdhaan
 - Xcode version:
 - Swift version:
 - iOS/macOS/tvOS/watchOS version:
-- Installation method (SPM / CocoaPods / Carthage):
+- Installation method (SPM):

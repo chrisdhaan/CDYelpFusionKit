@@ -16,10 +16,8 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | `docs/` | DocC-generated API documentation (GitHub Pages) |
 | `scripts/` | Developer scripts (e.g. `generate-docs.sh`) |
 | `CDYelpFusionKit.xcodeproj` | Xcode project |
-| `CDYelpFusionKit.podspec` | CocoaPods spec |
 | `Package.swift` | Swift Package Manager manifest |
 | `.github/workflows/ci.yml` | GitHub Actions CI |
-| `Gemfile` | Ruby dependencies (CocoaPods) |
 
 ## Platform Targets
 
@@ -53,7 +51,6 @@ CDYelpFusionKit is a Swift framework that wraps the Yelp Fusion REST API. It pro
 | watchOS | macos-26 (×4), macos-15 | Build watchOS scheme |
 | visionOS | macos-26 (×4) | Build visionOS scheme |
 | Catalyst | macos-15 | Build iOS scheme for macOS |
-| CocoaPods | macos-15 | `bundle exec pod lib lint` |
 | SPM | macos-15 | `swift test` |
 | SwiftLint | macos-15 | `swiftlint lint --strict` |
 | SwiftFormat | macos-15 | `swiftformat Source Tests --lint` |
@@ -93,7 +90,4 @@ bash scripts/generate-docs.sh
 
 # Preview documentation locally
 swift package --disable-sandbox preview-documentation --target CDYelpFusionKit
-
-# CocoaPods lint
-bundle exec pod lib lint --allow-warnings
 ```
