@@ -14,17 +14,8 @@
     <a href="https://www.swift.org">
         <img src="https://img.shields.io/badge/Swift-5+-orange?style=flat" alt="Swift Versions">
     </a>
-    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/p/CDYelpFusionKit.svg?style=flat" alt="Platforms">
-    </a>
-    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/v/CDYelpFusionKit.svg?style=flat" alt="CocoaPods Compatible">
-    </a>
     <a href="https://www.swift.org/package-manager">
         <img src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat" alt="SPM Compatible">
-    </a>
-    <a href="http://cocoapods.org/pods/CDYelpFusionKit">
-        <img src="https://img.shields.io/cocoapods/l/CDYelpFusionKit.svg?style=flat" alt="License">
     </a>
 </p>
 
@@ -103,21 +94,12 @@ dependencies: [
 
 Or in Xcode: **File → Add Packages** and enter the repository URL.
 
-### CocoaPods
-
-Add to your `Podfile`:
-
-```ruby
-pod 'CDYelpFusionKit', '~> 6.0'
-```
-
-Then run `pod install`.
-
 ## Documentation
 
 - **[Usage Guide](Documentation/Usage.md)** — Complete API reference with examples for all endpoints
 - **[Architecture](Documentation/ARCHITECTURE.md)** — Technical design and implementation details
-- **[Migration Guide](Documentation/CDYelpFusionKit%206.0%20Migration%20Guide.md)** — Upgrade from v5.x to v6.0
+- **[Migration Guide (v7.0)](Documentation/CDYelpFusionKit%207.0%20Migration%20Guide.md)** — Upgrade from v6.x to v7.0 (SPM only)
+- **[Migration Guide (v6.0)](Documentation/CDYelpFusionKit%206.0%20Migration%20Guide.md)** — Upgrade from v5.x to v6.0
 - **[API Documentation](https://chrisdhaan.github.io/CDYelpFusionKit/)** — Generated DocC reference
 
 ## Author
