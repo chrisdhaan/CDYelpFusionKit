@@ -12,7 +12,7 @@ Add CDYelpFusionKit to your `Package.swift` or Xcode project:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "6.0.0"))
+    .package(url: "https://github.com/chrisdhaan/CDYelpFusionKit.git", .upToNextMajor(from: "6.0.1"))
 ]
 ```
 
@@ -685,7 +685,7 @@ let response = try await client.searchBusinesses(byTerm: "coffee", location: "SF
 let cached = try await client.searchBusinesses(byTerm: "coffee", location: "SF", ...)
 
 // Manually invalidate the entire cache
-await client.clearCache()
+client.clearCache()
 ```
 
 Caching is disabled by default (`CDYelpCacheConfiguration.disabled`). Cached bytes are stored on any successful 2xx response before decoding. If decoding subsequently fails, the raw bytes remain cached for the TTL window — callers should account for this when diagnosing persistent decode failures.
@@ -943,10 +943,11 @@ Filter by star rating:
 
 ### watchOS
 
-watchOS apps have limited capabilities compared to iOS/macOS:
+watchOS apps have more limited UI capabilities compared to iOS/macOS, but image rendering itself is not one of them:
 
-- **No UIImage Rendering:** The framework cannot render images directly on watchOS. Fetch image URLs and handle display in your app.
-- **Limited UI:** Use `WatchKit` framework components; avoid `UIKit` image operations.
+- **Star Rating Images:** `CDImage.yelpStars(numberOfStars:forSize:)` works on watchOS — `CDImage` is a `UIImage` typealias there, backed by the framework's own asset catalog.
+- **Remote Business Photos:** `business.imageUrl` is just a URL string on every platform; downloading and displaying it is left to your app.
+- **Limited UI:** Use `WatchKit` framework components alongside `UIImage`-based views where SwiftUI/WatchKit expects one.
 - **Network Requests:** All API calls work identically to iOS.
 
 Example:
@@ -971,10 +972,9 @@ Task {
             attributes: nil
         )
         for business in response.businesses ?? [] {
-            // Fetch image URL but don't try to render UIImage
+            // business.imageUrl is a remote URL — download it before displaying
             if let imageUrlString = business.imageUrl {
                 print("Image URL: \(imageUrlString)")
-                // Download and display using WatchKit-compatible methods
             }
         }
     } catch {

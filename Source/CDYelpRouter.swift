@@ -81,7 +81,7 @@ enum CDYelpRouter {
         urlRequest.setValue(CDYelpFusionKitUserAgent, forHTTPHeaderField: "User-Agent")
         urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.setValue(defaultAcceptLanguage, forHTTPHeaderField: "Accept-Language")
+        urlRequest.setValue(acceptLanguageHeaderValue(), forHTTPHeaderField: "Accept-Language")
         if hasBody {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
@@ -89,12 +89,18 @@ enum CDYelpRouter {
 
     /// Mirrors Alamofire's `HTTPHeaders.default` Accept-Language header, which the pre-v6
     /// Alamofire-backed session sent on every request via `sessionConfiguration.httpAdditionalHeaders`.
-    /// Encodes the device's preferred languages with decreasing quality values, e.g.
+    /// Encodes the given preferred languages with decreasing quality values, e.g.
     /// `"en-US;q=1.0, fr-FR;q=0.9"`.
-    private static let defaultAcceptLanguage: String = Locale.preferredLanguages.prefix(6).enumerated().map { index, languageCode in
-        let quality = 1.0 - (Double(index) * 0.1)
-        return "\(languageCode);q=\(quality)"
-    }.joined(separator: ", ")
+    ///
+    /// Takes `preferredLanguages` as a parameter (defaulting to the live `Locale.preferredLanguages`)
+    /// rather than caching the header in a `static let`, so a language change is reflected on the
+    /// very next request instead of requiring a process relaunch.
+    static func acceptLanguageHeaderValue(preferredLanguages: [String] = Locale.preferredLanguages) -> String {
+        preferredLanguages.prefix(6).enumerated().map { index, languageCode in
+            let quality = 1.0 - (Double(index) * 0.1)
+            return "\(languageCode);q=\(quality)"
+        }.joined(separator: ", ")
+    }
 
     /// Builds a POST request with a JSON-encoded body, shared by the `.aiChat` and `.jobs`
     /// branches of `asURLRequest(apiKey:)` — they differ only in base URL and encoded value.

@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [6.0.1](#601---2026-08-06)
 - [6.0.0](#600---2026-07-24)
 - [5.1.0](#510---2026-06-15)
 - [5.0.0](#500---2026-06-07)
@@ -23,6 +24,22 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [6.0.1] - 2026-08-06
+
+### Fixed
+
+- `URL.yelpSearchWebLink`/`yelpSearchDeepLink` sent the wrong category slug when called without a search term — the Swift enum case name (e.g. `activeLife`) was interpolated instead of its Yelp API raw value (`active`)
+- `URL.yelpSearchWebLink`/`yelpSearchDeepLink` produced a malformed URL when called with a `location` but no term — the category-only and location-only code paths didn't percent-encode `location`
+- `CDYelpBusiness.PhoneSearch` and `CDYelpBusiness.TransactionSearch` silently dropped `display_address` and `cross_streets` from decoded responses — both used the plain `CDYelpLocation` type instead of `CDYelpLocation.Detailed`
+- `DateFormatter.events`, `.reviews`, and `.specialHours` could fail to parse (or misparse) Yelp API date strings on devices set to a non-Gregorian-calendar locale — none of the three explicitly set `locale`
+- The `Accept-Language` request header was computed once from `Locale.preferredLanguages` and cached for the lifetime of the process, so a device language change wasn't reflected until relaunch
+- `Documentation/Usage.md`'s cache example showed `await client.clearCache()`; the method is synchronous
+- `Documentation/ARCHITECTURE.md`'s `CDColor`/`CDImage` code samples referenced `UIColor`/`UIImage` types and signatures that don't exist in this framework; corrected to the actual `CDColor`/`CDImage` API
+- `Documentation/ARCHITECTURE.md` and `Documentation/Usage.md` incorrectly claimed watchOS has no `UIImage` access; `CDImage` is a `UIImage` typealias on watchOS and the framework's star rating images render there normally
+- `Documentation/ARCHITECTURE.md`'s Asset Catalog section referenced the wrong path (`Resources/Assets.xcassets` instead of `Resources/Images.xcassets`), an incorrect star image count (44 instead of 40), and a nonexistent colorset-based brand color setup
 
 ---
 

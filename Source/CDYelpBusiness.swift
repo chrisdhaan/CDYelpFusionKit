@@ -101,7 +101,7 @@ public struct CDYelpBusiness: Sendable {
         public let reviewCount: Int?
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
-        public let location: CDYelpLocation?
+        public let location: CDYelpLocation.Detailed?
         public let transactions: [String]?
 
         enum CodingKeys: String, CodingKey {
@@ -153,7 +153,7 @@ public struct CDYelpBusiness: Sendable {
         public let reviewCount: Int?
         public let categories: [CDYelpCategory]?
         public let coordinates: CDYelpCoordinates?
-        public let location: CDYelpLocation?
+        public let location: CDYelpLocation.Detailed?
         public let transactions: [String]?
 
         enum CodingKeys: String, CodingKey {

@@ -80,7 +80,7 @@ request.allHTTPHeaderFields = [
     "User-Agent": CDYelpFusionKitUserAgent,
     "Authorization": "Bearer \(apiKey)",
     "Accept": "application/json",
-    "Accept-Language": defaultAcceptLanguage
+    "Accept-Language": acceptLanguageHeaderValue()
 ]
 return request
 ```
@@ -375,9 +375,9 @@ This avoids conversion logic — the enum value is used directly in the API requ
 `Source/CDColor.swift` and `Source/CDColor+CDYelpFusionKit.swift` provide color constants for Yelp branding:
 
 ```swift
-public extension UIColor {
-    class var yelpRed: UIColor {
-        return UIColor(red: 0.835, green: 0.000, blue: 0.000, alpha: 1.0)
+public extension CDColor {
+    class func yelpFiveStarRed() -> CDColor {
+        return CDColor(red: 211.0 / 255.0, green: 35.0 / 255.0, blue: 35.0 / 255.0, alpha: 1.0)
     }
 }
 ```
@@ -389,9 +389,9 @@ Available on iOS, tvOS, and visionOS (UIKit-based platforms). macOS uses `NSColo
 `Source/CDImage.swift` and `Source/CDImage+CDYelpFusionKit.swift` provide star rating images:
 
 ```swift
-public extension UIImage {
-    class func yelpStars(rating: CDYelpStars, size: CDYelpStarsSize) -> UIImage? {
-        // Returns pre-rendered star rating image (e.g., 4.5 stars as image)
+public extension CDImage {
+    class func yelpStars(numberOfStars: CDYelpStars!, forSize size: CDYelpStarsSize!) -> CDImage? {
+        // Returns a pre-rendered star rating image (e.g., 4.5 stars as image)
     }
 }
 ```
@@ -400,10 +400,10 @@ Stars are rendered at multiple sizes (`small`, `regular`, `large`, `extraLarge`)
 
 ### Asset Catalog
 
-`Resources/Assets.xcassets` contains:
-- Star rating images (0-5 stars, in 0.5 increments, at 4 sizes = 44 images)
+`Resources/Images.xcassets` contains:
+- Star rating images (0-5 stars, in 0.5 increments except for 0, at 4 sizes = 40 images)
 - Yelp logo variations (light, dark, monochrome)
-- Brand colors (pre-configured in the asset catalog for SwiftUI/Storyboard compatibility)
+- Brand colors are hardcoded RGB literals in `CDColor+CDYelpFusionKit.swift`, not asset catalog colorsets
 
 ---
 
@@ -514,10 +514,10 @@ All functionality available. Uses `AppKit` (NSColor, NSImage) instead of UIKit.
 
 ### watchOS
 
-All functionality available for network requests. Limited UI rendering:
+All functionality available for network requests. UI rendering is more limited than iOS, but not absent:
 
-- No access to `UIImage` (WatchKit does not support UIKit)
-- Use image URLs directly; render via `AsyncImage` or WatchKit image views
+- `CDImage` is a `UIImage` typealias on watchOS (`Package.swift` links UIKit for this platform), so the framework's own star rating images render normally via `CDImage.yelpStars(numberOfStars:forSize:)`
+- Remote business photos (`imageUrl`) still need to be downloaded and displayed by your app, same as on any platform
 - All API methods work identically to iOS
 
 ---
@@ -560,7 +560,7 @@ Router tests validate URL construction without network access:
 
 ### Integration Testing
 
-`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (in `Source/Testing/`) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
+`CDYelpMockURLProtocol` and `CDYelpMockClientFactory` (part of the `CDYelpFusionKitTesting` target) enable end-to-end integration tests against the real `CDYelpAPIClient` without network access:
 
 ```swift
 CDYelpMockURLProtocol.register(

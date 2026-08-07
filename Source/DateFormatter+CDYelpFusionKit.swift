@@ -35,6 +35,7 @@ extension DateFormatter {
     /// Date formatter for Yelp Events API responses using ISO 8601 format with timezone.
     static let events: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         return formatter
     }()
@@ -42,6 +43,7 @@ extension DateFormatter {
     /// Date formatter for Yelp Reviews API responses using standard date and time format.
     static let reviews: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter
     }()
@@ -49,6 +51,7 @@ extension DateFormatter {
     /// Date formatter for Yelp Special Hours date fields using ISO date-only format.
     static let specialHours: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()

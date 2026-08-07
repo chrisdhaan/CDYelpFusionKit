@@ -1,8 +1,8 @@
 //
-//  CDYelpConstants.swift
-//  CDYelpFusionKit
+//  StringCDYelpFusionKitTests.swift
+//  CDYelpFusionKitTests
 //
-//  Created by Christopher de Haan on 5/7/17.
+//  Created by Christopher de Haan on 8/5/26.
 //
 //  Copyright © 2016-2026 Christopher de Haan <contact@christopherdehaan.me>
 //
@@ -25,15 +25,24 @@
 //  THE SOFTWARE.
 //
 
-let CDYelpFusionKitBundleIdentifier = "com.christopherdehaan.CDYelpFusionKit"
+@testable import CDYelpFusionKit
+import Foundation
+import Testing
 
-enum CDYelpURL {
-    static let base = "https://api.yelp.com/v3/"
-    static let rootBase = "https://api.yelp.com/"
-    static let deepLink = "yelp4:"
-    static let web = "https://yelp.com/"
+struct StringCDYelpFusionKitTests {
+    @Test func searchLinkPathUsesCategoryRawValueNotCaseName() {
+        let path = String.searchLinkPath(withTerm: nil, category: .activeLife, location: nil)
+        #expect(path == "search?category=active")
+    }
+
+    @Test func searchLinkPathPercentEncodesLocationInAllBranches() throws {
+        let location = "San Francisco, CA"
+        let encodedLocation = try #require(location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+
+        let categoryAndLocation = String.searchLinkPath(withTerm: nil, category: .pizza, location: location)
+        #expect(categoryAndLocation == "search?category=pizza&location=\(encodedLocation)")
+
+        let locationOnly = String.searchLinkPath(withTerm: nil, category: nil, location: location)
+        #expect(locationOnly == "search?location=\(encodedLocation)")
+    }
 }
-
-/// Identifies this framework to the Yelp Fusion API on every request. Alamofire previously set
-/// this implicitly via `HTTPHeaders.default`; the native `URLSession` client sets it explicitly.
-let CDYelpFusionKitUserAgent = "CDYelpFusionKit/6.0.1"

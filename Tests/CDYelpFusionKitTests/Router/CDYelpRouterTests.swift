@@ -397,4 +397,17 @@ struct CDYelpRouterTests {
             }
         }
     }
+
+    @Test func acceptLanguageHeaderReflectsGivenPreferredLanguages() {
+        let header = CDYelpRouter.acceptLanguageHeaderValue(preferredLanguages: ["fr-FR", "en-US"])
+        #expect(header == "fr-FR;q=1.0, en-US;q=0.9")
+    }
+
+    @Test func acceptLanguageHeaderIsRecomputedOnEveryCall() {
+        // A stored `static let` would freeze this at the first call's value; a function
+        // recomputes it fresh every time, so two different inputs must yield two different outputs.
+        let first = CDYelpRouter.acceptLanguageHeaderValue(preferredLanguages: ["en-US"])
+        let second = CDYelpRouter.acceptLanguageHeaderValue(preferredLanguages: ["de-DE"])
+        #expect(first != second)
+    }
 }
