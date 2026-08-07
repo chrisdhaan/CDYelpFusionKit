@@ -342,7 +342,6 @@
 		B285D9E81FBD34F400FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA291FBE1AA600FA9ABB /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+CDYelpFusionKit.swift"; sourceTree = "<group>"; };
-		B29CB00A1FBBBAE80090F336 /* CDYelpFusionKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CDYelpFusionKit.podspec; sourceTree = "<group>"; };
 		B29CB00B1FBBBAE80090F336 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		B29CB00C1FBBBAE80090F336 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B29CB0101FBBBAFD0090F336 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -548,7 +547,6 @@
 			isa = PBXGroup;
 			children = (
 				B25523B2218D02FF007CDD7A /* .swiftlint.yml */,
-				B29CB00A1FBBBAE80090F336 /* CDYelpFusionKit.podspec */,
 				5F88711226EECEE3004A3814 /* ci.yml */,
 				B29CB00C1FBBBAE80090F336 /* LICENSE */,
 				B29CB00B1FBBBAE80090F336 /* Package.swift */,
