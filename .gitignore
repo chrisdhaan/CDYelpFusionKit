@@ -35,9 +35,6 @@ playground.xcworkspace
 # Swift Package Manager
 .build/
 
-# Bundler
-.bundle/
-
 # DocC build artifacts (docs/ is tracked intentionally for GitHub Pages)
 /tmp/docc-output/
 
