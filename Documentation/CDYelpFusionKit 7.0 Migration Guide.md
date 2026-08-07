@@ -21,7 +21,7 @@ As of 7.0.0, no new versions of CDYelpFusionKit will be published to CocoaPods t
 
 ---
 
-## Migration Checklist
+## Migration Checklist (if switching to SPM)
 
 - [ ] **Switch to SPM** — add the package via Xcode's **File → Add Packages**, or add a `.package(url:...)` entry to your own `Package.swift`
 - [ ] **Remove CocoaPods integration** — delete the `pod 'CDYelpFusionKit'` line from your `Podfile` and run `pod install`
