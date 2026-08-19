@@ -128,14 +128,21 @@ If no test files changed, skip this commit — nothing to commit.
 
 ---
 
-### Task 3: Verify with xcodebuild
+### Task 3: Set Xcode project language mode to Swift 6 and verify with xcodebuild
 
-**Files:** none (verification only)
+**Plan amendment (ruled during execution, not in the original spec draft):** `Package.swift`'s `swiftLanguageModes` only governs SPM-driven builds (`swift build`/`swift test`, and Xcode when it resolves the package directly). It does **not** propagate to `CDYelpFusionKit.xcodeproj`, which carries its own independent `SWIFT_VERSION` build setting per target/configuration. Of this project's 11 CI jobs (`.github/workflows/ci.yml`), 7 build via `xcodebuild` against this `.xcodeproj` (iOS, macOS, tvOS, watchOS, Catalyst, visionOS, CodeQL) — without this task, v8.0.0 would ship with those 7 silently still building under Swift 5, checked only by the SPM job (`swift test`) and the DocC job (`swift package generate-documentation`), both of which read `Package.swift` directly. This was caught by the Task 1 reviewer as a "cannot verify from diff" item and ruled in-scope for this task rather than out of scope for the plan.
+
+**Files:**
+- Modify: `CDYelpFusionKit.xcodeproj/project.pbxproj`
 
 **Interfaces:**
-- Consumes: the green `swift build`/`swift test` baseline from Tasks 1–2.
+- Consumes: the `.v6`-clean `swift build`/`swift test` baseline from Tasks 1–2.
 
-- [ ] **Step 1: Build the macOS scheme via xcodebuild**
+- [ ] **Step 1: Bump SWIFT_VERSION in the Xcode project**
+
+In `CDYelpFusionKit.xcodeproj/project.pbxproj`, there are 4 occurrences of `SWIFT_VERSION = 5.0;`. Replace all 4 with `SWIFT_VERSION = 6.0;`.
+
+- [ ] **Step 2: Build the macOS scheme via xcodebuild**
 
 Run:
 
@@ -149,9 +156,14 @@ xcodebuild build \
 
 (If `xcpretty` isn't installed, drop the pipe and run the bare `xcodebuild` command — just confirm it ends with `** BUILD SUCCEEDED **`.)
 
-Expected: `** BUILD SUCCEEDED **`. This catches xcodeproj-level divergence from the SPM manifest (access levels, deployment targets, target-level overrides) that `swift build` alone can miss.
+Expected: `** BUILD SUCCEEDED **`, now genuinely under Swift 6 language mode. If this surfaces new concurrency diagnostics that `swift build` didn't (possible — `xcodebuild` compiles the platform-specific `UIKit`-linking code paths `swift build` may not exercise identically), fix them with the same narrowest-fix philosophy as Task 1 Step 4, then rebuild until `** BUILD SUCCEEDED **`.
 
-- [ ] **Step 2: No commit** — this task is verification-only.
+- [ ] **Step 3: Commit**
+
+```bash
+git add CDYelpFusionKit.xcodeproj/project.pbxproj
+git commit -m "feat: switch Xcode project to Swift 6 language mode"
+```
 
 ---
 
