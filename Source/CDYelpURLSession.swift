@@ -32,8 +32,8 @@ actor CDYelpURLSession {
     /// that occur before a request exists, matching the adapter-failure path below.
     private static let placeholderRequestURL = URL(string: CDYelpURL.base) ?? URL(fileURLWithPath: "/")
 
-    func perform<T: Decodable>(
-        buildRequest: () throws -> URLRequest,
+    func perform<T: Decodable & Sendable>(
+        buildRequest: @Sendable () throws -> URLRequest,
         decoder: JSONDecoder? = nil,
         cacheable: Bool = true
     ) async throws -> T {

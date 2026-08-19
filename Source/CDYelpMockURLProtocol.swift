@@ -27,7 +27,7 @@ public final class CDYelpMockURLProtocol: URLProtocol {
     }
 
     private static let lock = NSLock()
-    private static var stubs: [String: Stub] = [:]
+    private nonisolated(unsafe) static var stubs: [String: Stub] = [:]
 
     /// Register a stub response for a URL prefix. All requests whose URL contains `urlContains` will receive this stub.
     public static func register(stub: Stub, forURLContaining urlContains: String) {
