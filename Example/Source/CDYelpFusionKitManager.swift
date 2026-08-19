@@ -28,6 +28,7 @@
 import CDYelpFusionKit
 import UIKit
 
+@MainActor
 final class CDYelpFusionKitManager: NSObject {
 
     static let shared = CDYelpFusionKitManager()
