@@ -36,4 +36,4 @@ enum CDYelpURL {
 
 /// Identifies this framework to the Yelp Fusion API on every request. Alamofire previously set
 /// this implicitly via `HTTPHeaders.default`; the native `URLSession` client sets it explicitly.
-let CDYelpFusionKitUserAgent = "CDYelpFusionKit/6.0.1"
+let CDYelpFusionKitUserAgent = "CDYelpFusionKit/8.0.0"

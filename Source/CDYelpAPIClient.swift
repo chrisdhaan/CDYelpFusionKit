@@ -135,7 +135,7 @@ public final class CDYelpAPIClient: Sendable {
 
     /// Builds and performs the request for a router case, shared by every endpoint method below
     /// so the "build request, perform, honor cacheability" sequence is expressed once.
-    private func perform<T: Decodable>(_ router: CDYelpRouter, decoder: JSONDecoder? = nil) async throws -> T {
+    private func perform<T: Decodable & Sendable>(_ router: CDYelpRouter, decoder: JSONDecoder? = nil) async throws -> T {
         try await urlSession.perform(
             buildRequest: { try router.asURLRequest(apiKey: self.apiKey) },
             decoder: decoder,

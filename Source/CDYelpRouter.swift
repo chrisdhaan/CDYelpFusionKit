@@ -1,6 +1,11 @@
 import Foundation
 
-enum CDYelpRouter {
+/// @unchecked because each case's `parameters: [String: Any]` associated value isn't verifiably
+/// `Sendable` at compile time — `Any` erases the concrete type. In practice every value placed
+/// into these dictionaries (by `Parameters+CDYelpFusionKit.swift` and the public API methods that
+/// build them) is a `String`, `Bool`, `Int`, `Double`, or array thereof — all `Sendable` — and
+/// `asURLRequest(apiKey:)` only ever reads them, never mutates them.
+enum CDYelpRouter: @unchecked Sendable {
     // GET endpoints
     case search(parameters: [String: Any])
     case phone(parameters: [String: Any])
