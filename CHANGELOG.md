@@ -33,7 +33,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ### Updated
 
-- CDYelpFusionKit now builds under Swift 6 language mode (`swiftLanguageModes: [.v6]` in `Package.swift`). The minimum toolchain is now Swift 6 / Xcode 16 — already the practical floor via CI, now enforced by the package manifest. Platform minimums (iOS 15 / macOS 12 / tvOS 15 / watchOS 8 / visionOS 1) are unchanged. See the [8.0 Migration Guide](Documentation/CDYelpFusionKit%208.0%20Migration%20Guide.md) for details.
+- CDYelpFusionKit now builds under Swift 6 language mode (`swiftLanguageModes: [.v6]` in `Package.swift`), and `CDYelpFusionKit.xcodeproj`'s `SWIFT_VERSION` build setting was bumped to match. This does not change the minimum toolchain — `Package.swift` has declared `swift-tools-version:6.0` (Xcode 16+) since the 4.0.0 release. Platform minimums (iOS 15 / macOS 12 / tvOS 15 / watchOS 8 / visionOS 1) are unchanged. See the [8.0 Migration Guide](Documentation/CDYelpFusionKit%208.0%20Migration%20Guide.md) for details.
 
 ---
 

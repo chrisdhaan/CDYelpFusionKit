@@ -12,7 +12,7 @@
         <img src="https://img.shields.io/github/release/chrisdhaan/CDYelpFusionKit.svg" alt="GitHub Release">
     </a>
     <a href="https://www.swift.org">
-        <img src="https://img.shields.io/badge/Swift-5+-orange?style=flat" alt="Swift Versions">
+        <img src="https://img.shields.io/badge/Swift-6+-orange?style=flat" alt="Swift Versions">
     </a>
     <a href="https://www.swift.org/package-manager">
         <img src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat" alt="SPM Compatible">
