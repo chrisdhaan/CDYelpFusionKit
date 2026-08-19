@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [8.0.1](#801---2026-08-19)
 - [8.0.0](#800---2026-08-18)
 - [7.0.0](#700---2026-08-07)
 - [6.0.1](#601---2026-08-06)
@@ -26,6 +27,19 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [8.0.1] - 2026-08-19
+
+### Added
+
+- Example app: all 19 `CDYelpAPIClient` endpoints are now wired up for testing (previously 12) — added `fetchAIChat`, `fetchEngagementMetrics`, `fetchServiceOfferings`, `fetchBusinessInsights`, `fetchReviewHighlights`, `fetchJobs`, and `fetchOpenings`
+- Example app: responses are now pretty-printed as JSON and pushed to an on-screen viewer instead of being logged to the console
+
+### Fixed
+
+- Example app failed to build on current Xcode toolchains: deprecated `@UIApplicationMain` (now `@main`) and a Swift 6 concurrency-safety error on `CDYelpFusionKitManager.shared` (now `@MainActor`)
 
 ---
 

@@ -11,6 +11,8 @@
 		5FBF0EE01EC00000004C1F6B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */; };
 		5FBF0E771EC00018004C1F6B /* CDYelpFusionKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */; };
 		5FBF0E781EC00018004C1F6B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E751EC00018004C1F6B /* ViewController.swift */; };
+		8E011B46DC694684A26FD31D /* JSONPrettyPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0480D1164DE04E23996AA062 /* JSONPrettyPrinter.swift */; };
+		D2F2B7D8616A4846BBEEA8A3 /* CDYelpJSONResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AC035538654DD88F9C1A35 /* CDYelpJSONResponseViewController.swift */; };
 		5FBF0E801EC00033004C1F6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF0E791EC00033004C1F6B /* Assets.xcassets */; };
 		5FBF0E881EC00047004C1F6B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF0E841EC00047004C1F6B /* LaunchScreen.storyboard */; };
 		5FBF0E891EC00047004C1F6B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF0E861EC00047004C1F6B /* Main.storyboard */; };
@@ -75,6 +77,8 @@
 		5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpFusionKitManager.swift; sourceTree = "<group>"; };
 		5FBF0E751EC00018004C1F6B /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0480D1164DE04E23996AA062 /* JSONPrettyPrinter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONPrettyPrinter.swift; sourceTree = "<group>"; };
+		C3AC035538654DD88F9C1A35 /* CDYelpJSONResponseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpJSONResponseViewController.swift; sourceTree = "<group>"; };
 		5FBF0E791EC00033004C1F6B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		5FBF0E7F1EC00033004C1F6B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		5FBF0EE21EC00000004C1F6B /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -119,6 +123,8 @@
 				5FBF0EE11EC00000004C1F6B /* SceneDelegate.swift */,
 				5FBF0E741EC00018004C1F6B /* CDYelpFusionKitManager.swift */,
 				5FBF0E751EC00018004C1F6B /* ViewController.swift */,
+				C3AC035538654DD88F9C1A35 /* CDYelpJSONResponseViewController.swift */,
+				0480D1164DE04E23996AA062 /* JSONPrettyPrinter.swift */,
 				5FBF0E8B1EC00060004C1F6B /* Resources */,
 				5FBF0E8A1EC0005A004C1F6B /* Supporting Files */,
 			);
@@ -272,6 +278,8 @@
 				5FBF0E761EC00018004C1F6B /* AppDelegate.swift in Sources */,
 				5FBF0EE01EC00000004C1F6B /* SceneDelegate.swift in Sources */,
 				5FBF0E771EC00018004C1F6B /* CDYelpFusionKitManager.swift in Sources */,
+				D2F2B7D8616A4846BBEEA8A3 /* CDYelpJSONResponseViewController.swift in Sources */,
+				8E011B46DC694684A26FD31D /* JSONPrettyPrinter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -55,6 +55,13 @@ class ViewController: UIViewController {
         self.tableView.tableFooterView = logoOutlineImageView
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Hidden here (rather than always-hidden on the navigation controller) so the bar still
+        // animates back in for the pushed JSON response screen and back out when returning here.
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     func openUrl(_ url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
@@ -72,7 +79,7 @@ extension ViewController: UITableViewDataSource {
                    numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 12
+            return 19
         case 1:
             return 6
         case 2:
@@ -167,6 +174,13 @@ private extension ViewController {
             case 9: return "/events/featured"
             case 10: return "categories"
             case 11: return "/categories/{alias}"
+            case 12: return "/ai/chat/v2"
+            case 13: return "/businesses/engagement"
+            case 14: return "/businesses/{id}/service_offerings"
+            case 15: return "/businesses/insights"
+            case 16: return "/businesses/{id}/review_highlights"
+            case 17: return "/jobs"
+            case 18: return "/bookings/{id}/openings"
             default: return ""
             }
         case 1:
@@ -216,24 +230,18 @@ private extension ViewController {
                                                                                                        openNow: true,
                                                                                                        openAt: nil,
                                                                                                        attributes: nil)
-                    if let businesses = response.businesses,
-                       businesses.count > 0 {
-                        print(businesses)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 1:
             Task {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060")
-                    if let businesses = response.businesses,
-                       businesses.count > 0 {
-                        print(businesses)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 2:
@@ -243,11 +251,9 @@ private extension ViewController {
                                                                                                          location: "San Francisco",
                                                                                                          latitude: nil,
                                                                                                          longitude: nil)
-                    if let businesses = response.businesses, businesses.count > 0 {
-                        print(businesses)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 3:
@@ -255,11 +261,9 @@ private extension ViewController {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
                                                                                                    locale: nil)
-                    if let business = response.business {
-                        print(business)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 4:
@@ -279,11 +283,9 @@ private extension ViewController {
                                                                                                       yelpBusinessId: nil,
                                                                                                       limit: 5,
                                                                                                       matchThresholdType: .normal)
-                    if let businesses = response.businesses, businesses.count > 0 {
-                        print(businesses)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 5:
@@ -291,11 +293,9 @@ private extension ViewController {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
                                                                                                   locale: nil)
-                    if let reviews = response.reviews, reviews.count > 0 {
-                        print(reviews)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 6:
@@ -305,17 +305,9 @@ private extension ViewController {
                                                                                                             latitude: 37.786572,
                                                                                                             longitude: -122.415192,
                                                                                                             locale: nil)
-                    if let businesses = response.businesses, businesses.count > 0 {
-                        print(businesses)
-                    }
-                    if let categories = response.categories, categories.count > 0 {
-                        print(categories)
-                    }
-                    if let terms = response.terms, terms.count > 0 {
-                        print(terms)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 7:
@@ -323,11 +315,9 @@ private extension ViewController {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-elite-week-renew-and-rejuvenate-with-redmint",
                                                                                                 locale: nil)
-                    if let event = response.event {
-                        print(event)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 8:
@@ -347,11 +337,9 @@ private extension ViewController {
                                                                                                   longitude: -122.415192,
                                                                                                   radius: 10000,
                                                                                                   excludedEvents: nil)
-                    if let events = response.events, events.count > 0 {
-                        print(events)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 9:
@@ -361,22 +349,18 @@ private extension ViewController {
                                                                                                         location: nil,
                                                                                                         latitude: 37.786572,
                                                                                                         longitude: -122.415192)
-                    if let event = response.event {
-                        print(event)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 10:
             Task {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil)
-                    if let categories = response.categories {
-                        print(categories)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
                 }
             }
         case 11:
@@ -384,11 +368,88 @@ private extension ViewController {
                 do {
                     let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
                                                                                                    andLocale: nil)
-                    if let category = response.category {
-                        print(category)
-                    }
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
                 } catch {
-                    print("Error: \(error)")
+                    presentError(error)
+                }
+            }
+        case 12:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchAIChat(query: "What are the best pizza places in San Francisco?",
+                                                                                                  chatId: nil,
+                                                                                                  latitude: 37.786572,
+                                                                                                  longitude: -122.415192,
+                                                                                                  requestContext: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 13:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchEngagementMetrics(forBusinessIds: ["north-india-restaurant-san-francisco"],
+                                                                                                             dateRangeStart: nil,
+                                                                                                             dateRangeEnd: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 14:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchServiceOfferings(forBusinessId: "north-india-restaurant-san-francisco",
+                                                                                                            locale: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 15:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchBusinessInsights(forBusinessIds: ["north-india-restaurant-san-francisco"],
+                                                                                                            dateRangeStart: "202401",
+                                                                                                            dateRangeEnd: "202412")
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 16:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchReviewHighlights(forBusinessId: "north-india-restaurant-san-francisco",
+                                                                                                            count: 3,
+                                                                                                            locale: nil,
+                                                                                                            devicePlatform: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 17:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchJobs(forQuery: "Plumber", locale: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
+                }
+            }
+        case 18:
+            Task {
+                do {
+                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchOpenings(forBusinessId: "north-india-restaurant-san-francisco",
+                                                                                                    covers: 2,
+                                                                                                    date: "2026-09-01",
+                                                                                                    time: "19:00",
+                                                                                                    getCoversRange: nil)
+                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
+                } catch {
+                    presentError(error)
                 }
             }
         default:
@@ -396,6 +457,18 @@ private extension ViewController {
         }
     }
     // swiftlint:enable function_body_length
+
+    func presentJSONResponse(_ response: Sendable, title: String) {
+        let jsonText = JSONPrettyPrinter.string(from: response)
+        let jsonResponseViewController = CDYelpJSONResponseViewController(title: title, jsonText: jsonText)
+        navigationController?.pushViewController(jsonResponseViewController, animated: true)
+    }
+
+    func presentError(_ error: Error) {
+        let alertController = UIAlertController(title: "Request Failed", message: "\(error)", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
 
     func handleDeepLinkSelection(at row: Int) {
         switch row {
