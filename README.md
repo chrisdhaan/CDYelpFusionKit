@@ -79,6 +79,7 @@ Task {
 | tvOS | 15.0 |
 | watchOS | 8.0 |
 | visionOS | 1.0 |
+| Swift | 6.0 |
 
 ## Installation
 
@@ -98,6 +99,7 @@ Or in Xcode: **File → Add Packages** and enter the repository URL.
 
 - **[Usage Guide](Documentation/Usage.md)** — Complete API reference with examples for all endpoints
 - **[Architecture](Documentation/ARCHITECTURE.md)** — Technical design and implementation details
+- **[Migration Guide (v8.0)](Documentation/CDYelpFusionKit%208.0%20Migration%20Guide.md)** — Upgrade from v7.x to v8.0 (Swift 6 language mode)
 - **[Migration Guide (v7.0)](Documentation/CDYelpFusionKit%207.0%20Migration%20Guide.md)** — Upgrade from v6.x to v7.0 (SPM only)
 - **[Migration Guide (v6.0)](Documentation/CDYelpFusionKit%206.0%20Migration%20Guide.md)** — Upgrade from v5.x to v6.0
 - **[API Documentation](https://chrisdhaan.github.io/CDYelpFusionKit/)** — Generated DocC reference

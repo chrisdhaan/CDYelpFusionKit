@@ -6,17 +6,17 @@ This guide covers migrating from CDYelpFusionKit 7.x to 8.0.
 
 ## Overview
 
-CDYelpFusionKit 8.0 switches the package to Swift 6 language mode (`swiftLanguageModes: [.v6]`). The public API is unchanged — every type and method your code already calls has the same signature. What changes is the **minimum toolchain**: building this package now requires Swift 6 (Xcode 16 or later).
+CDYelpFusionKit 8.0 switches the package's **language mode** to Swift 6 (`swiftLanguageModes: [.v6]`), so the library's own source is now built and type-checked under the Swift 6 strict-concurrency checker. The Xcode project's `SWIFT_VERSION` build setting was bumped to `6.0` to match, for consumers who build via the Xcode project / `xcodebuild` rather than pure SwiftPM. The public API is unchanged — every type and method your code already calls has the same signature.
 
-In practice this is not a new requirement — CDYelpFusionKit's CI has only tested against Xcode 16.0+ since well before this release. 8.0 makes that floor explicit in the package manifest rather than implicit in CI configuration.
+This does **not** change the minimum toolchain needed to resolve the package. CDYelpFusionKit's `Package.swift` has declared `// swift-tools-version:6.0` since the 4.0.0 release, and 7.0.0 (the immediately prior release) already required it — so a Swift 6 SwiftPM toolchain (Xcode 16 or later) has been necessary to even resolve this package's manifest for several major versions now, not starting with 8.0.
 
 ---
 
-## 1. Minimum toolchain is now Swift 6 / Xcode 16
+## 1. Minimum toolchain: unchanged, and it's been Swift 6 / Xcode 16 for a while
 
-If you're already building with Xcode 16 or later, this release requires no action.
+If you're already building with Xcode 16 or later — which has been true for anyone successfully resolving CDYelpFusionKit since well before this release — this release requires no toolchain action.
 
-If you're on an older Xcode version, upgrade to Xcode 16 or later before adopting CDYelpFusionKit 8.0. Stay on `7.0.0` if you need to remain on an older toolchain for now — it will continue to build under Swift 5 language mode indefinitely.
+If you're on an older Xcode version and have not yet been able to adopt any recent CDYelpFusionKit release, upgrading to Xcode 16 or later is not optional for 8.0 specifically — it was already required by the SwiftPM manifest as of 7.0.0 (and earlier). Downgrading to 7.0.0 will not restore compatibility with an older toolchain. If you need a release whose manifest supports an older Swift toolchain, check the `Package.swift` of prior tagged releases for the declared `swift-tools-version` that matches what your toolchain supports — CDYelpFusionKit 3.2.0 was the last release with a pre-6.0 manifest (`swift-tools-version:5.6`).
 
 ---
 
