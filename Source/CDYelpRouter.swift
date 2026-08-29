@@ -31,43 +31,43 @@ enum CDYelpRouter: @unchecked Sendable {
     var path: String {
         switch self {
         case .search:
-            return "businesses/search"
+            "businesses/search"
         case .phone:
-            return "businesses/search/phone"
+            "businesses/search/phone"
         case let .transactions(type, _):
-            return "transactions/\(Self.percentEncodedPathSegment(type))/search"
+            "transactions/\(Self.percentEncodedPathSegment(type))/search"
         case let .business(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))"
+            "businesses/\(Self.percentEncodedPathSegment(id))"
         case .matches:
-            return "businesses/matches"
+            "businesses/matches"
         case let .reviews(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/reviews"
+            "businesses/\(Self.percentEncodedPathSegment(id))/reviews"
         case .autocomplete:
-            return "autocomplete"
+            "autocomplete"
         case let .event(id, _):
-            return "events/\(Self.percentEncodedPathSegment(id))"
+            "events/\(Self.percentEncodedPathSegment(id))"
         case .events:
-            return "events"
+            "events"
         case .featuredEvent:
-            return "events/featured"
+            "events/featured"
         case .allCategories:
-            return "categories"
+            "categories"
         case let .categoryDetails(alias, _):
-            return "categories/\(Self.percentEncodedPathSegment(alias))"
+            "categories/\(Self.percentEncodedPathSegment(alias))"
         case .engagement:
-            return "businesses/engagement"
+            "businesses/engagement"
         case let .serviceOfferings(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/service_offerings"
+            "businesses/\(Self.percentEncodedPathSegment(id))/service_offerings"
         case .businessInsights:
-            return "businesses/insights"
+            "businesses/insights"
         case let .reviewHighlights(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/review_highlights"
+            "businesses/\(Self.percentEncodedPathSegment(id))/review_highlights"
         case let .openings(businessId, _):
-            return "bookings/\(Self.percentEncodedPathSegment(businessId))/openings"
+            "bookings/\(Self.percentEncodedPathSegment(businessId))/openings"
         case .aiChat:
-            return "ai/chat/v2"
+            "ai/chat/v2"
         case .jobs:
-            return "jobs"
+            "jobs"
         }
     }
 
@@ -199,14 +199,14 @@ enum CDYelpRouter: @unchecked Sendable {
         switch self {
         case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete,
              .event, .events, .featuredEvent, .allCategories, .categoryDetails:
-            return true
+            true
         case .engagement, .serviceOfferings, .businessInsights, .reviewHighlights, .openings:
             // Near-real-time analytics/availability endpoints were never cached prior to v6.
-            return false
+            false
         case .aiChat, .jobs:
             // POST endpoints; CDYelpURLSession's GET-only cache-key gate would exclude these
             // regardless, but listing them here keeps this switch exhaustive and self-documenting.
-            return false
+            false
         }
     }
 
@@ -223,13 +223,13 @@ enum CDYelpRouter: @unchecked Sendable {
         case let .search(params), let .phone(params), let .matches(params),
              let .autocomplete(params), let .events(params), let .featuredEvent(params),
              let .allCategories(params), let .engagement(params), let .businessInsights(params):
-            return params
+            params
         case let .transactions(_, params), let .business(_, params), let .reviews(_, params),
              let .event(_, params), let .categoryDetails(_, params), let .serviceOfferings(_, params),
              let .reviewHighlights(_, params), let .openings(_, params):
-            return params
+            params
         case .aiChat, .jobs:
-            return [:]
+            [:]
         }
     }
 }

@@ -1,5 +1,5 @@
-@testable import CDYelpFusionKit
 import Testing
+@testable import CDYelpFusionKit
 
 @Suite(.serialized) struct CDYelpAttributeFilterTests {
     @Test func parkingRawValues() {

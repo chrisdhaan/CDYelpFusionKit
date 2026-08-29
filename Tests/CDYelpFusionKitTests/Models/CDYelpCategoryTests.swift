@@ -25,9 +25,9 @@
 //  THE SOFTWARE.
 //
 
-@testable import CDYelpFusionKit
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 struct CDYelpCategoryTests {
     @Test func categoryDecodesFromJSON() throws {
@@ -59,7 +59,7 @@ struct CDYelpCategoryTests {
             ("pizza", "Pizza"),
             ("chinese", "Chinese"),
             ("japanese", "Japanese"),
-            ("indian", "Indian"),
+            ("indian", "Indian")
         ]
 
         for (alias, title) in categories {

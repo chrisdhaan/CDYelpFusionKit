@@ -1,5 +1,5 @@
-@testable import CDYelpFusionKit
 import Testing
+@testable import CDYelpFusionKit
 
 @Suite(.serialized) struct CDYelpReviewSortTypeTests {
     @Test func yelpSortRawValue() {

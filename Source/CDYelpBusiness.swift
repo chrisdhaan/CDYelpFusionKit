@@ -70,18 +70,16 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = imageUrl,
-               let asUrl = URL(string: imageUrl)
-            {
+            if let imageUrl,
+               let asUrl = URL(string: imageUrl) {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = url,
-               let asUrl = URL(string: url)
-            {
+            if let url,
+               let asUrl = URL(string: url) {
                 return asUrl
             }
             return nil
@@ -122,18 +120,16 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = imageUrl,
-               let asUrl = URL(string: imageUrl)
-            {
+            if let imageUrl,
+               let asUrl = URL(string: imageUrl) {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = url,
-               let asUrl = URL(string: url)
-            {
+            if let url,
+               let asUrl = URL(string: url) {
                 return asUrl
             }
             return nil
@@ -174,18 +170,16 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = imageUrl,
-               let asUrl = URL(string: imageUrl)
-            {
+            if let imageUrl,
+               let asUrl = URL(string: imageUrl) {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = url,
-               let asUrl = URL(string: url)
-            {
+            if let url,
+               let asUrl = URL(string: url) {
                 return asUrl
             }
             return nil
@@ -240,18 +234,16 @@ public struct CDYelpBusiness: Sendable {
         }
 
         public func imageUrlAsUrl() -> URL? {
-            if let imageUrl = imageUrl,
-               let asUrl = URL(string: imageUrl)
-            {
+            if let imageUrl,
+               let asUrl = URL(string: imageUrl) {
                 return asUrl
             }
             return nil
         }
 
         public func urlAsUrl() -> URL? {
-            if let url = url,
-               let asUrl = URL(string: url)
-            {
+            if let url,
+               let asUrl = URL(string: url) {
                 return asUrl
             }
             return nil
@@ -259,7 +251,7 @@ public struct CDYelpBusiness: Sendable {
 
         public func photosAsUrls() -> [URL] {
             var asUrls: [URL] = []
-            if let photos = photos {
+            if let photos {
                 for photo in photos {
                     if let url = URL(string: photo) {
                         asUrls.append(url)

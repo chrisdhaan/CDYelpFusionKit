@@ -1,31 +1,21 @@
 ---
 name: Bug Report
-about: Report a bug in CDYelpFusionKit
-title: ''
+about: Report a reproducible bug or regression.
 labels: bug
-assignees: chrisdhaan
 ---
 
-## Description
+**What did you do?**
+<!-- A clear description of the steps that produced the bug. -->
 
-> A clear and concise description of the bug.
+**What did you expect to happen?**
 
-## Steps to Reproduce
+**What actually happened?**
 
-> Steps to reproduce the behavior.
+**CDYelpFusionKit version:**
 
-## Expected Behavior
+**Swift version:**
 
-> A clear and concise description of what you expected to happen.
+**Platform and OS version:**
 
-## Actual Behavior
-
-> A clear and concise description of what actually happened.
-
-## Environment
-
-- CDYelpFusionKit version:
-- Xcode version:
-- Swift version:
-- iOS/macOS/tvOS/watchOS version:
-- Installation method (SPM):
+**Minimal reproducible example:**
+<!-- A short Swift snippet that demonstrates the bug. -->

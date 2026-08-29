@@ -6,3 +6,6 @@ contact_links:
   - name: Yelp Fusion API Issue
     url: https://github.com/Yelp/yelp-fusion/issues
     about: Report Yelp Fusion API issues to the Yelp team.
+  - name: Security Vulnerability
+    url: mailto:contact@christopherdehaan.me
+    about: Please report security vulnerabilities privately via email.

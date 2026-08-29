@@ -25,9 +25,9 @@
 //  THE SOFTWARE.
 //
 
-@testable import CDYelpFusionKit
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 struct CDYelpCoordinatesTests {
     @Test func coordinatesDecodesFromJSON() throws {

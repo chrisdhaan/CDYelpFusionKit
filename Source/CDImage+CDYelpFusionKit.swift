@@ -46,24 +46,23 @@ public extension CDImage {
     }
 
     class func yelpBurstLogoRed() -> CDImage? {
-        return CDImage.cdImage(named: "yelp_burst_logo_red")
+        CDImage.cdImage(named: "yelp_burst_logo_red")
     }
 
     class func yelpBurstLogoWhite() -> CDImage? {
-        return CDImage.cdImage(named: "yelp_burst_logo_white")
+        CDImage.cdImage(named: "yelp_burst_logo_white")
     }
 
     class func yelpLogo() -> CDImage? {
-        return CDImage.cdImage(named: "yelp_logo")
+        CDImage.cdImage(named: "yelp_logo")
     }
 
     class func yelpLogoOutline() -> CDImage? {
-        return CDImage.cdImage(named: "yelp_logo_outline")
+        CDImage.cdImage(named: "yelp_logo_outline")
     }
 
     class func yelpStars(numberOfStars: CDYelpStars!,
-                         forSize size: CDYelpStarsSize!) -> CDImage?
-    {
-        return CDImage.cdImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)")
+                         forSize size: CDYelpStarsSize!) -> CDImage? {
+        CDImage.cdImage(named: "yelp_stars_\(numberOfStars.rawValue)_\(size.rawValue)")
     }
 }

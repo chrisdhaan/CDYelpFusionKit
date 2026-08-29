@@ -45,3 +45,6 @@ Example/Secrets.xcconfig
 Documentation/IMPLEMENTATION.md
 Documentation/IMPROVEMENTS.md
 /superpowers/
+
+# onlydiff session cache
+.claude/onlydiff/

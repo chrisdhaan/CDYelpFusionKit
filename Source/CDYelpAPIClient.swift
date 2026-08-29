@@ -626,11 +626,10 @@ public final class CDYelpAPIClient: Sendable {
             (latitude == nil) == (longitude == nil),
             "latitude and longitude must be provided together or not at all."
         )
-        let userContext: CDYelpAIChatRequest.UserContext?
-        if let latitude, let longitude {
-            userContext = .init(latitude: latitude, longitude: longitude)
+        let userContext: CDYelpAIChatRequest.UserContext? = if let latitude, let longitude {
+            .init(latitude: latitude, longitude: longitude)
         } else {
-            userContext = nil
+            nil
         }
         let chatRequest = CDYelpAIChatRequest(
             query: query,

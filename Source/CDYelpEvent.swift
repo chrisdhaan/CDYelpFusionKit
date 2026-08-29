@@ -77,18 +77,16 @@ public struct CDYelpEvent: Decodable, Sendable {
     }
 
     public func eventSiteUrlAsUrl() -> URL? {
-        if let eventSiteUrl = eventSiteUrl,
-           let asUrl = URL(string: eventSiteUrl)
-        {
+        if let eventSiteUrl,
+           let asUrl = URL(string: eventSiteUrl) {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = imageUrl,
-           let asUrl = URL(string: imageUrl)
-        {
+        if let imageUrl,
+           let asUrl = URL(string: imageUrl) {
             return asUrl
         }
         return nil

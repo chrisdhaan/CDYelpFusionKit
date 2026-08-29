@@ -25,9 +25,9 @@
 //  THE SOFTWARE.
 //
 
-@testable import CDYelpFusionKit
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 struct CDYelpReviewsResponseTests {
     @Test func reviewsResponseDecodesFromJSON() throws {

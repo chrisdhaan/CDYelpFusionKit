@@ -9,6 +9,7 @@ private let kTestURL = URL(string: "https://mock.yelp.test/\(kTestKey)resource")
 
 @Suite(.serialized)
 struct CDYelpMockURLProtocolTests {
+
     // MARK: - canInit
 
     @Test func canInitReturnsTrueWhenURLMatchesRegisteredStub() {

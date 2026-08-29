@@ -1,6 +1,6 @@
-@testable import CDYelpFusionKit
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 struct CDYelpDecoderConfigurationTests {
     @Test func defaultConfigurationMakesStandardDecoder() {
