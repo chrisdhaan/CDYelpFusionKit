@@ -5,6 +5,7 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 
 ## Table of Contents
 
+- [Unreleased](#unreleased)
 - [8.0.1](#801---2026-08-19)
 - [8.0.0](#800---2026-08-18)
 - [7.0.0](#700---2026-08-07)
@@ -27,6 +28,16 @@ CDYelpFusionKit adheres to [Semantic Versioning](https://semver.org/).
 - [1.2.0](#120---2017-11-14)
 - [1.1.0](#110---2017-11-01)
 - [1.0.0](#100---2017-09-28)
+
+---
+
+## [Unreleased]
+
+### Changed
+
+- Aligned `.swiftformat`, GitHub issue/PR templates, and CI conventions with the sibling CDMarkdownKit/CDUntappdKit/CDOAuth1Kit/CDYahooKit frameworks, including pinning a Swift version in `.swiftformat` for the first time (surfacing several previously-inactive formatting rules across 45 files) and adding an Example-app build to CI.
+- Tightened the `file_length`, `function_body_length`, and `type_body_length` SwiftLint limits to match the shared baseline agreed across all 5 sibling frameworks. Every violation was fixed by restructuring — splitting `CDYelpAPIClient` and its parameter builders into per-endpoint-group files, extracting oversized functions — rather than raising the limits or disabling the rules.
+- Split `CDYelpEnums.swift`'s 12 unrelated enums into one file per enum, so 11 of them get real `file_length`/`type_body_length` coverage instead of riding on one blanket disable. `CDYelpCategoryAlias` and `CDYelpLocale` keep narrowly-scoped disables, each with an explanation of why (Swift enums can't split their cases across files, and both are complete 1-to-1 mappings of real Yelp API values).
 
 ---
 
