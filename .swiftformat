@@ -8,7 +8,7 @@
 --indentcase false
 
 # Line length — matches the warning threshold in .swiftlint.yml
---maxwidth 195
+--maxwidth 149
 
 # Line endings
 --linebreaks lf

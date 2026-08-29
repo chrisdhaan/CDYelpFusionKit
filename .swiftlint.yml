@@ -16,23 +16,23 @@ cyclomatic_complexity:
   warning: 55
 # number of lines allowed in a function
 function_body_length:
-  error: 140
-  warning: 130
+  error: 100
+  warning: 40
 # number of parameters allowed for a function
 function_parameter_count: 15
 # number of lines allowed in a file
 file_length:
-  error: 1470
-  warning: 1455
+  error: 1000
+  warning: 400
 # number of characters allowed in a line
 line_length:
   error: 200
   ignores_comments: true
-  warning: 195
+  warning: 149
 # Allow for types to be definied within a struct 1 level deep
 nesting:
   type_level: 2
 # number of lines allowed in a type declaration
 type_body_length:
-  error: 750
-  warning: 740
+  error: 350
+  warning: 200

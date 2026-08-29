@@ -145,47 +145,55 @@ enum CDYelpRouter: @unchecked Sendable {
 
         default:
             // All other cases: GET + URL query parameters
-            guard var components = URLComponents(string: CDYelpURL.base + path) else {
-                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-            }
-            let queryParams = queryParameters
-            if !queryParams.isEmpty {
-                components.queryItems = try queryParams.map {
-                    let value: String
-                    if let boolValue = $0.value as? Bool {
-                        // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
-                        // encoding this library has always sent (previously via Alamofire's
-                        // default URLEncoding, whose boolEncoding is .numeric).
-                        value = boolValue ? "1" : "0"
-                    } else if let doubleValue = $0.value as? Double {
-                        // NaN/Infinity have no valid coordinate representation — %.8f would
-                        // silently render "nan"/"inf"/"-inf" and send a malformed request.
-                        guard doubleValue.isFinite else {
-                            throw CDYelpNetworkError.invalidRequest(underlying: NonFiniteQueryValueError(parameterName: $0.key))
-                        }
-                        // String(describing:) renders small magnitudes (e.g. latitude/longitude
-                        // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
-                        // don't parse as a coordinate. Always use fixed-point decimal notation.
-                        value = String(format: "%.8f", doubleValue)
-                    } else {
-                        value = String(describing: $0.value)
-                    }
-                    return URLQueryItem(name: $0.key, value: value)
-                }
-                // URLComponents allows + per RFC 3986, but servers decode it as a space
-                // (application/x-www-form-urlencoded convention); force-encode it as %2B.
-                if let query = components.percentEncodedQuery {
-                    components.percentEncodedQuery = query.replacingOccurrences(of: "+", with: "%2B")
-                }
-            }
-            guard let url = components.url else {
-                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-            }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "GET"
-            Self.applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: false)
-            return urlRequest
+            return try getRequest(apiKey: apiKey)
         }
+    }
+
+    /// Builds a GET request with URL query parameters, shared by every router case except
+    /// `.aiChat` and `.jobs` (which POST a JSON body instead via `postRequest`).
+    private func getRequest(apiKey: String) throws -> URLRequest {
+        guard var components = URLComponents(string: CDYelpURL.base + path) else {
+            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+        }
+        let queryParams = queryParameters
+        if !queryParams.isEmpty {
+            components.queryItems = try queryParams.map(Self.queryItem)
+            // URLComponents allows + per RFC 3986, but servers decode it as a space
+            // (application/x-www-form-urlencoded convention); force-encode it as %2B.
+            if let query = components.percentEncodedQuery {
+                components.percentEncodedQuery = query.replacingOccurrences(of: "+", with: "%2B")
+            }
+        }
+        guard let url = components.url else {
+            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+        }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        Self.applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: false)
+        return urlRequest
+    }
+
+    private static func queryItem(from pair: (key: String, value: Any)) throws -> URLQueryItem {
+        let value: String
+        if let boolValue = pair.value as? Bool {
+            // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
+            // encoding this library has always sent (previously via Alamofire's
+            // default URLEncoding, whose boolEncoding is .numeric).
+            value = boolValue ? "1" : "0"
+        } else if let doubleValue = pair.value as? Double {
+            // NaN/Infinity have no valid coordinate representation — %.8f would
+            // silently render "nan"/"inf"/"-inf" and send a malformed request.
+            guard doubleValue.isFinite else {
+                throw CDYelpNetworkError.invalidRequest(underlying: NonFiniteQueryValueError(parameterName: pair.key))
+            }
+            // String(describing:) renders small magnitudes (e.g. latitude/longitude
+            // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
+            // don't parse as a coordinate. Always use fixed-point decimal notation.
+            value = String(format: "%.8f", doubleValue)
+        } else {
+            value = String(describing: pair.value)
+        }
+        return URLQueryItem(name: pair.key, value: value)
     }
 
     /// Single source of truth for which endpoints are safe to serve from the response cache.

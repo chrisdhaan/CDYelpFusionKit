@@ -1,5 +1,5 @@
 //
-//  CDYelpKitManager.swift
+//  CDYelpFusionKitManager.swift
 //  iOS Example
 //
 //  Created by Christopher de Haan on 5/6/17.

@@ -29,7 +29,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak private var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView!
 
     // MARK: - Lifecycle Methods
 
@@ -72,20 +72,20 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        3
     }
 
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 19
+            19
         case 1:
-            return 6
+            6
         case 2:
-            return 3
+            3
         default:
-            return 0
+            0
         }
     }
 
@@ -114,13 +114,13 @@ extension ViewController: UITableViewDataSource {
                    titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Yelp Fusion API Endpoints"
+            "Yelp Fusion API Endpoints"
         case 1:
-            return "Yelp Fusion Deep Linking"
+            "Yelp Fusion Deep Linking"
         case 2:
-            return "Yelp Fusion Web Linking"
+            "Yelp Fusion Web Linking"
         default:
-            return ""
+            ""
         }
     }
 }
@@ -150,386 +150,63 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    heightForFooterInSection section: Int) -> CGFloat {
-        return 0.1
+        0.1
     }
 }
 
 // MARK: - Private Helpers
 
-private extension ViewController {
+/// Not `private extension`: cellTitle is called from ViewController+EndpointSelection.swift.
+extension ViewController {
 
     func cellTitle(for indexPath: IndexPath) -> String {
         switch indexPath.section {
         case 0:
-            switch indexPath.row {
-            case 0: return "/businesses/search"
-            case 1: return "/businesses/search/phone"
-            case 2: return "/transactions/{transaction_type}/search"
-            case 3: return "/businesses/id"
-            case 4: return "/businesses/matches/{business_match_type}"
-            case 5: return "/businesses/{id}/reviews"
-            case 6: return "/autocomplete"
-            case 7: return "/events/{id}"
-            case 8: return "/events"
-            case 9: return "/events/featured"
-            case 10: return "categories"
-            case 11: return "/categories/{alias}"
-            case 12: return "/ai/chat/v2"
-            case 13: return "/businesses/engagement"
-            case 14: return "/businesses/{id}/service_offerings"
-            case 15: return "/businesses/insights"
-            case 16: return "/businesses/{id}/review_highlights"
-            case 17: return "/jobs"
-            case 18: return "/bookings/{id}/openings"
-            default: return ""
-            }
+            apiEndpointCellTitle(forRow: indexPath.row)
         case 1:
             switch indexPath.row {
-            case 0: return "/"
-            case 1: return "/search"
-            case 2: return "/biz"
-            case 3: return "/check_in/nearby"
-            case 4: return "/check_ins"
-            case 5: return "/check_in/rankings"
-            default: return ""
+            case 0: "/"
+            case 1: "/search"
+            case 2: "/biz"
+            case 3: "/check_in/nearby"
+            case 4: "/check_ins"
+            case 5: "/check_in/rankings"
+            default: ""
             }
         case 2:
             switch indexPath.row {
-            case 0: return "/"
-            case 1: return "/search"
-            case 2: return "/biz"
-            default: return ""
+            case 0: "/"
+            case 1: "/search"
+            case 2: "/biz"
+            default: ""
             }
         default:
-            return ""
-        }
-    }
-}
-
-// MARK: - Private Selection Handlers
-
-private extension ViewController {
-
-    // swiftlint:disable function_body_length
-    func handleAPIEndpointSelection(at row: Int) {
-        switch row {
-        case 0:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byTerm: "Food",
-                                                                                                       location: "San Francisco",
-                                                                                                       latitude: nil,
-                                                                                                       longitude: nil,
-                                                                                                       radius: 10000,
-                                                                                                       categories: nil,
-                                                                                                       locale: .english_unitedStates,
-                                                                                                       limit: 5,
-                                                                                                       offset: 0,
-                                                                                                       sortBy: .rating,
-                                                                                                       priceTiers: nil,
-                                                                                                       openNow: true,
-                                                                                                       openAt: nil,
-                                                                                                       attributes: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 1:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(byPhoneNumber: "+14157492060")
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 2:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.searchTransactions(byType: .foodDelivery,
-                                                                                                         location: "San Francisco",
-                                                                                                         latitude: nil,
-                                                                                                         longitude: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 3:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchBusiness(forId: "north-india-restaurant-san-francisco",
-                                                                                                   locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 4:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.searchBusinesses(name: "Gary Danko",
-                                                                                                      addressOne: "800 N Point St",
-                                                                                                      addressTwo: nil,
-                                                                                                      addressThree: nil,
-                                                                                                      city: "San Francisco",
-                                                                                                      state: "CA",
-                                                                                                      country: "US",
-                                                                                                      latitude: nil,
-                                                                                                      longitude: nil,
-                                                                                                      phone: nil,
-                                                                                                      zipCode: nil,
-                                                                                                      yelpBusinessId: nil,
-                                                                                                      limit: 5,
-                                                                                                      matchThresholdType: .normal)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 5:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchReviews(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                                                  locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 6:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.autocompleteBusinesses(byText: "Pizza Delivery",
-                                                                                                            latitude: 37.786572,
-                                                                                                            longitude: -122.415192,
-                                                                                                            locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 7:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchEvent(forId: "san-francisco-yelp-elite-week-renew-and-rejuvenate-with-redmint",
-                                                                                                locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 8:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.searchEvents(byLocale: nil,
-                                                                                                  offset: nil,
-                                                                                                  limit: 5,
-                                                                                                  sortBy: .descending,
-                                                                                                  sortOn: .popularity,
-                                                                                                  startDate: nil,
-                                                                                                  endDate: nil,
-                                                                                                  categories: [.music, .foodAndDrink],
-                                                                                                  isFree: false,
-                                                                                                  location: nil,
-                                                                                                  latitude: 37.786572,
-                                                                                                  longitude: -122.415192,
-                                                                                                  radius: 10000,
-                                                                                                  excludedEvents: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 9:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchFeaturedEvent(forLocale: nil,
-                                                                                                        location: nil,
-                                                                                                        latitude: 37.786572,
-                                                                                                        longitude: -122.415192)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 10:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategories(forLocale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 11:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchCategory(forAlias: .fastFood,
-                                                                                                   andLocale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 12:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchAIChat(query: "What are the best pizza places in San Francisco?",
-                                                                                                  chatId: nil,
-                                                                                                  latitude: 37.786572,
-                                                                                                  longitude: -122.415192,
-                                                                                                  requestContext: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 13:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchEngagementMetrics(forBusinessIds: ["north-india-restaurant-san-francisco"],
-                                                                                                             dateRangeStart: nil,
-                                                                                                             dateRangeEnd: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 14:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchServiceOfferings(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                                                            locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 15:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchBusinessInsights(forBusinessIds: ["north-india-restaurant-san-francisco"],
-                                                                                                            dateRangeStart: "202401",
-                                                                                                            dateRangeEnd: "202412")
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 16:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchReviewHighlights(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                                                            count: 3,
-                                                                                                            locale: nil,
-                                                                                                            devicePlatform: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 17:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchJobs(forQuery: "Plumber", locale: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        case 18:
-            Task {
-                do {
-                    let response = try await CDYelpFusionKitManager.shared.apiClient.fetchOpenings(forBusinessId: "north-india-restaurant-san-francisco",
-                                                                                                    covers: 2,
-                                                                                                    date: "2026-09-01",
-                                                                                                    time: "19:00",
-                                                                                                    getCoversRange: nil)
-                    presentJSONResponse(response, title: cellTitle(for: IndexPath(row: row, section: 0)))
-                } catch {
-                    presentError(error)
-                }
-            }
-        default:
-            break
-        }
-    }
-    // swiftlint:enable function_body_length
-
-    func presentJSONResponse(_ response: Sendable, title: String) {
-        let jsonText = JSONPrettyPrinter.string(from: response)
-        let jsonResponseViewController = CDYelpJSONResponseViewController(title: title, jsonText: jsonText)
-        navigationController?.pushViewController(jsonResponseViewController, animated: true)
-    }
-
-    func presentError(_ error: Error) {
-        let alertController = UIAlertController(title: "Request Failed", message: "\(error)", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-
-    func handleDeepLinkSelection(at row: Int) {
-        switch row {
-        case 0:
-            if let url = URL.yelpDeepLink(),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 1:
-            if let url = URL.yelpSearchDeepLink(withTerm: "burrito",
-                                                category: .food,
-                                                location: "San Francisco, CA"),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 2:
-            if let url = URL.yelpBusinessDeepLink(forId: "the-sentinel-san-francisco"),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 3:
-            if let url = URL.yelpCheckInNearbyDeepLink(),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 4:
-            if let url = URL.yelpCheckInsDeepLink(),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 5:
-            if let url = URL.yelpCheckInRankingsDeepLink(),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        default:
-            break
+            ""
         }
     }
 
-    func handleWebLinkSelection(at row: Int) {
+    func apiEndpointCellTitle(forRow row: Int) -> String {
         switch row {
-        case 0:
-            if let url = URL.yelpWebLink(),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 1:
-            if let url = URL.yelpSearchWebLink(withTerm: "burrito",
-                                               category: .food,
-                                               location: "San Francisco, CA"),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        case 2:
-            if let url = URL.yelpBusinessWebLink(forId: "the-sentinel-san-francisco"),
-                UIApplication.shared.canOpenURL(url) {
-                self.openUrl(url)
-            }
-        default:
-            break
+        case 0: "/businesses/search"
+        case 1: "/businesses/search/phone"
+        case 2: "/transactions/{transaction_type}/search"
+        case 3: "/businesses/id"
+        case 4: "/businesses/matches/{business_match_type}"
+        case 5: "/businesses/{id}/reviews"
+        case 6: "/autocomplete"
+        case 7: "/events/{id}"
+        case 8: "/events"
+        case 9: "/events/featured"
+        case 10: "categories"
+        case 11: "/categories/{alias}"
+        case 12: "/ai/chat/v2"
+        case 13: "/businesses/engagement"
+        case 14: "/businesses/{id}/service_offerings"
+        case 15: "/businesses/insights"
+        case 16: "/businesses/{id}/review_highlights"
+        case 17: "/jobs"
+        case 18: "/bookings/{id}/openings"
+        default: ""
         }
     }
 }
