@@ -32,15 +32,15 @@
 #endif
 
 public extension URL {
+
     // MARK: - Private Methods
 
     private static func addScheme(toPath path: String,
-                                  forWeb: Bool) -> URL?
-    {
+                                  forWeb: Bool) -> URL? {
         if forWeb {
-            return yelpURL(withPath: "\(CDYelpURL.web)\(path)")
+            yelpURL(withPath: "\(CDYelpURL.web)\(path)")
         } else {
-            return yelpURL(withPath: "\(CDYelpURL.deepLink)///\(path)")
+            yelpURL(withPath: "\(CDYelpURL.deepLink)///\(path)")
         }
     }
 
@@ -59,7 +59,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpDeepLink() -> URL? {
-        return yelpURL(withPath: CDYelpURL.deepLink)
+        yelpURL(withPath: CDYelpURL.deepLink)
     }
 
     ///
@@ -68,7 +68,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpWebLink() -> URL? {
-        return yelpURL(withPath: CDYelpURL.web)
+        yelpURL(withPath: CDYelpURL.web)
     }
 
     ///
@@ -83,8 +83,7 @@ public extension URL {
     ///
     static func yelpSearchDeepLink(withTerm term: String?,
                                    category: CDYelpCategoryAlias?,
-                                   location: String?) -> URL?
-    {
+                                   location: String?) -> URL? {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
@@ -105,8 +104,7 @@ public extension URL {
     ///
     static func yelpSearchWebLink(withTerm term: String?,
                                   category: CDYelpCategoryAlias?,
-                                  location: String?) -> URL?
-    {
+                                  location: String?) -> URL? {
         let path = String.searchLinkPath(withTerm: term,
                                          category: category,
                                          location: location)
@@ -155,8 +153,8 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInNearbyDeepLink() -> URL? {
-        return addScheme(toPath: "check_in/nearby",
-                         forWeb: false)
+        addScheme(toPath: "check_in/nearby",
+                  forWeb: false)
     }
 
     ///
@@ -165,8 +163,8 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInsDeepLink() -> URL? {
-        return addScheme(toPath: "check_ins",
-                         forWeb: false)
+        addScheme(toPath: "check_ins",
+                  forWeb: false)
     }
 
     ///
@@ -175,7 +173,7 @@ public extension URL {
     /// - returns: URL?
     ///
     static func yelpCheckInRankingsDeepLink() -> URL? {
-        return addScheme(toPath: "check_in/rankings",
-                         forWeb: false)
+        addScheme(toPath: "check_in/rankings",
+                  forWeb: false)
     }
 }

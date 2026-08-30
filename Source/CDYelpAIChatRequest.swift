@@ -53,8 +53,7 @@ public struct CDYelpAIChatRequest: Encodable, Sendable {
     public init(query: String,
                 chatId: String? = nil,
                 userContext: UserContext? = nil,
-                requestContext: [String: String]? = nil)
-    {
+                requestContext: [String: String]? = nil) {
         self.query = query
         self.chatId = chatId
         self.userContext = userContext

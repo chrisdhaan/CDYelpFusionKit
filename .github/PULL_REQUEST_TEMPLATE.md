@@ -1,15 +1,15 @@
-## Issue
+### Issue :link:
 
-> Link the issue(s) this PR resolves, or explain the motivation if there is no issue.
+> Link to the GitHub issue this PR addresses.
 
-## Goals
+### Goals :soccer:
 
-> Describe what this PR accomplishes.
+> Bullet list of what this PR accomplishes.
 
-## Implementation Details
+### Implementation Details :construction:
 
-> Describe the technical approach and any important decisions made.
+> Describe any non-obvious implementation decisions.
 
-## Testing Details
+### Testing Details :mag:
 
-> Describe how the changes were tested.
+> How was this tested? List new tests added, or explain why no tests are needed.

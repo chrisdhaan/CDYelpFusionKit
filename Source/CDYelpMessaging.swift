@@ -41,9 +41,8 @@ public struct CDYelpMessaging: Decodable, Sendable {
     }
 
     public func urlAsUrl() -> URL? {
-        if let url = url,
-           let asUrl = URL(string: url)
-        {
+        if let url,
+           let asUrl = URL(string: url) {
             return asUrl
         }
         return nil

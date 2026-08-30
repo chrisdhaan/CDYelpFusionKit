@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		5F4315DF2FD2782000FAC621 /* CDYelpRequestAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4315DD2FD2782000FAC621 /* CDYelpRequestAdapter.swift */; };
 		5F4315E02FD2782000FAC621 /* CDYelpEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4315DC2FD2782000FAC621 /* CDYelpEventMonitor.swift */; };
 		5F4315E12FD2782000FAC621 /* CDYelpDecoderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4315DB2FD2782000FAC621 /* CDYelpDecoderConfiguration.swift */; };
@@ -115,7 +114,6 @@
 		5FC4F17F2FCCDFC300C53B15 /* CDYelpUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA31EC000B1004C1F6B /* CDYelpUser.swift */; };
 		5FC4F1802FCCDFC300C53B15 /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		5FC4F1812FCCDFC300C53B15 /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
-		5FC4F1822FCCDFC300C53B15 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		5FC92B5026668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC92B4F26668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift */; };
 		5FC92B5126668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC92B4F26668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift */; };
 		5FC92B5226668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC92B4F26668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift */; };
@@ -214,7 +212,6 @@
 		B285DA0F1FBD35C100FA9ABB /* CDYelpUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA31EC000B1004C1F6B /* CDYelpUser.swift */; };
 		B285DA131FBD35C100FA9ABB /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		B285DA141FBD35C100FA9ABB /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
-		B285DA151FBD35C100FA9ABB /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		B285DA3D1FBE1BB200FA9ABB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F854E1B1FB44D6A00335D73 /* Images.xcassets */; };
 		B285DA3F1FBE1BCE00FA9ABB /* Parameters+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */; };
 		B285DA401FBE1BCE00FA9ABB /* CDColor+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F854DFD1FB44B0F00335D73 /* CDColor+CDYelpFusionKit.swift */; };
@@ -239,7 +236,6 @@
 		B285DA531FBE1BCE00FA9ABB /* CDYelpUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA31EC000B1004C1F6B /* CDYelpUser.swift */; };
 		B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
-		B285DA591FBE1BCE00FA9ABB /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
 		B285DA691FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
 		B285DA6A1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
 		B285DA6B1FBE217800FA9ABB /* URL+CDYelpFusionKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */; };
@@ -276,11 +272,104 @@
 		B2C6E20D1FBCF3A400FE8462 /* CDYelpUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0EA31EC000B1004C1F6B /* CDYelpUser.swift */; };
 		B2C6E2111FBCF3A400FE8462 /* CDYelpAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */; };
 		B2C6E2121FBCF3A400FE8462 /* CDYelpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */; };
-		B2C6E2131FBCF3A400FE8462 /* CDYelpEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F09D2E91F282938001877E9 /* CDYelpEnums.swift */; };
+		6927BFA7610D705C1085F462 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */; };
+		20A51837A42B324608D317E6 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */; };
+		D3DDAD6958F5B0B7D8673AC1 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */; };
+		4C497FF370B789A4F21BB0DF /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */; };
+		400CE51161DFF8097EB01B72 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */; };
+		0AA5162C5B19FB7B280D197B /* CDYelpAPIClient+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */; };
+		712855B8F685A718A068F771 /* CDYelpAPIClient+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */; };
+		BCED2CDAB589126A43BB39F0 /* CDYelpAPIClient+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */; };
+		BE91E30EFF9333E70C6EE9DE /* CDYelpAPIClient+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */; };
+		FEC28FAC689311A9DFF9E152 /* CDYelpAPIClient+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */; };
+		1A838C458A796F4E46E37521 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */; };
+		8C499ABE1152BC23451CC671 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */; };
+		D435FD7628B4EBDAAEB11E3A /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */; };
+		DF1A58C40CF38A5B528E7D7E /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */; };
+		57C69ECD3E8F7C7BF3BDD02E /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */; };
+		5E5247E8A6329C538C1425BF /* CDYelpBusiness+Detailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */; };
+		D196F3A2A0E4AFECC4B94165 /* CDYelpBusiness+Detailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */; };
+		DF99F542B48A566398258301 /* CDYelpBusiness+Detailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */; };
+		2F2EC718F8001F70C736988A /* CDYelpBusiness+Detailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */; };
+		3F63E0E3A30673F9522DCA3A /* CDYelpBusiness+Detailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */; };
+		C28A58CC1B29063841CE3052 /* Parameters+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */; };
+		8A26A9E3896B4AFF313AE0DA /* Parameters+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */; };
+		2F8756A752C492A4E5F154A3 /* Parameters+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */; };
+		A6D739F601349FA76E86099A /* Parameters+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */; };
+		28A6156C330D784378755C3D /* Parameters+BusinessEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */; };
+		9F3F750014CA5EE3FFDEB8DF /* Parameters+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */; };
+		9782556CF1205AAD9838949B /* Parameters+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */; };
+		0F2D82C1F73AC00771971B98 /* Parameters+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */; };
+		B167A27BAFDF98834CA199F8 /* Parameters+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */; };
+		6B2D184A324A900B1C92137F /* Parameters+EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */; };
+		47948ACD39AB21ACF02DA473 /* CDYelpAttributeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */; };
+		44BFC2DB6AD496BAB2B2FE18 /* CDYelpAttributeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */; };
+		429B12E890BD3B1C14C0B4B2 /* CDYelpAttributeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */; };
+		AF5E9F29448EBB8211008090 /* CDYelpAttributeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */; };
+		7F00628DE18BB22F2197A7D1 /* CDYelpAttributeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */; };
+		89598C175E61814462E232A1 /* CDYelpCategoryAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */; };
+		F1A6BC4E7812E05CC06AE772 /* CDYelpCategoryAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */; };
+		50350DD08FE2E57F342FC4D0 /* CDYelpCategoryAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */; };
+		B75DEA1A2B1FA7636CD67205 /* CDYelpCategoryAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */; };
+		C464852B8B9FED56C13597BF /* CDYelpCategoryAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */; };
+		77BAD33D24F901CE4E4A8F5B /* CDYelpBusinessMatchThresholdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */; };
+		F0D6F7F1877C130BE15ACB0C /* CDYelpBusinessMatchThresholdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */; };
+		CEA04BDC3BF7ED2239899C8E /* CDYelpBusinessMatchThresholdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */; };
+		E18D237074B365C1710330D6 /* CDYelpBusinessMatchThresholdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */; };
+		8B7D16B4167BB1FE07C8AE27 /* CDYelpBusinessMatchThresholdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */; };
+		479A6CA9ED223A8873A04970 /* CDYelpBusinessSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */; };
+		B9BF1BE41393643A03D76BAC /* CDYelpBusinessSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */; };
+		0A8F3BB56373FCA786DA6209 /* CDYelpBusinessSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */; };
+		70492B684E3E8319CF1510B6 /* CDYelpBusinessSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */; };
+		F4A9DBED4DE8C21B5FAD3D1E /* CDYelpBusinessSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */; };
+		D11331773AA8F53DA07D7736 /* CDYelpEventCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */; };
+		4293A6126876D51ED4966CF2 /* CDYelpEventCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */; };
+		25CD1E69D34C16F72FF2793E /* CDYelpEventCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */; };
+		3DE02E1630B17690B7189EC0 /* CDYelpEventCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */; };
+		B6730E96D183EBE1381812D6 /* CDYelpEventCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */; };
+		D43822CC0499BE86634B3514 /* CDYelpEventSortByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */; };
+		8EE57E5ACB50D324BD85D1E9 /* CDYelpEventSortByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */; };
+		4D9EC287C959EC8E1A42DD4C /* CDYelpEventSortByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */; };
+		4EF29C42F4E36D21C7629B7B /* CDYelpEventSortByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */; };
+		3F5A661CA3756286CB4957B7 /* CDYelpEventSortByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */; };
+		9E6925F98FE5DD4D4EC47CEA /* CDYelpEventSortOnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */; };
+		8B30286B7B001024903AD4C1 /* CDYelpEventSortOnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */; };
+		161D152E8DC4A80774A6A1E8 /* CDYelpEventSortOnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */; };
+		EF9730392DB7CBA5F79C2508 /* CDYelpEventSortOnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */; };
+		33C43B93A9BDE01C8FC17D6C /* CDYelpEventSortOnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */; };
+		59B13DFCF7CCF626CBD5B24A /* CDYelpReviewSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */; };
+		C78DA66D6BADE266B80B2F12 /* CDYelpReviewSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */; };
+		2A56EBE0D6D5E6E18CD03601 /* CDYelpReviewSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */; };
+		7200D13D0BADA2F30196411A /* CDYelpReviewSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */; };
+		64B0653DFA5D43D498EB6F29 /* CDYelpReviewSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */; };
+		64F5251185BDB3F2DD79F184 /* CDYelpLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398FD7E47312E6077437C3B /* CDYelpLocale.swift */; };
+		02D32F984E988043C731EE06 /* CDYelpLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398FD7E47312E6077437C3B /* CDYelpLocale.swift */; };
+		3727882B94E06671BA8F5E4A /* CDYelpLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398FD7E47312E6077437C3B /* CDYelpLocale.swift */; };
+		C72ED832E9D27245E784BF3F /* CDYelpLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398FD7E47312E6077437C3B /* CDYelpLocale.swift */; };
+		A5710D8741AC9E47D1F4DE60 /* CDYelpLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B398FD7E47312E6077437C3B /* CDYelpLocale.swift */; };
+		18EBF651E2A7F91DD47D4D00 /* CDYelpPriceTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */; };
+		CE19CFB5BC24509B1021E28F /* CDYelpPriceTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */; };
+		6E1093004E6AC3B58B651C89 /* CDYelpPriceTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */; };
+		81F86BB704066A496F90D88A /* CDYelpPriceTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */; };
+		DFB06DBA30891CCB14B40AE2 /* CDYelpPriceTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */; };
+		1925B318D26267C37D5120D5 /* CDYelpStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BE7334B7390602F877FFA /* CDYelpStars.swift */; };
+		0271D656435C9C1A0A5FDB10 /* CDYelpStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BE7334B7390602F877FFA /* CDYelpStars.swift */; };
+		E27327A5791A6E6A83A66646 /* CDYelpStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BE7334B7390602F877FFA /* CDYelpStars.swift */; };
+		4C1BCB2EFBF8E3FDBB235D69 /* CDYelpStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BE7334B7390602F877FFA /* CDYelpStars.swift */; };
+		6C48F53B03EE68C2BDDFCEB4 /* CDYelpStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BE7334B7390602F877FFA /* CDYelpStars.swift */; };
+		59CE76C113BD2ED993900735 /* CDYelpStarsSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */; };
+		A4D4FECD4C67B9AC5BD24783 /* CDYelpStarsSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */; };
+		FA605A150A369873A6925D6F /* CDYelpStarsSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */; };
+		A190A7538F7A2CF52FF142CF /* CDYelpStarsSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */; };
+		0128AA29F18065A70DA83959 /* CDYelpStarsSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */; };
+		EBC695F962804D57F62CB881 /* CDYelpTransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */; };
+		60666E215A23C6C60C49332D /* CDYelpTransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */; };
+		02D3E5F14F6BDDF8D2D8860C /* CDYelpTransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */; };
+		10366C7FD5B4050952377155 /* CDYelpTransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */; };
+		1E85FE366CC6970AAAA6457B /* CDYelpTransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F09D2E91F282938001877E9 /* CDYelpEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpEnums.swift; sourceTree = "<group>"; };
 		5F4315DA2FD2782000FAC621 /* CDYelpCacheConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpCacheConfiguration.swift; sourceTree = "<group>"; };
 		5F4315DB2FD2782000FAC621 /* CDYelpDecoderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpDecoderConfiguration.swift; sourceTree = "<group>"; };
 		5F4315DC2FD2782000FAC621 /* CDYelpEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDYelpEventMonitor.swift; sourceTree = "<group>"; };
@@ -299,6 +388,19 @@
 		5F88711226EECEE3004A3814 /* ci.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = ci.yml; path = .github/workflows/ci.yml; sourceTree = "<group>"; };
 		5FBF0E671EBFFEB0004C1F6B /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAPIClient.swift; sourceTree = "<group>"; };
+		96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpAttributeFilter.swift"; sourceTree = "<group>"; };
+		EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpCategoryAlias.swift"; sourceTree = "<group>"; };
+		95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpBusinessMatchThresholdType.swift"; sourceTree = "<group>"; };
+		CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpBusinessSortType.swift"; sourceTree = "<group>"; };
+		468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpEventCategoryFilter.swift"; sourceTree = "<group>"; };
+		609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpEventSortByType.swift"; sourceTree = "<group>"; };
+		A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpEventSortOnType.swift"; sourceTree = "<group>"; };
+		970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpReviewSortType.swift"; sourceTree = "<group>"; };
+		B398FD7E47312E6077437C3B /* CDYelpLocale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpLocale.swift"; sourceTree = "<group>"; };
+		C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpPriceTier.swift"; sourceTree = "<group>"; };
+		5A9BE7334B7390602F877FFA /* CDYelpStars.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpStars.swift"; sourceTree = "<group>"; };
+		5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpStarsSize.swift"; sourceTree = "<group>"; };
+		06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpTransactionType.swift"; sourceTree = "<group>"; };
 		5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpAutoCompleteResponse.swift; sourceTree = "<group>"; };
 		5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpBusiness.swift; sourceTree = "<group>"; };
 		5FBF0E901EC000B1004C1F6B /* CDYelpBusinessResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDYelpBusinessResponse.swift; sourceTree = "<group>"; };
@@ -350,6 +452,12 @@
 		B2C4A04E1FCE323600B253A2 /* CDColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDColor.swift; sourceTree = "<group>"; };
 		B2C4A0531FCE33D000B253A2 /* CDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDImage.swift; sourceTree = "<group>"; };
 		B2C6E1E61FBCF25A00FE8462 /* CDYelpFusionKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDYelpFusionKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpAPIClient+BusinessEndpoints.swift"; sourceTree = "<group>"; };
+		A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpAPIClient+EventEndpoints.swift"; sourceTree = "<group>"; };
+		6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpAPIClient+CategoryAndDataEndpoints.swift"; sourceTree = "<group>"; };
+		D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDYelpBusiness+Detailed.swift"; sourceTree = "<group>"; };
+		0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Parameters+BusinessEndpoints.swift"; sourceTree = "<group>"; };
+		0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Parameters+EventEndpoints.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -453,6 +561,8 @@
 				5F854E061FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift */,
 				5FC92B4F26668EEE00E016A2 /* DateFormatter+CDYelpFusionKit.swift */,
 				5FBF0EA51EC000B1004C1F6B /* Parameters+CDYelpFusionKit.swift */,
+				0D1F3C74C69523D93664821A /* Parameters+EventEndpoints.swift */,
+				0651EB9C9689F76A216201C7 /* Parameters+BusinessEndpoints.swift */,
 				B266344C1FBEA1B8003B09CE /* String+CDYelpFusionKit.swift */,
 				B285DA681FBE217800FA9ABB /* URL+CDYelpFusionKit.swift */,
 			);
@@ -466,6 +576,7 @@
 				AA51FF010000000000000002 /* CDYelpAIChatResponse.swift */,
 				5FBF0E8E1EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift */,
 				5FBF0E8F1EC000B1004C1F6B /* CDYelpBusiness.swift */,
+				D14B163CBF66890F8061FCDC /* CDYelpBusiness+Detailed.swift */,
 				AA51FF010000000000000003 /* CDYelpBusinessInsightsResponse.swift */,
 				5FBF0E901EC000B1004C1F6B /* CDYelpBusinessResponse.swift */,
 				B267ED55233EAD3C007B902A /* CDYelpCategoriesResponse.swift */,
@@ -501,10 +612,25 @@
 			isa = PBXGroup;
 			children = (
 				5FBF0E8D1EC000B1004C1F6B /* CDYelpAPIClient.swift */,
+				96F74F24A772C1BF28FE0D1A /* CDYelpAttributeFilter.swift */,
+				EB608681E06E283761E39EA0 /* CDYelpCategoryAlias.swift */,
+				95F7498EDA06FDA9872F4BF3 /* CDYelpBusinessMatchThresholdType.swift */,
+				CA29D7186978C319EF179DEE /* CDYelpBusinessSortType.swift */,
+				468889AD03A57423527511E5 /* CDYelpEventCategoryFilter.swift */,
+				609593DA419844E37EC40149 /* CDYelpEventSortByType.swift */,
+				A53DA263C8AD9E1CF3CB7C31 /* CDYelpEventSortOnType.swift */,
+				970B97CFBCAD9922CCF47C37 /* CDYelpReviewSortType.swift */,
+				B398FD7E47312E6077437C3B /* CDYelpLocale.swift */,
+				C01AC537F445375A4B4D37CD /* CDYelpPriceTier.swift */,
+				5A9BE7334B7390602F877FFA /* CDYelpStars.swift */,
+				5E091146EB1C8397BCBAD4F0 /* CDYelpStarsSize.swift */,
+				06C9D3AC06060189DA07DC9B /* CDYelpTransactionType.swift */,
+				6F9C0146EFB0111C0DAC4313 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift */,
+				A7CE6FC80D75012C8A96AFB3 /* CDYelpAPIClient+EventEndpoints.swift */,
+				80C3FF9047F122DEF50D5743 /* CDYelpAPIClient+BusinessEndpoints.swift */,
 				5F4315DA2FD2782000FAC621 /* CDYelpCacheConfiguration.swift */,
 				5FBF0E931EC000B1004C1F6B /* CDYelpConstants.swift */,
 				5F4315DB2FD2782000FAC621 /* CDYelpDecoderConfiguration.swift */,
-				5F09D2E91F282938001877E9 /* CDYelpEnums.swift */,
 				5F4315DC2FD2782000FAC621 /* CDYelpEventMonitor.swift */,
 				5F86E87B2FE24C8400C50F5F /* CDYelpNetworkError.swift */,
 				5F4315DD2FD2782000FAC621 /* CDYelpRequestAdapter.swift */,
@@ -1009,6 +1135,25 @@
 				B2C4A0541FCE33D000B253A2 /* CDImage.swift in Sources */,
 				5F854E071FB44B1F00335D73 /* CDImage+CDYelpFusionKit.swift in Sources */,
 				5FBF0EA61EC000B1004C1F6B /* CDYelpAPIClient.swift in Sources */,
+				47948ACD39AB21ACF02DA473 /* CDYelpAttributeFilter.swift in Sources */,
+				89598C175E61814462E232A1 /* CDYelpCategoryAlias.swift in Sources */,
+				77BAD33D24F901CE4E4A8F5B /* CDYelpBusinessMatchThresholdType.swift in Sources */,
+				479A6CA9ED223A8873A04970 /* CDYelpBusinessSortType.swift in Sources */,
+				D11331773AA8F53DA07D7736 /* CDYelpEventCategoryFilter.swift in Sources */,
+				D43822CC0499BE86634B3514 /* CDYelpEventSortByType.swift in Sources */,
+				9E6925F98FE5DD4D4EC47CEA /* CDYelpEventSortOnType.swift in Sources */,
+				59B13DFCF7CCF626CBD5B24A /* CDYelpReviewSortType.swift in Sources */,
+				64F5251185BDB3F2DD79F184 /* CDYelpLocale.swift in Sources */,
+				18EBF651E2A7F91DD47D4D00 /* CDYelpPriceTier.swift in Sources */,
+				1925B318D26267C37D5120D5 /* CDYelpStars.swift in Sources */,
+				59CE76C113BD2ED993900735 /* CDYelpStarsSize.swift in Sources */,
+				EBC695F962804D57F62CB881 /* CDYelpTransactionType.swift in Sources */,
+				6927BFA7610D705C1085F462 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */,
+				0AA5162C5B19FB7B280D197B /* CDYelpAPIClient+EventEndpoints.swift in Sources */,
+				1A838C458A796F4E46E37521 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */,
+				5E5247E8A6329C538C1425BF /* CDYelpBusiness+Detailed.swift in Sources */,
+				C28A58CC1B29063841CE3052 /* Parameters+BusinessEndpoints.swift in Sources */,
+				9F3F750014CA5EE3FFDEB8DF /* Parameters+EventEndpoints.swift in Sources */,
 				5FBF0EA71EC000B1004C1F6B /* CDYelpAutoCompleteResponse.swift in Sources */,
 				5FBF0EA81EC000B1004C1F6B /* CDYelpBusiness.swift in Sources */,
 				5FBF0EA91EC000B1004C1F6B /* CDYelpBusinessResponse.swift in Sources */,
@@ -1026,7 +1171,6 @@
 				B267903128592CDA00DFAAA5 /* CDYelpSpecialHour.swift in Sources */,
 				5FBF0EAC1EC000B1004C1F6B /* CDYelpConstants.swift in Sources */,
 				5FBF0EAD1EC000B1004C1F6B /* CDYelpCoordinates.swift in Sources */,
-				5F09D2EA1F282938001877E9 /* CDYelpEnums.swift in Sources */,
 				5FBF0EAE1EC000B1004C1F6B /* CDYelpError.swift in Sources */,
 				5FDB32991FAACE8E00A9CF71 /* CDYelpEvent.swift in Sources */,
 				5FDB32A21FAACF4100A9CF71 /* CDYelpEventsResponse.swift in Sources */,
@@ -1103,8 +1247,26 @@
 				5FC4F17E2FCCDFC300C53B15 /* CDYelpTerm.swift in Sources */,
 				5FC4F17F2FCCDFC300C53B15 /* CDYelpUser.swift in Sources */,
 				5FC4F1802FCCDFC300C53B15 /* CDYelpAPIClient.swift in Sources */,
+				44BFC2DB6AD496BAB2B2FE18 /* CDYelpAttributeFilter.swift in Sources */,
+				F1A6BC4E7812E05CC06AE772 /* CDYelpCategoryAlias.swift in Sources */,
+				F0D6F7F1877C130BE15ACB0C /* CDYelpBusinessMatchThresholdType.swift in Sources */,
+				B9BF1BE41393643A03D76BAC /* CDYelpBusinessSortType.swift in Sources */,
+				4293A6126876D51ED4966CF2 /* CDYelpEventCategoryFilter.swift in Sources */,
+				8EE57E5ACB50D324BD85D1E9 /* CDYelpEventSortByType.swift in Sources */,
+				8B30286B7B001024903AD4C1 /* CDYelpEventSortOnType.swift in Sources */,
+				C78DA66D6BADE266B80B2F12 /* CDYelpReviewSortType.swift in Sources */,
+				02D32F984E988043C731EE06 /* CDYelpLocale.swift in Sources */,
+				CE19CFB5BC24509B1021E28F /* CDYelpPriceTier.swift in Sources */,
+				0271D656435C9C1A0A5FDB10 /* CDYelpStars.swift in Sources */,
+				A4D4FECD4C67B9AC5BD24783 /* CDYelpStarsSize.swift in Sources */,
+				60666E215A23C6C60C49332D /* CDYelpTransactionType.swift in Sources */,
+				20A51837A42B324608D317E6 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */,
+				712855B8F685A718A068F771 /* CDYelpAPIClient+EventEndpoints.swift in Sources */,
+				8C499ABE1152BC23451CC671 /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */,
+				D196F3A2A0E4AFECC4B94165 /* CDYelpBusiness+Detailed.swift in Sources */,
+				8A26A9E3896B4AFF313AE0DA /* Parameters+BusinessEndpoints.swift in Sources */,
+				9782556CF1205AAD9838949B /* Parameters+EventEndpoints.swift in Sources */,
 				5FC4F1812FCCDFC300C53B15 /* CDYelpConstants.swift in Sources */,
-				5FC4F1822FCCDFC300C53B15 /* CDYelpEnums.swift in Sources */,
 				5F43160A2FD2783D00FAC621 /* CDYelpCacheKey.swift in Sources */,
 				5F43160B2FD2783D00FAC621 /* CDYelpResponseCache.swift in Sources */,
 				AA51FF010000005000000001 /* CDYelpAIChatRequest.swift in Sources */,
@@ -1129,6 +1291,25 @@
 				B2C4A0551FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285D9FD1FBD35C100FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B285DA131FBD35C100FA9ABB /* CDYelpAPIClient.swift in Sources */,
+				429B12E890BD3B1C14C0B4B2 /* CDYelpAttributeFilter.swift in Sources */,
+				50350DD08FE2E57F342FC4D0 /* CDYelpCategoryAlias.swift in Sources */,
+				CEA04BDC3BF7ED2239899C8E /* CDYelpBusinessMatchThresholdType.swift in Sources */,
+				0A8F3BB56373FCA786DA6209 /* CDYelpBusinessSortType.swift in Sources */,
+				25CD1E69D34C16F72FF2793E /* CDYelpEventCategoryFilter.swift in Sources */,
+				4D9EC287C959EC8E1A42DD4C /* CDYelpEventSortByType.swift in Sources */,
+				161D152E8DC4A80774A6A1E8 /* CDYelpEventSortOnType.swift in Sources */,
+				2A56EBE0D6D5E6E18CD03601 /* CDYelpReviewSortType.swift in Sources */,
+				3727882B94E06671BA8F5E4A /* CDYelpLocale.swift in Sources */,
+				6E1093004E6AC3B58B651C89 /* CDYelpPriceTier.swift in Sources */,
+				E27327A5791A6E6A83A66646 /* CDYelpStars.swift in Sources */,
+				FA605A150A369873A6925D6F /* CDYelpStarsSize.swift in Sources */,
+				02D3E5F14F6BDDF8D2D8860C /* CDYelpTransactionType.swift in Sources */,
+				D3DDAD6958F5B0B7D8673AC1 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */,
+				BCED2CDAB589126A43BB39F0 /* CDYelpAPIClient+EventEndpoints.swift in Sources */,
+				D435FD7628B4EBDAAEB11E3A /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */,
+				DF99F542B48A566398258301 /* CDYelpBusiness+Detailed.swift in Sources */,
+				2F8756A752C492A4E5F154A3 /* Parameters+BusinessEndpoints.swift in Sources */,
+				0F2D82C1F73AC00771971B98 /* Parameters+EventEndpoints.swift in Sources */,
 				B285D9FE1FBD35C100FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
 				B285D9FF1FBD35C100FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA001FBD35C100FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
@@ -1146,7 +1327,6 @@
 				B267903228592CDA00DFAAA5 /* CDYelpSpecialHour.swift in Sources */,
 				B285DA141FBD35C100FA9ABB /* CDYelpConstants.swift in Sources */,
 				B285DA031FBD35C100FA9ABB /* CDYelpCoordinates.swift in Sources */,
-				B285DA151FBD35C100FA9ABB /* CDYelpEnums.swift in Sources */,
 				B285DA041FBD35C100FA9ABB /* CDYelpError.swift in Sources */,
 				B285DA051FBD35C100FA9ABB /* CDYelpEvent.swift in Sources */,
 				B285DA061FBD35C100FA9ABB /* CDYelpEventsResponse.swift in Sources */,
@@ -1189,6 +1369,25 @@
 				B2C4A0561FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B285DA411FBE1BCE00FA9ABB /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B285DA571FBE1BCE00FA9ABB /* CDYelpAPIClient.swift in Sources */,
+				AF5E9F29448EBB8211008090 /* CDYelpAttributeFilter.swift in Sources */,
+				B75DEA1A2B1FA7636CD67205 /* CDYelpCategoryAlias.swift in Sources */,
+				E18D237074B365C1710330D6 /* CDYelpBusinessMatchThresholdType.swift in Sources */,
+				70492B684E3E8319CF1510B6 /* CDYelpBusinessSortType.swift in Sources */,
+				3DE02E1630B17690B7189EC0 /* CDYelpEventCategoryFilter.swift in Sources */,
+				4EF29C42F4E36D21C7629B7B /* CDYelpEventSortByType.swift in Sources */,
+				EF9730392DB7CBA5F79C2508 /* CDYelpEventSortOnType.swift in Sources */,
+				7200D13D0BADA2F30196411A /* CDYelpReviewSortType.swift in Sources */,
+				C72ED832E9D27245E784BF3F /* CDYelpLocale.swift in Sources */,
+				81F86BB704066A496F90D88A /* CDYelpPriceTier.swift in Sources */,
+				4C1BCB2EFBF8E3FDBB235D69 /* CDYelpStars.swift in Sources */,
+				A190A7538F7A2CF52FF142CF /* CDYelpStarsSize.swift in Sources */,
+				10366C7FD5B4050952377155 /* CDYelpTransactionType.swift in Sources */,
+				4C497FF370B789A4F21BB0DF /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */,
+				BE91E30EFF9333E70C6EE9DE /* CDYelpAPIClient+EventEndpoints.swift in Sources */,
+				DF1A58C40CF38A5B528E7D7E /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */,
+				2F2EC718F8001F70C736988A /* CDYelpBusiness+Detailed.swift in Sources */,
+				A6D739F601349FA76E86099A /* Parameters+BusinessEndpoints.swift in Sources */,
+				B167A27BAFDF98834CA199F8 /* Parameters+EventEndpoints.swift in Sources */,
 				B285DA421FBE1BCE00FA9ABB /* CDYelpAutoCompleteResponse.swift in Sources */,
 				B285DA431FBE1BCE00FA9ABB /* CDYelpBusiness.swift in Sources */,
 				B285DA441FBE1BCE00FA9ABB /* CDYelpBusinessResponse.swift in Sources */,
@@ -1206,7 +1405,6 @@
 				B267903328592CDA00DFAAA5 /* CDYelpSpecialHour.swift in Sources */,
 				B285DA581FBE1BCE00FA9ABB /* CDYelpConstants.swift in Sources */,
 				B285DA471FBE1BCE00FA9ABB /* CDYelpCoordinates.swift in Sources */,
-				B285DA591FBE1BCE00FA9ABB /* CDYelpEnums.swift in Sources */,
 				B285DA481FBE1BCE00FA9ABB /* CDYelpError.swift in Sources */,
 				B285DA491FBE1BCE00FA9ABB /* CDYelpEvent.swift in Sources */,
 				B285DA4A1FBE1BCE00FA9ABB /* CDYelpEventsResponse.swift in Sources */,
@@ -1249,6 +1447,25 @@
 				B2C4A0571FCE33D000B253A2 /* CDImage.swift in Sources */,
 				B2C6E1FB1FBCF3A400FE8462 /* CDImage+CDYelpFusionKit.swift in Sources */,
 				B2C6E2111FBCF3A400FE8462 /* CDYelpAPIClient.swift in Sources */,
+				7F00628DE18BB22F2197A7D1 /* CDYelpAttributeFilter.swift in Sources */,
+				C464852B8B9FED56C13597BF /* CDYelpCategoryAlias.swift in Sources */,
+				8B7D16B4167BB1FE07C8AE27 /* CDYelpBusinessMatchThresholdType.swift in Sources */,
+				F4A9DBED4DE8C21B5FAD3D1E /* CDYelpBusinessSortType.swift in Sources */,
+				B6730E96D183EBE1381812D6 /* CDYelpEventCategoryFilter.swift in Sources */,
+				3F5A661CA3756286CB4957B7 /* CDYelpEventSortByType.swift in Sources */,
+				33C43B93A9BDE01C8FC17D6C /* CDYelpEventSortOnType.swift in Sources */,
+				64B0653DFA5D43D498EB6F29 /* CDYelpReviewSortType.swift in Sources */,
+				A5710D8741AC9E47D1F4DE60 /* CDYelpLocale.swift in Sources */,
+				DFB06DBA30891CCB14B40AE2 /* CDYelpPriceTier.swift in Sources */,
+				6C48F53B03EE68C2BDDFCEB4 /* CDYelpStars.swift in Sources */,
+				0128AA29F18065A70DA83959 /* CDYelpStarsSize.swift in Sources */,
+				1E85FE366CC6970AAAA6457B /* CDYelpTransactionType.swift in Sources */,
+				400CE51161DFF8097EB01B72 /* CDYelpAPIClient+BusinessEndpoints.swift in Sources */,
+				FEC28FAC689311A9DFF9E152 /* CDYelpAPIClient+EventEndpoints.swift in Sources */,
+				57C69ECD3E8F7C7BF3BDD02E /* CDYelpAPIClient+CategoryAndDataEndpoints.swift in Sources */,
+				3F63E0E3A30673F9522DCA3A /* CDYelpBusiness+Detailed.swift in Sources */,
+				28A6156C330D784378755C3D /* Parameters+BusinessEndpoints.swift in Sources */,
+				6B2D184A324A900B1C92137F /* Parameters+EventEndpoints.swift in Sources */,
 				B2C6E1FC1FBCF3A400FE8462 /* CDYelpAutoCompleteResponse.swift in Sources */,
 				B2C6E1FD1FBCF3A400FE8462 /* CDYelpBusiness.swift in Sources */,
 				B2C6E1FE1FBCF3A400FE8462 /* CDYelpBusinessResponse.swift in Sources */,
@@ -1266,7 +1483,6 @@
 				B267903428592CDA00DFAAA5 /* CDYelpSpecialHour.swift in Sources */,
 				B2C6E2121FBCF3A400FE8462 /* CDYelpConstants.swift in Sources */,
 				B2C6E2011FBCF3A400FE8462 /* CDYelpCoordinates.swift in Sources */,
-				B2C6E2131FBCF3A400FE8462 /* CDYelpEnums.swift in Sources */,
 				B2C6E2021FBCF3A400FE8462 /* CDYelpError.swift in Sources */,
 				B2C6E2031FBCF3A400FE8462 /* CDYelpEvent.swift in Sources */,
 				B2C6E2041FBCF3A400FE8462 /* CDYelpEventsResponse.swift in Sources */,

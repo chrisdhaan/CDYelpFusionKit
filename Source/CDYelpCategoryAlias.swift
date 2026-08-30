@@ -1,5 +1,5 @@
 //
-//  CDYelpEnums.swift
+//  CDYelpCategoryAlias.swift
 //  CDYelpFusionKit
 //
 //  Created by Christopher de Haan on 7/25/17.
@@ -24,37 +24,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-//
 
-// swiftlint:disable file_length
-
-///
-/// A list of the business attributes the Yelp Fusion API supports.
-///
-public enum CDYelpAttributeFilter: String, Sendable {
-    case hotAndNew = "hot_and_new"
-    case requestAQuote = "request_a_quote"
-    case reservation
-    case waitlistReservation = "waitlist_reservation"
-    case deals
-    case genderNeutralRestrooms = "gender_neutral_restrooms"
-    case openToAll = "open_to_all"
-    case wheelchairAccessible = "wheelchair_accessible"
-    // Parking
-    case parkingGarage = "parking_garage"
-    case parkingLot = "parking_lot"
-    case parkingStreet = "parking_street"
-    case parkingValet = "parking_valet"
-    case parkingBike = "parking_bike"
-    case parkingValidated = "parking_validated"
-    // Dietary
-    case likedByVegetarians = "liked_by_vegetarians"
-    case veganOfferings = "vegan_offerings"
-    case glutenFreeOfferings = "gluten_free_offerings"
-    case outdoorSeating = "outdoor_seating"
-}
-
-// swiftlint:disable type_body_length
+// swiftlint:disable file_length type_body_length
+// Swift enums can't split their cases across files or extensions (unlike classes,
+// structs, or actors). This enum is a complete 1-to-1 mapping of Yelp's real
+// category taxonomy (1,481 cases as of writing) — every case corresponds to an
+// actual Yelp Fusion API category alias, so reducing the case count would mean
+// dropping real, supported categories rather than simplifying anything.
 ///
 /// A list of the business categories the Yelp Fusion API supports.
 ///
@@ -1586,174 +1562,4 @@ public enum CDYelpCategoryAlias: String, Sendable {
     case wholesaleStores = "wholesale_stores"
     case wigs
 }
-
-// swiftlint:enable type_body_length
-
-///
-/// A list of business match threshold types the Yelp Fusion API supports.
-///
-public enum CDYelpBusinessMatchThresholdType: String, Sendable {
-    ///
-    /// Do not apply any match quality threshold; all potential business matches will be returned.
-    ///
-    case none
-    ///
-    /// Apply a match quality threshold such that only very closely matching businesses will be returned.
-    ///
-    case normal = "default"
-    ///
-    /// Apply a very strict match quality threshold.
-    ///
-    case strict
-}
-
-///
-/// A list of the business sort types the Yelp Fusion API supports.
-///
-public enum CDYelpBusinessSortType: String, Sendable {
-    case bestMatch = "best_match"
-    case rating
-    case reviewCount = "review_count"
-    case distance
-}
-
-///
-/// A list of the event categories the Yelp Fusion API supports.
-///
-public enum CDYelpEventCategoryFilter: String, Sendable {
-    case charities
-    case fashion
-    case festivalsAndFairs = "festivals-fairs"
-    case film
-    case foodAndDrink = "food-and-drink"
-    case kidsAndFamily = "kids-family"
-    case lecturesAndBooks = "lectures-books"
-    case music
-    case nightlife
-    case other
-    case performingArts = "performing-arts"
-    case sportsAndActiveLife = "sports-active-life"
-    case visualArts = "visual-arts"
-}
-
-///
-/// A list of the event sortBy types the Yelp Fusion API supports.
-///
-public enum CDYelpEventSortByType: String, Sendable {
-    case ascending = "asc"
-    case descending = "desc"
-}
-
-///
-/// A list of the event sortOn types the Yelp Fusion API supports.
-///
-public enum CDYelpEventSortOnType: String, Sendable {
-    case popularity
-    case timeStart = "time_start"
-}
-
-///
-/// A list of the review sort types the Yelp Fusion API supports.
-///
-public enum CDYelpReviewSortType: String, Sendable {
-    case yelpSort = "yelp_sort"
-    case rating
-    case timeCreated = "time_created"
-}
-
-///
-/// A list of locales the Yelp Fusion API supports. The locale code is in the format of {language code}_{country code}.
-///
-public enum CDYelpLocale: String, Sendable {
-    // swiftlint:disable identifier_name
-    case chinese_hongKong = "zh_HK"
-    case chinese_taiwan = "zh_TW"
-    case czech_czechRepublic = "cs_CZ"
-    case danish_denmark = "da_DK"
-    case dutch_belgium = "nl_BE"
-    case dutch_theNetherlands = "nl_NL"
-    case english_australia = "en_AU"
-    case english_belgium = "en_BE"
-    case english_canada = "en_CA"
-    case english_hongKong = "en_HK"
-    case english_malaysia = "en_MY"
-    case english_newZealand = "en_NZ"
-    case english_philippines = "en_PH"
-    case english_republicOfIreland = "en_IE"
-    case english_singapore = "en_SG"
-    case english_switzerland = "en_CH"
-    case english_unitedKingdom = "en_GB"
-    case english_unitedStates = "en_US"
-    case filipino_philippines = "fil_PH"
-    case finnish_finland = "fi_FI"
-    case french_belgium = "fr_BE"
-    case french_canada = "fr_CA"
-    case french_france = "fr_FR"
-    case french_switzerland = "fr_CH"
-    case german_austria = "de_AT"
-    case german_germany = "de_DE"
-    case german_switzerland = "de_CH"
-    case italian_italy = "it_IT"
-    case italian_switzerland = "it_CH"
-    case japanese_japan = "ja_JP"
-    case malay_malaysia = "ms_MY"
-    case norwegian_norway = "nb_NO"
-    case polish_poland = "pl_PL"
-    case portuguese_brazil = "pt_BR"
-    case portuguese_portugal = "pt_PT"
-    case spanish_argentina = "es_AR"
-    case spanish_chile = "es_CL"
-    case spanish_mexico = "es_MX"
-    case spanish_spain = "es_ES"
-    case swedish_finland = "sv_FI"
-    case swedish_sweden = "sv_SE"
-    case turkish_turkey = "tr_TR"
-    // swiftlint:enable identifier_name
-}
-
-///
-/// A list of the price tiers the Yelp Fusion API supports.
-///
-public enum CDYelpPriceTier: String, Sendable {
-    case oneDollarSign = "1"
-    case twoDollarSigns = "2"
-    case threeDollarSigns = "3"
-    case fourDollarSigns = "4"
-}
-
-///
-/// A list of the number of filled stars the Yelp stars asset can be returned with.
-///
-public enum CDYelpStars: String, Sendable {
-    case zero
-    case one
-    case oneHalf = "one_half"
-    case two
-    case twoHalf = "two_half"
-    case three
-    case threeHalf = "three_half"
-    case four
-    case fourHalf = "four_half"
-    case five
-}
-
-///
-/// A list of the sizes the Yelp stars asset can be returned in.
-///
-public enum CDYelpStarsSize: String, Sendable {
-    case small
-    case regular
-    case large
-    case extraLarge = "extra_large"
-}
-
-///
-/// A list of the transaction types the Yelp Fusion API supports.
-///
-public enum CDYelpTransactionType: String, Sendable {
-    case foodDelivery = "delivery"
-    case pickup
-    case restaurantReservation = "restaurant_reservation"
-}
-
-// swiftlint:enable file_length
+// swiftlint:enable file_length type_body_length

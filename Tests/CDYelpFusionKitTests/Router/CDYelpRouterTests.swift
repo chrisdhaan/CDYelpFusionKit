@@ -25,9 +25,9 @@
 //  THE SOFTWARE.
 //
 
-@testable import CDYelpFusionKit
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 struct CDYelpRouterTests {
     @Test func searchRouterProducesGetRequest() throws {
@@ -231,7 +231,7 @@ struct CDYelpRouterTests {
             .businessInsights(parameters: [:]),
             .reviewHighlights(id: "test", parameters: [:]),
             .jobs(query: "plumber", locale: nil),
-            .openings(businessId: "test", parameters: [:]),
+            .openings(businessId: "test", parameters: [:])
         ]
 
         for router in routers {
@@ -258,7 +258,7 @@ struct CDYelpRouterTests {
             .serviceOfferings(id: "test", parameters: [:]),
             .businessInsights(parameters: [:]),
             .reviewHighlights(id: "test", parameters: [:]),
-            .openings(businessId: "test", parameters: [:]),
+            .openings(businessId: "test", parameters: [:])
         ]
 
         for router in routers {
@@ -271,7 +271,7 @@ struct CDYelpRouterTests {
         let chatRequest = CDYelpAIChatRequest(query: "test")
         let routers: [CDYelpRouter] = [
             .aiChat(request: chatRequest),
-            .jobs(query: "plumber", locale: nil),
+            .jobs(query: "plumber", locale: nil)
         ]
 
         for router in routers {
@@ -293,7 +293,7 @@ struct CDYelpRouterTests {
             "location": "San Francisco",
             "limit": "20",
             "offset": "0",
-            "sort_by": "rating",
+            "sort_by": "rating"
         ]
         let router = CDYelpRouter.search(parameters: parameters)
         let request = try router.asURLRequest(apiKey: "test-key")

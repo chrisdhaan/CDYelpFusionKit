@@ -37,6 +37,20 @@ actor CDYelpURLSession {
         decoder: JSONDecoder? = nil,
         cacheable: Bool = true
     ) async throws -> T {
+        let request = try await adaptedRequest(buildRequest: buildRequest)
+        let cacheKey = cacheKeyIfApplicable(for: request, cacheable: cacheable)
+        if let cacheKey, let cached: T = cachedDecodedResponse(request: request, cacheKey: cacheKey, decoder: decoder) {
+            return cached
+        }
+        // requestDidStart fires once per logical request, regardless of retry count.
+        notifyStart(request)
+        return try await performWithRetry(request, decoder: decoder, cacheKey: cacheKey)
+    }
+
+    /// Builds the request, runs the adapter chain, and restores any framework-set header an
+    /// adapter inadvertently stripped. One-time setup, run exactly once per logical API call
+    /// regardless of how many retry attempts `performWithRetry` below makes.
+    private func adaptedRequest(buildRequest: @Sendable () throws -> URLRequest) async throws -> URLRequest {
         let builtRequest: URLRequest
         do {
             builtRequest = try buildRequest()
@@ -51,8 +65,6 @@ actor CDYelpURLSession {
             notifyComplete(placeholderRequest, response: nil, data: nil, error: networkError)
             throw networkError
         }
-        // One-time setup, run exactly once per logical API call regardless of how many retry
-        // attempts occur below: the adapter chain, header restoration, and cache lookup.
         var request = builtRequest
         let originalHeaders = builtRequest.allHTTPHeaderFields ?? [:]
         do {
@@ -75,29 +87,34 @@ actor CDYelpURLSession {
         for (header, originalValue) in originalHeaders {
             restoreHeaderIfStripped(header, originalValue: originalValue, in: &request)
         }
+        return request
+    }
 
-        // .uppercased() matches the normalization shouldRetry uses for idempotentHTTPMethods.
-        // URLRequest.httpMethod's own setter already uppercases on assignment (confirmed: even
-        // an adapter that assigns "get" ends up with "GET"), so this is defense-in-depth rather
-        // than a fix for a reachable bug — kept for consistency between the two checks.
-        let cacheKey: String? = (cacheable && request.httpMethod?.uppercased() == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
-        if let cacheKey, let cache, let cached = cache.data(forKey: cacheKey) {
-            let decoded: T? = try? decodeWrapping(cached, decoder: decoder)
-            if let decoded {
-                notifyStart(request)
-                notifyComplete(request, response: nil, data: cached, error: nil)
-                return decoded
-            }
-            // Evict the undecodable entry and fall through to a live network fetch below — a
-            // corrupt/stale cache entry (e.g. a model shape change after an app update) should
-            // not fail the caller when the network can serve a fresh response right now. No
-            // notifyStart/notifyComplete here: the single pair below covers this logical request.
-            cache.remove(forKey: cacheKey)
+    /// .uppercased() matches the normalization shouldRetry uses for idempotentHTTPMethods.
+    /// URLRequest.httpMethod's own setter already uppercases on assignment (confirmed: even
+    /// an adapter that assigns "get" ends up with "GET"), so this is defense-in-depth rather
+    /// than a fix for a reachable bug — kept for consistency between the two checks.
+    private func cacheKeyIfApplicable(for request: URLRequest, cacheable: Bool) -> String? {
+        (cacheable && request.httpMethod?.uppercased() == "GET" && cache != nil) ? CDYelpCacheKey.key(for: request) : nil
+    }
+
+    private func cachedDecodedResponse<T: Decodable>(request: URLRequest, cacheKey: String, decoder: JSONDecoder?) -> T? {
+        guard let cache, let cached = cache.data(forKey: cacheKey) else { return nil }
+        let decoded: T? = try? decodeWrapping(cached, decoder: decoder)
+        if let decoded {
+            notifyStart(request)
+            notifyComplete(request, response: nil, data: cached, error: nil)
+            return decoded
         }
+        // Evict the undecodable entry and fall through to a live network fetch below — a
+        // corrupt/stale cache entry (e.g. a model shape change after an app update) should
+        // not fail the caller when the network can serve a fresh response right now. No
+        // notifyStart/notifyComplete here: the single pair in `perform` covers this logical request.
+        cache.remove(forKey: cacheKey)
+        return nil
+    }
 
-        // requestDidStart fires once per logical request, regardless of retry count.
-        notifyStart(request)
-
+    private func performWithRetry<T: Decodable & Sendable>(_ request: URLRequest, decoder: JSONDecoder?, cacheKey: String?) async throws -> T {
         var attempt: UInt = 0
         while true {
             let data: Data
@@ -143,6 +160,38 @@ actor CDYelpURLSession {
         }
     }
 
+    private func decodeWrapping<T: Decodable>(_ data: Data, decoder: JSONDecoder?) throws -> T {
+        do {
+            return try (decoder ?? makeDecoder()).decode(T.self, from: data)
+        } catch {
+            throw CDYelpNetworkError.decodingFailed(underlying: error)
+        }
+    }
+
+    /// Cancels in-progress URLSession tasks and any Tasks sleeping during retry backoff.
+    /// Awaits both, so cancellation is guaranteed to be in effect by the time this returns.
+    func cancelAllTasks() async {
+        let (dataTasks, uploadTasks, downloadTasks) = await session.tasks
+        for task in dataTasks {
+            task.cancel()
+        }
+        for task in uploadTasks {
+            task.cancel()
+        }
+        for task in downloadTasks {
+            task.cancel()
+        }
+        cancelAllRetrySleepTasks()
+    }
+
+    nonisolated func clearCache() {
+        cache?.removeAll()
+    }
+}
+
+// MARK: - Retry & Backoff
+
+extension CDYelpURLSession {
     /// Shared retry-or-throw path for both the transport-error and HTTP-status-error cases:
     /// returns (having slept for backoff, notified monitors, and advanced `attempt`) if the
     /// caller should retry, or notifies monitors of the terminal failure and throws `error` (or
@@ -217,30 +266,6 @@ actor CDYelpURLSession {
         }
     }
 
-    private func decodeWrapping<T: Decodable>(_ data: Data, decoder: JSONDecoder?) throws -> T {
-        do {
-            return try (decoder ?? makeDecoder()).decode(T.self, from: data)
-        } catch {
-            throw CDYelpNetworkError.decodingFailed(underlying: error)
-        }
-    }
-
-    /// Cancels in-progress URLSession tasks and any Tasks sleeping during retry backoff.
-    /// Awaits both, so cancellation is guaranteed to be in effect by the time this returns.
-    func cancelAllTasks() async {
-        let (dataTasks, uploadTasks, downloadTasks) = await session.tasks
-        for task in dataTasks {
-            task.cancel()
-        }
-        for task in uploadTasks {
-            task.cancel()
-        }
-        for task in downloadTasks {
-            task.cancel()
-        }
-        cancelAllRetrySleepTasks()
-    }
-
     private func cancelAllRetrySleepTasks() {
         for task in retrySleepTasks.values {
             task.cancel()
@@ -248,13 +273,9 @@ actor CDYelpURLSession {
         retrySleepTasks.removeAll()
     }
 
-    nonisolated func clearCache() {
-        cache?.removeAll()
-    }
-
     /// HTTP methods safe to automatically resend without risking a duplicate side effect,
     /// matching the set Alamofire's `RetryPolicy` retried by default (notably excluding POST).
-    private static let idempotentHTTPMethods: Set<String> = ["DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE"]
+    fileprivate static let idempotentHTTPMethods: Set<String> = ["DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE"]
 
     private func shouldRetry(_ error: CDYelpNetworkError, httpMethod: String?, attempt: UInt) -> Bool {
         guard attempt < retryConfig.retryLimit else { return false }
@@ -289,7 +310,7 @@ actor CDYelpURLSession {
     /// Parses a `Retry-After` header value per RFC 9110 §10.2.3: either a non-negative integer
     /// number of seconds, or an HTTP-date to wait until. Returns nil for anything else so the
     /// caller falls back to exponential backoff instead of trusting a malformed value.
-    private static func retryAfterInterval(from headers: [String: String]) -> TimeInterval? {
+    fileprivate static func retryAfterInterval(from headers: [String: String]) -> TimeInterval? {
         guard let value = headers.first(where: { $0.key.caseInsensitiveCompare("Retry-After") == .orderedSame })?.value else {
             return nil
         }

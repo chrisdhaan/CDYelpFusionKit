@@ -1,7 +1,7 @@
-@testable import CDYelpFusionKit
 import CDYelpFusionKitTesting
 import Foundation
 import Testing
+@testable import CDYelpFusionKit
 
 /// .serialized is required: several tests register mock stub keys that are substrings of
 /// other tests' keys (e.g. "events" / "events/featured"), and CDYelpMockURLProtocol's stub

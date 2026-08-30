@@ -31,43 +31,43 @@ enum CDYelpRouter: @unchecked Sendable {
     var path: String {
         switch self {
         case .search:
-            return "businesses/search"
+            "businesses/search"
         case .phone:
-            return "businesses/search/phone"
+            "businesses/search/phone"
         case let .transactions(type, _):
-            return "transactions/\(Self.percentEncodedPathSegment(type))/search"
+            "transactions/\(Self.percentEncodedPathSegment(type))/search"
         case let .business(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))"
+            "businesses/\(Self.percentEncodedPathSegment(id))"
         case .matches:
-            return "businesses/matches"
+            "businesses/matches"
         case let .reviews(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/reviews"
+            "businesses/\(Self.percentEncodedPathSegment(id))/reviews"
         case .autocomplete:
-            return "autocomplete"
+            "autocomplete"
         case let .event(id, _):
-            return "events/\(Self.percentEncodedPathSegment(id))"
+            "events/\(Self.percentEncodedPathSegment(id))"
         case .events:
-            return "events"
+            "events"
         case .featuredEvent:
-            return "events/featured"
+            "events/featured"
         case .allCategories:
-            return "categories"
+            "categories"
         case let .categoryDetails(alias, _):
-            return "categories/\(Self.percentEncodedPathSegment(alias))"
+            "categories/\(Self.percentEncodedPathSegment(alias))"
         case .engagement:
-            return "businesses/engagement"
+            "businesses/engagement"
         case let .serviceOfferings(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/service_offerings"
+            "businesses/\(Self.percentEncodedPathSegment(id))/service_offerings"
         case .businessInsights:
-            return "businesses/insights"
+            "businesses/insights"
         case let .reviewHighlights(id, _):
-            return "businesses/\(Self.percentEncodedPathSegment(id))/review_highlights"
+            "businesses/\(Self.percentEncodedPathSegment(id))/review_highlights"
         case let .openings(businessId, _):
-            return "bookings/\(Self.percentEncodedPathSegment(businessId))/openings"
+            "bookings/\(Self.percentEncodedPathSegment(businessId))/openings"
         case .aiChat:
-            return "ai/chat/v2"
+            "ai/chat/v2"
         case .jobs:
-            return "jobs"
+            "jobs"
         }
     }
 
@@ -145,47 +145,55 @@ enum CDYelpRouter: @unchecked Sendable {
 
         default:
             // All other cases: GET + URL query parameters
-            guard var components = URLComponents(string: CDYelpURL.base + path) else {
-                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-            }
-            let queryParams = queryParameters
-            if !queryParams.isEmpty {
-                components.queryItems = try queryParams.map {
-                    let value: String
-                    if let boolValue = $0.value as? Bool {
-                        // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
-                        // encoding this library has always sent (previously via Alamofire's
-                        // default URLEncoding, whose boolEncoding is .numeric).
-                        value = boolValue ? "1" : "0"
-                    } else if let doubleValue = $0.value as? Double {
-                        // NaN/Infinity have no valid coordinate representation — %.8f would
-                        // silently render "nan"/"inf"/"-inf" and send a malformed request.
-                        guard doubleValue.isFinite else {
-                            throw CDYelpNetworkError.invalidRequest(underlying: NonFiniteQueryValueError(parameterName: $0.key))
-                        }
-                        // String(describing:) renders small magnitudes (e.g. latitude/longitude
-                        // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
-                        // don't parse as a coordinate. Always use fixed-point decimal notation.
-                        value = String(format: "%.8f", doubleValue)
-                    } else {
-                        value = String(describing: $0.value)
-                    }
-                    return URLQueryItem(name: $0.key, value: value)
-                }
-                // URLComponents allows + per RFC 3986, but servers decode it as a space
-                // (application/x-www-form-urlencoded convention); force-encode it as %2B.
-                if let query = components.percentEncodedQuery {
-                    components.percentEncodedQuery = query.replacingOccurrences(of: "+", with: "%2B")
-                }
-            }
-            guard let url = components.url else {
-                throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
-            }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "GET"
-            Self.applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: false)
-            return urlRequest
+            return try getRequest(apiKey: apiKey)
         }
+    }
+
+    /// Builds a GET request with URL query parameters, shared by every router case except
+    /// `.aiChat` and `.jobs` (which POST a JSON body instead via `postRequest`).
+    private func getRequest(apiKey: String) throws -> URLRequest {
+        guard var components = URLComponents(string: CDYelpURL.base + path) else {
+            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+        }
+        let queryParams = queryParameters
+        if !queryParams.isEmpty {
+            components.queryItems = try queryParams.map(Self.queryItem)
+            // URLComponents allows + per RFC 3986, but servers decode it as a space
+            // (application/x-www-form-urlencoded convention); force-encode it as %2B.
+            if let query = components.percentEncodedQuery {
+                components.percentEncodedQuery = query.replacingOccurrences(of: "+", with: "%2B")
+            }
+        }
+        guard let url = components.url else {
+            throw CDYelpNetworkError.invalidRequest(underlying: URLError(.badURL))
+        }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        Self.applyStandardHeaders(to: &urlRequest, apiKey: apiKey, hasBody: false)
+        return urlRequest
+    }
+
+    private static func queryItem(from pair: (key: String, value: Any)) throws -> URLQueryItem {
+        let value: String
+        if let boolValue = pair.value as? Bool {
+            // Numeric ("1"/"0"), matching the Yelp Fusion API convention and the
+            // encoding this library has always sent (previously via Alamofire's
+            // default URLEncoding, whose boolEncoding is .numeric).
+            value = boolValue ? "1" : "0"
+        } else if let doubleValue = pair.value as? Double {
+            // NaN/Infinity have no valid coordinate representation — %.8f would
+            // silently render "nan"/"inf"/"-inf" and send a malformed request.
+            guard doubleValue.isFinite else {
+                throw CDYelpNetworkError.invalidRequest(underlying: NonFiniteQueryValueError(parameterName: pair.key))
+            }
+            // String(describing:) renders small magnitudes (e.g. latitude/longitude
+            // within ~0.0001 of 0) in scientific notation ("1e-05"), which servers
+            // don't parse as a coordinate. Always use fixed-point decimal notation.
+            value = String(format: "%.8f", doubleValue)
+        } else {
+            value = String(describing: pair.value)
+        }
+        return URLQueryItem(name: pair.key, value: value)
     }
 
     /// Single source of truth for which endpoints are safe to serve from the response cache.
@@ -199,14 +207,14 @@ enum CDYelpRouter: @unchecked Sendable {
         switch self {
         case .search, .phone, .transactions, .business, .matches, .reviews, .autocomplete,
              .event, .events, .featuredEvent, .allCategories, .categoryDetails:
-            return true
+            true
         case .engagement, .serviceOfferings, .businessInsights, .reviewHighlights, .openings:
             // Near-real-time analytics/availability endpoints were never cached prior to v6.
-            return false
+            false
         case .aiChat, .jobs:
             // POST endpoints; CDYelpURLSession's GET-only cache-key gate would exclude these
             // regardless, but listing them here keeps this switch exhaustive and self-documenting.
-            return false
+            false
         }
     }
 
@@ -223,13 +231,13 @@ enum CDYelpRouter: @unchecked Sendable {
         case let .search(params), let .phone(params), let .matches(params),
              let .autocomplete(params), let .events(params), let .featuredEvent(params),
              let .allCategories(params), let .engagement(params), let .businessInsights(params):
-            return params
+            params
         case let .transactions(_, params), let .business(_, params), let .reviews(_, params),
              let .event(_, params), let .categoryDetails(_, params), let .serviceOfferings(_, params),
              let .reviewHighlights(_, params), let .openings(_, params):
-            return params
+            params
         case .aiChat, .jobs:
-            return [:]
+            [:]
         }
     }
 }

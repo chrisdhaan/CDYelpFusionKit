@@ -60,7 +60,7 @@ public final class CDYelpMockURLProtocol: URLProtocol {
     }
 
     override public static func canonicalRequest(for request: URLRequest) -> URLRequest {
-        return request
+        request
     }
 
     override public func startLoading() {

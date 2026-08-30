@@ -1,19 +1,11 @@
 ---
 name: Feature Request
-about: Suggest an enhancement for CDYelpFusionKit
-title: ''
+about: Suggest a new feature or enhancement.
 labels: enhancement
-assignees: chrisdhaan
 ---
 
-## Summary
+**What problem does this feature solve?**
 
-> A concise description of the feature you'd like to see.
+**Describe the solution you'd like.**
 
-## Motivation
-
-> Why would this feature be valuable? What problem does it solve?
-
-## Proposed Solution
-
-> If you have a specific implementation in mind, describe it here.
+**Have you considered any alternatives?**

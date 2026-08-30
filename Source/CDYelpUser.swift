@@ -45,18 +45,16 @@ public struct CDYelpUser: Decodable, Sendable {
     }
 
     public func profileUrlAsUrl() -> URL? {
-        if let profileUrl = profileUrl,
-           let asUrl = URL(string: profileUrl)
-        {
+        if let profileUrl,
+           let asUrl = URL(string: profileUrl) {
             return asUrl
         }
         return nil
     }
 
     public func imageUrlAsUrl() -> URL? {
-        if let imageUrl = imageUrl,
-           let asUrl = URL(string: imageUrl)
-        {
+        if let imageUrl,
+           let asUrl = URL(string: imageUrl) {
             return asUrl
         }
         return nil
